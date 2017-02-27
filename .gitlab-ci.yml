@@ -1,7 +1,9 @@
 before_script:
   - pip3 install --upgrade -r requirements.txt -r requirements-dev.txt
 
-test_back:
+test_package:
+  tags:
+    - numpy
   script:
     - python3 setup.py test
 
