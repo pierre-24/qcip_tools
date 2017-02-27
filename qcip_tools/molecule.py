@@ -213,9 +213,9 @@ class Molecule:
         return 1 / all_atomic_numbers * com
 
     def translate(self, coordinates):
-
         """
-        Translate the molecule (each of its atom)
+        Translate the molecule (each of its atom).
+
         :param coordinates: new position of the molecule
         :type coordinates: list|numpy.ndarray
         """
@@ -238,7 +238,7 @@ class Molecule:
 
     def distances(self):
         """
-        retrieve the distance matrix between all atoms in the molecule
+        Retrieve the distance matrix between all atoms in the molecule.
 
         :rtype: numpy.ndarray
         """
@@ -255,11 +255,10 @@ class Molecule:
 
     def connectivities(self, threshold=.1):
         """
-        Get connectivity atom by atom, using the VdW radii
+        Get connectivity atom by atom, using the VdW radii.
 
         :param threshold: threshold for acceptance (because bond are sometimes a little larger than the sum of VdWs)
         :type threshold: float
-
         :return: the connectivity, as a dictionary per atom index (starting with one !)
         :rtype: dict
         """
@@ -278,7 +277,8 @@ class Molecule:
         return connectivities
 
     def bonds(self, threshold=.1):
-        """Get a list of the bond in the molecule
+        """Get a list of the bond in the molecule.
+
         :param threshold:  threshold (see `self. connectivites()`)
         :type threshold: float
         :rtype: list
@@ -354,7 +354,7 @@ class Molecule:
         return atoms_string
 
     def output_as_xyz(self, title='', use_z_instead_of_symbol=False):
-        """Return an XYZ content
+        """Return an XYZ content.
 
         :param title: optional name of the molecule
         :type title: str
@@ -387,6 +387,7 @@ class Molecule:
 
     def moments_of_inertia(self):
         """Get the moment of inertia tensor.
+
         :rtype: numpy.ndarray
         """
 
@@ -414,7 +415,7 @@ class Molecule:
 
     def principal_axes(self):
         """Return the moment of inertia
-        From https://github.com/moorepants/DynamicistToolKit/blob/master/dtk/inertia.py
+        (from https://github.com/moorepants/DynamicistToolKit/blob/master/dtk/inertia.py).
 
         :return: The principal moment of inertia (sorted from lowest to largest) and the rotation matrix
         """

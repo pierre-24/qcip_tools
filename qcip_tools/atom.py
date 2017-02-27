@@ -397,19 +397,17 @@ Colors = {
 
 class Atom:
     """
-    Class to represent an atom and its properties
+    Create an atom. You must gives either symbol or atomic_number.
+
+    :param atomic_number: the atomic number
+    :type atomic_number: int
+    :param symbol: the atom symbol (starting with an upercase letter)
+    :type symbol: str
+    :param position: atom position
+    :type position: list|numpy.ndarray
     """
 
     def __init__(self, atomic_number=None, symbol=None, position=None):
-        """Crete an atom. You must gives either symbol or atomic_number
-
-        :param atomic_number: the atomic number
-        :type atomic_number: int
-        :param symbol: the atom symbol (starting with an upercase letter)
-        :type symbol: str
-        :param position: atom position
-        :type position: list|numpy.ndarray
-        """
 
         if symbol is not None:
 
@@ -467,7 +465,8 @@ class Atom:
         return self.mass_number - self.atomic_number
 
     def charge(self):
-        """Get atomic charge
+        """Get atomic charge.
+
         :return: Charge
         :rtype: int
         """

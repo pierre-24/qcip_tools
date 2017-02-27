@@ -6,6 +6,7 @@ def rodrigues_rotation(rot_axis, angle, v):
     """
     Rotate vector `v` around rotation axis `rot_axis`, of an angle `angle`
     Note: `v` and `rot_axis` must be defined via the same origin.
+
     :param rot_axis: axis of rotation (SHOULD BE NORMALIZED !!)
     :param angle: angle (in radian)
     :param v: rotated vector
