@@ -3,7 +3,7 @@ before_script:
 
 test_package:
   tags:
-    - numpy
+    - python-numpy
   script:
     - python3 setup.py test
 
