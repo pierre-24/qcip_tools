@@ -1,0 +1,9 @@
+before_script:
+  - pip3 install --upgrade -r requirements.txt -r requirements-dev.txt
+
+test_back:
+  script:
+    - python3 setup.py test
+
+after_script:
+  - flake8 qcip_tools tests --max-line-length=120 --ignore=N802 --exclude=settings_test.py
