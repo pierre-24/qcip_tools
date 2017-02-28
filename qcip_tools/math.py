@@ -2,18 +2,127 @@ import math
 import numpy
 
 
-def rodrigues_rotation(rot_axis, angle, v):
+class DimensionAreNotEquals(Exception):
+
+    def __init__(self, var1='a', var2='b'):
+        super().__init__('{} and {} have not the same dimension'.format(var1, var2))
+
+
+class BoundingBox:
+
+    def __init__(self, origin, maximum=None, size=None):
+        """Defines a bounding box
+
+        :param origin:
+        :param maximum:
+        :param size:
+        """
+
+        self.dimension = len(origin)
+        self.origin = origin
+
+        if maximum is not None:
+            if self.dimension != len(maximum):
+                raise DimensionAreNotEquals('min', 'max')
+
+            self.size = [maximum[a] - origin[a] for a in range(len(origin))]
+
+        elif size is not None:
+
+            if self.dimension != len(size):
+                raise DimensionAreNotEquals('min', 'size')
+
+            self.size = size
+
+        else:
+            RuntimeError('you must give either maximum or size')
+
+        for i, val in enumerate(self.size):  # change origin if maximum was actually the minimum
+            if val < 0.0:
+                self.origin[i] += val
+                self.size[i] = -val
+
+    def contains(self, coo):
+        """Test if point in bounding box
+
+        :param coo: coordinates of the point
+        :type coo: list|numpy.ndarray
+        :rtype: bool
+        """
+
+        if len(coo) != len(self.origin):
+            raise DimensionAreNotEquals('coordinates', 'box')
+
+        max_ = self.maximum()
+
+        for i in range(self.dimension):
+            if coo[i] < self.origin[i] or coo[i] > max_[i]:
+                return False
+
+        return True
+
+    def update(self, coo):
+        """Update the size of the bounding box to include a given point
+
+        :param coo: coordinates of the point
+        :type coo: list|numpy.ndarray
+        """
+
+        if not self.contains(coo):
+            maximum = self.maximum()
+
+            for i in range(self.dimension):
+
+                self.origin[i] = coo[i] if coo[i] < self.origin[i] else self.origin[i]
+                new_size = maximum[i] - self.origin[i]
+                new_size_from_point = coo[i] - self.origin[i]
+
+                self.size[i] = new_size if new_size > new_size_from_point else new_size_from_point
+
+    def local_coordinates(self, coo):
+        """Returns coordinates with respect to the origin of the bounding box
+
+        :param coo: coordinates of the point
+        :type coo: list|numpy.ndarray
+        :rtype: numpy.ndarray
+        """
+
+        if len(coo) != self.dimension:
+            raise DimensionAreNotEquals('coordinates', 'box')
+
+        return numpy.array([coo[i] - self.origin[i] for i in range(self.dimension)])
+
+    def maximum(self):
+        """Returns the position of the maximum of the bounding box in "global" coordinates
+
+        :rtype: numpy.ndarray
+        """
+
+        return numpy.array([self.origin[i] + self.size[i] for i in range(self.dimension)])
+
+
+def rodrigues_rotation(v, rot_axis, angle):
     """
     Rotate vector `v` around rotation axis `rot_axis`, of an angle `angle`
     Note: `v` and `rot_axis` must be defined via the same origin.
 
-    :param rot_axis: axis of rotation (SHOULD BE NORMALIZED !!)
-    :param angle: angle (in radian)
     :param v: rotated vector
+    :type v: list|numpy.ndarray
+    :param rot_axis: axis of rotation (SHOULD BE NORMALIZED !!)
+    :type rot_axis: list|numpy.ndarray
+    :param angle: angle (in degree)
+    :type angle: float
     :return: the rotated vector
+    :rtype: numpy.ndarray
     """
-    v_rot = v * math.cos(angle) + numpy.cross(rot_axis, v) * math.sin(angle) + \
-        rot_axis * numpy.dot(rot_axis, v) * (1 - math.cos(angle))
+
+    ang_ = numpy.radians(angle)
+    ra_ = numpy.array(rot_axis)
+    v_ = numpy.array(v)
+
+    v_rot = v_ * math.cos(ang_) + numpy.cross(ra_, v_) * math.sin(ang_) + \
+        ra_ * numpy.dot(ra_, v) * (1 - math.cos(ang_))
+
     return v_rot
 
 
@@ -21,7 +130,7 @@ def normalize(c):
     """Normalize and return the vector
 
     :param c: vector
-    :type c: numpy.ndarray
+    :type c: numpy.ndarray|list
     :rtype: numpy.ndarray
     """
     n = numpy.linalg.norm(c)
@@ -46,7 +155,7 @@ def distance(c1, c2):
 
 def angle(c1, c2, c3):
     """
-    Get the angle between three position. Note that `c2` is the center coordinate !!
+    Get the angle (in degree) between three position. Note that `c2` is the center coordinate !!
 
     :param c1: coordinate
     :type c1: list
@@ -61,7 +170,7 @@ def angle(c1, c2, c3):
 
 
 def angle_vector(v1, v2):
-    """Get the angle between two vectors
+    """Get the angle (in degree) between two vectors
 
     :param v1: vector
     :type v1: numpy.ndarray
@@ -75,7 +184,7 @@ def angle_vector(v1, v2):
 
 def torsion_angle(c1, c2, c3, c4):
     """
-    Get the torsion angle between four position.
+    Get the torsion angle (in degree) between four position.
 
     :param c1: coordinate
     :type c1: list
@@ -107,7 +216,8 @@ def BLA(lst):
 
     number_of_bonds = len(lst) - 1
     if number_of_bonds < 3:
-        return 0
+        raise Exception('not enought bonds')
+
     distances = []
     previous = lst[0]
     for i in lst[1:]:

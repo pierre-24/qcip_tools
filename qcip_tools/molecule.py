@@ -12,8 +12,8 @@ class Bond:
     atom_2 = None
     type = 'None'
     length = 0.0
-    index1 = 0
-    index2 = 0
+    index1 = 0  # shifted_index
+    index2 = 0  # shifted_index
     vector = []
 
     def __init__(self, atom_1, atom_2, bond_type='single', indexes=None):
@@ -139,6 +139,42 @@ class Molecule:
         else:
             raise KeyError(shifted_index)
 
+    def list_of_atoms(self, shifted_index, exclude_atoms=None):
+        """Make a list of atoms following the connectivity and excluding some if any.
+
+        .. note:;
+            It may seems obvious, but the first atom IS included in the list.
+
+        :param shifted_index: starting atom
+        :type shifted_index: int
+        :param exclude_atoms: stop following atom (listed as shifted_indexes) if on one of those
+        :type exclude_atoms: list of int
+        :return: list of atoms (as shifted_indexes)
+        :rtype: list of int
+        """
+
+        def lookup(current_atom, exclude_atoms, added_atom_indexes):
+            for atom_index in connectivity[current_atom]:
+                if atom_index not in added_atom_indexes:
+                    if atom_index in exclude_atoms:
+                        continue
+                    added_atom_indexes.append(atom_index)
+
+                    lookup(atom_index, exclude_atoms, added_atom_indexes)
+
+        if exclude_atoms is None:
+            return [a for a in range(len(self))]
+
+        if shifted_index < 1 or shifted_index > len(self):
+            raise ValueError(shifted_index)
+
+        connectivity = self.connectivities()
+
+        atom_indexes = [shifted_index]
+        lookup(shifted_index, exclude_atoms, atom_indexes)  # recursive
+
+        return atom_indexes
+
     def number_of_electrons(self):
         """
         :return: The number of electrons in the molecule
@@ -220,7 +256,7 @@ class Molecule:
         :type coordinates: list|numpy.ndarray
         """
 
-        coordinates = numpy.array(coordinates, float)
+        coordinates = numpy.array(coordinates)
         for a in self:
             a.position = a.position + coordinates
 
@@ -236,9 +272,90 @@ class Molecule:
         """
         self.translate(-self.center_of_charges())
 
+    def moments_of_inertia(self):
+        """Get the moment of inertia tensor.
+
+        :rtype: numpy.ndarray
+        """
+
+        tensor = numpy.zeros((3, 3))
+
+        coordinates, masses, r = \
+            numpy.zeros((len(self), 3)), \
+            numpy.zeros(len(self)), \
+            numpy.zeros(len(self))
+
+        for index, atm in enumerate(self):
+            coordinates[index] = atm.position
+            r[index] = numpy.linalg.norm(atm.position)
+            masses[index] = atm.mass
+
+        for i in [0, 1, 2]:
+            for j in [0, 1, 2]:
+                tmp = 0
+                for k in range(0, len(self)):
+                    delta = i == j
+                    tmp += masses[k] * (delta * r[k] ** 2 - coordinates[k][i] * coordinates[k][j])
+                tensor[i, j] = tmp
+
+        return tensor
+
+    def principal_axes(self):
+        """Return the moment of inertia
+        (from https://github.com/moorepants/DynamicistToolKit/blob/master/dtk/inertia.py).
+
+        :return: The principal moment of inertia (sorted from lowest to largest) and the rotation matrix
+        :rtype: tuple
+        """
+
+        inertia_tensor = self.moments_of_inertia()
+        Ip, C = numpy.linalg.eig(inertia_tensor)
+        indices = numpy.argsort(Ip)
+        Ip = Ip[indices]
+        C = C.T[indices]
+        return Ip, C
+
+    def set_to_inertia_axes(self):
+        """Translate and rotate molecule to its principal inertia axes
+        """
+
+        self.translate_to_center_of_mass()
+        rot = self.principal_axes()[1]
+        for atom in self:
+            atom.position = numpy.dot(rot, atom.position)
+
+    def reorient(self, origin, start_vector, end_vector):
+        """
+        Move and reorient all the atoms in the molecule so that the starting vector becomes the ending vector.
+
+        :param origin: origin of the two vectors
+        :param start_vector: starting vector
+        :param end_vector: ending vector
+        :raise: ValueError if the two vectors have a 180° angle
+        """
+
+        if numpy.array_equal(start_vector, end_vector):
+            return
+
+        rot_angle = math.acos(
+            numpy.dot(end_vector, start_vector) / numpy.linalg.norm(end_vector) / numpy.linalg.norm(start_vector))
+
+        if math.fabs(math.pi - rot_angle) < 1e-3:
+            raise ValueError()
+
+        rot_axis = qcip_math.normalize(numpy.cross(end_vector, start_vector))
+
+        for atom in self:
+            v = atom.position - origin
+            v_rot = qcip_math.rodrigues_rotation(v, rot_axis, -numpy.degrees(rot_angle))
+            atom.position = v_rot + origin
+
     def distances(self):
         """
         Retrieve the distance matrix between all atoms in the molecule.
+
+        .. note::
+            The array indexes are **NOT** shifted indexes.
 
         :rtype: numpy.ndarray
         """
@@ -259,9 +376,10 @@ class Molecule:
 
         :param threshold: threshold for acceptance (because bond are sometimes a little larger than the sum of VdWs)
         :type threshold: float
-        :return: the connectivity, as a dictionary per atom index (starting with one !)
+        :return: the connectivity, as a dictionary per atom index (as shifted_indexes)
         :rtype: dict
         """
+
         distances = self.distances()
         connectivities = {}
         for i, a1 in enumerate(self):
@@ -279,7 +397,7 @@ class Molecule:
     def bonds(self, threshold=.1):
         """Get a list of the bond in the molecule.
 
-        :param threshold:  threshold (see `self. connectivites()`)
+        :param threshold:  threshold (see ``self. connectivites()``)
         :type threshold: float
         :rtype: list
         """
@@ -292,7 +410,30 @@ class Molecule:
                 for index in connectivity[i + 1]:
                     if index > i:
                         bonds_handler.append(Bond(atm, self.atom(index), 'single', [i + 1, index]))
+
         return bonds_handler
+
+    def bounding_box(self, extra_space=0.0):
+        """
+        Get the bounding box corresponding to the molecule.
+
+        :param extra_space: Add some space around the box
+        :type extra_space: float
+        :return: Bounding box
+        :rtype: qcip_tools.math.BoundingBox
+        """
+
+        origin = numpy.array([1e14, 1e14, 1e14])
+        maximum = numpy.array([-1e14, -1e14, -1e14])
+        for atm in self:
+            coo = atm.position
+            for i in [0, 1, 2]:
+                if coo[i] < origin[i]:
+                    origin[i] = coo[i]
+                if coo[i] > maximum[i]:
+                    maximum[i] = coo[i]
+
+        return qcip_math.BoundingBox([i - extra_space for i in origin], maximum=[i + extra_space for i in maximum])
 
     def formula(self, enhanced=False):
         """Get the formula, based on self.formula_holder and self. symbols_contained.
@@ -384,75 +525,6 @@ class Molecule:
             rstr += '{:3} {:16.9f} {:16.9f} {:16.9f}\n'.format(a.symbol, *a.position)
 
         return rstr
-
-    def moments_of_inertia(self):
-        """Get the moment of inertia tensor.
-
-        :rtype: numpy.ndarray
-        """
-
-        tensor = numpy.zeros((3, 3))
-
-        coordinates, masses, r = \
-            numpy.zeros((len(self), 3)), \
-            numpy.zeros(len(self)), \
-            numpy.zeros(len(self))
-
-        for index, atm in enumerate(self):
-            coordinates[index] = atm.coordinates
-            r[index] = numpy.linalg.norm(atm.coordinates)
-            masses[index] = atm.mass
-
-        for i in [0, 1, 2]:
-            for j in [0, 1, 2]:
-                tmp = 0
-                for k in range(0, len(self)):
-                    delta = i == j
-                    tmp += masses[k] * (delta * r[k] ** 2 - coordinates[k][i] * coordinates[k][j])
-                tensor[i, j] = tmp
-
-        return tensor
-
-    def principal_axes(self):
-        """Return the moment of inertia
-        (from https://github.com/moorepants/DynamicistToolKit/blob/master/dtk/inertia.py).
-
-        :return: The principal moment of inertia (sorted from lowest to largest) and the rotation matrix
-        """
-
-        inertia_tensor = self.moments_of_inertia()
-        Ip, C = numpy.linalg.eig(inertia_tensor)
-        indices = numpy.argsort(Ip)
-        Ip = Ip[indices]
-        C = C.T[indices]
-        return Ip, C
-
-    def bounding_box(self, extra_space=0.0):
-        """
-        Note: may be a good idea to perform a `geomoperation.set_to_inertia_axis()` before, it may reduce the
-        volume of the bounding bow
-
-        :return: (origin, size) tuple
-        :rtype: tuple
-        """
-
-        low = numpy.array([0, 0, 0])
-        high = numpy.array([0, 0, 0])
-        for atm in self:
-            coo = atm.position
-            for i in [0, 1, 2]:
-                if coo[i] < low[i]:
-                    low[i] = coo[i]
-                if coo[i] > high[i]:
-                    high[i] = coo[i]
-
-        extra_space_array = numpy.zeros(3)
-        if type(extra_space) is float:
-            extra_space_array = numpy.array([extra_space, extra_space, extra_space])
-        elif type(extra_space) is numpy.ndarray:
-            extra_space_array = extra_space
-        size = high - low + 2 * extra_space_array
-        return low - extra_space_array, size
 
 
 class GroupError(Exception):
