@@ -7,3 +7,6 @@ lint-back:
 
 test-back:
 	python setup.py test
+
+doc:
+	cd documentation; make html

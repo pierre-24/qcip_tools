@@ -123,7 +123,7 @@ class Molecule:
         if len(self) >= shifted_index > 0:
             self.atom_list.pop(shifted_index - 1)
         else:
-            raise Exception('The atom shifted_index (' + str(shifted_index) + ') is out of range')
+            raise ValueError(shifted_index)
 
     def atom(self, shifted_index):
         """
