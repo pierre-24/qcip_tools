@@ -118,6 +118,10 @@ class DataFile:
     def read_in_file(self, f):
         """Read in a pipe
 
+        .. note::
+
+            Must be implemented in child class.
+
         :param f: pipe
         :type f: file
         """
@@ -138,6 +142,10 @@ class DataFile:
 
     def write_in_file(self, f):
         """Write in a pipe
+
+        .. note::
+
+            Must be implemented in child class.
 
         :param f: pipe
         :type f: file
@@ -190,6 +198,15 @@ class DataFile:
             raise KeyError(key)
 
     def parse_chunk(self, keyword):
+        """Parse a chunk
+
+        .. note::
+
+            Must be implemented in child class.
+
+        :param keyword: keyword
+        :type keyword: str
+        """
         raise NotImplementedError()
 
 
