@@ -113,6 +113,7 @@ class DataFile:
 
         f = open(filename, 'r')
         self.read_in_file(f)
+        f.close()
 
     def read_in_file(self, f):
         """Read in a pipe
@@ -133,6 +134,7 @@ class DataFile:
 
         f = open(filename, mode=mode)
         self.write_in_file(f)
+        f.close()
 
     def write_in_file(self, f):
         """Write in a pipe

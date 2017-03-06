@@ -72,7 +72,10 @@ class DataFileTesCase(unittest.TestCase):
         f.write(self.temporary_file)
         self.assertNotEqual(os.path.getsize(self.temporary_file), 0)
 
-        file_content = open(self.temporary_file).read()
+        file_ = open(self.temporary_file)
+        file_content = file_.read()
+        file_.close()
+
         self.assertTrue('I' + str(len(some_integers)) + ' integers' in file_content)
         self.assertTrue('R' + str(len(some_floats)) + ' floats' in file_content)
         self.assertTrue('S' + str(len(some_text)) + ' text' in file_content)
@@ -118,7 +121,10 @@ class DataFileTesCase(unittest.TestCase):
         self.assertFalse(g.chunks_information['integers'].modified)
         g.write(self.temporary_file)
 
-        file_content = open(self.temporary_file).read()
+        file_ = open(self.temporary_file)
+        file_content = file_.read()
+        file_.close()
+
         self.assertTrue('I' + str(len(some_integers)) + ' integers' in file_content)
         self.assertTrue('R' + str(len(some_floats)) + ' floats' in file_content)
         self.assertTrue('S' + str(len(some_text)) + ' text' in file_content)
