@@ -119,6 +119,13 @@ class DerivativesTesCase(unittest.TestCase):
         with self.assertRaises(Exception):
             d0.differentiate('G')  # missing dof
 
+        # test comparison
+        self.assertTrue(d1 == 'GFF')
+        self.assertTrue(d1 == 'FGF')  # no matter the order
+        self.assertTrue(d1 != 'FGD')  # ... But the type matter
+        self.assertFalse(d1 == d2)
+        self.assertTrue(d1 != d2)
+
     def test_tensor(self):
         """Test the behavior of the Tensor object"""
 

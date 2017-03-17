@@ -57,6 +57,14 @@ class Derivative:
 
             self.diff_representation = from_representation
 
+    def __eq__(self, other):
+        if type(other) is str:
+            return self == Derivative(from_representation=other, spacial_dof=self.spacial_dof)
+        elif isinstance(other, Derivative):
+            return self.representation() == other.representation()
+        else:
+            raise TypeError(other)
+
     def representation(self):
         """Get the full representation (mix basis and current)
 
