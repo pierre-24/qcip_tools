@@ -63,7 +63,19 @@ Therefore, ``FG`` (or ``GF``) is the first-order derivative of the dipole moment
 Implementation
 --------------
 
-*to be continued*
+The object ``Derivative`` handle the manipulation of derivative on a symbolic level : you can define a derivative and differenciate it.
+It computes the shape, dimension and order of the corresponding derivative.
+Note that you must provide ``spacial_dof``, the number of spacial degrees of freeedom of the corresponding system if the derivative contains a geometrical one (``G`` or ``N``).
+
+The object ``Tensor`` allows to store this derivative in the ``components`` array (but without the specific operation that you can perform on certain tensors, e.g. the isotropic value for the polarizability and so all).
+It is provided with a ``Derivative`` (``self.representation``) for efficiency, so the ``components`` array is shaped accordingly.
+You must also provide ``frequency`` if the derivatives contains a dynamic electric field (``D``).
+
+.. warning::
+
+    Always use the ``representation()`` function to get the actual representation of the derivatives.
+    The representation of the derivative is ordered so that geometrical derivatives come before electric one.
+    Therefore, the content of the ``components`` array in ``Tensor`` must be given with the indices in that order.
 
 API documentation
 -----------------

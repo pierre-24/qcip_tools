@@ -1,6 +1,7 @@
 import math
 import collections
 import itertools
+import numpy
 
 from qcip_tools import math as qcip_math
 
@@ -149,7 +150,9 @@ class Derivative:
         return (self.basis.order() if self.basis else 0) + len(self.diff_representation)
 
     def smart_iterator(self):
-        """An iterator to avoid computing all stuffs but only some by yielding a subset of independent coordinates."""
+        """Apply the
+        `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem>`_
+        and only return as subset of independant coordinates. Order guaranteed."""
 
         if self.representation() == '':  # special case of energy
             yield 0
@@ -207,7 +210,7 @@ class Derivative:
 
         components = []
         rest = element
-        for i, (s, d) in enumerate(zip(self.shape(), self.representation())):
+        for i, _ in enumerate(self.representation()):
 
             current = int(math.floor(rest / qcip_math.prod(shape[i + 1:])))
             components.append(current)
@@ -244,3 +247,116 @@ class Derivative:
                 n += e * qcip_math.prod(shape[i + 1:])
 
             yield n
+
+
+def representation_to_operator(representation, component=None, molecule=None):
+    if representation not in ALLOWED_DERIVATIVES:
+        raise ValueError(representation)
+
+    if representation == 'N':
+        return 'dQ' + ('({})'.format(component + 1) if component is not None else '')
+
+    if representation == 'G':
+        return 'dG' + ('({})'.format(
+            component + 1 if not molecule else '{}{}'.format(
+                molecule[math.floor(component / 3)].symbol, COORDINATES[component % 3]))
+            if component is not None else '')
+
+    if representation in 'FD':
+        return 'dF' + ('({})'.format(COORDINATES[component]) if component is not None else '')
+
+
+class Tensor:
+    """Create a tensor to store a given derivative.
+
+    :param representation: representation of the derivative
+    :type representation: str|Derivative
+    :param spacial_dof: number of spacial degrees of freedom
+    :type spacial_dof: int
+    :param frequency: frequency if dynamic electric field
+    :type frequency: str|float
+    """
+
+    def __init__(self, representation, components=None, spacial_dof=None, frequency=None, name=''):
+        if isinstance(representation, Derivative):
+            self.representation = representation
+        else:
+            self.representation = Derivative(from_representation=representation, spacial_dof=spacial_dof)
+
+        if components is not None:
+            if components.shape != self.representation.shape():
+                components = components.reshape(self.representation.shape())
+
+        self.spacial_dof = spacial_dof
+
+        if 'D' in self.representation.representation() and not frequency:
+            raise ValueError(frequency)
+
+        self.frequency = frequency
+        self.name = name
+        self.components = numpy.zeros(self.representation.shape()) if components is None else components
+
+    def to_string(self, threshold=1e-5, columns_per_line=6):
+        """Print the tensor in a more or less textual version.
+
+        :param threshold: show 0 instead of the value if lower than threshold
+        :type threshold: float
+        :param columns_per_line: number of columns per "line" of the tensor
+        :type columns_per_line: int
+        :return: representation
+        :rtype: str
+        """
+        s = ''
+        order = self.representation.order()
+        shape = self.representation.shape()
+        representation = self.representation.representation()
+        dimension = self.representation.dimension()
+
+        if self.name:
+            s += self.name + '\n'
+
+        for offset in range(0, shape[-1], columns_per_line):
+            if offset != 0:
+                s += '\n'
+
+            s += (' ' * 8) * (order - 1) + ' ' * 2
+
+            for index in range(0, columns_per_line):
+                if (offset + index) >= shape[-1]:
+                    break
+                s += '{:8}'.format(representation_to_operator(representation[-1], offset + index)) + ' ' * 6
+
+            s += '\n'
+
+            for idx in range(int(dimension / shape[-1])):
+
+                components = []
+                rest = idx
+                for i, _ in enumerate(representation[:-1]):
+                    current = int(math.floor(rest / qcip_math.prod(shape[i + 1:-1])))
+                    components.append(current)
+                    rest -= current * qcip_math.prod(shape[i + 1:-1])
+
+                for index, c in enumerate(components):
+                    if index < len(components) - 1:
+                        if numpy.all(numpy.array(components[index + 1:]) == 0):
+                            s += '{:8}'.format(representation_to_operator(representation[index], c))
+                        else:
+                            s += '        '
+                    else:
+                        s += '{:8}'.format(representation_to_operator(representation[index], c))
+
+                s += ' ' * 1
+
+                for k in range(offset, offset + 6):
+                    if k >= shape[-1]:
+                        break
+
+                    val = self.components[tuple(components)][k]
+                    s += '{: .6e} '.format(0.0 if math.fabs(val) < threshold else val)
+
+                s += '\n'
+        return s
+
+    def __repr__(self):
+        return self.to_string()

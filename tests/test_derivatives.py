@@ -118,3 +118,21 @@ class DerivativesTesCase(unittest.TestCase):
             d0.differentiate('N')  # missing dof
         with self.assertRaises(Exception):
             d0.differentiate('G')  # missing dof
+
+    def test_tensor(self):
+        """Test the behavior of the Tensor object"""
+
+        beta_tensor = numpy.array([a * (-1) ** a for a in range(27)]).reshape((3, 3, 3))
+        t = derivatives.Tensor('FDD', components=beta_tensor, frequency='static')
+
+        self.assertEqual(t.representation.representation(), 'FDD')
+        self.assertEqual(t.representation.dimension(), 27)
+        self.assertEqual(t.frequency, 'static')
+        self.assertIsNone(t.spacial_dof)
+        self.assertTrue(numpy.array_equal(beta_tensor, t.components))
+
+        # make the code cry:
+        with self.assertRaises(ValueError):
+            derivatives.Tensor('FDD')  # no frequency
+        with self.assertRaises(Exception):
+            derivatives.Tensor('N')  # no dof
