@@ -153,7 +153,7 @@ class Derivative:
 
         if self.representation() == '':  # special case of energy
             yield 0
-            raise StopIteration
+            return
 
         shape = self.shape()
         each = collections.Counter(self.representation())
@@ -200,7 +200,7 @@ class Derivative:
 
         if self.diff_representation == '':  # special case of energy
             yield 0
-            raise StopIteration
+            return
 
         each = collections.Counter(self.representation())
         shape = self.shape()
