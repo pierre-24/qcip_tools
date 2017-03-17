@@ -130,3 +130,22 @@ class MathTesCase(unittest.TestCase):
         # dimension mismatch in update()
         with self.assertRaises(qcip_math.DimensionAreNotEquals):
             b1.update([2, 2])
+
+    def test_permutations(self):
+        """Test the permutations function"""
+
+        self.assertEqual(len([a for a in qcip_math.unique_permutations(['a', 'b', 'c'])]), 6)
+        self.assertEqual(len([a for a in qcip_math.unique_permutations(['a', 'b', 'b'])]), 3)
+        self.assertEqual(len([a for a in qcip_math.unique_permutations(['b', 'b', 'b'])]), 1)
+
+        self.assertEqual(qcip_math.num_of_unique_permutations(['a', 'b', 'c']), 6)
+        self.assertEqual(qcip_math.num_of_unique_permutations(['a', 'b', 'b']), 3)
+        self.assertEqual(qcip_math.num_of_unique_permutations(['b', 'b', 'b']), 1)
+
+        self.assertEqual([a for a in qcip_math.unique_everseen([1, 2, 3, 1, 4, 1, 2])], [1, 2, 3, 4])
+
+        def tolower_(a):
+            return a.lower()
+
+        self.assertEqual(
+            [a for a in qcip_math.unique_everseen(['a', 'A', 'b', 'c', 'B'], key=tolower_)], ['a', 'b', 'c'])

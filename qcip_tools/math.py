@@ -1,5 +1,9 @@
 import math
 import numpy
+import collections
+from functools import reduce
+import operator
+import itertools
 
 
 class DimensionAreNotEquals(Exception):
@@ -227,3 +231,98 @@ def BLA(lst):
     for i in range(number_of_bonds - 1):
         acc += (distances[i + 1] - distances[i]) * (-1) ** (i - 1)
     return (1 / (number_of_bonds - 1)) * acc
+
+
+def conjugate(z):
+    """Get the conjugate complex of z
+
+    :param z: complex number
+    :type z: complex
+    :return: the conjugate
+    :rtype: complex
+    """
+    if z.imag != 0:
+        return z.real - z.imag * 1j
+    else:
+        return z
+
+
+def prod(iterable):
+    """Same as sum(), but multiplying
+
+    :param iterable: an iterable
+    :type iterable: iterable
+    :return: multiplication
+    :rtype: float
+    """
+    return reduce(operator.mul, iterable, 1)
+
+
+def unique_permutations(elements):
+    """Like itertools.permutation(), but yield UNIQUE elements.
+    Iterative. May be not as fast as possible.
+
+    Credit to http://stackoverflow.com/a/30558049.
+
+    :param elements: a set of elements
+    :type elements: iterable
+    """
+
+    if len(elements) == 1:
+        yield (elements[0],)
+    else:
+        unique_elements = set(elements)
+        for first_element in unique_elements:
+            remaining_elements = list(elements)
+            remaining_elements.remove(first_element)
+            for sub_permutation in unique_permutations(remaining_elements):
+                yield (first_element,) + sub_permutation
+
+
+def num_of_unique_permutations(elements):
+    """Get the number of unique elements. Compute the
+    `multinomial coefficients <https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients>`_:
+
+    .. math::
+
+        \\prod_i^m \\left(\\begin{matrix}\\sum_j^i k_j\\\\k_i\\end{matrix}\\right) = \\frac{n!}{\\prod_i k_i!}.
+
+    where :math:`n` is the number of elements in the set and :math:`k_i` is the number of :math:`i` in the set (their
+    multiplicities).
+
+    This is equivalent to ``len(unique_permutation(elements))`` (but faster).
+
+    :param elements: a set
+    :type elements: iterable
+    :return: length
+    :rtype: int
+    """
+
+    n = len(elements)
+    each = collections.Counter(elements)
+    return int(math.factorial(n) / prod(math.factorial(each[i]) for i in each))
+
+
+def unique_everseen(iterable, key=None):
+    """List unique elements, preserving order. Remember all elements ever seen.
+
+    Credit goes to the "recipes" in https://docs.python.org/dev/library/itertools.html.
+
+    :param iterable: any iterable
+    :type iterable: iterable
+    :param key: apply a function to each element before checking if seen
+    :type key: function
+    """
+
+    seen = set()
+    seen_add = seen.add
+    if key is None:
+        for element in itertools.filterfalse(seen.__contains__, iterable):
+            seen_add(element)
+            yield element
+    else:
+        for element in iterable:
+            k = key(element)
+            if k not in seen:
+                seen_add(k)
+                yield element

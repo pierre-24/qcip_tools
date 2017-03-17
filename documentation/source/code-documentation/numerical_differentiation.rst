@@ -20,7 +20,7 @@ Let :math:`M(x)` be a `Maclaurin series expansion <https://en.wikipedia.org/wiki
 .. math::
     :label: expansion
 
-    M(x) = \sum_ {n=0}^{n_{max}} \frac{A_n}{n!} x^n,
+    M(x) =  \sum_ {n=0}^{n_{max}} \frac{1}{n!}\frac{\partial^n f(0)}{\partial x^n} x^n = \sum_ {n=0}^{n_{max}} \frac{A_n}{n!} x^n,
 
 where :math:`A_n=f^{(n)}(0)`, the value of the :math:`n`-order derivative of :math:`f(x)` at :math:`x=0`. If the expansion is not truncated, :math:`n_{max}=\infty`.
 
@@ -113,8 +113,29 @@ In the code, to works with the romberg triangles defined below, :math:`h=a^{k}h_
 The ``Coefficients`` class takes care of the computation of the different coefficients, storing them in ``Coefficients.mat_coefs``.
 The :math:`\frac{d!}{h^d}` part can be computed via the ``Coefficients.prefactor()`` function.
 
-The ``compute_derivative_of_function()`` function does the whole computation (for uni and multivariate functions) and gives :math:`A_d(h)` (which is the component of a tensor in the case of multivariate functions).
-A ``scalar_function(fields, h_0, **kwargs)`` function must be defined, which must return the (scalar) value of the (multivariate) Maclaurin expansion :math:`M()` given ``fields``, which are the different :math:`q` for each variable.
+The ``compute_derivative_of_function(c, scalar_function, k, h0, input_space_dimension, **kwargs)`` function does the whole computation (for uni and multivariate functions) and gives :math:`A_d(h)` (which is the component of a tensor in the case of multivariate functions).
+A ``scalar_function(fields, h_0, **kwargs)`` function must be defined, which must return the value of the Maclaurin expansion :math:`\mathbf{M}_i(\mathbf{x})`,  with :math:`\mathbf{M}:\mathbb{R}^n\rightarrow\mathbb{R}^m` (where `n` is the input space dimension), given :math:`n` ``fields`` (the :math:`\mathbf{x}` vector), corresponding to the different :math:`q`.
+Since the function expects real values, :math:`i` (the :math:`i^\text{th}` coordinate of :math:`\mathbf{M}(\mathbf{x})\in\mathbb{R}^m`) must be passed thought ``**kwargs`` if any.
+``c`` is a list of tuple ``(Coefficient, int)``, which define the derivatives to compute and with respect to which coordinates (starting by 0) the differentiation must be performed.
+
+For example, given :math:`E:\mathbb{R}^3\rightarrow\mathbb{R}`, computation of :math:`\frac{\partial^3E(\mathbf{x})}{\partial \mathbf{x}_0\partial\mathbf{x}_1^2}` is requested via
+
+.. sourcecode:: python
+
+    first_order = numerical_differentiation.Coefficients(1, 2, ratio=a, method='C')
+    second_order = numerical_differentiation.Coefficients(2, 2, ratio=a, method='C')
+
+    derivative_values = []
+
+    # compute d^3 E(x) / dx0 dx1^2
+    derivative_values.append(numerical_differentiation.compute_derivative_of_function(
+        [(first_order, 0), (second_order, 1)],
+        E,  # assume defined
+        0,  # k = 0
+        0.001,  # h0
+        3  # input space is R³.
+    ))
+
 
 .. warning::
 
@@ -218,7 +239,7 @@ For example, for an univariate function :math:`F(x)`, compute :math:`\frac{dF(x)
             univariate_function,  # assume defined
             k,
             0.001,  # f0
-            1  # differentiation space size is 1 because univariate function
+            1  # R → R
         ))
 
     t = numerical_differentiation.RombergTriangle(derivative_values, ratio=a)
@@ -241,7 +262,7 @@ For a bivariate function :math:`F(x, y)`, compute :math:`\frac{\partial^3 F(x, y
             bivariate_function,  # assume defined
             k,
             0.001,  # f0
-            2  # differentiation space size is 2
+            2  # R² → R
         ))
 
     t = numerical_differentiation.RombergTriangle(derivative_values, ratio=a, r=2)  # r=2 because centered

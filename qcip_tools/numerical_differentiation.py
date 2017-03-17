@@ -105,7 +105,7 @@ class Coefficients:
         return math.factorial(self.derivation_order) / akf_(self.ratio, k, h0) ** self.derivation_order
 
 
-def compute_derivative_of_function(c, scalar_function, k, h0, differentiation_space_size=1, **kwargs):
+def compute_derivative_of_function(c, scalar_function, k, h0, input_space_dimension=1, **kwargs):
     """
     Compute the numerical derivative of a scalar, calling the appropriate results through ``scalar_function``,
     to which the ``**kwargs`` parameter is provided.
@@ -117,8 +117,8 @@ def compute_derivative_of_function(c, scalar_function, k, h0, differentiation_sp
     :type k: int
     :param h0: minimal value
     :type h0: float
-    :param differentiation_space_size: size of the differentiation space
-    :type differentiation_space_size: int
+    :param input_space_dimension: dimension of the input vector space
+    :type input_space_dimension: int
     :param kwargs: other arguments, transfered to ``scalar_function()``
     :type kwargs: dict
     :return: value of the derivative (as a scalar)
@@ -146,7 +146,7 @@ def compute_derivative_of_function(c, scalar_function, k, h0, differentiation_sp
             continue
 
         index = it.multi_index
-        fields = [.0] * differentiation_space_size
+        fields = [.0] * input_space_dimension
 
         for i, s in enumerate(c):
             init_val = s[0].mat_i[index[i]]

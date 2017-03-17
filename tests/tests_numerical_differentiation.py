@@ -119,7 +119,7 @@ class NumericalDifferentiationTesCase(unittest.TestCase):
                                 scalar_function,
                                 k,
                                 h0,
-                                1,  # differentiation space size = 1 because univariate
+                                1,  # input space = 1 because function of R → R
                                 a=a
                             )
 
@@ -171,7 +171,7 @@ class NumericalDifferentiationTesCase(unittest.TestCase):
                 scalar_function,
                 0,
                 0.01,
-                2,
+                2,  # function R² → R, so input space size = 2.
                 a=2
             )
 
