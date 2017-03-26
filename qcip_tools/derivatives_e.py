@@ -339,7 +339,12 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            |\\beta_{J=1}|^2 = ...
+            \\begin{align}
+                |\\beta_{J=1}|^2 &= \\frac{3}{5} \\sum\\limits_{i} \\beta_{iii}^2 \\nonumber\\\\
+                &+ \\frac{3}{5} \\sum\\limits_{i\\neq j} \\beta_{iij}^2
+                + \\frac{6}{5} \\sum\\limits_{i\\neq j} \\beta_{iii}\\beta_{ijj} \\nonumber\\\\
+                &+ \\frac{3}{5} \\sum\\limits_{i\\neq j \\neq k} \\beta_{ijj} \\beta_{ikk}
+            \\end{align}
 
         :rtype: float
         """
@@ -368,7 +373,13 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            |\\beta_{J=3}|^2 = ...
+            \\begin{align}
+                |\\beta_{J=3}|^2 &= \\frac{2}{5} \\sum\\limits_{i} \\beta_{iii}^2 \\nonumber\\\\
+                &+ \\frac{12}{5} \\sum\\limits_{i\\neq j} \\beta_{iij}^2
+                - \\frac{6}{5} \\sum\\limits_{i\\neq j} \\beta_{iii}\\beta_{ijj} \\nonumber\\\\
+                &- \\frac{3}{5} \\sum\\limits_{i\\neq j \\neq k} \\beta_{ijj} \\beta_{ikk}
+                + \\sum\\limits_{i\\neq j \\neq k} \\beta_{ijk}^2
+            \\end{align}
 
         :rtype: float
         """
@@ -483,7 +494,8 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            \\beta_{\\perp} = \\frac{1}{5}\\,\\sum_{ij} 2\\beta_{ijj} - 3\\beta_{jij} + 2 \\beta_{jji}.
+            \\beta_{\\perp} = \\frac{1}{5}\\,\\sum_i
+            \\frac{\\mu_i}{||\\vec{\\mu}||}\\,\\sum_{j} 2\\beta_{ijj} - 3\\beta_{jij} + 2 \\beta_{jji}.
 
 
         :param dipole: the dipole moment

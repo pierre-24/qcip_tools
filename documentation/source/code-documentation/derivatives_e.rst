@@ -35,10 +35,9 @@ For small electric fields, the polarizability term is dominant, but the hyperpol
 Sources
 -------
 
-+ R.W. Boyd,  « Nonlinear Optics (3rd edition) ». *Elsevier*, 2008.
++ R.W. Boyd,  « Nonlinear Optics (3rd edition) ». *Elsevier* (2008).
++ F\. Castet *et al*. *J. Chem. Phys.* **136**, 024506 (2012).
 + F\. Castet *et al*. *Acc. Chem. Res.* **46**, 2656 (2013).
-
-
 
 API documentation
 -----------------
