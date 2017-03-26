@@ -215,14 +215,7 @@ class Derivative:
 
         each = collections.Counter(self.representation())
         shape = self.shape()
-
-        components = []
-        rest = element
-        for i, _ in enumerate(self.representation()):
-
-            current = int(math.floor(rest / qcip_math.prod(shape[i + 1:])))
-            components.append(current)
-            rest -= current * qcip_math.prod(shape[i + 1:])
+        components = self.flatten_component_to_components(element)
 
         iterable = []
         index = 0
@@ -255,6 +248,19 @@ class Derivative:
                 n += e * qcip_math.prod(shape[i + 1:])
 
             yield n
+
+    def flatten_component_to_components(self, i):
+
+        components = []
+        rest = i
+        shape = self.shape()
+
+        for i, _ in enumerate(self.representation()):
+            current = int(math.floor(rest / qcip_math.prod(shape[i + 1:])))
+            components.append(current)
+            rest -= current * qcip_math.prod(shape[i + 1:])
+
+        return components
 
 
 def representation_to_operator(representation, component=None, molecule=None):

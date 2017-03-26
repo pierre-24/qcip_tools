@@ -7,7 +7,7 @@ from tests import float_almost_equals
 from qcip_tools import numerical_differentiation
 
 
-class NumericalDifferentiationTesCase(unittest.TestCase):
+class NumericalDifferentiationTestCase(unittest.TestCase):
 
     coefficients_of_univariate_polynom = [3, 15, -250, 1240, -10450]  # one order of magnitude between each coef.
 

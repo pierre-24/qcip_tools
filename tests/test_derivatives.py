@@ -1,10 +1,11 @@
 import unittest
 import numpy
 
-from qcip_tools import derivatives
+from qcip_tools import derivatives, derivatives_e
+from tests import float_almost_equals, array_almost_equals
 
 
-class DerivativesTesCase(unittest.TestCase):
+class DerivativesTestCase(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -130,6 +131,7 @@ class DerivativesTesCase(unittest.TestCase):
         """Test the behavior of the Tensor object"""
 
         beta_tensor = numpy.array([a * (-1) ** a for a in range(27)]).reshape((3, 3, 3))
+        # Note: a tensor is suppose to be symmetric, which is not the case here
         t = derivatives.Tensor('FDD', components=beta_tensor, frequency='static')
 
         self.assertEqual(t.representation.representation(), 'FDD')
@@ -143,3 +145,134 @@ class DerivativesTesCase(unittest.TestCase):
             derivatives.Tensor('FDD')  # no frequency
         with self.assertRaises(Exception):
             derivatives.Tensor('N')  # no dof
+
+    def test_electrical_derivatives_tensors(self):
+        """Test the objects in derivatives_e.py
+
+        Note: no gamma for the moment
+        """
+
+        # static water, HF/d-aug-cc-pVDZ (Gaussian)
+        dipole = numpy.array([.0, .0, -0.767392])
+
+        d = derivatives_e.ElectricDipole(dipole=dipole)
+        self.assertTrue(float_almost_equals(d.norm(), 0.767392))
+
+        alpha = numpy.array(
+            [[0.777020e1, .0, .0],
+             [.0, 0.895381e1, .0],
+             [.0, .0, 0.832281e1]]
+        )
+
+        a = derivatives_e.PolarisabilityTensor(tensor=alpha)
+
+        self.assertTrue(float_almost_equals(a.isotropic_value(), 0.834894e1))
+        self.assertTrue(float_almost_equals(a.anisotropic_value(), 0.102578e1))
+
+        beta = numpy.array(
+            [[[.0, .0, -0.489173],
+              [.0, .0, .0],
+              [-0.489173, .0, .0]],
+             [[.0, .0, .0],
+              [.0, .0, 9.080568],
+              [.0, 9.080568, .0]],
+             [[-0.489173, .0, .0],
+              [.0, 9.080568, .0],
+              [.0, .0, 4.276656]]]
+        )
+
+        b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
+
+        self.assertTrue(float_almost_equals(b.beta_squared_zzz(), 29.4147))
+        self.assertTrue(float_almost_equals(b.beta_squared_zxx(), 8.5707))
+        self.assertTrue(float_almost_equals(b.beta_hrs(), 6.1632))
+        self.assertTrue(float_almost_equals(b.depolarization_ratio(), 3.4320))
+        self.assertTrue(float_almost_equals(b.octupolar_contribution_squared(), 167.0257))
+        self.assertTrue(float_almost_equals(b.dipolar_contribution_squared(), 99.3520))
+        self.assertTrue(float_almost_equals(b.nonlinear_anisotropy(), 1.2966))
+
+        self.assertTrue(float_almost_equals(b.beta_parallel(dipole), -7.7208))
+        self.assertTrue(float_almost_equals(b.beta_perpendicular(dipole), -2.5736))
+        self.assertTrue(float_almost_equals(b.beta_kerr(dipole), -7.7208))
+
+        self.assertTrue(array_almost_equals(b.beta_vector(), [.0, .0, 12.8681]))
+
+        # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
+        dipole = numpy.array([.0, .0, 0.625899])
+
+        d = derivatives_e.ElectricDipole(dipole=dipole)
+        self.assertTrue(float_almost_equals(d.norm(), 0.625899))
+
+        alpha = numpy.array(
+            [[0.125681e2, .0, -0.485486e-4],
+             [.0, 0.125681e2, .0],
+             [-0.485486e-4, .0, 0.132024e2]]
+        )
+
+        a = derivatives_e.PolarisabilityTensor(tensor=alpha)
+
+        self.assertTrue(float_almost_equals(a.isotropic_value(), 0.127795e2))
+        self.assertTrue(float_almost_equals(a.anisotropic_value(), 0.634350))
+
+        beta = numpy.array(
+            [[[9.258607, -0.012368, -6.097955],
+              [-0.012368, -9.257993, .0],
+              [-6.097955, .0, -0.000073]],
+             [[-0.012368, -9.257993, .0],
+              [-9.257993, 0.012368, -6.097633],
+              [.0, -6.097633, .0]],
+             [[-6.097955, .0, -0.000073],
+              [.0, -6.097633, .0],
+              [-0.000073, .0, -6.483421]]]
+        )
+
+        b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
+
+        self.assertTrue(float_almost_equals(b.beta_squared_zzz(), 64.6483))
+        self.assertTrue(float_almost_equals(b.beta_squared_zxx(), 19.8385))
+        self.assertTrue(float_almost_equals(b.beta_hrs(), 9.1917))
+        self.assertTrue(float_almost_equals(b.depolarization_ratio(), 3.2587))
+        self.assertTrue(float_almost_equals(b.octupolar_contribution_squared(), 398.6438))
+        self.assertTrue(float_almost_equals(b.dipolar_contribution_squared(), 209.3432))
+        self.assertTrue(float_almost_equals(b.nonlinear_anisotropy(), 1.3799))
+
+        self.assertTrue(float_almost_equals(b.beta_parallel(dipole), -11.2074))
+        self.assertTrue(float_almost_equals(b.beta_perpendicular(dipole), -3.7358))
+        self.assertTrue(float_almost_equals(b.beta_kerr(dipole), -11.2074))
+
+        self.assertTrue(array_almost_equals(b.beta_vector(), [.0, .0, -18.6790]))
+
+        # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
+        alpha = numpy.array(
+            [[0.159960e2, .0, .0],
+             [.0, 0.159960e2, .0],
+             [.0, .0, 0.159960e2]]
+        )
+
+        a = derivatives_e.PolarisabilityTensor(tensor=alpha)
+
+        self.assertTrue(float_almost_equals(a.isotropic_value(), 0.159960e2))
+        self.assertTrue(float_almost_equals(a.anisotropic_value(), .0))
+
+        beta = numpy.array(
+            [[[.0, .0, .0],
+              [.0, .0, -11.757505],
+              [.0, -11.757505, .0]],
+             [[.0, .0, -11.757505],
+              [.0, .0, .0],
+              [-11.757505, .0, .0]],
+             [[.0, -11.757505, .0],
+              [-11.757505, .0, .0],
+              [.0, .0, .0]]]
+        )
+
+        b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
+
+        self.assertTrue(float_almost_equals(b.beta_squared_zzz(), 47.3962))
+        self.assertTrue(float_almost_equals(b.beta_squared_zxx(), 31.5975))
+        self.assertTrue(float_almost_equals(b.beta_hrs(), 8.8878))
+        self.assertTrue(float_almost_equals(b.depolarization_ratio(), 1.5))
+        self.assertTrue(float_almost_equals(b.octupolar_contribution_squared(), 829.4336))
+        self.assertTrue(float_almost_equals(b.dipolar_contribution_squared(), .0))
+
+        # since CH4 has no dipole moment, the rest of the calculations failed ;)

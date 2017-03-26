@@ -6,7 +6,7 @@ from tests import array_almost_equals
 from qcip_tools import math as qcip_math
 
 
-class MathTesCase(unittest.TestCase):
+class MathTestCase(unittest.TestCase):
 
     def setUp(self):
         pass

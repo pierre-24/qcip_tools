@@ -6,7 +6,7 @@ import math
 from qcip_tools import datafile
 
 
-class DataFileTesCase(unittest.TestCase):
+class DataFileTestCase(unittest.TestCase):
 
     def setUp(self):
         self.temporary_file = tempfile.mkstemp()[1]
