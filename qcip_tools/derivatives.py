@@ -310,7 +310,7 @@ class Tensor:
         self.name = name
         self.components = numpy.zeros(self.representation.shape()) if components is None else components
 
-    def to_string(self, threshold=1e-5, columns_per_line=6):
+    def to_string(self, threshold=1e-5, columns_per_line=6, **kwargs):
         """Print the tensor in a more or less textual version.
 
         :param threshold: show 0 instead of the value if lower than threshold

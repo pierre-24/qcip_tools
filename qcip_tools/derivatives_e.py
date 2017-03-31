@@ -83,7 +83,7 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
 
         super().__init__('F' + representation, frequency=frequency, components=tensor)
 
-    def to_string(self, threshold=1e-5, columns_per_line=6):
+    def to_string(self, threshold=1e-5, **kwargs):
         """Rewritten to get a better output with this kind of tensor
         """
 
@@ -138,6 +138,18 @@ class ElectricDipole(BaseElectricalDerivativeTensor):
         """
         return numpy.linalg.norm(self.components)
 
+    def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
+        """Rewritten to add information
+        """
+
+        r = super().to_string(threshold=threshold, **kwargs)
+
+        if not disable_extras:
+            rx = r.splitlines()
+            r = rx[0] + '         norm\n' + rx[1] + '{:.5e}'.format(self.norm())
+
+        return r
+
 
 class PolarisabilityTensor(BaseElectricalDerivativeTensor):
     """
@@ -177,6 +189,19 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
             return math.sqrt(.5 * tmp)
         except:
             return 0.0
+
+    def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
+        """Rewritten to add information
+        """
+
+        r = super().to_string(threshold=threshold, **kwargs)
+
+        if not disable_extras:
+            r += '\n'
+            r += 'iso    {: .5e}\n'.format(self.isotropic_value())
+            r += 'aniso  {: .5e}\n'.format(self.anisotropic_value())
+
+        return r
 
 
 class NotSHG(Exception):
@@ -528,6 +553,45 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return 3 / 2 * (self.beta_parallel(dipole) - self.beta_perpendicular(dipole))
 
+    def to_string(self, threshold=1e-5, disable_extras=False, dipole=None, **kwargs):
+        """Rewritten to add information
+        """
+
+        r = super().to_string(threshold=threshold, **kwargs)
+
+        if not disable_extras:
+            r += '\n'
+            beta_vector = self.beta_vector()
+            r += '||B||     {: .5e}\n'.format(numpy.linalg.norm(beta_vector))
+
+            if dipole is not None:
+                r += 'B_||      {: .5e}\n'.format(self.beta_parallel(dipole))
+                r += 'theta     {: .3f}°\n'.format(numpy.rad2deg(math.acos(
+                    numpy.dot(dipole, beta_vector) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(beta_vector)))))
+
+                if sum(self.input_fields) == 0 or self.frequency == .0 or self.frequency == 'static':  # OEP
+                    r += 'beta^K    {: .5e}\n'.format(self.beta_kerr(dipole))
+
+            if sum(self.input_fields) == 2 or self.frequency == .0 or self.frequency == 'static':  # SHG
+                B2zzz = self.beta_squared_zzz()
+                B2zxx = self.beta_squared_zxx()
+                BJ1 = self.dipolar_contribution()
+                BJ3 = self.octupolar_contribution()
+
+                r += '<B2zzz>   {: .5e}\n'.format(B2zzz)
+                r += '<B2zxx>   {: .5e}\n'.format(B2zxx)
+                r += 'beta_HRS  {: .5e}\n'.format(math.sqrt(B2zxx + B2zzz))
+                r += 'DR        {: .3f}\n'.format(B2zzz / B2zxx)
+                r += 'B|J=1|    {: .5e}\n'.format(BJ1)
+                r += 'B|J=3|    {: .5e}\n'.format(BJ3)
+
+                try:
+                    r += 'rho       {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
+                except ValueError:
+                    pass
+
+        return r
+
 
 class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
     """
@@ -586,3 +650,20 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
         return 3 / 2 * (self.gamma_parallel() - self.gamma_perpendicular())
+
+    def to_string(self, threshold=1e-5, disable_extras=False, dipole=None, **kwargs):
+        """Rewritten to add information
+        """
+
+        r = super().to_string(threshold=threshold, **kwargs)
+
+        if not disable_extras:
+            r += '\n'
+            para = self.gamma_parallel()
+            perp = self.gamma_perpendicular()
+
+            r += 'gamma_||  {: .5e}\n'.format(para)
+            r += 'gamma_per {: .5e}\n'.format(perp)
+            r += 'r         {: .3f}\n'.format(para / perp)
+
+        return r
