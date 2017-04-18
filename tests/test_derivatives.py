@@ -1,7 +1,8 @@
+import random
 import unittest
-import numpy
 
-from qcip_tools import derivatives, derivatives_e
+import numpy
+from qcip_tools import derivatives, derivatives_e, math as qcip_math
 from tests import float_almost_equals, array_almost_equals
 
 
@@ -149,8 +150,19 @@ class DerivativesTestCase(unittest.TestCase):
     def test_electrical_derivatives_tensors(self):
         """Test the objects in derivatives_e.py
 
-        Note: no gamma for the moment
+        Also test that the properties that are invariant under rotation remain invariant !
+
+        Note: no gamma for the moment!
         """
+
+        angles_set = [
+            (0, 0, 0),  # first test without any rotation
+            (180, 60, -60),
+            (15, -15, 25),
+            (450, -75, 75),
+            # and the last one, to be certain
+            (random.randrange(-360, 360), random.randrange(-360, 360), random.randrange(-360, 360))
+        ]
 
         # static water, HF/d-aug-cc-pVDZ (Gaussian)
         dipole = numpy.array([.0, .0, -0.767392])
@@ -164,10 +176,12 @@ class DerivativesTestCase(unittest.TestCase):
              [.0, .0, 0.832281e1]]
         )
 
-        a = derivatives_e.PolarisabilityTensor(tensor=alpha)
+        for angles in angles_set:  # invariants remain invariants under rotation
+            new_alpha = qcip_math.tensor_rotate(alpha, *angles)
+            na = derivatives_e.PolarisabilityTensor(tensor=new_alpha)
 
-        self.assertTrue(float_almost_equals(a.isotropic_value(), 0.834894e1))
-        self.assertTrue(float_almost_equals(a.anisotropic_value(), 0.102578e1))
+            self.assertTrue(float_almost_equals(na.isotropic_value(), 0.834894e1))
+            self.assertTrue(float_almost_equals(na.anisotropic_value(), 0.102578e1))
 
         beta = numpy.array(
             [[[.0, .0, -0.489173],
@@ -183,19 +197,24 @@ class DerivativesTestCase(unittest.TestCase):
 
         b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
 
-        self.assertTrue(float_almost_equals(b.beta_squared_zzz(), 29.4147))
-        self.assertTrue(float_almost_equals(b.beta_squared_zxx(), 8.5707))
-        self.assertTrue(float_almost_equals(b.beta_hrs(), 6.1632))
-        self.assertTrue(float_almost_equals(b.depolarization_ratio(), 3.4320))
-        self.assertTrue(float_almost_equals(b.octupolar_contribution_squared(), 167.0257))
-        self.assertTrue(float_almost_equals(b.dipolar_contribution_squared(), 99.3520))
-        self.assertTrue(float_almost_equals(b.nonlinear_anisotropy(), 1.2966))
-
         self.assertTrue(float_almost_equals(b.beta_parallel(dipole), -7.7208))
         self.assertTrue(float_almost_equals(b.beta_perpendicular(dipole), -2.5736))
         self.assertTrue(float_almost_equals(b.beta_kerr(dipole), -7.7208))
-
         self.assertTrue(array_almost_equals(b.beta_vector(), [.0, .0, 12.8681]))
+
+        # NOTE: above properties are also invariant to rotation, but in a less funny way.
+
+        for angles in angles_set:
+            new_beta = qcip_math.tensor_rotate(beta, *angles)
+            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
+
+            self.assertTrue(float_almost_equals(nb.beta_squared_zzz(), 29.4147))
+            self.assertTrue(float_almost_equals(nb.beta_squared_zxx(), 8.5707))
+            self.assertTrue(float_almost_equals(nb.beta_hrs(), 6.1632))
+            self.assertTrue(float_almost_equals(nb.depolarization_ratio(), 3.4320))
+            self.assertTrue(float_almost_equals(nb.octupolar_contribution_squared(), 167.0257))
+            self.assertTrue(float_almost_equals(nb.dipolar_contribution_squared(), 99.3520))
+            self.assertTrue(float_almost_equals(nb.nonlinear_anisotropy(), 1.2966))
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
         dipole = numpy.array([.0, .0, 0.625899])
@@ -209,10 +228,12 @@ class DerivativesTestCase(unittest.TestCase):
              [-0.485486e-4, .0, 0.132024e2]]
         )
 
-        a = derivatives_e.PolarisabilityTensor(tensor=alpha)
+        for angles in angles_set:
+            new_alpha = qcip_math.tensor_rotate(alpha, *angles)
+            na = derivatives_e.PolarisabilityTensor(tensor=new_alpha)
 
-        self.assertTrue(float_almost_equals(a.isotropic_value(), 0.127795e2))
-        self.assertTrue(float_almost_equals(a.anisotropic_value(), 0.634350))
+            self.assertTrue(float_almost_equals(na.isotropic_value(), 0.127795e2))
+            self.assertTrue(float_almost_equals(na.anisotropic_value(), 0.634350))
 
         beta = numpy.array(
             [[[9.258607, -0.012368, -6.097955],
@@ -228,19 +249,22 @@ class DerivativesTestCase(unittest.TestCase):
 
         b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
 
-        self.assertTrue(float_almost_equals(b.beta_squared_zzz(), 64.6483))
-        self.assertTrue(float_almost_equals(b.beta_squared_zxx(), 19.8385))
-        self.assertTrue(float_almost_equals(b.beta_hrs(), 9.1917))
-        self.assertTrue(float_almost_equals(b.depolarization_ratio(), 3.2587))
-        self.assertTrue(float_almost_equals(b.octupolar_contribution_squared(), 398.6438))
-        self.assertTrue(float_almost_equals(b.dipolar_contribution_squared(), 209.3432))
-        self.assertTrue(float_almost_equals(b.nonlinear_anisotropy(), 1.3799))
-
         self.assertTrue(float_almost_equals(b.beta_parallel(dipole), -11.2074))
         self.assertTrue(float_almost_equals(b.beta_perpendicular(dipole), -3.7358))
         self.assertTrue(float_almost_equals(b.beta_kerr(dipole), -11.2074))
-
         self.assertTrue(array_almost_equals(b.beta_vector(), [.0, .0, -18.6790]))
+
+        for angles in angles_set:
+            new_beta = qcip_math.tensor_rotate(beta, *angles)
+            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
+
+            self.assertTrue(float_almost_equals(nb.beta_squared_zzz(), 64.6483))
+            self.assertTrue(float_almost_equals(nb.beta_squared_zxx(), 19.8385))
+            self.assertTrue(float_almost_equals(nb.beta_hrs(), 9.1917))
+            self.assertTrue(float_almost_equals(nb.depolarization_ratio(), 3.2587))
+            self.assertTrue(float_almost_equals(nb.octupolar_contribution_squared(), 398.6438))
+            self.assertTrue(float_almost_equals(nb.dipolar_contribution_squared(), 209.3432))
+            self.assertTrue(float_almost_equals(nb.nonlinear_anisotropy(), 1.3799))
 
         # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
         alpha = numpy.array(
@@ -249,10 +273,12 @@ class DerivativesTestCase(unittest.TestCase):
              [.0, .0, 0.159960e2]]
         )
 
-        a = derivatives_e.PolarisabilityTensor(tensor=alpha)
+        for angles in angles_set:
+            new_alpha = qcip_math.tensor_rotate(alpha, *angles)
+            na = derivatives_e.PolarisabilityTensor(tensor=new_alpha)
 
-        self.assertTrue(float_almost_equals(a.isotropic_value(), 0.159960e2))
-        self.assertTrue(float_almost_equals(a.anisotropic_value(), .0))
+            self.assertTrue(float_almost_equals(na.isotropic_value(), 0.159960e2))
+            self.assertTrue(float_almost_equals(na.anisotropic_value(), .0))
 
         beta = numpy.array(
             [[[.0, .0, .0],
@@ -266,13 +292,63 @@ class DerivativesTestCase(unittest.TestCase):
               [.0, .0, .0]]]
         )
 
-        b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
+        for angles in angles_set:
+            new_beta = qcip_math.tensor_rotate(beta, *angles)
+            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
 
-        self.assertTrue(float_almost_equals(b.beta_squared_zzz(), 47.3962))
-        self.assertTrue(float_almost_equals(b.beta_squared_zxx(), 31.5975))
-        self.assertTrue(float_almost_equals(b.beta_hrs(), 8.8878))
-        self.assertTrue(float_almost_equals(b.depolarization_ratio(), 1.5))
-        self.assertTrue(float_almost_equals(b.octupolar_contribution_squared(), 829.4336))
-        self.assertTrue(float_almost_equals(b.dipolar_contribution_squared(), .0))
+            self.assertTrue(float_almost_equals(nb.beta_squared_zzz(), 47.3962))
+            self.assertTrue(float_almost_equals(nb.beta_squared_zxx(), 31.5975))
+            self.assertTrue(float_almost_equals(nb.beta_hrs(), 8.8878))
+            self.assertTrue(float_almost_equals(nb.depolarization_ratio(), 1.5))
+            self.assertTrue(float_almost_equals(nb.octupolar_contribution_squared(), 829.4336))
+            self.assertTrue(float_almost_equals(nb.dipolar_contribution_squared(), .0))
 
-        # since CH4 has no dipole moment, the rest of the calculations failed ;)
+        # ... since CH4 has no dipole moment, the rest of the properties failed ;)
+
+        # static CH2Cl2, CCS/d-aug-cc-pVDZ (dalton)
+        gamma = numpy.array(
+            [[[[-4.959904e+03, 4.730379e-03, 0.000000e+00],
+               [4.730379e-03, -1.790611e+03, -1.524347e-03],
+               [0.000000e+00, -1.524347e-03, -2.052200e+03]],
+              [[4.730379e-03, -1.790611e+03, -1.524347e-03],
+               [-1.790611e+03, 2.387447e-03, 0.000000e+00],
+               [-1.524347e-03, 0.000000e+00, 3.412659e-03]],
+              [[0.000000e+00, -1.524347e-03, -2.052200e+03],
+               [-1.524347e-03, 0.000000e+00, 3.412659e-03],
+               [-2.052200e+03, 3.412659e-03, 0.000000e+00]]],
+             [[[4.730379e-03, -1.790611e+03, -1.524347e-03],
+               [-1.790611e+03, 2.387447e-03, 0.000000e+00],
+               [-1.524347e-03, 0.000000e+00, 3.412659e-03]],
+              [[-1.790611e+03, 2.387447e-03, 0.000000e+00],
+               [2.387447e-03, -5.193209e+03, -6.751678e-04],
+               [0.000000e+00, -6.751678e-04, -2.207921e+03]],
+              [[-1.524347e-03, 0.000000e+00, 3.412659e-03],
+               [0.000000e+00, -6.751678e-04, -2.207921e+03],
+               [3.412659e-03, -2.207921e+03, -2.799551e-03]]],
+             [[[0.000000e+00, -1.524347e-03, -2.052200e+03],
+               [-1.524347e-03, 0.000000e+00, 3.412659e-03],
+               [-2.052200e+03, 3.412659e-03, 0.000000e+00]],
+              [[-1.524347e-03, 0.000000e+00, 3.412659e-03],
+               [0.000000e+00, -6.751678e-04, -2.207921e+03],
+               [3.412659e-03, -2.207921e+03, -2.799551e-03]],
+              [[-2.052200e+03, 3.412659e-03, 0.000000e+00],
+               [3.412659e-03, -2.207921e+03, -2.799551e-03],
+               [0.000000e+00, -2.799551e-03, -9.412690e+03]]]]
+        )
+
+        orig_g = derivatives_e.SecondHyperpolarizabilityTensor(tensor=gamma)
+
+        print(orig_g)
+
+        for angles in angles_set:
+            new_gamma = qcip_math.tensor_rotate(gamma, *angles)
+            ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
+
+            self.assertTrue(float_almost_equals(ng.gamma_parallel(), orig_g.gamma_parallel()))
+            self.assertTrue(float_almost_equals(ng.gamma_perpendicular(), orig_g.gamma_perpendicular()))
+            self.assertTrue(float_almost_equals(ng.gamma_kerr(), orig_g.gamma_kerr()))
+
+            self.assertTrue(float_almost_equals(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz()))
+            self.assertTrue(float_almost_equals(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx()))
+            self.assertTrue(float_almost_equals(ng.gamma_ths(), orig_g.gamma_ths()))
+            self.assertTrue(float_almost_equals(ng.depolarization_ratio(), orig_g.depolarization_ratio()))

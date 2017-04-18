@@ -15,7 +15,7 @@ class MathTestCase(unittest.TestCase):
         pass
 
     def test_vector_manipulation(self):
-        """Test the behavior of rodrigues_rotation() normalize(), distance(), angle(), torsion_angle() and BLA()"""
+        """Test the behavior of vector manipularion functions"""
 
         # test basic stuffs:
         self.assertTrue(array_almost_equals(qcip_math.rodrigues_rotation([1, 0, 0], [0, 0, 1], 90), [0, 1, 0]))
@@ -25,6 +25,29 @@ class MathTestCase(unittest.TestCase):
         self.assertEqual(qcip_math.distance([-1, 0, 0], [.5, 0, 0]), 1.5)
         self.assertEqual(qcip_math.angle([2, 0, 0], [0, 0, 0], [0, 1, 0]), 90.0)
         self.assertEqual(qcip_math.torsion_angle([2, 0, 0], [0, 0, 0], [0, 1, 0], [-2, 1, 0]), -180.0)
+
+        # test euler angles
+        rot = qcip_math.euler_rotation_matrix(0, 0, 0)  # identity matrix
+        self.assertTrue(numpy.all(rot == numpy.identity(3)))
+        self.assertTrue(array_almost_equals(rot.dot([1, 0, 0]), [1, 0, 0]))
+        self.assertTrue(array_almost_equals(rot.dot([1, 1, 0]), [1, 1, 0]))
+        self.assertTrue(array_almost_equals(rot.dot([1, 2, 1]), [1, 2, 1]))
+
+        rot = qcip_math.euler_rotation_matrix(360, 360, 360)  # identity matrix as well
+        self.assertTrue(array_almost_equals(rot.dot([1, 0, 0]), [1, 0, 0]))
+        self.assertTrue(array_almost_equals(rot.dot([1, 1, 0]), [1, 1, 0]))
+        self.assertTrue(array_almost_equals(rot.dot([1, 2, 1]), [1, 2, 1]))
+
+        rot = qcip_math.euler_rotation_matrix(180, 0, 0)  # rotation around z axis
+        self.assertTrue(array_almost_equals(rot.dot([1, 0, 0]), [-1, 0, 0]))
+        self.assertTrue(array_almost_equals(rot.dot([1, 1, 0]), [-1, -1, 0]))
+
+        rot = qcip_math.euler_rotation_matrix(180, 180, 0)  # rotation around z axis, followed by y'
+        self.assertTrue(array_almost_equals(rot.dot([1, 0, 0]), [1, 0, 0]))
+        self.assertTrue(array_almost_equals(rot.dot([1, 1, 1]), [1, -1, -1]))
+
+    def test_bla(self):
+        """Test the BLA definition"""
 
         # test BLA:
         position_list_1 = [(0, 0, 0), (1, 0, 0), (1, 1, 0), (2, 1, 0)]

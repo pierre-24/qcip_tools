@@ -7,7 +7,7 @@ from qcip_tools import derivatives
 field_to_out = {-1: '-w', 0: '0', 1: 'w'}
 in_to_field = {'w': 1, '-w': -1, '0': 0}
 
-#: Correspondance between a name and a representation
+#: Correspondence between a name and a representation
 REPRESENTATIONS = {
     'mu': 'F',
     'alpha': 'FF',
@@ -248,26 +248,15 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         tmp = 0
 
         for i in derivatives.COORDINATES_LIST:
-
-            tmp += 1 / 35 * self.components[i, i, i] ** 2
-
             for j in derivatives.COORDINATES_LIST:
-                if i != j:
-                    tmp += 4 / 105 * self.components[i, i, i] * self.components[i, j, j]
-                    tmp -= 2 / 35 * self.components[i, i, i] * self.components[j, j, i]
-                    tmp += 8 / 105 * self.components[i, i, j] ** 2
-                    tmp += 3 / 35 * self.components[i, j, j] ** 2
-                    tmp -= 2 / 35 * self.components[i, i, j] * self.components[j, i, i]
-
                     for k in derivatives.COORDINATES_LIST:
-                        if i != k and j != k:
-                            tmp += 1 / 35 * self.components[i, j, j] * self.components[i, k, k]
-                            tmp -= 2 / 105 * self.components[i, i, k] * self.components[j, j, k]
-                            tmp -= 2 / 105 * self.components[i, i, j] * self.components[j, k, k]
-                            tmp += 2 / 35 * self.components[i, j, k] ** 2
-                            tmp -= 2 / 105 * self.components[i, j, k] * self.components[j, i, k]
+                        tmp += -2 * self.components[i, i, j] * self.components[j, k, k]
+                        tmp += -2 * self.components[i, i, j] * self.components[k, j, k]
+                        tmp += 3 * self.components[i, j, j] * self.components[i, k, k]
+                        tmp += 6 * self.components[i, j, k] ** 2
+                        tmp += -2 * self.components[i, j, k] * self.components[j, i, k]
 
-        return tmp
+        return 1 / 105 * tmp
 
     def beta_squared_zzz(self):
         """Compute :math:`\\langle\\beta^2_{ZZZ}\\rangle`:
@@ -297,25 +286,15 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         tmp = 0
 
         for i in derivatives.COORDINATES_LIST:
-
-            tmp += 1 / 7 * self.components[i, i, i] ** 2
-
             for j in derivatives.COORDINATES_LIST:
-                if i != j:
-                    tmp += 4 / 35 * self.components[i, i, j] ** 2
-                    tmp += 2 / 35 * self.components[i, i, i] * self.components[i, j, j]
-                    tmp += 4 / 35 * self.components[j, i, i] * self.components[i, i, j]
-                    tmp += 4 / 35 * self.components[i, i, i] * self.components[j, j, i]
-                    tmp += 1 / 35 * self.components[j, i, i] ** 2
-
                     for k in derivatives.COORDINATES_LIST:
-                        if i != k and j != k:
-                            tmp += 4 / 105 * self.components[i, i, j] * self.components[j, k, k]
-                            tmp += 1 / 105 * self.components[j, i, i] * self.components[j, k, k]
-                            tmp += 4 / 105 * self.components[i, i, j] * self.components[k, k, j]
-                            tmp += 2 / 105 * self.components[i, j, k] ** 2
-                            tmp += 4 / 105 * self.components[i, j, k] * self.components[j, i, k]
-        return tmp
+                        tmp += 4 * self.components[i, i, j] * self.components[j, k, k]
+                        tmp += 4 * self.components[i, i, j] * self.components[k, j, k]
+                        tmp += self.components[i, j, j] * self.components[i, k, k]
+                        tmp += 2 * self.components[i, j, k] ** 2
+                        tmp += 4 * self.components[i, j, k] * self.components[j, i, k]
+
+        return 1 / 105 * tmp
 
     def beta_hrs(self, assume_kleinman=False):
         """Hyper-Rayleigh scattering quantity:
@@ -324,7 +303,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
             \\beta_{HRS}=\\left\\{\\begin{array}{ll}
                 |\\beta_{J=1}|\,\\sqrt{\\frac{2}{21}\\rho^2+\\frac{2}{9}} & \\text{if Kleinman's conditions} \\\\
-                \\sqrt{\\langle\\beta^2_{ZZZ}\\rangle + \\langle\\beta^2_{XZZ}\\rangle} & \\text{otherwise}
+                \\sqrt{\\langle\\beta^2_{ZZZ}\\rangle + \\langle\\beta^2_{ZXX}\\rangle} & \\text{otherwise}
             \\end{array}\\right.
 
         :param assume_kleinman:
@@ -593,6 +572,10 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         return r
 
 
+class NotTHG(Exception):
+    """Raised when trying to compute a quantity from THG experiment on a tensor which is not"""
+
+
 class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
     """
     Second hyperpolarisability  tensor, commonly written
@@ -651,6 +634,90 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         """
         return 3 / 2 * (self.gamma_parallel() - self.gamma_perpendicular())
 
+    def gamma_squared_zzzz(self):
+        """Compute :math:`\\langle\\gamma^2_{ZZZZ}\\rangle`.
+
+        :rtype: float
+        """
+
+        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotTHG(self.input_fields)
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += 2 * self.components[i, j, k, l] ** 2
+                            tmp += 12 * self.components[i, i, j, k] * self.components[j, l, l, k]
+                            tmp += 6 * self.components[i, i, j, k] * self.components[l, j, l, k]
+                            tmp += 6 * self.components[i, j, k, l] * self.components[j, i, k, l]
+                            tmp += 3 * self.components[i, j, j, k] * self.components[i, k, l, l]
+                            tmp += 3 * self.components[i, i, j, j] * self.components[k, l, l, k]
+                            tmp += 3 * self.components[i, j, j, k] * self.components[k, i, l, l]
+
+        return 1 / 315 * tmp
+
+    def gamma_squared_zxxx(self):
+        """Compute :math:`\\langle\\gamma^2_{ZXXX}\\rangle`.
+
+        :rtype: float
+        """
+
+        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotTHG(self.input_fields)
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += 16 * self.components[i, j, k, l] ** 2
+                            tmp += 24 * self.components[i, j, j, k] * self.components[i, k, l, l]
+                            tmp += -12 * self.components[i, i, j, k] * self.components[j, l, l, k]
+                            tmp += -6 * self.components[i, i, j, k] * self.components[l, j, l, k]
+                            tmp += -6 * self.components[i, j, k, l] * self.components[j, i, k, l]
+                            tmp += -3 * self.components[i, i, j, j] * self.components[k, l, l, k]
+                            tmp += -3 * self.components[i, j, j, k] * self.components[k, i, l, l]
+
+        return 1 / 630 * tmp
+
+    def gamma_ths(self):
+        """Compute :math:`\\gamma_{THS}`, the quantity from a third harmonic scattering experiment.
+
+        .. math::
+
+            \\gamma_{THS} = \\sqrt{\\langle\\gamma^2_{ZZZZ}\\rangle + \\langle\\gamma^2_{ZXXX}\\rangle}
+
+        :rtype: float
+        """
+
+        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotTHG(self.input_fields)
+
+        return math.sqrt(self.gamma_squared_zzzz() + self.gamma_squared_zxxx())
+
+    def depolarization_ratio(self):
+        """Compute the depolarization ratio:
+
+        .. math::
+
+            DR = \\frac{\\langle\\gamma^2_{ZZZZ}\\rangle}{\\langle\\gamma^2_{ZXXX}\\rangle}
+
+        :rtype: float
+        """
+
+        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotTHG(self.input_fields)
+
+        return self.gamma_squared_zzzz() / self.gamma_squared_zxxx()
+
     def to_string(self, threshold=1e-5, disable_extras=False, dipole=None, **kwargs):
         """Rewritten to add information
         """
@@ -661,6 +728,13 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
             r += '\n'
             para = self.gamma_parallel()
             perp = self.gamma_perpendicular()
+            G2zzzz = self.gamma_squared_zzzz()
+            G2zxxx = self.gamma_squared_zxxx()
+
+            r += '<G2zzzz>  {: .5e}\n'.format(G2zzzz)
+            r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
+            r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
+            r += 'DR        {: .3f}\n'.format(G2zzzz / G2zxxx)
 
             r += 'gamma_||  {: .5e}\n'.format(para)
             r += 'gamma_per {: .5e}\n'.format(perp)

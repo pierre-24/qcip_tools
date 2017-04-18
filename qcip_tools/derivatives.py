@@ -310,13 +310,15 @@ class Tensor:
         self.name = name
         self.components = numpy.zeros(self.representation.shape()) if components is None else components
 
-    def to_string(self, threshold=1e-5, columns_per_line=6, **kwargs):
+    def to_string(self, threshold=1e-5, columns_per_line=6, molecule=None, **kwargs):
         """Print the tensor in a more or less textual version.
 
         :param threshold: show 0 instead of the value if lower than threshold
         :type threshold: float
         :param columns_per_line: number of columns per "line" of the tensor
         :type columns_per_line: int
+        :param molecule: use molecule to gives the atom insteaad of Gxx
+        :type molecule: qcip_tools.molecule.Molecule
         :return: representation
         :rtype: str
         """
@@ -338,7 +340,7 @@ class Tensor:
             for index in range(0, columns_per_line):
                 if (offset + index) >= shape[-1]:
                     break
-                s += '{:8}'.format(representation_to_operator(representation[-1], offset + index)) + ' ' * 6
+                s += '{:8}'.format(representation_to_operator(representation[-1], offset + index, molecule)) + ' ' * 6
 
             s += '\n'
 
@@ -354,11 +356,11 @@ class Tensor:
                 for index, c in enumerate(components):
                     if index < len(components) - 1:
                         if numpy.all(numpy.array(components[index + 1:]) == 0):
-                            s += '{:8}'.format(representation_to_operator(representation[index], c))
+                            s += '{:8}'.format(representation_to_operator(representation[index], c, molecule))
                         else:
                             s += '        '
                     else:
-                        s += '{:8}'.format(representation_to_operator(representation[index], c))
+                        s += '{:8}'.format(representation_to_operator(representation[index], c, molecule))
 
                 s += ' ' * 1
 
