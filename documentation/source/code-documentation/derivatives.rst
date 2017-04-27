@@ -48,7 +48,7 @@ Two kind of derivatives are considered for the moment:
 
   .. math::
 
-      V(\mathbf{q}) = V_0  +  \sum_i F_i\mathbf{q}_i + \frac{1}{2!}\,\sum_{ij}H_{ij}\mathbf{q}_i\mathbf{q}_j +  + \frac{1}{3!}\,\sum_{ij}F_{ijk}\mathbf{q}_i\mathbf{q}_j\mathbf{q}_k+ \ldots
+      V(\mathbf{q}) = V_0  +  \sum_i F_i\mathbf{q}_i + \frac{1}{2!}\,\sum_{ij}H_{ij}\mathbf{q}_i\mathbf{q}_j +  \frac{1}{3!}\,\sum_{ij}F_{ijk}\mathbf{q}_i\mathbf{q}_j\mathbf{q}_k+ \ldots
 
   where :math:`F_i=\left.\frac{\partial V}{\partial\mathbf{q}_i}\right|_{\mathbf{q}=0}` is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), :math:`H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{q}_i\mathbf{q}_j}\right|_{\mathbf{q}=0}` is the hessian (force constant matrix) and :math:`F_{ijk}` is the cubic force constants matrix (and so on).
 

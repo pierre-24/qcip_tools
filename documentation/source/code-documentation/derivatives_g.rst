@@ -11,7 +11,7 @@ The displacement around the equilibrium position, :math:`\mathbf{x}_i=\mathbf{x}
 
   .. math::
 
-      V(\mathbf{x}) = V_0  +  \sum_i F_i\mathbf{x}_i + \frac{1}{2!}\,\sum_{ij}H_{ij}\mathbf{x}_i\mathbf{x}_j +  + \frac{1}{3!}\,\sum_{ij}F_{ijk}\mathbf{x}_i\mathbf{x}_j\mathbf{x}_k+ \ldots
+      V(\mathbf{x}) = V_0  +  \sum_i F_i\mathbf{x}_i + \frac{1}{2!}\,\sum_{ij}H_{ij}\mathbf{x}_i\mathbf{x}_j + \frac{1}{3!}\,\sum_{ij}F_{ijk}\mathbf{x}_i\mathbf{x}_j\mathbf{x}_k+ \ldots
 
 where :math:`\mathbf{x}\in\mathbf{R}^{3N}`, :math:`F_i=\left.\frac{\partial V}{\partial\mathbf{x}_i}\right|_{\mathbf{x}=0}` is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), :math:`H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{x}_i\mathbf{x}_j}\right|_{\mathbf{x}=0}` is the hessian (force constant matrix) and :math:`F_{ijk}` is the cubic force constants matrix (and so on).
 The sums runs over the :math:`3N` degrees of freedom of :math:`N` atoms.
@@ -34,19 +34,19 @@ or, in a matrix form,
 
 .. math::
 
-    \mathbf{M}\,\overset{\cdot\cdot}{\mathbf{X}} + \mathbf{H}\,\mathbf{X} = 0.
+    \mathbf{m}\,\overset{\cdot\cdot}{\mathbf{X}} + \mathbf{H}\,\mathbf{X} = 0.
 
 One can assume, in the case of small displacements, a linear harmonic solution, :math:`\mathbf{X}=\mathbf{X}_0\,\cos{(\mathbf{\omega}\,t)}`, so that the previous equation reduce to
 
 .. math::
 
-    \mathbf{H}\,\mathbf{X}_0 = \mathbf{\omega}^2\,\mathbf{m}\,\mathbf{X}_0.
+    \mathbf{H}\,\mathbf{X}_0 = \mathbf{m}\,\mathbf{\omega}^2\,\mathbf{X}_0.
 
 This is reduced to an eigenvalue problem by setting mass-weighted coordinates, :math:`\mathbf{Q}=\mathbf{m}^{\frac{1}{2}}\,\mathbf{X}_0`, which gives
 
 .. math::
 
-    (\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{\frac{1}{2}})\,\mathbf{Q} = \mathbf{\omega}^2\,\mathbf{Q}.
+    (\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}})\,\mathbf{Q} = \mathbf{\omega}^2\,\mathbf{Q}.
 
 The :math:`\mathbf{Q}`'s are therefore eigenvectors of the mass-weigted hessian, also called normal modes (which form a complete and orthogonal basis), while the :math:`\mathbf{\omega}`'s are the eigenvalues.
 There is 6 (or 5, if the system is linear) zeros eigenvalues for the translation and rotation modes, while the other normal modes describe the vibrations.
