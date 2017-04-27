@@ -133,6 +133,7 @@ class MoleculeTestCase(unittest.TestCase):
         ]
 
         m1 = qcip_molecule.Molecule(atom_list=atom_list)
+        self.assertTrue(m1.linear())
 
         # test translate
         m1.translate([1, 0, 0])
@@ -153,6 +154,8 @@ class MoleculeTestCase(unittest.TestCase):
         m2 = qcip_molecule.Molecule(atom_list=atom_list)
         m2.translate_to_center_of_mass()  # X has the largest moment of inertia, then Z, then Y
         m2_copy = copy.deepcopy(m2)
+
+        self.assertFalse(m2.linear())
 
         # set to inertia axes
         m2.set_to_inertia_axes()
@@ -187,6 +190,7 @@ class MoleculeTestCase(unittest.TestCase):
         ]
 
         m = qcip_molecule.Molecule(atom_list=atom_list)
+        self.assertFalse(m.linear())
 
         # starting with 2, excluding 3 and 1, should get 2, 4 and 5
         self.assertEqual(m.list_of_atoms(2, exclude_atoms=[1, 3]), [2, 4, 5])

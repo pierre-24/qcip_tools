@@ -526,6 +526,21 @@ class Molecule:
 
         return rstr
 
+    def linear(self, threshold=1e-5):
+        """Compute if the molecule is linear or not. A molecule is linear if :math:`I_\\alpha \approx 0` and
+        `I_\\beta \approx I_\\gamma`, if :math:`I_\\alpha < I_\\beta \approx I_\\gamma`.
+
+        :param threshold: threshold for the moment of inertia
+        :type threshold: float
+        :rtype: bool
+        """
+
+        inertia_moments, _ = numpy.linalg.eigh(self.moments_of_inertia())
+        if math.fabs(inertia_moments[0]) < threshold and math.fabs(inertia_moments[1] - inertia_moments[2]) < threshold:
+            return True
+
+        return False
+
 
 class GroupError(Exception):
     pass

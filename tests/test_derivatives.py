@@ -1,8 +1,10 @@
 import random
 import unittest
+import math
 
 import numpy
-from qcip_tools import derivatives, derivatives_e, math as qcip_math
+from qcip_tools import derivatives, derivatives_e, math as qcip_math, derivatives_g, atom as qcip_atom, \
+    molecule as qcip_molecule
 from tests import float_almost_equals, array_almost_equals
 
 
@@ -151,8 +153,6 @@ class DerivativesTestCase(unittest.TestCase):
         """Test the objects in derivatives_e.py
 
         Also test that the properties that are invariant under rotation remain invariant !
-
-        Note: no gamma for the moment!
         """
 
         angles_set = [
@@ -338,7 +338,51 @@ class DerivativesTestCase(unittest.TestCase):
 
         orig_g = derivatives_e.SecondHyperpolarizabilityTensor(tensor=gamma)
 
-        print(orig_g)
+        for angles in angles_set:
+            new_gamma = qcip_math.tensor_rotate(gamma, *angles)
+            ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
+
+            self.assertTrue(float_almost_equals(ng.gamma_parallel(), orig_g.gamma_parallel()))
+            self.assertTrue(float_almost_equals(ng.gamma_perpendicular(), orig_g.gamma_perpendicular()))
+            self.assertTrue(float_almost_equals(ng.gamma_kerr(), orig_g.gamma_kerr()))
+
+            self.assertTrue(float_almost_equals(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz()))
+            self.assertTrue(float_almost_equals(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx()))
+            self.assertTrue(float_almost_equals(ng.gamma_ths(), orig_g.gamma_ths()))
+            self.assertTrue(float_almost_equals(ng.depolarization_ratio(), orig_g.depolarization_ratio()))
+
+        # static CH4, CCS/d-aug-cc-pVDZ (dalton)
+        gamma = numpy.array([
+            [[[-2.229953e+03, -3.839926e-05, -3.112595e-05],
+              [-3.839926e-05, -8.607108e+02, 1.515257e-05],
+              [-3.112595e-05, 1.515257e-05, -8.607108e+02]],
+             [[-3.839926e-05, -8.607108e+02, 1.515257e-05],
+              [-8.607108e+02, -2.006040e-05, -1.040868e-05],
+              [1.515257e-05, -1.040868e-05, -1.487595e-05]],
+             [[-3.112595e-05, 1.515257e-05, -8.607108e+02],
+              [1.515257e-05, -1.040868e-05, -1.487595e-05],
+              [-8.607108e+02, -1.487595e-05, -5.166972e-05]]],
+            [[[-3.839926e-05, -8.607108e+02, 1.515257e-05],
+              [-8.607108e+02, -2.006040e-05, -1.040868e-05],
+              [1.515257e-05, -1.040868e-05, -1.487595e-05]],
+             [[-8.607108e+02, -2.006040e-05, -1.040868e-05],
+              [-2.006040e-05, -2.229954e+03, 1.370702e-05],
+              [-1.040868e-05, 1.370702e-05, -8.607109e+02]],
+             [[1.515257e-05, -1.040868e-05, -1.487595e-05],
+              [-1.040868e-05, 1.370702e-05, -8.607109e+02],
+              [-1.487595e-05, -8.607109e+02, 4.011427e-05]]],
+            [[[-3.112595e-05, 1.515257e-05, -8.607108e+02],
+              [1.515257e-05, -1.040868e-05, -1.487595e-05],
+              [-8.607108e+02, -1.487595e-05, -5.166972e-05]],
+             [[1.515257e-05, -1.040868e-05, -1.487595e-05],
+              [-1.040868e-05, 1.370702e-05, -8.607109e+02],
+              [-1.487595e-05, -8.607109e+02, 4.011427e-05]],
+             [[-8.607108e+02, -1.487595e-05, -5.166972e-05],
+              [-1.487595e-05, -8.607109e+02, 4.011427e-05],
+              [-5.166972e-05, 4.011427e-05, -2.229954e+03]]]
+        ])
+
+        orig_g = derivatives_e.SecondHyperpolarizabilityTensor(tensor=gamma)
 
         for angles in angles_set:
             new_gamma = qcip_math.tensor_rotate(gamma, *angles)
@@ -352,3 +396,54 @@ class DerivativesTestCase(unittest.TestCase):
             self.assertTrue(float_almost_equals(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx()))
             self.assertTrue(float_almost_equals(ng.gamma_ths(), orig_g.gamma_ths()))
             self.assertTrue(float_almost_equals(ng.depolarization_ratio(), orig_g.depolarization_ratio()))
+
+    def test_geometrical_derivatives(self):
+        """Test geometrical ones.
+
+        Note: only tests the Hessian
+        """
+
+        # H2O molecule:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, .0, 0.11393182]),
+            qcip_atom.Atom(symbol='H', position=[0, -0.75394266, -0.45572727]),
+            qcip_atom.Atom(symbol='H', position=[0, 0.75394266, -0.45572727])
+        ]
+
+        water_molecule = qcip_molecule.Molecule(atom_list=atom_list)
+
+        # Water (geometry above) HF/Sadlej-POL (cartesian set)
+        hessian = numpy.array(
+            [[-0.00011, .0, .0, 0.00005, .0, .0, 0.00005, .0, .0],
+             [.0, 0.80982, .0, .0, -0.40491, -0.30598, .0, -0.40491, 0.30598],
+             [.0, .0, 0.53532, .0, -0.23905, -0.26766, .0, 0.23905, -0.26766],
+             [0.00005, .0, .0, .0, .0, .0, -0.00005, .0, .0],
+             [.0, -0.40491, -0.23905, .0, 0.43721, 0.27252, .0, -0.03230, -0.03346],
+             [.0, -0.30598, -0.26766, .0, 0.27252, 0.24945, .0, 0.03346, 0.01821],
+             [0.00005, .0, .0, -0.00005, .0, .0, .0, .0, .0],
+             [.0, -0.40491, 0.23905, .0, -0.03230, 0.03346, .0, 0.43721, -0.27252],
+             [.0, 0.30598, -0.26766, .0, -0.03346, 0.01821, .0, -0.27252, 0.24945]]
+        )
+
+        h = derivatives_g.BaseGeometricalDerivativeTensor(
+            3 * len(water_molecule), 5 if water_molecule.linear() else 6, 'GG', components=hessian)
+
+        mh = derivatives_g.MassWeightedHessian(water_molecule, hessian)
+        self.assertEqual(mh.vibrational_dof, 3)
+        self.assertFalse(mh.linear)
+
+        self.assertEqual(len(mh.frequencies), 9)
+
+        self.assertTrue(array_almost_equals(
+            [-38.44, -3.8, -0.03, 0.0, 18.1, 36.2, 1760.4, 4136.5, 4244.3],
+            [a * derivatives_g.HartreeToWavenumber for a in mh.frequencies],
+            threshold=.1
+        ))
+
+        # projected hessian must contain square of frequency on the diagonal
+        projected_h = h.project_over_normal_modes(mh.displacements)
+        self.assertEqual(projected_h.representation.representation(), 'NN')  # change type
+
+        for i in range(h.spacial_dof):
+            self.assertTrue(
+                float_almost_equals(math.fabs(projected_h.components[i, i]), mh.frequencies[i] ** 2, threshold=1e-10))
