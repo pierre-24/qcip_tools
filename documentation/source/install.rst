@@ -10,4 +10,4 @@ For a development environment,
 + Install dependencies : ``pip install --upgrade -r requirements.txt`` or ``make install-dependencies`` (for a development environment).
 + Finally, "install" the pakage: ``pip install --editable .``
 
-You can launch the tests series with ``python3 setup.py test-back``
+You can launch the tests series with ``python3 setup.py test``
