@@ -25,6 +25,7 @@ class MoleculeTestCase(unittest.TestCase):
         self.assertEqual(m1.charge, 0.0)
         self.assertEqual(m1.number_of_electrons(), 0)
         self.assertEqual(m1.formula(), '')
+        self.assertEqual(m1.multiplicity, 1)
 
         # H2 molecule
         atom_list = [
@@ -37,6 +38,7 @@ class MoleculeTestCase(unittest.TestCase):
         self.assertEqual(m2.charge, 0)
         self.assertEqual(m2.number_of_electrons(), 2)
         self.assertEqual(m2.formula(), 'H2')
+        self.assertEqual(m2.multiplicity, 1)
 
         self.assertTrue(numpy.array_equal(m2.center_of_mass(), [0, 0, 0]))
         self.assertTrue(numpy.array_equal(m2.center_of_charges(), [0, 0, 0]))
@@ -89,6 +91,7 @@ class MoleculeTestCase(unittest.TestCase):
         self.assertEqual(m3.charge, 0)
         self.assertEqual(m3.number_of_electrons(), 10)
         self.assertEqual(m3.formula(), 'H2O')
+        self.assertEqual(m3.multiplicity, 1)
 
         # distances and bonds
         distances = m3.distances()

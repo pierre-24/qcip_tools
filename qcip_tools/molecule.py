@@ -69,6 +69,8 @@ class Molecule:
             if a.symbol not in self.symbols_contained:
                 self.symbols_contained.append(a.symbol)
 
+        self.multiplicity = 1 if self.number_of_electrons() % 2 == 0 else 2
+
     def __str__(self):
         return self.formula()
 
