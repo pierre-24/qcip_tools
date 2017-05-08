@@ -1,6 +1,6 @@
 
 
-class File:
+class ChemistryFile:
     """Purely abstract class that implemnent some basic methods that any child should implement if possible.
 
     Input methods:
@@ -50,3 +50,32 @@ class File:
             raise NotImplementedError
 
         return molecule
+
+
+def apply_over_list(lines, func, start=0, end=None, **kwargs):
+    """
+    Apply ``func()`` to a given element in list, and expects ``True`` if the iteration must stop, ``False`` otherwise.
+    The prototype of ``func`` must be ``func(line,  current_line_index, **kwargs)``.
+
+    :param lines: lines of the log
+    :type lines: list
+    :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
+    :type func: callback
+    :param start: starting index
+    :type start: int
+    :param end: end the search at some point
+    :type end: int
+    :type kwargs: dict
+    :return: True if it ``func()`` call for termination, False otherwise
+    :rtype: bool
+    """
+
+    if end is None:
+        end = len(lines)
+
+    for index, line in enumerate(lines[start:end]):
+
+        if func(line, current_line_index=index + start, **kwargs):
+            return True
+
+    return False

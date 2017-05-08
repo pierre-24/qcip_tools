@@ -3,7 +3,7 @@ API documentation
 =================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :glob:
 
    code-documentation/*

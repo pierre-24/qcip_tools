@@ -24,6 +24,12 @@ class GaussianTestCase(QcipToolsTestCase):
             with open('tests/tests_files/gaussian_fchk.fchk') as fx:
                 f.write(fx.read())
 
+        self.log_file = os.path.join(self.temp_dir, 'file.log')
+
+        with open(self.log_file, 'w') as f:
+            with open('tests/tests_files/gaussian_output.log') as fx:
+                f.write(fx.read())
+
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
 
@@ -125,3 +131,32 @@ class GaussianTestCase(QcipToolsTestCase):
         # test molecule (conversion from a.u. to angstrom):
         self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
         self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)
+
+    def test_log_file(self):
+
+        fo = gaussian.Output()
+
+        with open(self.log_file) as f:
+            fo.read(f)
+
+        self.assertTrue(fo.link_called(1))  # the real beginning of the program
+        self.assertTrue(fo.link_called(202))  # Link 202 deals with geometry
+        self.assertFalse(fo.link_called(9998))  # Does not exists (apart from 9999 and 1, all link have the form xxx)
+
+        # test molecule
+        self.assertEqual(len(fo.molecule), 3)
+
+        symbols = ['O', 'H', 'H']
+        for index, a in enumerate(fo.molecule):
+            self.assertEqual(a.symbol, symbols[index])
+
+        self.assertEqual(fo.molecule.charge, 0)
+        self.assertEqual(fo.molecule.multiplicity, 1)
+
+        # test find string:
+        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND'), 30)
+        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_start=30), 30)
+        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_end=30), -1)
+        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_start=31), -1)
+        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', in_link=1), 30)
+        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', in_link=101), -1)

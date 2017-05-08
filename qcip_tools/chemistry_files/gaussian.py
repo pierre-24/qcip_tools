@@ -3,13 +3,16 @@ import math
 import re
 
 from qcip_tools import molecule, atom
-from qcip_tools.chemistry_files import File as qcip_File
+from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
 
 AuToAngstrom = 0.52917165
 
 
-class Input(qcip_File):
-    """Gaussian input file. I/O class."""
+class Input(qcip_ChemistryFile):
+    """Gaussian input file.
+
+    **Input/Output class.**
+    """
 
     file_type = 'GAUSSIAN_INPUT'
 
@@ -171,9 +174,13 @@ class FCHKChunkInformation:
         self.line_end = line_end
 
 
-class FCHK(qcip_File):
-    """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after)
+class FCHK(qcip_ChemistryFile):
+    """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).
+
+    **Input only class.**
     """
+
+    file_type = 'GAUSSIAN_FCHK'
 
     def __init__(self):
         self.molecule = molecule.Molecule()
@@ -188,6 +195,12 @@ class FCHK(qcip_File):
         self.lines = []
 
     def get(self, key):
+        """Get the content from a given keyword
+
+        :param key: tghe keyword
+        :type key: str
+        :rtype: list|int|float|str
+        """
         content = []
 
         if key not in self.chunks_information:
@@ -215,7 +228,13 @@ class FCHK(qcip_File):
         return content
 
     def read(self, f):
+        """
 
+        :param f: File
+        :type f: file
+        """
+
+        self.from_read = True
         self.lines = f.readlines()
 
         # extract the first information :
@@ -290,3 +309,172 @@ class FCHK(qcip_File):
         Implement test with ``in`` keyword
         """
         return item in self.chunks_information
+
+
+class LinkCalled:
+    """Remind when a link is called
+
+    :param link: number of the link called
+    :type link: int
+    :type line_start: int
+    :type line_end: int
+    """
+
+    def __init__(self, link, line_start, line_end):
+
+        self.link = link
+        self.line_start = line_start
+        self.line_end = line_end
+
+    def __repr__(self):
+        return 'Link {}: {}:{}'.format(self.link, self.line_start, self.line_end)
+
+
+class Output(qcip_ChemistryFile):
+    """Log file of Gaussian. Contains a lot of informations, but not well printed or located.
+    If possible, rely on the FCHK rather than on the LOG file.
+
+    **Input only class.**
+
+    .. note::
+
+        ``self.geometry`` contains the input geometry, but it may be reoriented according to the symmetry if
+        ``nosym`` was not provided. If it was not reoriented, ``self.input_orientation`` is set to ``True``.
+
+    .. warning::
+
+        Results are not guaranteed if the job ran without ``#P``.
+
+    """
+
+    file_type = 'GAUSSIAN_LOG'
+
+    def __init__(self):
+        self.molecule = molecule.Molecule()
+        self.input_orientation = False
+
+        self.links_called = []
+        self.lines = []
+
+    def read(self, f):
+        """
+
+        :param f: File
+        :type f: file
+        """
+
+        self.lines = f.readlines()
+
+        found_enter_link1 = False
+
+        for index, line in enumerate(self.lines):
+            if 'Entering Link 1' in line:
+                self.links_called.append(LinkCalled(1, index, -1))
+                found_enter_link1 = True
+                break
+
+        if not found_enter_link1:
+            raise Exception('this does not seems to be a Gaussian output')
+
+        for index, line in enumerate(self.lines):
+            # List links (needs a job that ran with `#p`)
+            if '(Enter ' in line:
+                self.links_called[-1].line_end = index - 1
+
+                link_num = line[-10:-6]
+                if link_num[0] == 'l':
+                    link_num = link_num[1:]
+                current_link = int(link_num)
+                self.links_called.append(LinkCalled(current_link, line_start=index, line_end=-1))
+
+        # fetch molecule:
+        charge_and_multiplicity_line = self.search('Charge = ', in_link=101)
+        orientation_line = self.search('orientation:', in_link=202)
+
+        if -1 in [charge_and_multiplicity_line, orientation_line]:
+            raise Exception('Could not find geometry')
+
+        self.input_orientation = self.lines[orientation_line][26] == 'I'
+
+        for line in self.lines[orientation_line + 5:]:
+            if '-------------' in line:
+                break
+            self.molecule.insert(atom.Atom(
+                atomic_number=int(line[12:21].strip()),
+                position=[float(a) for a in line[36:].split()]
+            ))
+
+        self.molecule.charge = int(self.lines[charge_and_multiplicity_line][9:13])
+        self.molecule.multiplicity = int(self.lines[charge_and_multiplicity_line][27:])
+
+    def link_called(self, link, all_times=False):
+        """Is a link called in the file?
+
+        :param link: the link to search
+        :type link: int
+        :param all_times: rater than stopping at the first time the link is found, go until the end and count
+        :type all_times: bool
+        :return: the number of times the link is found (max 1 if ``all_times`` is ``False``)
+        :rtype: int
+        """
+        times = 0
+
+        for link_info in self.links_called:
+            if link_info.link == link:
+                if not all_times:
+                    return 1
+                else:
+                    times += 1
+
+        return times
+
+    def apply_function(self, func, line_start=0, line_end=None, in_link=None, **kwargs):
+        """Apply ``apply_over_list()`` to the lines.
+
+        :param lines: lines of the log
+        :type lines: list
+        :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
+        :type func: callback
+        :param line_start: starting index
+        :type line_start: int
+        :param line_end: end the search at some point
+        :type line_end: int
+        :param in_link: restrict the search to a given link
+        :type in_link: int
+        :type kwargs: dict
+        :rtype: bool
+        """
+
+        if in_link is not None:
+            if type(in_link) is not int:
+                raise TypeError(in_link)
+
+            for link_info in self.links_called:
+                if link_info.link == in_link:
+                    r = apply_over_list(self.lines, func, link_info.line_start, link_info.line_end, **kwargs)
+                    if r:
+                        return True
+
+            return False
+
+        else:
+            return apply_over_list(self.lines, func, line_start, line_end, **kwargs)
+
+    def search(self, s, line_start=0, line_end=None, in_link=None):
+        """Returns the line when the string is found in this line or -1 if nothing was found.
+
+        :rtype: int
+        """
+
+        class FunctionScope:
+            line_found = -1
+
+        def find_string(line, current_line_index):
+            if s in line:
+                FunctionScope.line_found = current_line_index
+                return True
+            else:
+                return False
+
+        self.apply_function(find_string, line_start=line_start, line_end=line_end, in_link=in_link)
+        return FunctionScope.line_found
