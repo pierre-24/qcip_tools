@@ -3,6 +3,7 @@ import tempfile
 import shutil
 import os
 
+from tests import float_almost_equals
 from qcip_tools.chemistry_files import gaussian
 
 
@@ -11,10 +12,17 @@ class GaussianTestCase(unittest.TestCase):
 
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
+
         self.input_file = os.path.join(self.temp_dir, 'input.com')
 
         with open(self.input_file, 'w') as f:
             with open('tests/tests_files/gaussian_input.com') as fx:
+                f.write(fx.read())
+
+        self.fchk_file = os.path.join(self.temp_dir, 'file.fchk')
+
+        with open(self.fchk_file, 'w') as f:
+            with open('tests/tests_files/gaussian_fchk.fchk') as fx:
                 f.write(fx.read())
 
     def tearDown(self):
@@ -79,3 +87,42 @@ class GaussianTestCase(unittest.TestCase):
         with open(other_file) as f:
             content = f.read()
             self.assertTrue('%chk=calculation_0002\n' in content)  # chk remains the same as the original
+
+    def test_fchk_file(self):
+
+        fi = gaussian.FCHK()
+
+        with open(self.fchk_file) as f:
+            fi.read(f)
+
+        self.assertEqual(fi.calculation_title, 'Ground state of LiH_mini with gen')
+        self.assertEqual(fi.calculation_method, 'RHF')
+        self.assertEqual(fi.calculation_basis, 'Gen')
+        self.assertEqual(fi.calculation_type, 'SP')
+
+        already_parsed = 6  # number of atoms, positions, weights, number of electron, charge and multiplicity
+        self.assertEqual(len(fi.chunks_parsed), already_parsed)
+
+        # get an array:
+        self.assertTrue('Nuclear spins' in fi)
+        self.assertTrue('Nuclear spins' not in fi.chunks_parsed)
+        self.assertEqual(len(fi.get('Nuclear spins')), 2)
+        self.assertEqual(len(fi.chunks_parsed), already_parsed + 1)
+        self.assertTrue('Nuclear spins' in fi.chunks_parsed)  # OK, stored.
+        self.assertTrue(fi.get('Nuclear spins')[0], 3)
+
+        # get a single number
+        self.assertTrue('Number of basis functions' in fi)
+        self.assertTrue('Number of basis functions' not in fi.chunks_parsed)
+        self.assertEqual(fi.get('Number of basis functions'), 6)
+        self.assertTrue('Number of basis functions' in fi.chunks_parsed)
+
+        # fool the storage system to make sure that it use it:
+        fi.chunks_parsed['Number of basis functions'] = 8
+        self.assertEqual(fi.get('Number of basis functions'), 8)
+        self.assertEqual(fi.property('Number of basis functions'), 8)
+        self.assertEqual(fi['Number of basis functions'], 8)
+
+        # test molecule (conversion from a.u. to angstrom):
+        self.assertTrue(float_almost_equals(fi.molecule[0].position[2], 0.04791742))
+        self.assertTrue(float_almost_equals(fi.molecule[1].position[2], -1.45865742))

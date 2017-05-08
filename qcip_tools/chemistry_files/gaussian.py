@@ -1,7 +1,11 @@
 import os
+import math
+import re
 
 from qcip_tools import molecule, atom
 from qcip_tools.chemistry_files import File as qcip_File
+
+AuToAngstrom = 0.52917165
 
 
 class Input(qcip_File):
@@ -123,3 +127,166 @@ class Input(qcip_File):
             chk = os.path.basename('.'.join(f.name.split('.')[:-1]))
 
         f.write(self.to_string(chk=chk, original_chk=original_chk))
+
+
+FCHK_AUTHORIZED_TYPES = ['I', 'R', 'C']
+REGEX_FLOAT = re.compile(r'(?P<base>[0-9](\.[0-9]*)?)\-(?P<exp>[0-9]*)')
+
+
+def transform_string_from_fchk(data, data_type):
+    if data_type == 'I':
+        return int(data)
+    elif data_type == 'R':
+        try:
+            return float(data)
+        except ValueError:
+            if REGEX_FLOAT.match(data):
+                return 0.0
+    elif data_type == 'C':
+        return data
+    else:
+        raise Exception('Unknown data type {}'.format(data_type))
+
+
+class FCHKChunkInformation:
+    """Where to find a given keyword in the FCHK file
+
+    :param keyword: keyword related to this piece of information
+    :type keyword: str
+    :param data_type: type of this piece of information
+    :type data_type: str
+    :param data_length: length of this data
+    :type data_length: int
+    :param line_start: start in the source file
+    :type line_start: int|object
+    :param line_end: end in the source file
+    :type line_end: int|object
+    """
+
+    def __init__(self, keyword, data_type, data_length, line_start, line_end):
+        self.keyword = keyword
+        self.data_type = data_type
+        self.data_length = data_length
+        self.line_start = line_start
+        self.line_end = line_end
+
+
+class FCHK(qcip_File):
+    """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after)
+    """
+
+    def __init__(self):
+        self.molecule = molecule.Molecule()
+
+        self.calculation_title = ''
+        self.calculation_type = ''
+        self.calculation_method = ''
+        self.calculation_basis = ''
+
+        self.chunks_information = {}
+        self.chunks_parsed = {}
+        self.lines = []
+
+    def get(self, key):
+        content = []
+
+        if key not in self.chunks_information:
+            raise KeyError(key)
+
+        if key not in self.chunks_parsed:
+            chunk = self.chunks_information[key]
+
+            if chunk.data_length != 1:
+                matrix = self.lines[chunk.line_start:chunk.line_end]
+                matrix = (''.join(matrix)).split()
+                if len(matrix) == chunk.data_length:
+                    for d in matrix:
+                        content.append(transform_string_from_fchk(d, chunk.data_type))
+                else:
+                    raise Exception('Size is not the same as defined for {}'.format(key))
+            else:
+                content = self.lines[chunk.line_start][49:].strip()
+                content = transform_string_from_fchk(content, chunk.data_type)
+
+            self.chunks_parsed[key] = content
+        else:
+            content = self.chunks_parsed[key]
+
+        return content
+
+    def read(self, f):
+
+        self.lines = f.readlines()
+
+        # extract the first information :
+        self.calculation_title = self.lines[0].strip()
+        second_line = self.lines[1].split()
+        self.calculation_type = second_line[0]
+        self.calculation_method = second_line[1]
+        self.calculation_basis = second_line[2]
+
+        # now, crawl trough information
+        for index, current_line in enumerate(self.lines[2:]):
+            current_line_index = index + 2
+            if current_line[0] != ' ':
+                keyword = current_line[:40].strip()  # name is contained in the 40 first characters
+                size = 1
+                data_type = current_line[43]
+
+                if data_type not in FCHK_AUTHORIZED_TYPES:
+                    raise Exception('Type of {} ({}) is unknown'.format(keyword, data_type))
+
+                is_matrix = current_line[47] == 'N'
+
+                if is_matrix:
+                    size = int(current_line[49:].strip())
+                    values_per_line = 5
+                    if data_type == 'I':
+                        values_per_line = 6
+                    num_lines = math.ceil(size / values_per_line)
+                    line_start, line_end = current_line_index + 1, current_line_index + 1 + num_lines
+
+                else:
+                    line_start = line_end = current_line_index
+
+                self.chunks_information[keyword] = FCHKChunkInformation(keyword, data_type, size, line_start, line_end)
+
+        # finally, read the molecule
+        nuclear_charges = self.get('Atomic numbers')
+        atoms_coordinates = self.get('Current cartesian coordinates')
+        weights = self.get('Real atomic weights')
+
+        for index, c in enumerate(nuclear_charges):
+            a = atom.Atom(
+                atomic_number=c, position=[a * AuToAngstrom for a in atoms_coordinates[index * 3:index * 3 + 3]])
+            a.mass = weights[index]
+            self.molecule.insert(a)
+
+        self.molecule.charge = self.get('Charge')
+        self.molecule.multiplicity = self.get('Multiplicity')
+
+        if self.get('Number of electrons') != self.molecule.number_of_electrons():
+            raise ValueError('Number of electron does not match: {} != {}'.format(
+                self.get('Number of electrons'), self.molecule.number_of_electrons()))
+
+    def property(self, property_):
+        """Rewritten to get access to keywords as well (which starts with uppercase letters,
+        so cannot be variable name anyway).
+        """
+
+        if property_ in self.chunks_information:
+            return self.get(property_)
+
+        return super().property(property_)
+
+    def __getitem__(self, item):
+        """
+        Implement access trough ``[]``
+        `"""
+        return self.get(item)
+
+    def __contains__(self, item):
+        """
+        Implement test with ``in`` keyword
+        """
+        return item in self.chunks_information

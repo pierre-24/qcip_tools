@@ -35,6 +35,10 @@ class DataFileTestCase(unittest.TestCase):
         self.assertEqual(f.get('integers'), some_integers)
         self.assertEqual(f['integers'], some_integers)
 
+        # fool the storage system to prove it is used:
+        f.chunks_parsed['integers'] = some_integers[:-1]
+        self.assertEqual(f.get('integers'), some_integers[:-1])
+
         # fire exceptions !
         with self.assertRaises(TypeError):  # non-existing type
             f.set('whatever', 'X', 'test')
