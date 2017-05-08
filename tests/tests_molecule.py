@@ -1,14 +1,13 @@
-import unittest
 import numpy
 import copy
 import math
 
-from tests import array_almost_equals
+from tests import QcipToolsTestCase
 
 from qcip_tools import atom as qcip_atom, molecule as qcip_molecule, math as qcip_math
 
 
-class MoleculeTestCase(unittest.TestCase):
+class MoleculeTestCase(QcipToolsTestCase):
 
     def setUp(self):
         pass
@@ -112,19 +111,19 @@ class MoleculeTestCase(unittest.TestCase):
         b1 = m3.bounding_box()
 
         angle_HOH = qcip_math.angle(m3.atom(2).position, m3.atom(1).position, m3.atom(3).position)
-        self.assertTrue(array_almost_equals(b1.origin, [0, -.767, -.115]))
+        self.assertArrayAlmostEqual(b1.origin, [0, -.767, -.115])
         # size of the box should be the projection of O-H on Y and H to H distance for X.
-        self.assertTrue(array_almost_equals(b1.size, [
+        self.assertArrayAlmostEqual(b1.size, [
             0,
             qcip_math.distance(m3.atom(2).position, m3.atom(3).position),
             qcip_math.distance(m3.atom(1).position, m3.atom(2).position) * math.cos(numpy.radians(angle_HOH / 2))
-        ]))
+        ])
 
         extra_space = .5
         b2 = m3.bounding_box(extra_space=extra_space)  # additional space
-        self.assertTrue(array_almost_equals(b2.origin, [i - extra_space for i in b1.origin]))
-        self.assertTrue(array_almost_equals(b2.size, [i + 2 * extra_space for i in b1.size]))
-        self.assertTrue(array_almost_equals(b2.maximum(), [i + extra_space for i in b1.maximum()]))
+        self.assertArrayAlmostEqual(b2.origin, [i - extra_space for i in b1.origin])
+        self.assertArrayAlmostEqual(b2.size, [i + 2 * extra_space for i in b1.size])
+        self.assertArrayAlmostEqual(b2.maximum(), [i + extra_space for i in b1.maximum()])
 
     def test_molecule_modifications(self):
         """Test the manipulation of the atoms"""
@@ -165,7 +164,7 @@ class MoleculeTestCase(unittest.TestCase):
 
         for u in zip(m2, m2_copy):
             good_position = u[1].position[1], u[1].position[2], u[1].position[0]
-            self.assertTrue(array_almost_equals(u[0].position, good_position))
+            self.assertArrayAlmostEqual(u[0].position, good_position)
 
         # reorient
         m2_copy = copy.deepcopy(m2)
@@ -173,7 +172,7 @@ class MoleculeTestCase(unittest.TestCase):
 
         for i in range(3):  # X and -Y where exchanged
             good_position = -m2_copy[i].position[1], m2_copy[i].position[0], m2_copy[i].position[2]
-            self.assertTrue(array_almost_equals(m2[i].position, good_position))
+            self.assertArrayAlmostEqual(m2[i].position, good_position)
 
     def test_list_of_atoms(self):
         """Test the molecule.list_of_atoms() function"""

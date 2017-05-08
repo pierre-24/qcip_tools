@@ -1,13 +1,12 @@
-import unittest
 import numpy
 import math
 
-from tests import float_almost_equals
+from tests import QcipToolsTestCase
 
 from qcip_tools import numerical_differentiation
 
 
-class NumericalDifferentiationTestCase(unittest.TestCase):
+class NumericalDifferentiationTestCase(QcipToolsTestCase):
 
     coefficients_of_univariate_polynom = [3, 15, -250, 1240, -10450]  # one order of magnitude between each coef.
 
@@ -93,8 +92,8 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
                                 for i in range(len(c.mat_coefs)))
 
                         # notice the large threshold:
-                        self.assertTrue(
-                            float_almost_equals(derivative, self.coefficients_of_univariate_polynom[d], threshold=1))
+                        self.assertAlmostEqual(
+                            derivative, self.coefficients_of_univariate_polynom[d], delta=1)
 
     def test_numerical_differentiation_of_univariate_function(self):
         """Same kind of test that in test_coefficients(), but directly with compute_derivative_of_function()"""
@@ -123,12 +122,10 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
                                 a=a
                             )
 
-                            self.assertTrue(
-                                float_almost_equals(
-                                    derivative,
-                                    self.coefficients_of_univariate_polynom[d],
-                                    threshold=5)
-                            )
+                            self.assertAlmostEqual(
+                                derivative,
+                                self.coefficients_of_univariate_polynom[d],
+                                delta=5)
 
                             # with custom coefficients
                             derivative = numerical_differentiation.compute_derivative_of_function(
@@ -143,12 +140,10 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
 
                             self.assertNotEqual(other_coefficients[d], self.coefficients_of_univariate_polynom[d])
 
-                            self.assertTrue(
-                                float_almost_equals(
-                                    derivative,
-                                    other_coefficients[d],
-                                    threshold=5)
-                            )
+                            self.assertAlmostEqual(
+                                derivative,
+                                other_coefficients[d],
+                                delta=5)
 
     def test_numerical_differentiation_of_bivariate_function(self):
         """Test for bivariate function (a bit simpler than the one for univariate function)"""
@@ -175,7 +170,7 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
                 a=2
             )
 
-            self.assertTrue(float_almost_equals(derivative, self.coefficients_of_bivariate_polynom[1][i], threshold=1))
+            self.assertAlmostEqual(derivative, self.coefficients_of_bivariate_polynom[1][i], delta=1)
 
         # second order:
         for i in range(2):
@@ -201,8 +196,7 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
                         a=2
                     )
 
-                self.assertTrue(
-                    float_almost_equals(derivative, self.coefficients_of_bivariate_polynom[2][i, j], threshold=1))
+                self.assertAlmostEqual(derivative, self.coefficients_of_bivariate_polynom[2][i, j], delta=1)
 
         # third order:
         for i in range(2):
@@ -238,9 +232,8 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
                             a=2
                         )
 
-                    self.assertTrue(
-                        float_almost_equals(
-                            derivative, self.coefficients_of_bivariate_polynom[3][i, j, k], threshold=1))
+                    self.assertAlmostEqual(
+                        derivative, self.coefficients_of_bivariate_polynom[3][i, j, k], delta=1)
 
     def test_romberg(self):
         """Test the Romberg's scheme implementation"""
@@ -270,7 +263,7 @@ class NumericalDifferentiationTestCase(unittest.TestCase):
 
         # test best value:
         position, value, iteration_error = t.find_best_value(threshold=1e-5)
-        self.assertTrue(float_almost_equals(value, self.coefficients_of_univariate_polynom[1], threshold=1e-5))
+        self.assertAlmostEqual(value, self.coefficients_of_univariate_polynom[1], places=5)
         self.assertTrue(position[1] > 0)  # it needed improvements !
         self.assertTrue(math.fabs(iteration_error) < 1e-5)
 

@@ -1,13 +1,12 @@
-import unittest
 import tempfile
 import shutil
 import os
 
-from tests import float_almost_equals
+from tests import QcipToolsTestCase
 from qcip_tools.chemistry_files import gaussian
 
 
-class GaussianTestCase(unittest.TestCase):
+class GaussianTestCase(QcipToolsTestCase):
     """Gaussian stuffs"""
 
     def setUp(self):
@@ -124,5 +123,5 @@ class GaussianTestCase(unittest.TestCase):
         self.assertEqual(fi['Number of basis functions'], 8)
 
         # test molecule (conversion from a.u. to angstrom):
-        self.assertTrue(float_almost_equals(fi.molecule[0].position[2], 0.04791742))
-        self.assertTrue(float_almost_equals(fi.molecule[1].position[2], -1.45865742))
+        self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
+        self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)

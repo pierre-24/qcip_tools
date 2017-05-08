@@ -1,14 +1,19 @@
-import math
+import unittest
+import numpy
 
 
-def float_almost_equals(a, b, threshold=1e-3):
-    return math.fabs(a - b) < threshold
-
-
-def array_almost_equals(a, b, threshold=1e-3):
+def array_almost_equals(a, b, places=7, delta=None, msg=''):
     """Check if two arrays containing float number are almost equals"""
 
-    if len(a) != len(b):
-        raise RuntimeError()
+    atol = 10 ** (-places)
 
-    return all(float_almost_equals(a[i], b[i], threshold) for i in range(len(a)))
+    if delta is not None:
+        atol = delta
+
+    return numpy.testing.assert_allclose(a, b, atol=atol, err_msg=msg)
+
+
+class QcipToolsTestCase(unittest.TestCase):
+
+    def assertArrayAlmostEqual(self, a, b, places=3, delta=None, msg=''):
+        return array_almost_equals(a, b, places=places, delta=delta, msg=msg)

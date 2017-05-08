@@ -1,14 +1,13 @@
 import random
-import unittest
 import math
 
 import numpy
 from qcip_tools import derivatives, derivatives_e, math as qcip_math, derivatives_g, atom as qcip_atom, \
     molecule as qcip_molecule
-from tests import float_almost_equals, array_almost_equals
+from tests import QcipToolsTestCase
 
 
-class DerivativesTestCase(unittest.TestCase):
+class DerivativesTestCase(QcipToolsTestCase):
 
     def setUp(self):
         pass
@@ -168,7 +167,7 @@ class DerivativesTestCase(unittest.TestCase):
         dipole = numpy.array([.0, .0, -0.767392])
 
         d = derivatives_e.ElectricDipole(dipole=dipole)
-        self.assertTrue(float_almost_equals(d.norm(), 0.767392))
+        self.assertAlmostEqual(d.norm(), 0.767392)
 
         alpha = numpy.array(
             [[0.777020e1, .0, .0],
@@ -180,8 +179,8 @@ class DerivativesTestCase(unittest.TestCase):
             new_alpha = qcip_math.tensor_rotate(alpha, *angles)
             na = derivatives_e.PolarisabilityTensor(tensor=new_alpha)
 
-            self.assertTrue(float_almost_equals(na.isotropic_value(), 0.834894e1))
-            self.assertTrue(float_almost_equals(na.anisotropic_value(), 0.102578e1))
+            self.assertAlmostEqual(na.isotropic_value(), 0.834894e1)
+            self.assertAlmostEqual(na.anisotropic_value(), 0.102578e1, places=3)
 
         beta = numpy.array(
             [[[.0, .0, -0.489173],
@@ -197,10 +196,10 @@ class DerivativesTestCase(unittest.TestCase):
 
         b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
 
-        self.assertTrue(float_almost_equals(b.beta_parallel(dipole), -7.7208))
-        self.assertTrue(float_almost_equals(b.beta_perpendicular(dipole), -2.5736))
-        self.assertTrue(float_almost_equals(b.beta_kerr(dipole), -7.7208))
-        self.assertTrue(array_almost_equals(b.beta_vector(), [.0, .0, 12.8681]))
+        self.assertAlmostEqual(b.beta_parallel(dipole), -7.7208, places=3)
+        self.assertAlmostEqual(b.beta_perpendicular(dipole), -2.5736, places=3)
+        self.assertAlmostEqual(b.beta_kerr(dipole), -7.7208, places=3)
+        self.assertArrayAlmostEqual(b.beta_vector(), [.0, .0, 12.8681])
 
         # NOTE: above properties are also invariant to rotation, but in a less funny way.
 
@@ -208,19 +207,19 @@ class DerivativesTestCase(unittest.TestCase):
             new_beta = qcip_math.tensor_rotate(beta, *angles)
             nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
 
-            self.assertTrue(float_almost_equals(nb.beta_squared_zzz(), 29.4147))
-            self.assertTrue(float_almost_equals(nb.beta_squared_zxx(), 8.5707))
-            self.assertTrue(float_almost_equals(nb.beta_hrs(), 6.1632))
-            self.assertTrue(float_almost_equals(nb.depolarization_ratio(), 3.4320))
-            self.assertTrue(float_almost_equals(nb.octupolar_contribution_squared(), 167.0257))
-            self.assertTrue(float_almost_equals(nb.dipolar_contribution_squared(), 99.3520))
-            self.assertTrue(float_almost_equals(nb.nonlinear_anisotropy(), 1.2966))
+            self.assertAlmostEqual(nb.beta_squared_zzz(), 29.4147, places=3)
+            self.assertAlmostEqual(nb.beta_squared_zxx(), 8.5707, places=3)
+            self.assertAlmostEqual(nb.beta_hrs(), 6.1632, places=3)
+            self.assertAlmostEqual(nb.depolarization_ratio(), 3.4320, places=3)
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 167.0257, places=3)
+            self.assertAlmostEqual(nb.dipolar_contribution_squared(), 99.3520, places=3)
+            self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
         dipole = numpy.array([.0, .0, 0.625899])
 
         d = derivatives_e.ElectricDipole(dipole=dipole)
-        self.assertTrue(float_almost_equals(d.norm(), 0.625899))
+        self.assertAlmostEqual(d.norm(), 0.625899)
 
         alpha = numpy.array(
             [[0.125681e2, .0, -0.485486e-4],
@@ -232,8 +231,8 @@ class DerivativesTestCase(unittest.TestCase):
             new_alpha = qcip_math.tensor_rotate(alpha, *angles)
             na = derivatives_e.PolarisabilityTensor(tensor=new_alpha)
 
-            self.assertTrue(float_almost_equals(na.isotropic_value(), 0.127795e2))
-            self.assertTrue(float_almost_equals(na.anisotropic_value(), 0.634350))
+            self.assertAlmostEqual(na.isotropic_value(), 0.127795e2, places=3)
+            self.assertAlmostEqual(na.anisotropic_value(), 0.634350, places=3)
 
         beta = numpy.array(
             [[[9.258607, -0.012368, -6.097955],
@@ -249,22 +248,22 @@ class DerivativesTestCase(unittest.TestCase):
 
         b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=beta)
 
-        self.assertTrue(float_almost_equals(b.beta_parallel(dipole), -11.2074))
-        self.assertTrue(float_almost_equals(b.beta_perpendicular(dipole), -3.7358))
-        self.assertTrue(float_almost_equals(b.beta_kerr(dipole), -11.2074))
-        self.assertTrue(array_almost_equals(b.beta_vector(), [.0, .0, -18.6790]))
+        self.assertAlmostEqual(b.beta_parallel(dipole), -11.2074, places=3)
+        self.assertAlmostEqual(b.beta_perpendicular(dipole), -3.7358, places=3)
+        self.assertAlmostEqual(b.beta_kerr(dipole), -11.2074, places=3)
+        self.assertArrayAlmostEqual(b.beta_vector(), [.0, .0, -18.6790])
 
         for angles in angles_set:
             new_beta = qcip_math.tensor_rotate(beta, *angles)
             nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
 
-            self.assertTrue(float_almost_equals(nb.beta_squared_zzz(), 64.6483))
-            self.assertTrue(float_almost_equals(nb.beta_squared_zxx(), 19.8385))
-            self.assertTrue(float_almost_equals(nb.beta_hrs(), 9.1917))
-            self.assertTrue(float_almost_equals(nb.depolarization_ratio(), 3.2587))
-            self.assertTrue(float_almost_equals(nb.octupolar_contribution_squared(), 398.6438))
-            self.assertTrue(float_almost_equals(nb.dipolar_contribution_squared(), 209.3432))
-            self.assertTrue(float_almost_equals(nb.nonlinear_anisotropy(), 1.3799))
+            self.assertAlmostEqual(nb.beta_squared_zzz(), 64.6483, places=3)
+            self.assertAlmostEqual(nb.beta_squared_zxx(), 19.8385, places=3)
+            self.assertAlmostEqual(nb.beta_hrs(), 9.1917, places=3)
+            self.assertAlmostEqual(nb.depolarization_ratio(), 3.2587, places=3)
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 398.6438, places=3)
+            self.assertAlmostEqual(nb.dipolar_contribution_squared(), 209.3432, places=3)
+            self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.3799, places=3)
 
         # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
         alpha = numpy.array(
@@ -277,8 +276,8 @@ class DerivativesTestCase(unittest.TestCase):
             new_alpha = qcip_math.tensor_rotate(alpha, *angles)
             na = derivatives_e.PolarisabilityTensor(tensor=new_alpha)
 
-            self.assertTrue(float_almost_equals(na.isotropic_value(), 0.159960e2))
-            self.assertTrue(float_almost_equals(na.anisotropic_value(), .0))
+            self.assertAlmostEqual(na.isotropic_value(), 0.159960e2, places=3)
+            self.assertAlmostEqual(na.anisotropic_value(), .0, places=3)
 
         beta = numpy.array(
             [[[.0, .0, .0],
@@ -296,12 +295,12 @@ class DerivativesTestCase(unittest.TestCase):
             new_beta = qcip_math.tensor_rotate(beta, *angles)
             nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
 
-            self.assertTrue(float_almost_equals(nb.beta_squared_zzz(), 47.3962))
-            self.assertTrue(float_almost_equals(nb.beta_squared_zxx(), 31.5975))
-            self.assertTrue(float_almost_equals(nb.beta_hrs(), 8.8878))
-            self.assertTrue(float_almost_equals(nb.depolarization_ratio(), 1.5))
-            self.assertTrue(float_almost_equals(nb.octupolar_contribution_squared(), 829.4336))
-            self.assertTrue(float_almost_equals(nb.dipolar_contribution_squared(), .0))
+            self.assertAlmostEqual(nb.beta_squared_zzz(), 47.3962, places=3)
+            self.assertAlmostEqual(nb.beta_squared_zxx(), 31.5975, places=3)
+            self.assertAlmostEqual(nb.beta_hrs(), 8.8878, places=3)
+            self.assertAlmostEqual(nb.depolarization_ratio(), 1.5, places=3)
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 829.4336, places=3)
+            self.assertAlmostEqual(nb.dipolar_contribution_squared(), .0, places=3)
 
         # ... since CH4 has no dipole moment, the rest of the properties failed ;)
 
@@ -342,14 +341,14 @@ class DerivativesTestCase(unittest.TestCase):
             new_gamma = qcip_math.tensor_rotate(gamma, *angles)
             ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
 
-            self.assertTrue(float_almost_equals(ng.gamma_parallel(), orig_g.gamma_parallel()))
-            self.assertTrue(float_almost_equals(ng.gamma_perpendicular(), orig_g.gamma_perpendicular()))
-            self.assertTrue(float_almost_equals(ng.gamma_kerr(), orig_g.gamma_kerr()))
+            self.assertAlmostEqual(ng.gamma_parallel(), orig_g.gamma_parallel(), places=3)
+            self.assertAlmostEqual(ng.gamma_perpendicular(), orig_g.gamma_perpendicular(), places=3)
+            self.assertAlmostEqual(ng.gamma_kerr(), orig_g.gamma_kerr(), places=3)
 
-            self.assertTrue(float_almost_equals(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz()))
-            self.assertTrue(float_almost_equals(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx()))
-            self.assertTrue(float_almost_equals(ng.gamma_ths(), orig_g.gamma_ths()))
-            self.assertTrue(float_almost_equals(ng.depolarization_ratio(), orig_g.depolarization_ratio()))
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz(), places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx(), places=3)
+            self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
+            self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
 
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
@@ -388,14 +387,14 @@ class DerivativesTestCase(unittest.TestCase):
             new_gamma = qcip_math.tensor_rotate(gamma, *angles)
             ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
 
-            self.assertTrue(float_almost_equals(ng.gamma_parallel(), orig_g.gamma_parallel()))
-            self.assertTrue(float_almost_equals(ng.gamma_perpendicular(), orig_g.gamma_perpendicular()))
-            self.assertTrue(float_almost_equals(ng.gamma_kerr(), orig_g.gamma_kerr()))
+            self.assertAlmostEqual(ng.gamma_parallel(), orig_g.gamma_parallel())
+            self.assertAlmostEqual(ng.gamma_perpendicular(), orig_g.gamma_perpendicular())
+            self.assertAlmostEqual(ng.gamma_kerr(), orig_g.gamma_kerr())
 
-            self.assertTrue(float_almost_equals(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz()))
-            self.assertTrue(float_almost_equals(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx()))
-            self.assertTrue(float_almost_equals(ng.gamma_ths(), orig_g.gamma_ths()))
-            self.assertTrue(float_almost_equals(ng.depolarization_ratio(), orig_g.depolarization_ratio()))
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz())
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx())
+            self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
+            self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
 
     def test_geometrical_derivatives(self):
         """Test geometrical ones.
@@ -434,16 +433,15 @@ class DerivativesTestCase(unittest.TestCase):
 
         self.assertEqual(len(mh.frequencies), 9)
 
-        self.assertTrue(array_almost_equals(
+        self.assertArrayAlmostEqual(
             [-38.44, -3.8, -0.03, 0.0, 18.1, 36.2, 1760.4, 4136.5, 4244.3],
             [a * derivatives_g.HartreeToWavenumber for a in mh.frequencies],
-            threshold=.1
-        ))
+            places=1)
 
         # projected hessian must contain square of frequency on the diagonal
         projected_h = h.project_over_normal_modes(mh.displacements)
         self.assertEqual(projected_h.representation.representation(), 'NN')  # change type
 
         for i in range(h.spacial_dof):
-            self.assertTrue(
-                float_almost_equals(math.fabs(projected_h.components[i, i]), mh.frequencies[i] ** 2, threshold=1e-10))
+            self.assertAlmostEqual(
+                math.fabs(projected_h.components[i, i]), mh.frequencies[i] ** 2, places=10)

@@ -1,10 +1,10 @@
-import unittest
 import numpy
 
+from tests import QcipToolsTestCase
 from qcip_tools import atom as qcip_atom
 
 
-class AtomTestCase(unittest.TestCase):
+class AtomTestCase(QcipToolsTestCase):
 
     def setUp(self):
         pass

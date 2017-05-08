@@ -1,12 +1,12 @@
-import unittest
 import os
 import tempfile
 import math
 
+from tests import QcipToolsTestCase
 from qcip_tools import datafile
 
 
-class DataFileTestCase(unittest.TestCase):
+class DataFileTestCase(QcipToolsTestCase):
 
     def setUp(self):
         self.temporary_file = tempfile.mkstemp()[1]
