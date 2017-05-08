@@ -9,29 +9,13 @@ from qcip_tools.chemistry_files import gaussian
 class GaussianTestCase(unittest.TestCase):
     """Gaussian stuffs"""
 
-    random_input_content = \
-        '%mem=3gb\n'\
-        '%chk=calculation_0002\n'\
-        '%nprocshared=4\n'\
-        '#p MP4 6-311+G(d) nosym field=read\n'\
-        'scf=(Conver=11,NoVarAcc,MaxCyc=600,vshift=1000) IOP(9/6=600,9/9=11)\n'\
-        '\n'\
-        'finite field calculation (-1, 0, 0)\n'\
-        '\n'\
-        '-1 2\n'\
-        'O	  0.00000000   0.00000000   0.00000000\n'\
-        'H	  0.75698805   0.00000000   0.58632839\n'\
-        'H	 -0.75698805   0.00000000   0.58632839\n'\
-        '\n'\
-        '-0.0004000000	 0.0000000000	 0.0000000000\n'\
-        ''  # the blank line at the end is important ;)
-
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.input_file = os.path.join(self.temp_dir, 'input.com')
 
         with open(self.input_file, 'w') as f:
-            f.write(self.random_input_content)
+            with open('tests/tests_files/gaussian_input.com') as fx:
+                f.write(fx.read())
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
