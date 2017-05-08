@@ -3,7 +3,7 @@ import shutil
 import os
 
 from tests import QcipToolsTestCase
-from qcip_tools.chemistry_files import gaussian
+from qcip_tools.chemistry_files import gaussian, dalton
 
 
 class GaussianTestCase(QcipToolsTestCase):
@@ -100,9 +100,9 @@ class GaussianTestCase(QcipToolsTestCase):
         with open(self.fchk_file) as f:
             fi.read(f)
 
-        self.assertEqual(fi.calculation_title, 'Ground state of LiH_mini with gen')
+        self.assertEqual(fi.title, 'Ground state of LiH_mini with gen')
         self.assertEqual(fi.calculation_method, 'RHF')
-        self.assertEqual(fi.calculation_basis, 'Gen')
+        self.assertEqual(fi.basis_set, 'Gen')
         self.assertEqual(fi.calculation_type, 'SP')
 
         already_parsed = 6  # number of atoms, positions, weights, number of electron, charge and multiplicity
@@ -160,3 +160,69 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_start=31), -1)
         self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', in_link=1), 30)
         self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', in_link=101), -1)
+
+
+class DaltonTestCase(QcipToolsTestCase):
+    """Dalton stuffs"""
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+        self.input_mol_file = os.path.join(self.temp_dir, 'input.mol')
+
+        with open(self.input_mol_file, 'w') as f:
+            with open('tests/tests_files/dalton_molecule.mol') as fx:
+                f.write(fx.read())
+
+    def test_input_mol(self):
+
+        fm = dalton.MoleculeInput()
+
+        with open(self.input_mol_file) as f:
+            fm.read(f)
+
+        self.assertEqual(fm.basis_set, 'd-aug-cc-pVDZ')
+        self.assertEqual(fm.title, 'no-field')
+
+        # test molecule
+        self.assertEqual(len(fm.molecule), 3)
+
+        symbols = ['O', 'H', 'H']
+        for index, a in enumerate(fm.molecule):
+            self.assertEqual(a.symbol, symbols[index])
+
+        # test generation with no symmetry
+        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        with open(new_input, 'w') as f:
+            fm.write(f, nosym=True)
+
+        with open(new_input) as f:
+            content = f.readlines()
+            self.assertTrue('Angstrom' in content[4])
+            self.assertTrue('Nosymmetry' in content[4])
+            self.assertTrue('0.115904592' in content[6])
+            self.assertTrue('Charge=1.0 Atoms=1' in content[7])
+
+        # test generation in atomic units
+        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        with open(new_input, 'w') as f:
+            fm.write(f, in_angstrom=False)
+
+        with open(new_input) as f:
+            content = f.readlines()
+            self.assertTrue('Nosymmetry' not in content[4])
+            self.assertTrue('Angstrom' not in content[4])
+            self.assertAlmostEqual(float(content[6].split()[-1]), 0.115904592 * 0.52917165, places=5)
+            self.assertTrue('Charge=1.0 Atoms=1' in content[7])
+
+        # test generation with grouping
+        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        with open(new_input, 'w') as f:
+            fm.write(f, group_atoms=True)
+
+        with open(new_input) as f:
+            content = f.readlines()
+            self.assertTrue('Nosymmetry' not in content[4])
+            self.assertTrue('Angstrom' in content[4])
+            self.assertTrue('0.115904592' in content[6])
+            self.assertTrue('Charge=1.0 Atoms=2' in content[7])  # hydrogens are grouped

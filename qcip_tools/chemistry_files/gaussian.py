@@ -185,10 +185,10 @@ class FCHK(qcip_ChemistryFile):
     def __init__(self):
         self.molecule = molecule.Molecule()
 
-        self.calculation_title = ''
+        self.title = ''
         self.calculation_type = ''
         self.calculation_method = ''
-        self.calculation_basis = ''
+        self.basis_set = ''
 
         self.chunks_information = {}
         self.chunks_parsed = {}
@@ -238,11 +238,11 @@ class FCHK(qcip_ChemistryFile):
         self.lines = f.readlines()
 
         # extract the first information :
-        self.calculation_title = self.lines[0].strip()
+        self.title = self.lines[0].strip()
         second_line = self.lines[1].split()
         self.calculation_type = second_line[0]
         self.calculation_method = second_line[1]
-        self.calculation_basis = second_line[2]
+        self.basis_set = second_line[2]
 
         # now, crawl trough information
         for index, current_line in enumerate(self.lines[2:]):

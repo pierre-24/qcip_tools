@@ -1,0 +1,11 @@
+BASIS
+d-aug-cc-pVDZ
+no-field
+
+Atomtypes=3  Angstrom Nosymmetry
+Charge=8.0 Atoms=1
+O        0.000000000      0.000000000      0.115904592
+Charge=1.0 Atoms=1
+H        0.000000000      0.768518035     -0.463618360
+Charge=1.0 Atoms=1
+H       -0.000000000     -0.768518035     -0.463618360

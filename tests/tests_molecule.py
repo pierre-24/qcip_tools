@@ -48,7 +48,11 @@ class MoleculeTestCase(QcipToolsTestCase):
 
         with self.assertRaises(KeyError):
             m2.atom(0)
+
+        with self.assertRaises(KeyError):
             m2.atom(-1)
+
+        with self.assertRaises(KeyError):
             m2.atom(3)
 
         # test add atom:
@@ -91,6 +95,14 @@ class MoleculeTestCase(QcipToolsTestCase):
         self.assertEqual(m3.number_of_electrons(), 10)
         self.assertEqual(m3.formula(), 'H2O')
         self.assertEqual(m3.multiplicity, 1)
+
+        # atoms()
+        self.assertEqual(m3.atoms(atomic_number_in=[1]), [1, 2])
+        self.assertEqual(m3.atoms(atomic_number_not_in=[1]), [0])
+        self.assertEqual(m3.atoms(atomic_number_not_in=[1, 8]), [])
+        self.assertEqual(m3.atoms(symbol_in=['H']), [1, 2])
+        self.assertEqual(m3.atoms(symbol_not_in=['H']), [0])
+        self.assertEqual(m3.atoms(symbol_not_in=['H'], atomic_number_not_in=[8]), [])
 
         # distances and bonds
         distances = m3.distances()

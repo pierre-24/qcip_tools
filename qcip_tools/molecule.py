@@ -141,6 +141,30 @@ class Molecule:
         else:
             raise KeyError(shifted_index)
 
+    def atoms(self, **kwargs):
+        """Get a list of atom (index) based on some criterion"""
+
+        l = []
+
+        symbols_in = kwargs.get('symbol_in', None)
+        symbols_not_in = kwargs.get('symbol_not_in', None)
+        atomic_number_in = kwargs.get('atomic_number_in', None)
+        atomic_number_not_in = kwargs.get('atomic_number_not_in', None)
+
+        for index, a in enumerate(self):
+            if symbols_in and a.symbol not in symbols_in:
+                continue
+            if symbols_not_in and a.symbol in symbols_not_in:
+                continue
+            if atomic_number_in and a.atomic_number not in atomic_number_in:
+                continue
+            if atomic_number_not_in and a.atomic_number in atomic_number_not_in:
+                continue
+
+            l.append(index)
+
+        return l
+
     def list_of_atoms(self, shifted_index, exclude_atoms=None):
         """Make a list of atoms following the connectivity and excluding some if any.
 
@@ -529,8 +553,8 @@ class Molecule:
         return rstr
 
     def linear(self, threshold=1e-5):
-        """Compute if the molecule is linear or not. A molecule is linear if :math:`I_\\alpha \approx 0` and
-        `I_\\beta \approx I_\\gamma`, if :math:`I_\\alpha < I_\\beta \approx I_\\gamma`.
+        """Compute if the molecule is linear or not. A molecule is linear if :math:`I_\\alpha \\approx 0` and
+        :math:`I_\\beta \\approx I_\\gamma`, if :math:`I_\\alpha < I_\\beta \\approx I_\\gamma`.
 
         :param threshold: threshold for the moment of inertia
         :type threshold: float
