@@ -469,9 +469,9 @@ class Output(qcip_ChemistryFile):
         class FunctionScope:
             line_found = -1
 
-        def find_string(line, current_line_index):
+        def find_string(line, current_index):
             if s in line:
-                FunctionScope.line_found = current_line_index
+                FunctionScope.line_found = current_index
                 return True
             else:
                 return False

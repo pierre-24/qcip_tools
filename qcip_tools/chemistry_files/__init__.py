@@ -55,7 +55,7 @@ class ChemistryFile:
 def apply_over_list(lines, func, start=0, end=None, **kwargs):
     """
     Apply ``func()`` to a given element in list, and expects ``True`` if the iteration must stop, ``False`` otherwise.
-    The prototype of ``func`` must be ``func(line,  current_line_index, **kwargs)``.
+    The prototype of ``func`` must be ``func(line,  current_index, **kwargs)``.
 
     :param lines: lines of the log
     :type lines: list
@@ -75,7 +75,7 @@ def apply_over_list(lines, func, start=0, end=None, **kwargs):
 
     for index, line in enumerate(lines[start:end]):
 
-        if func(line, current_line_index=index + start, **kwargs):
+        if func(line, current_index=index + start, **kwargs):
             return True
 
     return False
