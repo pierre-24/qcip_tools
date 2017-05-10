@@ -174,6 +174,12 @@ class DaltonTestCase(QcipToolsTestCase):
             with open('tests/tests_files/dalton_molecule.mol') as fx:
                 f.write(fx.read())
 
+        self.output_archive = os.path.join(self.temp_dir, 'output.tar.gz')
+
+        with open(self.output_archive, 'wb') as f:
+            with open('tests/tests_files/dalton_archive.tar.gz', 'rb') as fx:
+                f.write(fx.read())
+
     def test_input_mol(self):
 
         fm = dalton.MoleculeInput()
@@ -226,3 +232,21 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('Angstrom' in content[4])
             self.assertTrue('0.115904592' in content[6])
             self.assertTrue('Charge=1.0 Atoms=2' in content[7])  # hydrogens are grouped
+
+    def test_output_archive(self):
+        """Pretty self-explainatory function"""
+
+        fa = dalton.ArchiveOutput()
+
+        with open(self.output_archive, 'rb') as f:
+            fa.read(f)
+
+            # test molecule
+            self.assertEqual(len(fa.molecule), 3)
+
+            symbols = ['O', 'H', 'H']
+            for index, a in enumerate(fa.molecule):
+                self.assertEqual(a.symbol, symbols[index])
+
+            with self.assertRaises(FileNotFoundError):
+                fa.get_file('whatever')

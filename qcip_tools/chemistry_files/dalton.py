@@ -1,3 +1,5 @@
+import tarfile
+
 from qcip_tools import molecule, atom
 from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile
 
@@ -94,4 +96,71 @@ class MoleculeInput(qcip_ChemistryFile):
         return r
 
     def write(self, f, in_angstrom=True, nosym=False, group_atoms=False):
+        """
+
+        :param f: File
+        :type f: file
+        :param in_angstrom: gives the atomic coordinates in angstrom
+        :type: in_angstrom: bool
+        :param nosym: specify "nosymmetry"
+        :type nosym: bool
+        :param group_atoms: group of the same type together (the order may be lost)
+        :type group_atoms: bool
+        """
+
         f.write(self.to_string(in_angstrom, nosym, group_atoms))
+
+
+class ArchiveOutput(qcip_ChemistryFile):
+    """Archive output of Dalton. Contains lots of information for who can extract them.
+
+    **Input only class.**"""
+
+    def __init__(self):
+        self.tar_file = None
+        self.molecule = molecule.Molecule()
+
+    def read(self, f):
+        """Expects ``f`` to be open on binary mode.
+
+        .. note::
+
+            In Dalton, the molecule is given in a old, weird format, called "molplt". Informations about it is
+            given in https://brettbode.github.io/wxmacmolplt/Manual_pages/MacMolPlt_Files.html ...
+
+        :param f: File
+        :type f: file
+        """
+
+        self.from_read = True
+        self.tar_file = tarfile.open(fileobj=f)
+
+        # read molecule:
+        mol_file = self.get_file('DALTON.MOL')
+
+        lines = mol_file.readlines()
+
+        info = lines[1].split()
+        number_of_atoms = int(info[1])
+        number_of_kinds = int(info[3])
+
+        for i in range(number_of_atoms):
+            a = lines[4 + number_of_kinds + i].split()
+            self.molecule.insert(atom.Atom(symbol=str(a[0], 'utf-8'), position=[float(e) for e in a[1:]]))
+
+    def get_file(self, name):
+        """Get a ``io.BufferedReader`` from a filename, if exists. Note that you get ``bytes`` out of that kind of
+        objects, so you need to ``decode()`` them.
+
+        :param name: file name
+        :type name: str
+        :rtype: io.BufferedReader
+        """
+
+        if self.tar_file is None:
+            raise IOError('no archive open')
+
+        if name in self.tar_file.getnames():
+            return self.tar_file.extractfile(self.tar_file.getmember(name))
+        else:
+            raise FileNotFoundError(name)
