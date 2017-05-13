@@ -10,24 +10,25 @@ class GaussianTestCase(QcipToolsTestCase):
     """Gaussian stuffs"""
 
     def setUp(self):
+
         self.temp_dir = tempfile.mkdtemp()
 
         self.input_file = os.path.join(self.temp_dir, 'input.com')
 
         with open(self.input_file, 'w') as f:
-            with open('tests/tests_files/gaussian_input.com') as fx:
+            with open(os.path.join(self.test_directory, 'tests_files/gaussian_input.com')) as fx:
                 f.write(fx.read())
 
         self.fchk_file = os.path.join(self.temp_dir, 'file.fchk')
 
         with open(self.fchk_file, 'w') as f:
-            with open('tests/tests_files/gaussian_fchk.fchk') as fx:
+            with open(os.path.join(self.test_directory, 'tests_files/gaussian_fchk.fchk')) as fx:
                 f.write(fx.read())
 
         self.log_file = os.path.join(self.temp_dir, 'file.log')
 
         with open(self.log_file, 'w') as f:
-            with open('tests/tests_files/gaussian_output.log') as fx:
+            with open(os.path.join(self.test_directory, 'tests_files/gaussian_output.log')) as fx:
                 f.write(fx.read())
 
     def tearDown(self):
@@ -153,13 +154,15 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(fo.molecule.charge, 0)
         self.assertEqual(fo.molecule.multiplicity, 1)
 
-        # test find string:
-        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND'), 30)
-        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_start=30), 30)
-        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_end=30), -1)
-        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', line_start=31), -1)
-        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', in_link=1), 30)
-        self.assertEqual(fo.search('RESTRICTED RIGHTS LEGEND', in_link=101), -1)
+        # test find string:o
+        to_find = 'RESTRICTED RIGHTS LEGEND'
+        line_found = 30
+        self.assertEqual(fo.search(to_find), line_found)
+        self.assertEqual(fo.search(to_find, line_start=line_found), line_found)
+        self.assertEqual(fo.search(to_find, line_end=line_found), -1)
+        self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
+        self.assertEqual(fo.search(to_find, in_link=1), line_found)
+        self.assertEqual(fo.search(to_find, in_link=101), -1)
 
 
 class DaltonTestCase(QcipToolsTestCase):
@@ -171,13 +174,19 @@ class DaltonTestCase(QcipToolsTestCase):
         self.input_mol_file = os.path.join(self.temp_dir, 'input.mol')
 
         with open(self.input_mol_file, 'w') as f:
-            with open('tests/tests_files/dalton_molecule.mol') as fx:
+            with open(os.path.join(self.test_directory, 'tests_files/dalton_molecule.mol')) as fx:
                 f.write(fx.read())
 
         self.output_archive = os.path.join(self.temp_dir, 'output.tar.gz')
 
         with open(self.output_archive, 'wb') as f:
-            with open('tests/tests_files/dalton_archive.tar.gz', 'rb') as fx:
+            with open(os.path.join(self.test_directory, 'tests_files/dalton_archive.tar.gz'), 'rb') as fx:
+                f.write(fx.read())
+
+        self.output_log = os.path.join(self.temp_dir, 'output.out')
+
+        with open(self.output_log, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/dalton_output.out'), 'r') as fx:
                 f.write(fx.read())
 
     def test_input_mol(self):
@@ -234,7 +243,7 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('Charge=1.0 Atoms=2' in content[7])  # hydrogens are grouped
 
     def test_output_archive(self):
-        """Pretty self-explainatory function"""
+        """Test archive output"""
 
         fa = dalton.ArchiveOutput()
 
@@ -250,3 +259,37 @@ class DaltonTestCase(QcipToolsTestCase):
 
             with self.assertRaises(FileNotFoundError):
                 fa.get_file('whatever')
+
+    def test_output(self):
+        """Test the bare dalton output"""
+
+        fl = dalton.Output()
+
+        with open(self.output_log) as f:
+            fl.read(f)
+
+        # test molecule
+        self.assertEqual(len(fl.molecule), 3)
+
+        symbols = ['O', 'H', 'H']
+        for index, a in enumerate(fl.molecule):
+            self.assertEqual(a.symbol, symbols[index])
+
+        # test find string:
+        to_find = '@    Occupied SCF orbitals'
+        line_found = 515
+        self.assertEqual(fl.search(to_find), line_found)
+        self.assertEqual(fl.search(to_find, line_start=line_found), line_found)
+        self.assertEqual(fl.search(to_find, line_end=line_found), -1)
+        self.assertEqual(fl.search(to_find, line_start=line_found + 1), -1)
+        self.assertEqual(fl.search(to_find, in_section='SIRIUS'), line_found)
+        self.assertEqual(fl.search(to_find, in_section='CC'), -1)
+
+        # compare with the archive output:
+        fa = dalton.ArchiveOutput()
+
+        with open(self.output_archive, 'rb') as f:
+            fa.read(f)
+
+            for index, a in enumerate(fa.molecule):
+                self.assertArrayAlmostEqual(a.position, fl.molecule[index].position)

@@ -52,14 +52,14 @@ class ChemistryFile:
         return molecule
 
 
-def apply_over_list(lines, func, start=0, end=None, **kwargs):
+def apply_over_list(lst, func, start=0, end=None, **kwargs):
     """
     Apply ``func()`` to a given element in list, and expects ``True`` if the iteration must stop, ``False`` otherwise.
     The prototype of ``func`` must be ``func(line,  current_index, **kwargs)``.
 
-    :param lines: lines of the log
-    :type lines: list
-    :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
+    :param lst: list over which the function is applied
+    :type lst: list
+    :param func: function, for which the first parameter is the index, and the followings are the ``**kwargs``.
     :type func: callback
     :param start: starting index
     :type start: int
@@ -71,9 +71,9 @@ def apply_over_list(lines, func, start=0, end=None, **kwargs):
     """
 
     if end is None:
-        end = len(lines)
+        end = len(lst)
 
-    for index, line in enumerate(lines[start:end]):
+    for index, line in enumerate(lst[start:end]):
 
         if func(line, current_index=index + start, **kwargs):
             return True

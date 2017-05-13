@@ -1,5 +1,6 @@
 import unittest
 import numpy
+import os
 
 
 def array_almost_equals(a, b, places=7, delta=None, msg=''):
@@ -14,6 +15,11 @@ def array_almost_equals(a, b, places=7, delta=None, msg=''):
 
 
 class QcipToolsTestCase(unittest.TestCase):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.test_directory = os.path.dirname(__file__)
 
     def assertArrayAlmostEqual(self, a, b, places=3, delta=None, msg=''):
         return array_almost_equals(a, b, places=places, delta=delta, msg=msg)
