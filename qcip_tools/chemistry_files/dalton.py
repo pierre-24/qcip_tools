@@ -11,6 +11,10 @@ AuToAngstrom = 0.52917165
 class MoleculeInput(qcip_ChemistryFile):
     """Dalton mol input file.
 
+    .. warning::
+
+        Multiplicity seems to be given in the .dal file, so it may be wrong!!
+
     **I/O class.**"""
 
     file_type = 'DALTON_MOL'
@@ -31,13 +35,21 @@ class MoleculeInput(qcip_ChemistryFile):
         self.from_read = True
 
         if len(lines) < 6:
-            raise Exception('something wrong with dalton .mol')
+            raise Exception('something wrong with dalton .mol: too short')
 
         self.basis_set = lines[1].strip()
         self.title = (lines[2] + '\n' + lines[3]).strip()
 
-        in_angstrom = 'angstrom' in lines[4].lower()
+        info_line = lines[4].lower()
+
+        in_angstrom = 'angstrom' in info_line
         atomic_number = .0
+
+        charge = info_line.find('charge=')
+        if charge != -1:
+            next_space = info_line.find(' ', charge + len('charge='))
+            self.molecule.charge = int(info_line[charge + len('charge='):next_space])
+            self.molecule.multiplicity = 1 if self.molecule.charge % 2 == 0 else 1
 
         for line in lines[5:]:
             if 'charge=' in line.lower():
@@ -115,6 +127,8 @@ class ArchiveOutput(qcip_ChemistryFile):
 
     **Input only class.**"""
 
+    file_type = 'DALTON_ARCHIVE'
+
     def __init__(self):
         self.tar_file = None
         self.molecule = molecule.Molecule()
@@ -188,6 +202,8 @@ class Output(qcip_ChemistryFile):
     """Output of Dalton.
 
     **Input only class.**"""
+
+    file_type = 'DALTON_LOG'
 
     def __init__(self):
         self.molecule = molecule.Molecule()

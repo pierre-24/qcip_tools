@@ -206,6 +206,10 @@ class DaltonTestCase(QcipToolsTestCase):
         for index, a in enumerate(fm.molecule):
             self.assertEqual(a.symbol, symbols[index])
 
+        self.assertEqual(fm.molecule.charge, -2)
+        self.assertEqual(fm.molecule.multiplicity, 1)
+        self.assertEqual(fm.molecule.number_of_electrons(), 12)
+
         # test generation with no symmetry
         new_input = os.path.join(self.temp_dir, 'new_mol.mol')
         with open(new_input, 'w') as f:
@@ -214,6 +218,7 @@ class DaltonTestCase(QcipToolsTestCase):
         with open(new_input) as f:
             content = f.readlines()
             self.assertTrue('Angstrom' in content[4])
+            self.assertTrue('Charge=-2' in content[4])
             self.assertTrue('Nosymmetry' in content[4])
             self.assertTrue('0.115904592' in content[6])
             self.assertTrue('Charge=1.0 Atoms=1' in content[7])
@@ -225,6 +230,7 @@ class DaltonTestCase(QcipToolsTestCase):
 
         with open(new_input) as f:
             content = f.readlines()
+            self.assertTrue('Charge=-2' in content[4])
             self.assertTrue('Nosymmetry' not in content[4])
             self.assertTrue('Angstrom' not in content[4])
             self.assertAlmostEqual(float(content[6].split()[-1]), 0.115904592 * 0.52917165, places=5)
@@ -238,6 +244,7 @@ class DaltonTestCase(QcipToolsTestCase):
         with open(new_input) as f:
             content = f.readlines()
             self.assertTrue('Nosymmetry' not in content[4])
+            self.assertTrue('Charge=-2' in content[4])
             self.assertTrue('Angstrom' in content[4])
             self.assertTrue('0.115904592' in content[6])
             self.assertTrue('Charge=1.0 Atoms=2' in content[7])  # hydrogens are grouped
