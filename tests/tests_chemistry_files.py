@@ -228,12 +228,28 @@ class GaussianTestCase(QcipToolsTestCase):
         square_subtract.cube_type = 'density'
         out = square_subtract.to_string()
 
-        with open('/home/pbeaujea/tmp.cub', 'w') as f:
-            square_subtract.write(f)
-
         with open(self.cube_file2) as f:
             ref = f.read()
             self.assertEqual(out, ref)
+
+    def test_cube_charge_transfer(self):
+        """Test the computation of the charge transfer"""
+
+        fc = gaussian.Cube()
+
+        with open(self.cube_file) as f:
+            fc.read(f)
+
+        MO_1 = fc.slice(0)
+        MO_2 = fc.slice(1)
+
+        diff_of_square = MO_2 ** 2 - MO_1 ** 2
+        ct = diff_of_square.compute_charge_transfer()
+
+        # those results are checked against the original implementation of D. Jacquemin.
+        self.assertArrayAlmostEqual(ct.charge, 0.8836, places=4)
+        self.assertAlmostEqual(ct.distance, 2.4217, places=4)
+        self.assertArrayAlmostEqual(ct.vector, [.0, .0, -2.4217], places=4)
 
 
 class DaltonTestCase(QcipToolsTestCase):

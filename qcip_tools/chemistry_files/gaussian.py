@@ -482,6 +482,28 @@ class Output(qcip_ChemistryFile):
         return FunctionScope.line_found
 
 
+class ChargeTransferInformation:
+    """Analyzed charge transfer.
+
+    In it, ``charge`` is the amount of charge (in e) transfered from ``barycenter_m`` to ``barycenter_p``,
+    linked by ``vector``, which lead to a certain charge transfer ``distance``.
+
+    :param charge: charge
+    :type charge: float
+    :param barycenter_m: barycenter of the negative charges
+    :type barycenter_m: numpy.array
+    :param barycenter_p: barycenter of the positive charges
+    :type barycenter_p: numpy.array
+    """
+
+    def __init__(self, charge, barycenter_m, barycenter_p):
+        self.charge = charge
+        self.barycenter_m = barycenter_m
+        self.barycenter_p = barycenter_p
+        self.vector = barycenter_m - barycenter_p
+        self.distance = numpy.linalg.norm(self.vector)
+
+
 class Cube(qcip_ChemistryFile):
     """Gaussian cube.
 
@@ -508,11 +530,12 @@ class Cube(qcip_ChemistryFile):
         """
 
         .. warning::
+
             The charge/multiplicity may be wrong !
 
         .. note::
 
-            Increments are stored as found, in bohr.
+            Increments and origin are stored as found, in bohr.
 
         :param f: File
         :type f: file
@@ -757,3 +780,61 @@ class Cube(qcip_ChemistryFile):
             new_cube.MOs = [self.MOs[index]]
 
         return new_cube
+
+    def positions(self):
+        """Return an array with the position (in angstrom) of each point.
+
+        :rtype: numpy.array
+        """
+
+        s = self.records_per_direction[:]
+        s.append(3)
+        positons = numpy.zeros(tuple(s))
+
+        for x in range(self.records_per_direction[0]):
+            for y in range(self.records_per_direction[1]):
+                for z in range(self.records_per_direction[2]):
+                    current_position = self.origin + numpy.array([x, y, z]) * self.increments
+                    positons[x, y, z] = current_position * AuToAngstrom
+        return positons
+
+    def compute_charge_transfer(self):
+        """
+        Analyse CT by computing:
+
+        - Transferred charge ;
+        - Barycenter positions (the negative one being the starting point of the transfer) ;
+        - Distance between the two barycenters.
+
+        Made according to *J. Chem. Theory. Comput.* **7**, 2498 (2011).
+
+        :rtype: ChargeTransferInformation
+        """
+
+        if self.data_per_record != 1:
+            raise ValueError(self.data_per_record)
+
+        dV = self.dV()
+
+        # positive and negative densities:
+        rho_p = self.records.copy()
+        rho_p[numpy.where(rho_p < 0.0)] = 0.0
+
+        charge_transferred = rho_p.sum() * dV
+
+        rho_m = self.records.copy()
+        rho_m[numpy.where(rho_p > 0.0)] = 0.0
+
+        # find barycenter positions (in angstrom)
+        positions = self.positions()
+        bar_p = numpy.zeros(3)
+        bar_m = numpy.zeros(3)
+
+        for i in range(3):
+            bar_p[i] = numpy.sum(positions[:, :, :, i] * rho_p[:, :, :, 0]) / charge_transferred * dV
+            bar_m[i] = - numpy.sum(positions[:, :, :, i] * rho_m[:, :, :, 0]) / charge_transferred * dV
+
+        return ChargeTransferInformation(
+            charge=charge_transferred / (AuToAngstrom ** 3),  # charge in |e|
+            barycenter_m=bar_m,
+            barycenter_p=bar_p)
