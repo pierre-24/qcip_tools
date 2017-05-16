@@ -1,6 +1,7 @@
 import tempfile
 import shutil
 import os
+import random
 
 from tests import QcipToolsTestCase
 from qcip_tools.chemistry_files import gaussian, dalton
@@ -29,6 +30,18 @@ class GaussianTestCase(QcipToolsTestCase):
 
         with open(self.log_file, 'w') as f:
             with open(os.path.join(self.test_directory, 'tests_files/gaussian_output.log')) as fx:
+                f.write(fx.read())
+
+        self.cube_file = os.path.join(self.temp_dir, 'file.cub')
+
+        with open(self.cube_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube.cub')) as fx:
+                f.write(fx.read())
+
+        self.cube_file2 = os.path.join(self.temp_dir, 'file2.cub')
+
+        with open(self.cube_file2, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_2.cub')) as fx:
                 f.write(fx.read())
 
     def tearDown(self):
@@ -163,6 +176,64 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
         self.assertEqual(fo.search(to_find, in_link=1), line_found)
         self.assertEqual(fo.search(to_find, in_link=101), -1)
+
+    def test_cube_file(self):
+        """Test the cube files"""
+
+        fc = gaussian.Cube()
+
+        with open(self.cube_file) as f:
+            fc.read(f)
+
+        self.assertEqual(fc.records_per_direction, [29, 29, 29])
+        self.assertEqual(fc.data_per_record, 2)
+        self.assertEqual(fc.MOs, [2, 3])
+        self.assertEqual(fc.number_of_data(), 29 * 29 * 29 * 2)
+        self.assertEqual(fc.cube_type, 'MO')
+
+        # test molecule
+        self.assertEqual(len(fc.molecule), 2)
+
+        symbols = ['Li', 'H']
+        for index, a in enumerate(fc.molecule):
+            self.assertEqual(a.symbol, symbols[index])
+
+        # test slice operation
+        MO_1 = fc.slice(0)
+        self.assertEqual(MO_1.data_per_record, 1)
+        self.assertEqual(MO_1.MOs[0], 2)
+        self.assertEqual(MO_1.records.shape, (29, 29, 29, 1))
+
+        MO_2 = fc.slice(1)
+        self.assertEqual(MO_2.data_per_record, 1)
+        self.assertEqual(MO_2.MOs[0], 3)
+        self.assertEqual(MO_2.records.shape, (29, 29, 29, 1))
+
+        random_place = random.randrange(0, 28), random.randrange(0, 28), random.randrange(0, 28)
+        self.assertEqual(MO_1.records[random_place][0], fc.records[random_place][0])
+        self.assertEqual(MO_2.records[random_place][0], fc.records[random_place][1])
+
+        # test mathematical operations
+        square_subtract = (MO_1 - MO_2) ** 2
+
+        fc2 = gaussian.Cube()
+
+        with open(self.cube_file2) as f:
+            fc2.read(f)
+
+        self.assertArrayAlmostEqual(square_subtract.records, fc2.records, places=5)
+
+        square_subtract.title = fc2.title
+        square_subtract.subtitle = fc2.subtitle
+        square_subtract.cube_type = 'density'
+        out = square_subtract.to_string()
+
+        with open('/home/pbeaujea/tmp.cub', 'w') as f:
+            square_subtract.write(f)
+
+        with open(self.cube_file2) as f:
+            ref = f.read()
+            self.assertEqual(out, ref)
 
 
 class DaltonTestCase(QcipToolsTestCase):

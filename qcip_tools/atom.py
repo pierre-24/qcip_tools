@@ -450,6 +450,30 @@ class Atom:
         """
         return self.num_of_electrons
 
+    def number_of_core_electrons(self):
+        """Return the number of core electrons
+
+        :rtype: int
+        """
+
+        prev = 0
+        possible_values = [0, 2, 10, 18, 36, 54, 86]
+
+        for core_electrons in possible_values[1:]:
+
+            if core_electrons > self.num_of_electrons:
+                return prev
+
+            prev = core_electrons
+
+    def number_of_valence_electrons(self):
+        """Get the number of valence electrons
+
+        :rtype: int
+        """
+
+        return self.num_of_electrons - self.number_of_core_electrons()
+
     def number_of_protons(self):
         """
         :return: the number of protons

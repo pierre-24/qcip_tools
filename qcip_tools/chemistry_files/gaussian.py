@@ -1,6 +1,8 @@
 import os
 import math
 import re
+import numpy
+import copy
 
 from qcip_tools import molecule, atom
 from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
@@ -478,3 +480,280 @@ class Output(qcip_ChemistryFile):
 
         self.apply_function(find_string, line_start=line_start, line_end=line_end, in_link=in_link)
         return FunctionScope.line_found
+
+
+class Cube(qcip_ChemistryFile):
+    """Gaussian cube.
+
+    Documentation on that format can be found `here <http://gaussian.com/cubegen/>`_.
+
+    **Input/output class**."""
+
+    file_type = 'GAUSSIAN_CUBE'
+
+    def __init__(self):
+
+        self.molecule = molecule.Molecule()
+        self.cube_type = ''
+        self.records_per_direction = [0, 0, 0]
+        self.origin = numpy.zeros(3)
+        self.increments = numpy.zeros(3)
+        self.data_per_record = 1
+        self.records = None
+        self.title = ''
+        self.subtitle = ''
+        self.MOs = ''
+
+    def read(self, f):
+        """
+
+        .. warning::
+            The charge/multiplicity may be wrong !
+
+        .. note::
+
+            Increments are stored as found, in bohr.
+
+        :param f: File
+        :type f: file
+        """
+
+        self.from_read = True
+
+        lines = f.readlines()
+        additional_line = False
+        self.cube_type = 'unknown'
+        self.data_per_record = 1
+
+        # titles:
+        self.title = lines[0].strip()
+        self.subtitle = lines[1].strip()
+
+        self.MOs = []
+
+        # parameters
+        params = lines[2].split()
+        num_of_atoms = int(params[0])
+        if num_of_atoms < 0:
+            additional_line = True
+            num_of_atoms = - num_of_atoms
+            self.cube_type = 'MO'
+
+        self.origin = numpy.array([float(a) for a in params[1:4]])
+
+        if len(params) > 4:
+            self.data_per_record = int(params[4])
+
+        # number of records and increments
+        for i in range(0, 3):
+            self.increments[i] = float(lines[3 + i].split()[i + 1])
+
+        for i in range(0, 3):
+            num = int(lines[i + 3][0:8].strip())
+            self.records_per_direction[i] = num
+
+        # atoms:
+        self.molecule = molecule.Molecule()
+        for i in range(0, num_of_atoms):
+            atm = lines[i + 6].split()
+            symbol = atom.AtomicNumberToSymbol[int(atm[0])]
+            atom_ = atom.Atom(symbol=symbol, position=numpy.array([float(a) * AuToAngstrom for a in atm[2:5]]))
+            self.molecule.insert(atom_)
+
+        # records
+        start_line = 6 + num_of_atoms
+
+        if additional_line:
+            # number of stuffs per line
+            extra_line = lines[start_line].strip().split()
+            self.data_per_record = int(extra_line[0])
+
+            for i in extra_line[1:]:
+                self.MOs.append(int(i))
+
+            start_line += 1
+
+        total_num_of_data = self.number_of_data()
+        actual_num_of_data = 0
+
+        self.records = numpy.zeros(total_num_of_data)
+
+        for line in lines[start_line:]:
+            raw = [float(a) for a in line.strip().split()]
+            l = len(raw)
+            self.records[actual_num_of_data:actual_num_of_data + l] = raw
+            actual_num_of_data += l
+
+        reshape = self.records_per_direction.copy()
+        reshape.append(self.data_per_record)
+
+        self.records = self.records.reshape(tuple(reshape))
+
+        if actual_num_of_data != total_num_of_data:
+            raise Exception(
+                'num of record is not equal to total num of records ({}!={})'.format(
+                    actual_num_of_data, total_num_of_data))
+
+    def number_of_records(self):
+        """Number of records in the file
+
+        .. note::
+
+            According to the documentation:
+            "Cube files have one row per record (i.e., N1*N2 records each of length N3*NVal)" (where N1 and N2
+            are the record per direction in the X and Y direction, while N3 is for the Z direction, the fastest
+            running index).
+
+        :rtype: int
+        """
+
+        return numpy.prod(self.records_per_direction[:2])
+
+    def number_of_data(self):
+        """Number of points in the file
+
+        :rtype: int
+        """
+        return self.number_of_records() * self.records_per_direction[2] * self.data_per_record
+
+    def dV(self):
+        """Return the size of the smallest unit of volume in the cube, in angstrom**3.
+
+        :rtype: float
+        """
+
+        return numpy.prod(self.increments) * AuToAngstrom ** 3
+
+    def to_string(self):
+        """
+
+        :rtype: str
+        """
+
+        r = '{}\n{}\n'.format(self.title, self.subtitle)
+
+        num_of_atoms = len(self.molecule)
+        if self.cube_type == 'MO':
+            num_of_atoms = - num_of_atoms
+
+        # origin and increments
+        r += '{:5d} {:11f} {:11f} {:11f} {:5d}\n'.format(
+            num_of_atoms, self.origin[0], self.origin[1], self.origin[2], self.data_per_record)
+
+        r += '{:5d} {:11f} {:11f} {:11f}\n'.format(self.records_per_direction[0], self.increments[0], 0.0, 0.0)
+        r += '{:5d} {:11f} {:11f} {:11f}\n'.format(self.records_per_direction[1], 0.0, self.increments[1], 0.0)
+        r += '{:5d} {:11f} {:11f} {:11f}\n'.format(self.records_per_direction[2], 0.0, 0.0, self.increments[2])
+
+        # molecule
+        for a in self.molecule:
+            r += '{:5d} {:11f} {:11f} {:11f} {:11f}\n'.format(
+                a.atomic_number, a.atomic_number,
+                a.position[0] / AuToAngstrom,
+                a.position[1] / AuToAngstrom,
+                a.position[2] / AuToAngstrom
+            )
+
+        if self.cube_type == 'MO':
+            r += '    {}  {}\n'.format(len(self.MOs), '  '.join(str(m) for m in self.MOs))
+
+        # records:
+        for x in range(self.records_per_direction[0]):
+            for y in range(self.records_per_direction[1]):
+                for z in range(self.records_per_direction[2]):
+                    for index_data in range(self.data_per_record):
+                        if (z * self.data_per_record + index_data) % 6 == 0 and z != 0:
+                            r += '\n'
+
+                        r += ' {: .5E}'.format(self.records[x][y][z][index_data])
+
+                r += '\n'
+
+        return r
+
+    def alike(self, other):
+        """Compare two cubes to check if they have the same size
+
+        :param other: the other cube
+        :type other: Cube
+        :rtype: bool
+        """
+
+        if self.number_of_data() != other.number_of_data():
+            return False
+
+        if not numpy.array_equal(self.increments, other.increments):
+            return False
+
+        if self.records.shape != other.records.shape:
+            return False
+
+        return True
+
+    def __add__(self, other):
+        """Sum the values of two cubes
+
+        :param other: other cube
+        :type other: Cube
+        :rtype: Cube
+        """
+
+        if not self.alike(other):
+            raise ArithmeticError('cannot sum with this cube')
+
+        new_cube = copy.deepcopy(self)
+        new_cube.records += other.records
+
+        return new_cube
+
+    def __sub__(self, other):
+        """Subtract the values of two cubes
+
+        :param other: other cube
+        :type other: Cube
+        :rtype: Cube
+        """
+
+        if not self.alike(other):
+            raise ArithmeticError('cannot sub with this cube')
+
+        new_cube = copy.deepcopy(self)
+        new_cube.records -= other.records
+
+        return new_cube
+
+    def __pow__(self, power, modulo=None):
+        """Power the records
+
+        :param power: power
+        :rtype power: float
+        :param modulo: ?
+        :rtype modulo: int
+        :rtype: Cube
+        """
+
+        new_cube = copy.deepcopy(self)
+        new_cube.records **= power
+
+        return new_cube
+
+    def slice(self, index=0):
+        """Get a specific part of the data
+
+        :param index: index of the record
+        :type index: int
+        :rtype: Cube
+        """
+
+        if index < 0 or index >= self.data_per_record:
+            raise ValueError(index)
+
+        new_cube = copy.deepcopy(self)
+        new_shape = list(self.records.shape)
+        new_shape[-1] = 1
+        new_cube.records = self.records[:, :, :, index].reshape(new_shape)
+        new_cube.data_per_record = 1
+
+        if self.cube_type == 'MO':
+            new_cube.MOs = [self.MOs[index]]
+
+        return new_cube
