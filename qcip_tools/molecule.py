@@ -446,7 +446,7 @@ class Molecule:
         :param extra_space: Add some space around the box
         :type extra_space: float
         :return: Bounding box
-        :rtype: qcip_tools.math.BoundingBox
+        :rtype: qcip_tools.math.AABoundingBox
         """
 
         origin = numpy.array([1e14, 1e14, 1e14])
@@ -459,7 +459,7 @@ class Molecule:
                 if coo[i] > maximum[i]:
                     maximum[i] = coo[i]
 
-        return qcip_math.BoundingBox([i - extra_space for i in origin], maximum=[i + extra_space for i in maximum])
+        return qcip_math.AABoundingBox([i - extra_space for i in origin], maximum=[i + extra_space for i in maximum])
 
     def formula(self, enhanced=False):
         """Get the formula, based on self.formula_holder and self. symbols_contained.

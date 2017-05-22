@@ -12,18 +12,82 @@ class DimensionAreNotEquals(Exception):
         super().__init__('{} and {} have not the same dimension'.format(var1, var2))
 
 
-class BoundingBox:
+class BoundingObject:
+    """Define a general bounding object
 
-    def __init__(self, origin, maximum=None, size=None):
-        """Defines a bounding box
+    :param origin: the origin
+    :type origin: list|numpy.ndarray
+    """
 
-        :param origin:
-        :param maximum:
-        :param size:
+    def __init__(self, origin):
+        self.dimension = len(origin)
+        self.origin = numpy.array(origin)
+
+    def contains(self, item):
+        """Test if point in bounding box
+
+        :param item: coordinates of the point
+        :type item: list|numpy.ndarray
+        :rtype: bool
         """
 
-        self.dimension = len(origin)
-        self.origin = origin
+        raise NotImplementedError()
+
+    def __contains__(self, item):
+
+        if type(item) not in [numpy.ndarray, list, tuple]:
+            raise TypeError(type(item))
+
+        if len(item) != len(self.origin):
+            raise DimensionAreNotEquals('coordinates', 'box')
+
+        return self.contains(item)
+
+    def update(self, coo):
+        """Update the size of the bounding box to include a given point
+
+        :param coo: coordinates of the point
+        :type coo: list|numpy.ndarray
+        """
+
+        raise NotImplementedError()
+
+    def local_coordinates(self, coo):
+        """Returns coordinates with respect to the origin of the bounding box
+
+        :param coo: coordinates of the point
+        :type coo: list|numpy.ndarray
+        :rtype: numpy.ndarray
+        """
+
+        if len(coo) != self.dimension:
+            raise DimensionAreNotEquals('coordinates', 'box')
+
+        return numpy.array([coo[i] - self.origin[i] for i in range(self.dimension)])
+
+
+class AABoundingBox(BoundingObject):
+    """Defines a Axis Aligned (AA) bounding box. You must define either ``maximum`` or ``size``.
+
+    .. note::
+
+        Works for any dimension.
+
+    .. note::
+
+        The ``origin`` is corrected so that is the lowest coordinates possible, and ``dimension`` is set
+        accordingly, so that it is only positive numbers.
+
+    :param origin: the origin
+    :type origin: list|numpy.ndarray
+    :param maximum: the maximum
+    :type maximum: list|numpy.ndarray
+    :param size: size of bounding box
+    :type size: list|numpy.ndarray
+    """
+
+    def __init__(self, origin, maximum=None, size=None):
+        super().__init__(origin)
 
         if maximum is not None:
             if self.dimension != len(maximum):
@@ -83,19 +147,6 @@ class BoundingBox:
 
                 self.size[i] = new_size if new_size > new_size_from_point else new_size_from_point
 
-    def local_coordinates(self, coo):
-        """Returns coordinates with respect to the origin of the bounding box
-
-        :param coo: coordinates of the point
-        :type coo: list|numpy.ndarray
-        :rtype: numpy.ndarray
-        """
-
-        if len(coo) != self.dimension:
-            raise DimensionAreNotEquals('coordinates', 'box')
-
-        return numpy.array([coo[i] - self.origin[i] for i in range(self.dimension)])
-
     def maximum(self):
         """Returns the position of the maximum of the bounding box in "global" coordinates
 
@@ -103,6 +154,57 @@ class BoundingBox:
         """
 
         return numpy.array([self.origin[i] + self.size[i] for i in range(self.dimension)])
+
+
+class BoundingSphere(BoundingObject):
+    """Define a bounding sphere
+
+    .. note::
+
+        Works for any dimension.
+
+    :param origin: the origin
+    :type origin: list|numpy.ndarray
+    :param radius: the radius
+    :type radius: float
+    """
+
+    def __init__(self, origin, radius):
+
+        super().__init__(origin)
+        self.radius = radius
+        self.squared_radius = radius ** 2
+
+    def contains(self, item, tolerance=1e-3):
+        """Test if point in bounding sphere
+
+        :param item: coordinates of the point
+        :type item: list|numpy.ndarray
+        :param tolerance: threshold of tolerance
+        :type tolerance: float
+        :rtype: bool
+        """
+
+        if len(item) != len(self.origin):
+            raise DimensionAreNotEquals('coordinates', 'sphere')
+
+        if numpy.sum((numpy.array(item) - self.origin) ** 2) < self.squared_radius + tolerance:
+            return True
+
+        return False
+
+    def update(self, coo):
+        """Update the radius of the bounding sphere to include a given point
+
+        :param coo: coordinates of the point
+        :type coo: list|numpy.ndarray
+        """
+
+        if len(coo) != len(self.origin):
+            raise DimensionAreNotEquals('coordinates', 'sphere')
+
+        self.squared_radius = numpy.sum((numpy.array(coo) - self.origin) ** 2)
+        self.radius = math.sqrt(self.squared_radius)
 
 
 def rodrigues_rotation(v, rot_axis, angle):
