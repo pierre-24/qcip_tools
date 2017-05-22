@@ -4,6 +4,7 @@ import os
 import random
 
 from tests import QcipToolsTestCase
+from qcip_tools import math as qcip_math
 from qcip_tools.chemistry_files import gaussian, dalton
 
 
@@ -42,6 +43,12 @@ class GaussianTestCase(QcipToolsTestCase):
 
         with open(self.cube_file2, 'w') as f:
             with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_2.cub')) as fx:
+                f.write(fx.read())
+
+        self.cube_file3 = os.path.join(self.temp_dir, 'file3.cub')
+
+        with open(self.cube_file3, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_3.cub')) as fx:
                 f.write(fx.read())
 
     def tearDown(self):
@@ -250,6 +257,36 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertArrayAlmostEqual(ct.charge, 0.8836, places=4)
         self.assertAlmostEqual(ct.distance, 2.4217, places=4)
         self.assertArrayAlmostEqual(ct.vector, [.0, .0, -2.4217], places=4)
+
+    def test_sum_density(self):
+        """Test the sum of density.
+
+        Note that due to the low resolution of the cube file, results are approximates"""
+
+        sets = {
+            'almost_everything': qcip_math.BoundingSet(),
+            'almost_nothing': qcip_math.BoundingSet(),
+            'lithium_atom': qcip_math.BoundingSet(),
+            'hydrogen_atom': qcip_math.BoundingSet()
+        }
+
+        fc = gaussian.Cube()
+
+        with open(self.cube_file3) as f:
+            fc.read(f)
+
+        sets['almost_everything'].include(qcip_math.AABoundingBox(
+            fc.origin * 0.52917165, maximum=(fc.origin + fc.records_per_direction * fc.increments) * 0.52917165))
+
+        sets['almost_nothing'].include(qcip_math.AABoundingBox(fc.origin * 0.52917165, size=[.1, .1, .1]))
+        sets['lithium_atom'].include(qcip_math.BoundingSphere(fc.molecule[0].position, radius=1.28))
+        sets['hydrogen_atom'].include(qcip_math.BoundingSphere(fc.molecule[1].position, radius=0.31))
+
+        results = fc.sum_density_of_sets(sets)
+        self.assertAlmostEqual(results['almost_everything'], fc.molecule.number_of_electrons(), delta=.5)
+        self.assertAlmostEqual(results['almost_nothing'], .0)
+        self.assertAlmostEqual(results['lithium_atom'], 2.25, delta=.5)
+        self.assertAlmostEqual(results['hydrogen_atom'], .25, delta=.5)
 
 
 class DaltonTestCase(QcipToolsTestCase):

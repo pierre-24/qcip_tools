@@ -186,7 +186,7 @@ class AABoundingBox(BoundingObject):
     .. note::
 
         The ``origin`` is corrected so that is the lowest coordinates possible, and ``dimension`` is set
-        accordingly, so that it is only positive numbers.
+        accordingly, so that it contains only positive numbers.
 
     :param origin: the origin
     :type origin: list|numpy.ndarray

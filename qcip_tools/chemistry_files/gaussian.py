@@ -670,11 +670,7 @@ class Cube(qcip_ChemistryFile):
         # molecule
         for a in self.molecule:
             r += '{:5d} {:11f} {:11f} {:11f} {:11f}\n'.format(
-                a.atomic_number, a.atomic_number,
-                a.position[0] / AuToAngstrom,
-                a.position[1] / AuToAngstrom,
-                a.position[2] / AuToAngstrom
-            )
+                a.atomic_number, a.atomic_number, *(a.position / AuToAngstrom))
 
         if self.cube_type == 'MO':
             r += '    {}  {}\n'.format(len(self.MOs), '  '.join(str(m) for m in self.MOs))
@@ -798,7 +794,7 @@ class Cube(qcip_ChemistryFile):
                     positons[x, y, z] = current_position * AuToAngstrom
         return positons
 
-    def compute_charge_transfer(self):
+    def compute_charge_transfer(self, index=0):
         """
         Analyse CT by computing:
 
@@ -808,11 +804,10 @@ class Cube(qcip_ChemistryFile):
 
         Made according to *J. Chem. Theory. Comput.* **7**, 2498 (2011).
 
+        :param index: slice of the record to use
+        :type index: int
         :rtype: ChargeTransferInformation
         """
-
-        if self.data_per_record != 1:
-            raise ValueError(self.data_per_record)
 
         dV = self.dV()
 
@@ -831,10 +826,46 @@ class Cube(qcip_ChemistryFile):
         bar_m = numpy.zeros(3)
 
         for i in range(3):
-            bar_p[i] = numpy.sum(positions[:, :, :, i] * rho_p[:, :, :, 0]) / charge_transferred * dV
-            bar_m[i] = - numpy.sum(positions[:, :, :, i] * rho_m[:, :, :, 0]) / charge_transferred * dV
+            bar_p[i] = numpy.sum(positions[:, :, :, i] * rho_p[:, :, :, index]) / charge_transferred * dV
+            bar_m[i] = - numpy.sum(positions[:, :, :, i] * rho_m[:, :, :, index]) / charge_transferred * dV
 
         return ChargeTransferInformation(
             charge=charge_transferred / (AuToAngstrom ** 3),  # charge in |e|
             barycenter_m=bar_m,
             barycenter_p=bar_p)
+
+    def sum_density_of_sets(self, bounding_sets, index=0):
+        """Sum the density in a given space, defined by the bounding boxes
+
+        :param bounding_sets: sets of bounding boxes
+        :type bounding_sets: dict
+        :param index: slice of the record to use
+        :type index: int
+        :return: dictionary with the sum of the density
+        :rtype: dict
+        """
+
+        if self.data_per_record != 1:
+            raise ValueError(self.data_per_record)
+
+        if len(bounding_sets) == 0:
+            return {}
+
+        sums = {}
+
+        for k in bounding_sets:
+            sums[k] = .0
+
+        dV = self.dV() / (AuToAngstrom ** 3)
+
+        for x in range(self.records_per_direction[0]):
+            for y in range(self.records_per_direction[1]):
+                for z in range(self.records_per_direction[2]):
+                    current_position = (self.origin + numpy.array([x, y, z]) * self.increments) * AuToAngstrom
+                    current_value = self.records[x, y, z, index] * dV
+
+                    for key, bounding_set in bounding_sets.items():
+                        if current_position in bounding_set:
+                            sums[key] += current_value
+
+        return sums
