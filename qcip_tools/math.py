@@ -1,5 +1,6 @@
 import math
 import numpy
+import copy
 import collections
 from functools import reduce
 import operator
@@ -31,16 +32,15 @@ class BoundingObject:
         :rtype: bool
         """
 
-        raise NotImplementedError()
-
-    def __contains__(self, item):
-
         if type(item) not in [numpy.ndarray, list, tuple]:
             raise TypeError(type(item))
 
         if len(item) != len(self.origin):
             raise DimensionAreNotEquals('coordinates', 'box')
 
+        raise NotImplementedError()
+
+    def __contains__(self, item):
         return self.contains(item)
 
     def update(self, coo):
@@ -64,6 +64,116 @@ class BoundingObject:
             raise DimensionAreNotEquals('coordinates', 'box')
 
         return numpy.array([coo[i] - self.origin[i] for i in range(self.dimension)])
+
+    def __add__(self, other):
+        """Create a BoundingSet by the addition of two bounding objects"""
+
+        n = BoundingSet()
+        n.include(self)
+        n.include(other)
+
+        return n
+
+    def __sub__(self, other):
+        """Create a BoundingSet by the subtraction of two bounding objects"""
+
+        n = BoundingSet()
+        n.include(self)
+        n.exclude(other)
+
+        return n
+
+
+class BoundingSet:
+    """Define a set of bounding objects"""
+
+    def __init__(self):
+
+        self.inclusion_set = []
+        self.exclusion_set = []
+        self.dimension = -1
+
+    def include(self, bounding_object):
+        """Add an object to the inclusion set
+
+        :param bounding_object: object
+        :type bounding_object: BoundingObject
+        """
+
+        if not isinstance(bounding_object, BoundingObject):
+            raise TypeError(type(BoundingObject))
+
+        if self.dimension == -1:
+            self.dimension = bounding_object.dimension
+
+        if self.dimension != bounding_object.dimension:
+            raise DimensionAreNotEquals('set', 'object')
+
+        self.inclusion_set.append(bounding_object)
+
+    def __add__(self, other):
+
+        n = copy.deepcopy(self)
+        n.include(other)
+
+        return n
+
+    def exclude(self, bounding_object):
+        """Add an object to the inclusion set
+
+        :param bounding_object: object
+        :type bounding_object: BoundingObject
+        """
+
+        if not isinstance(bounding_object, BoundingObject):
+            raise TypeError(type(BoundingObject))
+
+        if self.dimension == -1:
+            self.dimension = bounding_object.dimension
+
+        if self.dimension != bounding_object.dimension:
+            raise DimensionAreNotEquals('set', 'object')
+
+        self.exclusion_set.append(bounding_object)
+
+    def __sub__(self, other):
+
+        n = copy.deepcopy(self)
+        n.exclude(other)
+
+        return n
+
+    def contains(self, item):
+        """Test if point in the set
+
+        :param item: coordinates of the point
+        :type item: list|numpy.ndarray|tuple
+        :rtype: bool
+        """
+
+        if type(item) not in [numpy.ndarray, list, tuple]:
+            raise TypeError(type(item))
+
+        if len(item) != self.dimension:
+            raise DimensionAreNotEquals('coordinates', 'set')
+
+        coordinates_in = False
+
+        for i in self.inclusion_set:
+            if item in i:
+                coordinates_in = True
+                break
+
+        if coordinates_in:
+            for i in self.exclusion_set:
+                if item in i:
+                    coordinates_in = False
+                    break
+
+        return coordinates_in
+
+    def __contains__(self, item):
+        return self.contains(item)
 
 
 class AABoundingBox(BoundingObject):
@@ -117,6 +227,9 @@ class AABoundingBox(BoundingObject):
         :type coo: list|numpy.ndarray
         :rtype: bool
         """
+
+        if type(coo) not in [numpy.ndarray, list, tuple]:
+            raise TypeError(type(coo))
 
         if len(coo) != len(self.origin):
             raise DimensionAreNotEquals('coordinates', 'box')
@@ -184,6 +297,9 @@ class BoundingSphere(BoundingObject):
         :type tolerance: float
         :rtype: bool
         """
+
+        if type(item) not in [numpy.ndarray, list, tuple]:
+            raise TypeError(type(item))
 
         if len(item) != len(self.origin):
             raise DimensionAreNotEquals('coordinates', 'sphere')

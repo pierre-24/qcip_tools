@@ -190,6 +190,34 @@ class MathTestCase(QcipToolsTestCase):
         self.assertArrayAlmostEqual(b.origin, [0, .5, 0])  # origin has not changed !
         self.assertArrayAlmostEqual(b.local_coordinates(point_originally_out), [2.1, 0, 0], places=1)
 
+    def test_bounding_set(self):
+        """Test the set of bounding objects"""
+
+        bs = qcip_math.BoundingSphere([.5, 0, 0], radius=1)
+        point_in_sphere = bs.origin + [.25, .1, .1]
+        point_in_both = [.0, .0, .0]
+        self.assertTrue(point_in_sphere in bs)
+        self.assertTrue(point_in_both in bs)
+
+        bc = qcip_math.AABoundingBox([-.5, -.5, -.5], size=[.5, .5, .5])
+        point_in_cube = bc.origin + [.1, .1, .25]
+        self.assertTrue(point_in_cube in bc)
+        self.assertTrue(point_in_both in bc)
+        self.assertTrue(point_in_sphere not in bc)
+        self.assertTrue(point_in_cube not in bs)
+
+        # create set
+        s = bs + bc
+        self.assertTrue(all([point_in_sphere in s, point_in_cube in s, point_in_both in s]))
+
+        # create set by excluding sphere:
+        s = bc - bs
+        self.assertTrue(all([point_in_sphere not in s, point_in_both not in s, point_in_cube in s]))
+
+        # create set by excluding cube:
+        s = bs - bc
+        self.assertTrue(all([point_in_sphere in s, point_in_both not in s, point_in_cube not in s]))
+
     def test_permutations(self):
         """Test the permutations function"""
 
