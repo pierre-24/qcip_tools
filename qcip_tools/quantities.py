@@ -13,5 +13,7 @@ def convert(from_, to_):
     return (1.0 * from_).to(to_).magnitude
 
 # widely used conversion factors
+#: Convert bohr to angstrom
 AuToAngstrom = convert(ureg.bohr, ureg.angstrom)
+#: Convert atomic mass units to electron mass
 AMUToElectronMass = convert(ureg.atomic_mass_unit, ureg.electron_mass)
