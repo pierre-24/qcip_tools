@@ -1,7 +1,7 @@
 import numpy
 import math
 
-from qcip_tools import derivatives
+from qcip_tools import derivatives, quantities
 
 #: Correspondence between a name and a representation
 REPRESENTATIONS = {
@@ -19,9 +19,6 @@ SIMPLIFIED_NAMES = {
     'hessian': 'Hij',
     'cubic_FF': 'Fijk',
 }
-
-AMUToElectronMass = 1822.88848493
-HartreeToWavenumber = 219474.63
 
 
 class BaseGeometricalDerivativeTensor(derivatives.Tensor):
@@ -141,13 +138,13 @@ class MassWeightedHessian:
         weigths = numpy.zeros(self.dof)
 
         for i in range(len(self.molecule)):
-            weigths[i * 3:(i + 1) * 3] = math.sqrt(self.molecule[i].mass * AMUToElectronMass)
+            weigths[i * 3:(i + 1) * 3] = math.sqrt(self.molecule[i].mass * quantities.AMUToElectronMass)
 
         no_freqs = [0] * self.dof
         no_disps = numpy.zeros((self.dof, self.dof))
 
         for i in range(self.dof):
-            val = eigvals[i] / AMUToElectronMass
+            val = eigvals[i] / quantities.AMUToElectronMass
             if val > 0:
                 no_freqs[i] = math.sqrt(val)
             else:
@@ -172,6 +169,8 @@ class MassWeightedHessian:
 
         r = ''
 
+        HartreeToWavenumber = quantities.convert(quantities.ureg.hartree, quantities.ureg.wavenumber)
+
         for offset in range(0, self.vibrational_dof, 5):
 
             line_mode = ' ' * 10
@@ -183,7 +182,7 @@ class MassWeightedHessian:
                     break
                 line_mode += '{:15}'.format(mode + 1 - self.trans_plus_rot_dof)
                 line_freqs += '{: 15.4f}'.format(self.frequencies[mode] * HartreeToWavenumber)
-                line_rmass += '{: 15.5f}'.format(self.reduced_masses[mode] / AMUToElectronMass)
+                line_rmass += '{: 15.5f}'.format(self.reduced_masses[mode] / quantities.AMUToElectronMass)
 
             r += line_mode
             r += '\n'
@@ -202,7 +201,7 @@ class MassWeightedHessian:
                             break
 
                         r += '{:15.9f}'.format(
-                            self.displacements[mode, index * 3 + c] * math.sqrt(AMUToElectronMass))
+                            self.displacements[mode, index * 3 + c] * math.sqrt(quantities.AMUToElectronMass))
 
                     r += '\n'
 

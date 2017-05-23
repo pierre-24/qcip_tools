@@ -4,10 +4,8 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom
+from qcip_tools import molecule, atom, quantities
 from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
-
-AuToAngstrom = 0.52917165
 
 
 class Input(qcip_ChemistryFile):
@@ -279,7 +277,8 @@ class FCHK(qcip_ChemistryFile):
 
         for index, c in enumerate(nuclear_charges):
             a = atom.Atom(
-                atomic_number=c, position=[a * AuToAngstrom for a in atoms_coordinates[index * 3:index * 3 + 3]])
+                atomic_number=c,
+                position=[a * quantities.AuToAngstrom for a in atoms_coordinates[index * 3:index * 3 + 3]])
             a.mass = weights[index]
             self.molecule.insert(a)
 
@@ -580,7 +579,8 @@ class Cube(qcip_ChemistryFile):
         for i in range(0, num_of_atoms):
             atm = lines[i + 6].split()
             symbol = atom.AtomicNumberToSymbol[int(atm[0])]
-            atom_ = atom.Atom(symbol=symbol, position=numpy.array([float(a) * AuToAngstrom for a in atm[2:5]]))
+            atom_ = atom.Atom(
+                symbol=symbol, position=numpy.array([float(a) * quantities.AuToAngstrom for a in atm[2:5]]))
             self.molecule.insert(atom_)
 
         # records
@@ -645,7 +645,7 @@ class Cube(qcip_ChemistryFile):
         :rtype: float
         """
 
-        return numpy.prod(self.increments) * AuToAngstrom ** 3
+        return numpy.prod(self.increments) * quantities.AuToAngstrom ** 3
 
     def to_string(self):
         """
@@ -670,7 +670,7 @@ class Cube(qcip_ChemistryFile):
         # molecule
         for a in self.molecule:
             r += '{:5d} {:11f} {:11f} {:11f} {:11f}\n'.format(
-                a.atomic_number, a.atomic_number, *(a.position / AuToAngstrom))
+                a.atomic_number, a.atomic_number, *(a.position / quantities.AuToAngstrom))
 
         if self.cube_type == 'MO':
             r += '    {}  {}\n'.format(len(self.MOs), '  '.join(str(m) for m in self.MOs))
@@ -791,7 +791,7 @@ class Cube(qcip_ChemistryFile):
             for y in range(self.records_per_direction[1]):
                 for z in range(self.records_per_direction[2]):
                     current_position = self.origin + numpy.array([x, y, z]) * self.increments
-                    positons[x, y, z] = current_position * AuToAngstrom
+                    positons[x, y, z] = current_position * quantities.AuToAngstrom
         return positons
 
     def compute_charge_transfer(self, index=0):
@@ -830,7 +830,7 @@ class Cube(qcip_ChemistryFile):
             bar_m[i] = - numpy.sum(positions[:, :, :, i] * rho_m[:, :, :, index]) / charge_transferred * dV
 
         return ChargeTransferInformation(
-            charge=charge_transferred / (AuToAngstrom ** 3),  # charge in |e|
+            charge=charge_transferred / (quantities.AuToAngstrom ** 3),  # charge in |e|
             barycenter_m=bar_m,
             barycenter_p=bar_p)
 
@@ -856,12 +856,12 @@ class Cube(qcip_ChemistryFile):
         for k in bounding_sets:
             sums[k] = .0
 
-        dV = self.dV() / (AuToAngstrom ** 3)
+        dV = self.dV() / (quantities.AuToAngstrom ** 3)
 
         for x in range(self.records_per_direction[0]):
             for y in range(self.records_per_direction[1]):
                 for z in range(self.records_per_direction[2]):
-                    current_position = (self.origin + numpy.array([x, y, z]) * self.increments) * AuToAngstrom
+                    current_position = (self.origin + [x, y, z] * self.increments) * quantities.AuToAngstrom
                     current_value = self.records[x, y, z, index] * dV
 
                     for key, bounding_set in bounding_sets.items():

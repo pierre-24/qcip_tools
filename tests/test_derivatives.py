@@ -435,7 +435,7 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         self.assertArrayAlmostEqual(
             [-38.44, -3.8, -0.03, 0.0, 18.1, 36.2, 1760.4, 4136.5, 4244.3],
-            [a * derivatives_g.HartreeToWavenumber for a in mh.frequencies],
+            [a * 219474.63 for a in mh.frequencies],
             places=1)
 
         # projected hessian must contain square of frequency on the diagonal

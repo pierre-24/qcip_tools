@@ -1,11 +1,8 @@
 import tarfile
 import math
 
-from qcip_tools import molecule, atom
+from qcip_tools import molecule, atom, quantities
 from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
-
-
-AuToAngstrom = 0.52917165
 
 
 class MoleculeInput(qcip_ChemistryFile):
@@ -62,7 +59,7 @@ class MoleculeInput(qcip_ChemistryFile):
 
             self.molecule.insert(atom.Atom(
                 atomic_number=atomic_number,
-                position=[float(a) * (1 if in_angstrom else AuToAngstrom) for a in content[1:]])
+                position=[float(a) * (1 if in_angstrom else quantities.AuToAngstrom) for a in content[1:]])
             )
 
     def to_string(self, in_angstrom=True, nosym=False, group_atoms=False):
@@ -93,7 +90,7 @@ class MoleculeInput(qcip_ChemistryFile):
             for a in self.molecule:
                 r += 'Charge={:.1f} Atoms={}\n'.format(a.atomic_number, 1)
                 r += '{:3} {:16.9f} {:16.9f} {:16.9f}\n'.format(
-                    a.symbol, *[p * (1 if in_angstrom else AuToAngstrom) for p in a.position])
+                    a.symbol, *[p * (1 if in_angstrom else quantities.AuToAngstrom) for p in a.position])
         else:
             for symbol in self.molecule.symbols_contained:
                 atms = self.molecule.atoms(symbol_in=[symbol])
@@ -102,7 +99,7 @@ class MoleculeInput(qcip_ChemistryFile):
                 for i in atms:
                     a = self.molecule[i]
                     r += '{:3} {:16.9f} {:16.9f} {:16.9f}\n'.format(
-                        a.symbol, *[p * (1 if in_angstrom else AuToAngstrom) for p in a.position])
+                        a.symbol, *[p * (1 if in_angstrom else quantities.AuToAngstrom) for p in a.position])
 
         return r
 
@@ -243,7 +240,8 @@ class Output(qcip_ChemistryFile):
             self.molecule.insert(
                 atom.Atom(
                     symbol=content[0],
-                    position=[a * AuToAngstrom for a in [float(content[4]), float(content[7]), float(content[10])]]
+                    position=[a * quantities.AuToAngstrom for a in [
+                        float(content[4]), float(content[7]), float(content[10])]]
                 ))
 
         charge_line = self.search('@    Total charge of the molecule', in_section='SIRIUS')
