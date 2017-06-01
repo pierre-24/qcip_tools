@@ -291,10 +291,17 @@ class GaussianTestCase(QcipToolsTestCase):
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.input_file)), gaussian.Input)
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.fchk_file)), gaussian.FCHK)
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.log_file)), gaussian.Output)
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.cube_file2)), gaussian.Cube)
+        with open(self.input_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gaussian.Input)
+
+        with open(self.fchk_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gaussian.FCHK)
+
+        with open(self.log_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gaussian.Output)
+
+        with open(self.cube_file2) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gaussian.Cube)
 
 
 class DaltonTestCase(QcipToolsTestCase):
@@ -435,7 +442,11 @@ class DaltonTestCase(QcipToolsTestCase):
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
+        with open(self.output_log) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), dalton.Output)
 
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.output_log)), dalton.Output)
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.input_mol_file)), dalton.MoleculeInput)
-        self.assertIsInstance(helpers.open_chemistry_file(open(self.output_archive)), dalton.ArchiveOutput)
+        with open(self.input_mol_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), dalton.MoleculeInput)
+
+        with open(self.output_archive) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), dalton.ArchiveOutput)
