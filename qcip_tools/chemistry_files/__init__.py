@@ -14,6 +14,11 @@ class ChemistryFile:
     - ``to_string()``
     - ``write()``
 
+    Methods to help file recognition:
+
+    - ``possible_file_extensions()`` (class method)
+    - ``attempt_recognition()`` (class method)
+
     """
 
     molecule = None
@@ -50,6 +55,26 @@ class ChemistryFile:
             raise NotImplementedError
 
         return molecule
+
+    @classmethod
+    def possible_file_extensions(cls):
+        """Return the common extention of this kind of files
+
+        :rtype: list
+        """
+
+        raise NotImplementedError
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """Attempt to identify the file as a possible file of this type
+
+        :param f: file (in read mode)
+        :type f: file
+        :rtype: bool
+        """
+
+        raise NotImplementedError
 
 
 def apply_over_list(lst, func, start=0, end=None, **kwargs):

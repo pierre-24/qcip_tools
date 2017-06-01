@@ -21,6 +21,29 @@ class MoleculeInput(qcip_ChemistryFile):
         self.title = ''
         self.basis_set = ''
 
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['mol']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A dalton molecule is quite unique ("charge=")
+        """
+
+        count = 0
+        found_charge = 0
+
+        for l in f.readlines():
+            count += 1
+
+            if 'charge=' in l.lower():
+                found_charge += 1
+
+            if count > 50:
+                break
+
+        return found_charge > 1
+
     def read(self, f):
         """
 
@@ -130,6 +153,28 @@ class ArchiveOutput(qcip_ChemistryFile):
         self.tar_file = None
         self.molecule = molecule.Molecule()
 
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['gz', 'tar.gz']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A dalton archive does contain a lot of files name "DALTON"
+        """
+
+        try:
+            t = tarfile.open(f.name)
+        except tarfile.TarError:
+            return False
+
+        found_dalton = 0
+
+        for n in t.getnames():
+            if 'DALTON' in n:
+                found_dalton += 1
+
+        return found_dalton > 3
+
     def read(self, f):
         """Expects ``f`` to be open on binary mode.
 
@@ -143,7 +188,7 @@ class ArchiveOutput(qcip_ChemistryFile):
         """
 
         self.from_read = True
-        self.tar_file = tarfile.open(fileobj=f)
+        self.tar_file = tarfile.open(f.name)
 
         # read molecule:
         mol_file = self.get_file('DALTON.MOL')
@@ -206,6 +251,35 @@ class Output(qcip_ChemistryFile):
         self.molecule = molecule.Molecule()
         self.lines = []
         self.sections = []
+
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['out', 'log']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A dalton output ... Does contains a lot of (european) countries and universities name at some point
+        """
+
+        count = 0
+        found_countries = 0
+        found_universities = 0
+        countries = ['Norway', 'Denmark', 'Italy', 'Sweden', 'Germany']
+
+        for l in f.readlines():
+            count += 1
+
+            if 60 < count < 150:
+                if 'University' in l:
+                    found_universities += 1
+                for c in countries:
+                    if c in l:
+                        found_countries += 1
+                        break
+            if count > 150:
+                break
+
+        return found_countries > 20 and found_universities > 20
 
     def read(self, f):
         """

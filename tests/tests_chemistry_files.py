@@ -5,7 +5,7 @@ import random
 
 from tests import QcipToolsTestCase
 from qcip_tools import math as qcip_math
-from qcip_tools.chemistry_files import gaussian, dalton
+from qcip_tools.chemistry_files import gaussian, dalton, helpers
 
 
 class GaussianTestCase(QcipToolsTestCase):
@@ -288,6 +288,14 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(results['lithium_atom'], 2.25, delta=.5)
         self.assertAlmostEqual(results['hydrogen_atom'], .25, delta=.5)
 
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.input_file)), gaussian.Input)
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.fchk_file)), gaussian.FCHK)
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.log_file)), gaussian.Output)
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.cube_file2)), gaussian.Cube)
+
 
 class DaltonTestCase(QcipToolsTestCase):
     """Dalton stuffs"""
@@ -424,3 +432,10 @@ class DaltonTestCase(QcipToolsTestCase):
 
             for index, a in enumerate(fa.molecule):
                 self.assertArrayAlmostEqual(a.position, fl.molecule[index].position)
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.output_log)), dalton.Output)
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.input_mol_file)), dalton.MoleculeInput)
+        self.assertIsInstance(helpers.open_chemistry_file(open(self.output_archive)), dalton.ArchiveOutput)

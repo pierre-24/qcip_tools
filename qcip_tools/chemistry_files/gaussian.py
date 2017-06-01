@@ -27,6 +27,38 @@ class Input(qcip_ChemistryFile):
         self.options_dict = {}
         self.input_card = []
 
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['com', 'inp']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A gaussian input should contains '%' or '#' as the first character of the line of the "first block"
+        """
+
+        found_some_lines = 0
+        found_input_line = False
+
+        for l in f.readlines():
+            if l.strip() == '':
+                break
+            if l[0] not in ['%', '#']:
+                if not found_some_lines:
+                    return False
+            else:
+                if l[0] == '#':
+                    found_input_line = True
+                found_some_lines += 1
+
+        if not found_some_lines:
+            return False
+
+        if not found_input_line:
+            return False
+
+        # TODO: if ``found_some_lines`` is equal to 1, maybe an extra test ? (charge and multiplicity, for example)
+        return True
+
     def read(self, f):
         """
 
@@ -194,10 +226,33 @@ class FCHK(qcip_ChemistryFile):
         self.chunks_parsed = {}
         self.lines = []
 
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['fchk']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A gaussian fchk starts with two two line of info, then "Number of atoms"
+        """
+
+        i = 0
+
+        for l in f.readlines():
+            if i == 2:
+                if 'Number of atoms' not in l:
+                    return False
+            if i == 3:
+                if 'Info1-9' in l:
+                    return True
+                return False
+            i += 1
+
+        return False
+
     def get(self, key):
         """Get the content from a given keyword
 
-        :param key: tghe keyword
+        :param key: the keyword
         :type key: str
         :rtype: list|int|float|str
         """
@@ -356,6 +411,27 @@ class Output(qcip_ChemistryFile):
 
         self.links_called = []
         self.lines = []
+
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['log', 'out']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A gaussian log ... Contains a lot of "gaussian" in the beginning (limit to the 150 first lines)"
+        """
+
+        count = 0
+        num_of_gaussian = 0
+
+        for l in f.readlines():
+            if count > 100:
+                break
+            if 'Gaussian' in l or 'gaussian' in l:
+                num_of_gaussian += 1
+            count += 1
+
+        return num_of_gaussian > 10
 
     def read(self, f):
         """
@@ -524,6 +600,49 @@ class Cube(qcip_ChemistryFile):
         self.title = ''
         self.subtitle = ''
         self.MOs = ''
+
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['cub', 'cube']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """A cube file contains, in line 3-6, quadruplets of numbers, the first one being an integer, then 3 floats.
+        Then, after the different atoms, line should contains numbers in scientific notation.
+        """
+
+        count = 0
+        number_of_atoms = 0
+
+        for l in f.readlines():
+            count += 1
+            # line 3-6:
+            if 7 > count > 2:
+                c = l.split()
+                if 6 < len(c) < 4:
+                    return False
+
+                if not c[0].isdigit():
+                    return False
+
+                for i in c[1:]:
+                    try:
+                        float(i)
+                    except ValueError:
+                        return False
+
+                if count == 3:
+                    number_of_atoms = abs(int(c[0]))
+            # only numbers in scientific notation in records
+            if count == 7 + number_of_atoms:
+                c = l.split()
+
+                for i in c:
+                    if 'E' not in i:
+                        return False
+                return True
+
+        return False
 
     def read(self, f):
         """

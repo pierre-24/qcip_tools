@@ -1,16 +1,18 @@
 from . import ureg
 
 
-def convert(from_, to_):
+def convert(from_, to_, value=1.0):
     """Conversion factor from one unit to the other
 
     :param from_: base unit
     :type from_: pint.unit.Unit
     :param to_: converted unit
     :type to_: pint.unit.Unit
+    :param value: value to convert
+    :type value: float
     """
 
-    return (1.0 * from_).to(to_).magnitude
+    return (value * from_).to(to_).magnitude
 
 # widely used conversion factors
 #: Convert bohr to angstrom

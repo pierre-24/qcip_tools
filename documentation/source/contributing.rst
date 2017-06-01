@@ -19,13 +19,13 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
 
 + Development is mad in ``dev`` branch, while ``master`` contains the production version.
 + Functionalities are added through merge request (MR) in the ``dev`` branch.
-+ Theses merge requests should be unitary, and include unit test(s) if needed. The test suite must succeed for the merge request to be accepted.
++ Theses merge requests should be unitary, and include unit test(s) and documentation if needed. The test suite must succeed for the merge request to be accepted.
 + At some (random) points, ``dev`` will be merged into ``master`` to create a new version.
 
 Licence
 -------
 
-This code belong to me, Pierre Beaujean, and to the `University of Namur <https://www.unamur.be>`_ is it is developed and used in the frame of my PhD thesis.
+This code belong to me, Pierre Beaujean, and to the `University of Namur <https://www.unamur.be>`_ since it is developed and used in the frame of my PhD thesis.
 
 Units
 -----
