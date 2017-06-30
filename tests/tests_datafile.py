@@ -73,7 +73,10 @@ class DataFileTestCase(QcipToolsTestCase):
         f.set('text', 'S', some_text)
 
         self.assertEqual(os.path.getsize(self.temporary_file), 0)
-        f.write(self.temporary_file)
+
+        with open(self.temporary_file, 'w') as fx:
+            f.write(fx)
+
         self.assertNotEqual(os.path.getsize(self.temporary_file), 0)
 
         file_ = open(self.temporary_file)
@@ -85,7 +88,9 @@ class DataFileTestCase(QcipToolsTestCase):
         self.assertTrue('S' + str(len(some_text)) + ' text' in file_content)
 
         # reading stuffs:
-        g = datafile.TextDataFile(filename=self.temporary_file)
+        with open(self.temporary_file) as fx:
+            g = datafile.TextDataFile()
+            g.read(fx)
 
         self.assertEqual(len(g.chunks_information), 3)
 
@@ -114,7 +119,9 @@ class DataFileTestCase(QcipToolsTestCase):
         self.assertEqual(len(g.chunks_parsed), 3)
 
         # open, modify and save:
-        g = datafile.TextDataFile(filename=self.temporary_file)
+        with open(self.temporary_file) as fx:
+            g = datafile.TextDataFile()
+            g.read(fx)
 
         some_floats.append(math.e)
         g.set('floats', 'R', some_floats)
@@ -123,7 +130,9 @@ class DataFileTestCase(QcipToolsTestCase):
 
         self.assertFalse(g.chunks_information['text'].modified)
         self.assertFalse(g.chunks_information['integers'].modified)
-        g.write(self.temporary_file)
+
+        with open(self.temporary_file, 'w') as fx:
+            g.write(fx)
 
         file_ = open(self.temporary_file)
         file_content = file_.read()
@@ -134,7 +143,10 @@ class DataFileTestCase(QcipToolsTestCase):
         self.assertTrue('S' + str(len(some_text)) + ' text' in file_content)
 
         # and reopen:
-        g = datafile.TextDataFile(filename=self.temporary_file)
+        with open(self.temporary_file) as fx:
+            g = datafile.TextDataFile()
+            g.read(fx)
+
         self.assertEqual(len(g.chunks_information), 3)
 
         self.assertEqual(g['text'], some_text)
