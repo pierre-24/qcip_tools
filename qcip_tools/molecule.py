@@ -520,38 +520,6 @@ class Molecule:
 
         return atoms_string
 
-    def output_as_xyz(self, title='', use_z_instead_of_symbol=False):
-        """Return an XYZ content.
-
-        :param title: optional name of the molecule
-        :type title: str
-        :param use_z_instead_of_symbol: put atomic number instead of symbol
-        :type use_z_instead_of_symbol: bool
-        :return: Molecule formatted for an xyz file
-        :rtype: str
-        """
-
-        rstr = str(len(self)) + '\n'
-        rstr += title + '\n'
-        rstr += self.output_atoms(use_z_instead_of_symbol)
-        return rstr
-
-    def output_as_dalton(self, nosym=False):
-        """Return atoms as in a Dalton molecule file.
-
-        :param nosym: set nosym !
-        :type nosym: bool
-        :rtype: str
-        """
-
-        rstr = 'Atomtypes={}  Angstrom{}\n'.format(len(self), ' Nosymmetry' if nosym else '')
-
-        for a in self:
-            rstr += 'Charge={:.1f} Atoms={}\n'.format(a.atomic_number, 1)
-            rstr += '{:3} {:16.9f} {:16.9f} {:16.9f}\n'.format(a.symbol, *a.position)
-
-        return rstr
-
     def linear(self, threshold=1e-5):
         """Compute if the molecule is linear or not. A molecule is linear if :math:`I_\\alpha \\approx 0` and
         :math:`I_\\beta \\approx I_\\gamma`, if :math:`I_\\alpha < I_\\beta \\approx I_\\gamma`.
