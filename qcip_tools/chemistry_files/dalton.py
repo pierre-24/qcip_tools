@@ -381,7 +381,10 @@ class Output(qcip_ChemistryFile):
         return FunctionScope.line_found
 
     def get_inputs(self):
-        """Fetch the inputs from the log file"""
+        """Fetch the inputs from the log file
+
+        :rtype: tuple
+        """
 
         line_dal = self.search('Content of the .dal input file', in_section='START')
         line_mol = self.search('Content of the .mol file', line_start=line_dal, in_section='START')
@@ -403,6 +406,24 @@ class Output(qcip_ChemistryFile):
 ALLOWED_LEVEL_0_MODULES=['**DALTON', '**INTEGRAL', '**WAVE F', '**START', '**EACH S', '**PROPERTIES', '**RESPONSE']
 
 
+def check_module(name):
+    """Check if the module name is allowed
+
+    :param name: name of the module
+    :type name: str
+    :rtype: bool
+    """
+
+    n = '**' + name[:5]
+    allowed = False
+    for module in ALLOWED_LEVEL_0_MODULES:
+        if module[:7] == n:
+            allowed = True
+            break
+
+    return allowed
+
+
 class InputModule:
     """The dalton (sub)modules, with level indicating it they are module (level=0) or submodule (level=1)
 
@@ -411,24 +432,25 @@ class InputModule:
         Since Dalton only interpret the 7 first characters of any input card or module (``*`` or ``.`` included),
         the storage key is reduced to that.
 
+    :param level: level of the module (either 0 if princiap or 1 if submodule)
+    :type level: int
+    :param name: name of the module
+    :type name: str
+    :param input_cards: The eventual input cards
+    :type input_cards: collections.OrderedDict
+    :param submodules: The eventual sub modules
+    :type submodules: collections.OrderedDict
     """
 
-    def __init__(self, name, level, input_cards=None, submodules=None):
+    def __init__(self, level=1, name=None, input_cards=None, submodules=None):
         if level not in [0, 1]:
             raise Exception('level should be zero or one')
 
-        if level == 0:
-            n = '**' + name[:5]
-            allowed = False
-            for module in ALLOWED_LEVEL_0_MODULES:
-                if module[:7] == n:
-                    allowed = True
-                    break
+        if level == 0 and name is not None:
+            if not check_module(name):
+                raise Exception('not an allowed module: {}'.format(name))
 
-            if not allowed:
-                raise Exception('not a module: {}'.format(n))
-
-        elif submodules is not None:
+        if level == 1 and submodules is not None:
             raise Exception('subdmodule {} with subsubmodules'.format(name))
 
         self.name = name
@@ -495,6 +517,12 @@ class InputModule:
             raise TypeError(value)
 
         if type(value) is InputModule:
+            if key[0] == '.':
+                raise Exception('module should not start with "."')
+
+            if value.name is None:
+                value.name = key
+
             if key[:6] != value.name[:6]:
                 raise Exception('key ({}) and name divergence ({})'.format(key[:6], value.name[:6]))
 
@@ -503,6 +531,9 @@ class InputModule:
         else:
             if key[0] != '.':
                 raise Exception('input card should start with "."')
+
+            if value.name is None:
+                value.name = key[1:]
 
             name = value.name
             if name[0] == '.':
@@ -526,13 +557,19 @@ class InputModule:
 
 
 class InputCard:
-    """Dalton input card"""
+    """Dalton input card
 
-    def __init__(self, name, parameters=None):
+    :param name: name of the module
+    :type name: str
+    :param parameters: the parameters
+    :type parameters: list
+    """
+
+    def __init__(self, name=None, parameters=None):
 
         self.name = name
 
-        if self.name[0] == '.':
+        if name is not None and self.name[0] == '.':
             self.name = name[1:]
 
         self.parameters = [] if parameters is None else parameters
@@ -610,14 +647,15 @@ class Input(qcip_ChemistryFile):
             if line[0] == '*':
                 if line[1] == '*':  # module
                     current_module = line[2:].strip()
-                    self[current_module] = InputModule(current_module, 0)
+                    self[current_module] = InputModule(level=0)
                     current_submodule = None
+
                 else:  # submodule
-                    if '*END OF' in line:
+                    if '*END OF' in line[:7]:
                         break
 
                     current_submodule = line[1:].strip()
-                    self[current_module].set_submodule(InputModule(current_submodule, 1))
+                    self[current_module][current_submodule] = InputModule(level=1)
 
             elif line[0] == '.':
                 current_input_card = line[1:].strip()
@@ -632,10 +670,9 @@ class Input(qcip_ChemistryFile):
                         parameters.append(line_param.strip())
 
                 if current_submodule is None:
-                    self[current_module]['.' + current_input_card] = InputCard(current_input_card, parameters)
+                    self[current_module]['.' + current_input_card] = InputCard(parameters=parameters)
                 else:
-                    self[current_module][current_submodule]['.' + current_input_card] = \
-                        InputCard(current_input_card, parameters)
+                    self[current_module][current_submodule]['.' + current_input_card] = InputCard(parameters=parameters)
 
     def __contains__(self, item):
 
@@ -654,8 +691,15 @@ class Input(qcip_ChemistryFile):
         if type(value) != InputModule:
             raise TypeError(value)
 
-        if key[:5] != value.name[:5]:
+        if value.name is not None and key[:5] != value.name[:5]:
             raise Exception('key ({}) and name ({}) divergence'.format(key[:5], value.name[:5]))
+
+        elif value.name is None:
+
+            if not check_module(key):
+                raise Exception('not an allowed module: {}'.format(key))
+
+            value.name = key
 
         value.level = 0
         self.modules[key[:5]] = value
@@ -665,5 +709,5 @@ class Input(qcip_ChemistryFile):
         for i in self.modules.values():
             r += str(i)
 
-        r += '*END OF INPUT\n'
+        r += '*END OF\n'  # 7 characters is enough
         return r

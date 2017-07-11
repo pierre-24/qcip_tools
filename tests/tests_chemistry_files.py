@@ -490,22 +490,40 @@ class DaltonTestCase(QcipToolsTestCase):
 
         # fire exceptions
         with self.assertRaises(Exception):
-            fi['PROPERTIES'] = dalton.InputModule('WAVE FUNCTIONS', 0)  # key and name divergence
+            fi['DALTON INPUT']['DIRECT'] = dalton.InputCard()  # input card should start with "."
 
         with self.assertRaises(Exception):
-            fi['DALTON INPUT']['DIRECT'] = dalton.InputCard('DIRECT')  # input card should start with "."
+            fi['DALTON INPUT']['.XX'] = dalton.InputModule()  # module should not start with "."
 
         with self.assertRaises(Exception):
-            fi['XX'] = dalton.InputModule('XX', 0)  # XX is not an allowed module name
+            fi['XX'] = dalton.InputModule(0, 'XX')  # XX is not an allowed (level 0) module name
 
         with self.assertRaises(Exception):
-            fi['WAVE FUNCTIONS']['CCLR'] = dalton.InputModule('CCLR', 1)  # module already exists
+            fi['WAVE FUNCTIONS']['CCLR'] = dalton.InputModule(1, 'CCLR')  # module already exists
 
         with self.assertRaises(Exception):
-            fi['WAVE FUNCTIONS']['CCLR']['XX'] = dalton.InputModule('XX', 1)  # no subsubmodules
+            fi['WAVE FUNCTIONS']['CCLR']['XX'] = dalton.InputModule(level=2)  # no subsubmodules
+
+        with self.assertRaises(Exception):
+            fi['WAVE FUNCTIONS']['CCLR']['XX'] = dalton.InputModule(level=1)  # no subsubmodules, I said!
+
+        with self.assertRaises(Exception):
+            fi['PROPERTIES'] = dalton.InputModule(0, 'WAVE FUNCTIONS')  # key and name divergence
 
         with self.assertRaises(Exception):
             fi['WAVE FUNCTIONS']['CCLR']['.XX'] = dalton.InputCard('YY')  # key and name divergence
+
+        # test file creation
+        fix = dalton.Input()
+
+        fix['DALTON'] = dalton.InputModule()  # "DALTON" is 5 characters, so it's good
+        fix['DALTON']['.DIRECT'] = dalton.InputCard()
+        fix['DALTON']['.RUN WAVE FUNCTIONS'] = dalton.InputCard()
+        fix['WAVE F'] = dalton.InputModule()  # "WAVE F" is 6 characters, so it is larger than the required 5 ones
+        fix['WAVE F']['.DFT'] = dalton.InputCard(parameters=['B3LYP'])
+
+        with open(os.path.join(self.test_directory, 'tests_files/dalton_input_2.dal'), 'r') as fx:
+            self.assertEqual(str(fix), fx.read())
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
