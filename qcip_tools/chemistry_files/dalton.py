@@ -396,14 +396,14 @@ class Output(qcip_ChemistryFile):
         dal_file = Input()
         mol_file = MoleculeInput()
 
-        dal_file.read(io.StringIO(''.join(self.lines[line_dal+2:line_mol-2])))
-        mol_file.read(io.StringIO(''.join(self.lines[line_mol+3:line_end-3])))
+        dal_file.read(io.StringIO(''.join(self.lines[line_dal + 2:line_mol - 2])))
+        mol_file.read(io.StringIO(''.join(self.lines[line_mol + 3:line_end - 3])))
 
         return dal_file, mol_file
 
 
 #: Name of the allowed modules in dalton (according to documentation)
-ALLOWED_LEVEL_0_MODULES=['**DALTON', '**INTEGRAL', '**WAVE F', '**START', '**EACH S', '**PROPERTIES', '**RESPONSE']
+ALLOWED_LEVEL_0_MODULES = ['**DALTON', '**INTEGRAL', '**WAVE F', '**START', '**EACH S', '**PROPERTIES', '**RESPONSE']
 
 
 def check_module(name):
@@ -540,7 +540,7 @@ class InputModule:
                 name = name[1:]
 
             if key[1:7] != name[:6]:
-                raise Exception('key ({}) and name divergence ({})'.format(key[1:7], name [:6]))
+                raise Exception('key ({}) and name divergence ({})'.format(key[1:7], name[:6]))
 
             self.set_input_card(value)
 
@@ -661,7 +661,7 @@ class Input(qcip_ChemistryFile):
                 current_input_card = line[1:].strip()
                 parameters = []
 
-                for line_param in self.lines[index+1:]:
+                for line_param in self.lines[index + 1:]:
                     if line_param[0] in ['.', '*']:
                         break
                     elif line_param[0] in ['!', '#']:
