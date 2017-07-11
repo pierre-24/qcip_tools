@@ -61,10 +61,10 @@ class DataFile:
     """
     Base class for data files.
 
-    Implement a "lazy loading" behavior: ``read_in_file()`` should only slice the file in chunks, which are stored.
+    Implement a "lazy loading" behavior: ``read()`` should only slice the file in chunks, which are stored.
     When the value of the keyword is requested, the chunck is parsed with ``parse_chunk()``.
 
-    To do so, ``read_in_file()`` should fill the variable ``self.raw`` with the content of the file, and parse it into
+    To do so, ``read()`` should fill the variable ``self.raw`` with the content of the file, and parse it into
     chunks and filling ``self.chunks_information`` with information about that chunk (especially ``start_offset`` and
     ``end_offset``). Then, the value of ``self.raw`` and ``self.chunks_information`` can be used when ``parse_chunk()``
     is called (by the ``get()`` function, probably), which should triggers the parsing of the chunk, and should set
@@ -77,20 +77,12 @@ class DataFile:
 
     """
 
-    def __init__(self, filename=None, pipe=None):
-
-        if filename is not None and pipe is not None:
-            raise Exception('cannot open file and pipe at the same time!')
+    def __init__(self):
 
         self.chunks_information = {}  #: Dict of ``ChunkInformation`` for **all** available keywords in the source file.
         self.chunks_parsed = {}  #: parsed chunks, so list of stuffs
         self.raw = None  #: variable for storage of chunks for ``parse_chunk()``,  so "whatever floats you boat".
         self.data_source = None  #: source pipe, should not be used normally (memory access is faster than the others)
-
-        if filename is not None:
-            self.read(filename)
-        elif pipe is not None:
-            self.read_in_file(pipe)
 
     def __getitem__(self, item):
         """
@@ -104,18 +96,7 @@ class DataFile:
         """
         return item in self.chunks_information
 
-    def read(self, filename):
-        """Read a file
-
-        :param filename: filename
-        :type filename: str
-        """
-
-        f = open(filename, 'r')
-        self.read_in_file(f)
-        f.close()
-
-    def read_in_file(self, f):
+    def read(self, f):
         """Read in a pipe
 
         .. note::
@@ -127,20 +108,7 @@ class DataFile:
         """
         raise NotImplementedError()
 
-    def write(self, filename, mode='w'):
-        """Write a file
-
-        :param filename: filename
-        :type filename: str
-        :param mode: opening mode
-        :type mode: str
-        """
-
-        f = open(filename, mode=mode)
-        self.write_in_file(f)
-        f.close()
-
-    def write_in_file(self, f):
+    def write(self, f):
         """Write in a pipe
 
         .. note::
@@ -215,7 +183,7 @@ class TextDataFile(DataFile):
     Object that save data in the form of a text file, more or less readable by an human being
     """
 
-    def write_in_file(self, f):
+    def write(self, f):
         for k in self.chunks_information:
             info = self.chunks_information[k]
 
@@ -244,7 +212,7 @@ class TextDataFile(DataFile):
             else:
                 f.write(''.join(self.raw[info.offset_start - 1:info.offset_end]))
 
-    def read_in_file(self, f):
+    def read(self, f):
 
         self.raw = f.readlines()
         self.chunks_information = {}
