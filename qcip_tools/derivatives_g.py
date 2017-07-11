@@ -110,6 +110,7 @@ class MassWeightedHessian:
         self.frequencies = numpy.zeros(self.dof)
         self.displacements = numpy.zeros((self.dof, self.dof))
         self.reduced_masses = numpy.zeros(self.dof)
+        self.normal_modes = numpy.zeros((self.dof, self.dof))
 
         if carthesian_hessian is not None:
             self.from_cartesian_hessian(carthesian_hessian)
@@ -150,6 +151,7 @@ class MassWeightedHessian:
             else:
                 no_freqs[i] = -math.sqrt(-val)
 
+            self.normal_modes[i] = eigvecs[:, i].copy()
             no_disps[i] = eigvecs[:, i] / weigths
 
         # order freqs and displacements according to freqs

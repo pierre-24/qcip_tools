@@ -16,6 +16,9 @@ The displacement around the equilibrium position, :math:`\mathbf{x}_i=\mathbf{x}
 where :math:`\mathbf{x}\in\mathbf{R}^{3N}`, :math:`F_i=\left.\frac{\partial V}{\partial\mathbf{x}_i}\right|_{\mathbf{x}=0}` is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), :math:`H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{x}_i\mathbf{x}_j}\right|_{\mathbf{x}=0}` is the hessian (force constant matrix) and :math:`F_{ijk}` is the cubic force constants matrix (and so on).
 The sums runs over the :math:`3N` degrees of freedom of :math:`N` atoms.
 
+Normal modes
+============
+
 By settings the Lagrange equations of the harmonic oscillator,
 
 .. math::
@@ -46,15 +49,67 @@ This is reduced to an eigenvalue problem by setting mass-weighted coordinates, :
 
 .. math::
 
-    (\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}})\,\mathbf{Q} = \mathbf{\omega}^2\,\mathbf{Q}.
+    (\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}})\,\mathbf{Q} = \mathbf{\omega}^2\,\mathbf{Q},
 
-The :math:`\mathbf{Q}`'s are therefore eigenvectors of the mass-weigted hessian, also called normal modes (which form a complete and orthogonal basis), while the :math:`\mathbf{\omega}`'s are the eigenvalues.
+or,
+
+.. math::
+    :label: x1
+
+    \mathbf{Q}^\dagger\,\mathbf{H}^m\,\mathbf{Q} = \omega^2
+
+where :math:`\mathbf{H}^m=\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}}` is the mass-weighted Hessian.
+The :math:`\mathbf{Q}`'s are therefore eigenvectors of the mass-weigted hessian, also called normal modes (which form a complete and orthogonal basis), while the :math:`\mathbf{\omega}`'s are the eigenvalues (vibrational frequencies).
 There is 6 (or 5, if the system is linear) zeros eigenvalues for the translation and rotation modes, while the other normal modes describe the vibrations.
 
 
+Computation of normal modes
+===========================
+
+The computation takes place in the  ``MassWeightedHessian`` class.
+
+.. warning::
+
+    Modes are not decontamined from translations and rotations.
+
+1. Compute the mass weighted Hessian, :math:`\mathbf{H}^m`, as
+
+    .. math::
+
+        H^m_{i\alpha,j\beta} = \frac{1}{\sqrt{m_i\,m_j}}\,H_{i\alpha,j\beta},
+
+  where :math:`i` and :math:`j` are the number of the atom, while :math:`\alpha` and :math:`\beta` ar the cartesian coordinates of the atoms.
+  Masses, :math:`m_i` and :math:`m_j`, are in AMU.
+
+2. Compute the :math:`3N` eigenvalues (:math:`\omega^2`) and egeinvectors (:math:`\mathbf{Q}`) of :math:`\mathbf{H}^m`. The explicit set of equations to solve, obtained from :eq:`x1`, is written
+
+    .. math::
+        :label: v1
+
+        \omega_p^2\,\delta_{pq} = \sum_{i\alpha,j\beta} Q_{i\alpha,p}\,\frac{H_{i\alpha,j\beta}}{\sqrt{m_i\,m_j}}\,Q_{j\beta,q}.\label{eq:v1}
+
+  Order them from the lowest to the largest eigenvalue.
+  Eventually discard the 6 (or 5) first lowest ones.
+
+3. Compute frequencies:
+
+    .. math::
+
+        \nu_p = \sqrt{\frac{\omega^2_p}{\mu}},
+
+  where :math:`\mu` is the conversion factor from AMU to electron mass (about 1822, see `here <quantities.html#qcip_tools.quantities.AMUToElectronMass>`_) and :math:`p` is the normal mode. With the conversion, :math:`\nu_p` is therefore in atomic units.
+
+4. Compute the carthesian displacements. From :eq:`v1`, they are defined by
+
+    .. math::
+
+        D_{p,i\alpha} = \frac{1}{\sqrt{m_i\,\mu}} Q_{i\alpha,p}.
+
+  With the conversion, displacement are therefore in :math:`\text{Å}\,m_e^{-1/2}`, where :math:`m_e` is the electron mass (so atomic unit of mass).
+
 .. note::
 
-    *May be continued to explain the concept of displacements and the corresponding units*.
+    The normal modes (``normal_modes``) and cartesian displacements (``displacements``) are stored in the form :math:`p,i\alpha`.
 
 API documentation
 -----------------
