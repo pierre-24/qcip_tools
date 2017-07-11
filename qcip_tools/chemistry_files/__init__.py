@@ -34,6 +34,9 @@ class ChemistryFile:
     def to_string(self):
         raise NotImplementedError
 
+    def __repr__(self):
+        return self.to_string()
+
     def property(self, property_):
         """
 

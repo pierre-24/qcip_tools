@@ -316,6 +316,12 @@ class DaltonTestCase(QcipToolsTestCase):
             with open(os.path.join(self.test_directory, 'tests_files/dalton_molecule.mol')) as fx:
                 f.write(fx.read())
 
+        self.input_dal_file = os.path.join(self.temp_dir, 'input.dal')
+
+        with open(self.input_dal_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/dalton_input.dal')) as fx:
+                f.write(fx.read())
+
         self.output_archive = os.path.join(self.temp_dir, 'output.tar.gz')
 
         with open(self.output_archive, 'wb') as f:
@@ -440,13 +446,78 @@ class DaltonTestCase(QcipToolsTestCase):
             for index, a in enumerate(fa.molecule):
                 self.assertArrayAlmostEqual(a.position, fl.molecule[index].position)
 
+        # test get inputs
+        dal, mol = fl.get_inputs()
+
+        for index, a in enumerate(mol.molecule):
+            self.assertEqual(a.symbol, symbols[index])
+            self.assertArrayAlmostEqual(a.position, fl.molecule[index].position)  # it is the same molecule
+
+        self.assertTrue('.STATIC' in dal['WAVE FUNCTION']['CCQR'])  # it is probably the good dal as well
+
+    def test_input_dal(self):
+        """Test .dal files"""
+
+        fi = dalton.Input()
+        with open(self.input_dal_file) as fx:
+            fi.read(fx)
+
+        # check if reading is done properly (and if "__contains__()" works)
+        available_modules = ['DALTON INPUT', 'INTEGRALS', 'WAVE FUNCTIONS']
+        for m in available_modules:
+            self.assertTrue(m[:5] in fi.modules)
+            self.assertTrue(m in fi)
+
+        self.assertFalse('RESPONSE' in fi)
+
+        self.assertTrue('DIRECT' in fi['DALTON INPUT'].input_cards)
+        self.assertTrue('.DIRECT' in fi['DALTON INPUT'])
+        self.assertTrue('.CC' in fi['WAVE FUNCTIONS'])
+        self.assertTrue('.STATIC' in fi['WAVE FUNCTIONS']['CCLR'])
+
+        self.assertFalse('.DIRECT' in fi['INTEGRALS'])
+        self.assertFalse('.DIRECT' in fi['WAVE FUNCTIONS']['CCLR'])
+
+        self.assertTrue('SCF INPUT' in fi['WAVE FUNCTIONS'])
+
+        self.assertTrue(len(fi['DALTON INPUT']['.DIRECT'].parameters) == 0)
+        self.assertTrue(len(fi['WAVE FUNCTIONS']['CCLR']['.FREQUE'].parameters) == 2)
+        self.assertEqual(fi['WAVE FUNCTIONS']['CCLR']['.FREQUE'].parameters[0], '9')
+
+        # check if file is identical to input
+        with open(self.input_dal_file) as fx:
+            self.assertEqual(str(fi), fx.read())
+
+        # fire exceptions
+        with self.assertRaises(Exception):
+            fi['PROPERTIES'] = dalton.InputModule('WAVE FUNCTIONS', 0)  # key and name divergence
+
+        with self.assertRaises(Exception):
+            fi['DALTON INPUT']['DIRECT'] = dalton.InputCard('DIRECT')  # input card should start with "."
+
+        with self.assertRaises(Exception):
+            fi['XX'] = dalton.InputModule('XX', 0)  # XX is not an allowed module name
+
+        with self.assertRaises(Exception):
+            fi['WAVE FUNCTIONS']['CCLR'] = dalton.InputModule('CCLR', 1)  # module already exists
+
+        with self.assertRaises(Exception):
+            fi['WAVE FUNCTIONS']['CCLR']['XX'] = dalton.InputModule('XX', 1)  # no subsubmodules
+
+        with self.assertRaises(Exception):
+            fi['WAVE FUNCTIONS']['CCLR']['.XX'] = dalton.InputCard('YY')  # key and name divergence
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
+
         with open(self.output_log) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), dalton.Output)
 
         with open(self.input_mol_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), dalton.MoleculeInput)
+
+        with open(self.input_dal_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), dalton.Input)
 
         with open(self.output_archive) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), dalton.ArchiveOutput)

@@ -1,5 +1,8 @@
 import tarfile
 import math
+import os
+import collections
+import io
 
 from qcip_tools import molecule, atom, quantities
 from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
@@ -376,3 +379,291 @@ class Output(qcip_ChemistryFile):
 
         self.apply_function(find_string, line_start=line_start, line_end=line_end, in_section=in_section)
         return FunctionScope.line_found
+
+    def get_inputs(self):
+        """Fetch the inputs from the log file"""
+
+        line_dal = self.search('Content of the .dal input file', in_section='START')
+        line_mol = self.search('Content of the .mol file', line_start=line_dal, in_section='START')
+        line_end = self.search('Output from DALTON general input processing', line_start=line_mol, in_section='START')
+
+        if -1 in [line_dal, line_mol, line_end]:
+            raise Exception('inputs not found')
+
+        dal_file = Input()
+        mol_file = MoleculeInput()
+
+        dal_file.read(io.StringIO(''.join(self.lines[line_dal+2:line_mol-2])))
+        mol_file.read(io.StringIO(''.join(self.lines[line_mol+3:line_end-3])))
+
+        return dal_file, mol_file
+
+
+#: Name of the allowed modules in dalton (according to documentation)
+ALLOWED_LEVEL_0_MODULES=['**DALTON', '**INTEGRAL', '**WAVE F', '**START', '**EACH S', '**PROPERTIES', '**RESPONSE']
+
+
+class InputModule:
+    """The dalton (sub)modules, with level indicating it they are module (level=0) or submodule (level=1)
+
+    ..note::
+
+        Since Dalton only interpret the 7 first characters of any input card or module (``*`` or ``.`` included),
+        the storage key is reduced to that.
+
+    """
+
+    def __init__(self, name, level, input_cards=None, submodules=None):
+        if level not in [0, 1]:
+            raise Exception('level should be zero or one')
+
+        if level == 0:
+            n = '**' + name[:5]
+            allowed = False
+            for module in ALLOWED_LEVEL_0_MODULES:
+                if module[:7] == n:
+                    allowed = True
+                    break
+
+            if not allowed:
+                raise Exception('not a module: {}'.format(n))
+
+        elif submodules is not None:
+            raise Exception('subdmodule {} with subsubmodules'.format(name))
+
+        self.name = name
+        self.level = level
+        self.input_cards = collections.OrderedDict() if input_cards is None else input_cards
+        self.submodules = collections.OrderedDict() if submodules is None else submodules
+
+    def set_submodule(self, submodule, force=False):
+        """Set up a submodule
+
+        :param submodule: module
+        :type submodule: InputModule
+        :param force: force replacing  the submodule if exists
+        :type force: bool
+        """
+
+        if self.level != 0:
+            raise Exception('no subsubmodule allowed!')
+
+        if not force and submodule.name[:6] in self.submodules:
+            raise Exception('submodule {} already exists'.format(submodule.name))
+
+        self.submodules[submodule.name[:6]] = submodule
+        submodule.level = 1
+
+    def set_input_card(self, input_card, force=True):
+        """Set an input card
+
+        :param input_card: module
+        :type input_card: InputCard
+        :param force: force replacing  the card if exists
+        :type force: bool
+        """
+
+        name = input_card.name
+        if name[0] == '.':
+            name = name[1:]
+
+        if not force and name[:6] in self.input_cards:
+            raise Exception('input card {} already exists'.format(input_card.name))
+
+        self.input_cards[name[:6]] = input_card
+
+    def __contains__(self, item):
+        if item[0] == '.' and item[1:7] in self.input_cards:
+            return True
+
+        if self.level == 0 and item[:6] in self.submodules:
+            return True
+
+        return False
+
+    def __getitem__(self, item):
+        if item[0] == '.' and item[1:7] in self.input_cards:
+            return self.input_cards[item[1:7]]
+
+        if self.level == 0 and item[:6] in self.submodules:
+            return self.submodules[item[:6]]
+
+        raise KeyError(item)
+
+    def __setitem__(self, key, value):
+        if type(value) not in [InputModule, InputCard]:
+            raise TypeError(value)
+
+        if type(value) is InputModule:
+            if key[:6] != value.name[:6]:
+                raise Exception('key ({}) and name divergence ({})'.format(key[:6], value.name[:6]))
+
+            self.set_submodule(value)
+
+        else:
+            if key[0] != '.':
+                raise Exception('input card should start with "."')
+
+            name = value.name
+            if name[0] == '.':
+                name = name[1:]
+
+            if key[1:7] != name[:6]:
+                raise Exception('key ({}) and name divergence ({})'.format(key[1:7], name [:6]))
+
+            self.set_input_card(value)
+
+    def __repr__(self):
+        r = '*' + ('*' if self.level == 0 else '') + self.name + '\n'
+        for i in self.input_cards.values():
+            r += str(i)
+
+        if self.level == 0:
+            for i in self.submodules.values():
+                r += str(i)
+
+        return r
+
+
+class InputCard:
+    """Dalton input card"""
+
+    def __init__(self, name, parameters=None):
+
+        self.name = name
+
+        if self.name[0] == '.':
+            self.name = name[1:]
+
+        self.parameters = [] if parameters is None else parameters
+
+    def __repr__(self):
+        r = '.' + self.name + '\n'
+
+        if self.parameters:
+            for i in self.parameters:
+                r += str(i) + '\n'
+
+        return r
+
+
+class Input(qcip_ChemistryFile):
+    """Dalton dal input file.
+
+    Do NOT contains a molecule!
+
+    ..note::
+
+        Since Dalton only interpret the 7 first characters of any module (``**`` included),
+        the storage key is reduced to 5 characters.
+
+    **I/O class.**"""
+
+    file_type = 'DALTON_DAL'
+
+    def __init__(self):
+        self.lines = []
+        self.modules = collections.OrderedDict()
+
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['dal']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """Very specific beginning (``**DALTON INPUT``) and end (``'*END OF INPUT``)
+        """
+
+        l0 = f.readline()
+        if '**DALTON' == l0[:8]:
+
+            with open(f.name, 'rb') as fh:
+                # trick to get easily the last line, see https://stackoverflow.com/a/3346492
+                # TODO: is it really necessary for a file this size ?
+                fh.seek(-30, os.SEEK_END)
+                last = fh.readlines()[-1].decode()
+
+                if '*END OF' == last[:7]:
+                    return True
+
+        return False
+
+    def read(self, f):
+        """
+
+        :param f: File
+        :type f: file
+        """
+
+        self.from_read = True
+        self.lines = f.readlines()
+
+        current_module = None
+        current_submodule = None
+
+        for index, line in enumerate(self.lines):  # comments
+            if line[0] in ['!', '#']:
+                continue
+            if line[0] not in ['*', '.']:  # parameters will be read directly
+                continue
+
+            if line[0] == '*':
+                if line[1] == '*':  # module
+                    current_module = line[2:].strip()
+                    self[current_module] = InputModule(current_module, 0)
+                    current_submodule = None
+                else:  # submodule
+                    if '*END OF' in line:
+                        break
+
+                    current_submodule = line[1:].strip()
+                    self[current_module].set_submodule(InputModule(current_submodule, 1))
+
+            elif line[0] == '.':
+                current_input_card = line[1:].strip()
+                parameters = []
+
+                for line_param in self.lines[index+1:]:
+                    if line_param[0] in ['.', '*']:
+                        break
+                    elif line_param[0] in ['!', '#']:
+                        continue
+                    else:
+                        parameters.append(line_param.strip())
+
+                if current_submodule is None:
+                    self[current_module]['.' + current_input_card] = InputCard(current_input_card, parameters)
+                else:
+                    self[current_module][current_submodule]['.' + current_input_card] = \
+                        InputCard(current_input_card, parameters)
+
+    def __contains__(self, item):
+
+        if item[:5] in self.modules:
+            return True
+
+        return False
+
+    def __getitem__(self, item):
+        if item in self:
+            return self.modules[item[:5]]
+
+        raise KeyError(item)
+
+    def __setitem__(self, key, value):
+        if type(value) != InputModule:
+            raise TypeError(value)
+
+        if key[:5] != value.name[:5]:
+            raise Exception('key ({}) and name ({}) divergence'.format(key[:5], value.name[:5]))
+
+        value.level = 0
+        self.modules[key[:5]] = value
+
+    def to_string(self):
+        r = ''
+        for i in self.modules.values():
+            r += str(i)
+
+        r += '*END OF INPUT\n'
+        return r
