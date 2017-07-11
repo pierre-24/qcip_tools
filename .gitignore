@@ -1,6 +1,7 @@
 ## Python
 
 *.py[co]
+test.py
 
 # Packages
 *.egg
