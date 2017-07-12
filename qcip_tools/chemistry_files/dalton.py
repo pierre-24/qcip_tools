@@ -15,8 +15,15 @@ class MoleculeInput(qcip_ChemistryFile):
 
         Multiplicity seems to be given in the .dal file, so it may be wrong!!
 
-    **I/O class.**"""
+    .. container:: class-members
 
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.title``: the title (``str``)
+        + ``self.basis_set``: the basis set (``str``)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_MOL'
 
     def __init__(self):
@@ -148,8 +155,14 @@ class MoleculeInput(qcip_ChemistryFile):
 class ArchiveOutput(qcip_ChemistryFile):
     """Archive output of Dalton. Contains lots of information for who can extract them.
 
-    **Input only class.**"""
+    .. container:: class-members
 
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.tar_file``: pipe to the tar file (``tarfile.TarFile``)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_ARCHIVE'
 
     def __init__(self):
@@ -246,8 +259,15 @@ class OutputSection:
 class Output(qcip_ChemistryFile):
     """Output of Dalton.
 
-    **Input only class.**"""
+    .. container:: class-members
 
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.lines``: the lines of the file (``list`` of ``str``)
+        + ``self.sections``: the different sections (``list`` of ``OutputSection``)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_LOG'
 
     def __init__(self):
@@ -293,6 +313,7 @@ class Output(qcip_ChemistryFile):
 
         self.lines = f.readlines()
         self.sections.append(OutputSection('START', 0, -1))
+        self.from_read = True
 
         for index, line in enumerate(self.lines):
             if '.----------------' in line:
@@ -427,7 +448,7 @@ def check_module(name):
 class InputModule:
     """The dalton (sub)modules, with level indicating it they are module (level=0) or submodule (level=1)
 
-    ..note::
+    .. note::
 
         Since Dalton only interpret the 7 first characters of any input card or module (``*`` or ``.`` included),
         the storage key is reduced to that.
@@ -589,17 +610,21 @@ class Input(qcip_ChemistryFile):
 
     Do NOT contains a molecule!
 
-    ..note::
+    .. note::
 
         Since Dalton only interpret the 7 first characters of any module (``**`` included),
         the storage key is reduced to 5 characters.
 
-    **I/O class.**"""
+    .. container:: class-members
 
+        + ``self.module``: modules (``collections.OrderedDict`` of ``InputModule``)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_DAL'
 
     def __init__(self):
-        self.lines = []
         self.modules = collections.OrderedDict()
 
     @classmethod
@@ -633,12 +658,12 @@ class Input(qcip_ChemistryFile):
         """
 
         self.from_read = True
-        self.lines = f.readlines()
+        lines = f.readlines()
 
         current_module = None
         current_submodule = None
 
-        for index, line in enumerate(self.lines):  # comments
+        for index, line in enumerate(lines):  # comments
             if line[0] in ['!', '#']:
                 continue
             if line[0] not in ['*', '.']:  # parameters will be read directly
@@ -661,7 +686,7 @@ class Input(qcip_ChemistryFile):
                 current_input_card = line[1:].strip()
                 parameters = []
 
-                for line_param in self.lines[index + 1:]:
+                for line_param in lines[index + 1:]:
                     if line_param[0] in ['.', '*']:
                         break
                     elif line_param[0] in ['!', '#']:

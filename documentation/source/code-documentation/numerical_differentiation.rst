@@ -202,7 +202,7 @@ where :math:`\varepsilon_k(m)` is the amplitude error at a given iteration :math
 
 This "best" value is chosen according to the following flowchart:
 
-.. figure:: /_static/flowchart_romberg_selection.png
+.. figure:: ./images/flowchart_romberg_selection.png
     :align: center
 
     Flowchart to select the "best" value in a Romberg triangle, adapted from the text in M. de Wergifosse *et al*. *Int. J. Quant. Chem.* **114**, 900 (2014).
