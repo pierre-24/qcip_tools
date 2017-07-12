@@ -111,6 +111,7 @@ def compute_derivative_of_function(c, scalar_function, k, h0, input_space_dimens
     to which the ``**kwargs`` parameter is provided.
 
     :param c: list of tuple to describe the numerical derivative (Coefficient, coordinate)
+    :type c: list
     :param scalar_function: a callback function to access the different quantities
     :type scalar_function: callback
     :param k: minimal amplitude

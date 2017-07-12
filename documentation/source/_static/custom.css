@@ -1,0 +1,15 @@
+/* Extra CSS classes */
+
+.class-members {
+    border: 1px solid #dda;
+    padding: 10px 30px;
+    margin: 20px 0px;
+    background-color: #ffd;
+}
+
+.class-members::before {
+    content: "Class members:";
+    font-size: 24px;
+    padding: 0;
+    margin: 0 0 10px;
+}

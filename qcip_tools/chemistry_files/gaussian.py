@@ -11,25 +11,33 @@ from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, appl
 class Input(qcip_ChemistryFile):
     """Gaussian input file.
 
-    **Input/Output class.**
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.options``: the different options (starting with ``%`` in the file, ``dict`` of ``str``
+          [if ``%xxx=yyy``, key is ``xxx`` and value is ``yyy``])
+        + ``self.input_card``: the input card (starting with ``#`` in the file, ``list`` of ``str``
+          [the different lines])
+        + ``self.title``: the title (``str``)
+        + ``self.other_blocks``: the additionnal blocks after the molecule
+          (``list`` of ``list`` of ``str`` [the different lines])
     """
 
+    #: The identifier
     file_type = 'GAUSSIAN_INPUT'
 
     def __init__(self):
 
         self.molecule = molecule.Molecule()
 
-        self.raw_blocks = []
         self.other_blocks = []
         self.title = ''
-        self.options = []
-        self.options_dict = {}
+        self.options = {}
         self.input_card = []
 
     @classmethod
     def possible_file_extensions(cls):
-        return ['com', 'inp']
+        return ['com', 'inp', 'gau']
 
     @classmethod
     def attempt_recognition(cls, f):
@@ -69,37 +77,38 @@ class Input(qcip_ChemistryFile):
         self.from_read = True
         lines = f.readlines()
 
+        raw_blocks = []
+
         temp = []
         for l in lines:
             if len(temp) > 0 and l.strip() == '':
-                self.raw_blocks.append(temp)
+                raw_blocks.append(temp)
                 temp = []
             else:
                 temp.append(l.strip())
 
         # add last
         if len(temp) > 0:
-            self.raw_blocks.append(temp)
-        if len(self.raw_blocks) < 3:
+            raw_blocks.append(temp)
+        if len(raw_blocks) < 3:
             raise Exception('The file contains less than 3 raw_blocks')
 
         # try to understand first block
-        for line in self.raw_blocks[0]:
+        for line in raw_blocks[0]:
             if line[0] == '%':
-                self.options.append(line[1:])
                 opt = line[1:].split('=')
-                self.options_dict[opt[0].lower()] = opt[1]
+                self.options[opt[0].lower()] = opt[1]
             else:
                 self.input_card.append(line)
 
         # read title, charge and multiplicity:
-        self.title = ' '.join(self.raw_blocks[1])
-        charge_and_multiplicity = [int(i) for i in self.raw_blocks[2][0].strip().split()]
+        self.title = ' '.join(raw_blocks[1])
+        charge_and_multiplicity = [int(i) for i in raw_blocks[2][0].strip().split()]
         self.molecule.charge = charge_and_multiplicity[0]
         self.molecule.multiplicity = charge_and_multiplicity[1]
 
         # read coordinates:
-        coordinates = self.raw_blocks[2][1:]
+        coordinates = raw_blocks[2][1:]
         for atm in coordinates:
             s = atm.split()
             if len(s) != 4:
@@ -112,8 +121,8 @@ class Input(qcip_ChemistryFile):
                 self.molecule.insert(atom.Atom(symbol=atm_, position=coords))
 
         # then store "other blocks"
-        if len(self.raw_blocks) > 3:
-            self.other_blocks = self.raw_blocks[3:]
+        if len(raw_blocks) > 3:
+            self.other_blocks = raw_blocks[3:]
 
     def to_string(self, chk='', original_chk=False):
         """
@@ -128,11 +137,11 @@ class Input(qcip_ChemistryFile):
         rstr = ''
 
         # first, options:
-        for key in self.options_dict:
+        for key in self.options:
             if not original_chk and key == 'chk':
                 rstr += '%{}={}\n'.format(key, chk)
             else:
-                rstr += '%{}={}\n'.format(key, self.options_dict[key])
+                rstr += '%{}={}\n'.format(key, self.options[key])
 
         # then, input card and title
         rstr += '\n'.join(self.input_card) + '\n\n'
@@ -209,9 +218,20 @@ class FCHKChunkInformation:
 class FCHK(qcip_ChemistryFile):
     """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).
 
-    **Input only class.**
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.title``: the title (``str``)
+        + ``self.calculation_type``: the type of calculation (``str``)
+        + ``self.calculation_method``: the method used (``str``)
+        + ``self.basis_set``: the basis set (``str``)
+        + ``self.chunks_information``: information about every chunk (``dict`` of ``FCHKChunkInformation``)
+        + ``self.chunks_parsed``: parsed chunks are stored here (``dict`` of ``int|float|str|numpy.ndarray``)
+        + ``self.lines``: the different lines of the file, used for interpretation (``list`` of ``str``)
+
     """
 
+    #: The identifier
     file_type = 'GAUSSIAN_FCHK'
 
     def __init__(self):
@@ -390,8 +410,6 @@ class Output(qcip_ChemistryFile):
     """Log file of Gaussian. Contains a lot of informations, but not well printed or located.
     If possible, rely on the FCHK rather than on the LOG file.
 
-    **Input only class.**
-
     .. note::
 
         ``self.geometry`` contains the input geometry, but it may be reoriented according to the symmetry if
@@ -401,8 +419,16 @@ class Output(qcip_ChemistryFile):
 
         Results are not guaranteed if the job ran without ``#P``.
 
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.input_orientation``: wether the molecule has been reoriented w.r.t. input (``bool``)
+        + ``self.links_called``: the different links called (``list`` of ``LinkCalled``)
+        + ``self.lines``: the lines of the file (``list`` of ``str``)
+
     """
 
+    #: The identifier
     file_type = 'GAUSSIAN_LOG'
 
     def __init__(self):
@@ -441,6 +467,7 @@ class Output(qcip_ChemistryFile):
         """
 
         self.lines = f.readlines()
+        self.from_read = True
 
         found_enter_link1 = False
 
@@ -584,13 +611,32 @@ class Cube(qcip_ChemistryFile):
 
     Documentation on that format can be found `here <http://gaussian.com/cubegen/>`_.
 
-    **Input/output class**."""
+    .. note::
 
+        Increments and origin are stored as found, in bohr.
+
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.cube_type``: set to ``MO`` if the cube contains MOs (``str``)
+        + ``self.records_per_directions``: number of point in the grid (``list`` of ``int``)
+        + ``self.origin``: origin of the grid (3x1 ``numpy.ndarray``)
+        + ``self.increments``: increments between each point (3x1 ``numpy.ndarray``)
+        + ``self.data_per_records``: data per point (``int``)
+        + ``self.records``: the records (``numpy.ndarray``)
+        + ``self.title``: the title (``str``)
+        + ``self.subtitle``: the second line (``str``)
+        + ``self.MOs``: the MOs contained in the file, if any (``list`` of ``int``)
+
+    """
+
+    #: The identifier
     file_type = 'GAUSSIAN_CUBE'
 
     def __init__(self):
 
         self.molecule = molecule.Molecule()
+
         self.cube_type = ''
         self.records_per_direction = [0, 0, 0]
         self.origin = numpy.zeros(3)
@@ -599,7 +645,7 @@ class Cube(qcip_ChemistryFile):
         self.records = None
         self.title = ''
         self.subtitle = ''
-        self.MOs = ''
+        self.MOs = []
 
     @classmethod
     def possible_file_extensions(cls):
@@ -650,10 +696,6 @@ class Cube(qcip_ChemistryFile):
         .. warning::
 
             The charge/multiplicity may be wrong !
-
-        .. note::
-
-            Increments and origin are stored as found, in bohr.
 
         :param f: File
         :type f: file
@@ -742,9 +784,12 @@ class Cube(qcip_ChemistryFile):
         .. note::
 
             According to the documentation:
-            "Cube files have one row per record (i.e., N1*N2 records each of length N3*NVal)" (where N1 and N2
-            are the record per direction in the X and Y direction, while N3 is for the Z direction, the fastest
-            running index).
+
+             |  Cube files have one row per record (i.e., N1*N2 records each of length N3*NVal) (where N1 and N2
+               are the record per direction in the X and Y direction, while N3 is for the Z direction, the fastest
+               running index).
+
+            So it returns the number of rows, and should not be mistaken with ``number_of_data()``.
 
         :rtype: int
         """
