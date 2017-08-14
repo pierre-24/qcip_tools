@@ -5,10 +5,10 @@ import numpy
 import copy
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
+from qcip_tools.chemistry_files import InputChemistryFile, InputOutputChemistryFile, apply_over_list
 
 
-class Input(qcip_ChemistryFile):
+class Input(InputOutputChemistryFile):
     """Gaussian input file.
 
     .. container:: class-members
@@ -215,7 +215,7 @@ class FCHKChunkInformation:
         self.line_end = line_end
 
 
-class FCHK(qcip_ChemistryFile):
+class FCHK(InputChemistryFile):
     """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).
 
     .. container:: class-members
@@ -406,7 +406,7 @@ class LinkCalled:
         return 'Link {}: {}:{}'.format(self.link, self.line_start, self.line_end)
 
 
-class Output(qcip_ChemistryFile):
+class Output(InputChemistryFile):
     """Log file of Gaussian. Contains a lot of informations, but not well printed or located.
     If possible, rely on the FCHK rather than on the LOG file.
 
@@ -606,7 +606,7 @@ class ChargeTransferInformation:
         self.distance = numpy.linalg.norm(self.vector)
 
 
-class Cube(qcip_ChemistryFile):
+class Cube(InputOutputChemistryFile):
     """Gaussian cube.
 
     Documentation on that format can be found `here <http://gaussian.com/cubegen/>`_.

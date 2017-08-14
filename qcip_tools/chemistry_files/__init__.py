@@ -1,18 +1,11 @@
-
-
-class ChemistryFile:
-    """Purely abstract class that implemnent some basic methods that any child should implement if possible.
+class InputChemistryFile:
+    """Purely abstract class that implement some basic methods that any child should implement if possible.
 
     Input methods:
 
     - ``read()``
-    - ``property()``
     - ``get_molecule()``
-
-    Output methods:
-
-    - ``to_string()``
-    - ``write()``
+    - ``property()`` (not yet implemented)
 
     Methods to help file recognition:
 
@@ -28,15 +21,6 @@ class ChemistryFile:
     def read(self, f):
         raise NotImplementedError
 
-    def write(self, f):
-        f.write(self.to_string())
-
-    def to_string(self):
-        raise NotImplementedError
-
-    def __repr__(self):
-        return self.to_string()
-
     def property(self, property_):
         """
 
@@ -44,7 +28,7 @@ class ChemistryFile:
         :type property_: str
         """
 
-        return getattr(self, property_)
+        raise NotImplementedError('property')
 
     def get_molecule(self):
         """Get the corresponding  molecular geometry. Raises ``NotImplementedError`` if ``self.molecule`` is ``None``.
@@ -78,6 +62,26 @@ class ChemistryFile:
         """
 
         raise NotImplementedError
+
+
+class InputOutputChemistryFile(InputChemistryFile):
+    """Purely abstract class that implement some basic methods that any child should implement if possible.
+
+
+    Output methods:
+
+    - ``to_string()`` (preferably to override)
+    - ``write()``
+    """
+
+    def write(self, f):
+        f.write(self.to_string())
+
+    def to_string(self):
+        raise NotImplementedError
+
+    def __repr__(self):
+        return self.to_string()
 
 
 def apply_over_list(lst, func, start=0, end=None, **kwargs):
