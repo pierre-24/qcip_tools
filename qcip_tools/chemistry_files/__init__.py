@@ -74,11 +74,11 @@ class InputOutputChemistryFile(InputChemistryFile):
     - ``write()``
     """
 
-    def write(self, f):
-        f.write(self.to_string())
-
     def to_string(self):
         raise NotImplementedError
+
+    def write(self, f):
+        f.write(self.to_string())
 
     def __repr__(self):
         return self.to_string()

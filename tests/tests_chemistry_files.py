@@ -5,7 +5,7 @@ import random
 
 from tests import QcipToolsTestCase
 from qcip_tools import math as qcip_math
-from qcip_tools.chemistry_files import gaussian, dalton, helpers, xyz
+from qcip_tools.chemistry_files import gaussian, dalton, helpers, xyz, gamess
 
 
 class GaussianTestCase(QcipToolsTestCase):
@@ -631,3 +631,71 @@ class XYZTestCase(QcipToolsTestCase):
 
         with open(self.xyz_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), xyz.File)
+
+
+class GAMESSTestCase(QcipToolsTestCase):
+    """GAMESS stuffs"""
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+        self.input_file = os.path.join(self.temp_dir, 'gamess_input.inp')
+
+        with open(self.input_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gamess_input.inp')) as fx:
+                f.write(fx.read())
+
+    def test_input(self):
+        """Test the behavior of the input"""
+
+        fi = gamess.Input()
+        self.assertFalse(fi.from_read)
+
+        with open(self.input_file) as f:
+            fi.read(f)
+
+        self.assertTrue(fi.from_read)
+
+        # test modules
+        modules = ['basis', 'contrl', 'scf', 'tdhfx', 'system', 'data']
+        for m in modules:
+            self.assertTrue(m in fi, msg='{} not in!'.format(m))
+
+        basis_module = fi['basis']
+        self.assertEqual(len(basis_module.options), 2)
+        self.assertTrue('gbasis' in basis_module)
+
+        control_module = fi['contrl']
+        self.assertEqual(len(control_module.options), 2)
+        self.assertTrue('scftyp' in control_module)
+        self.assertTrue('runtyp' in control_module)
+
+        # test molecule
+        symbols = ['C', 'H', 'H', 'H', 'H']
+        self.assertEqual(len(symbols), len(fi.molecule))
+
+        for index, a in enumerate(fi.molecule):
+            self.assertEqual(symbols[index], a.symbol)
+
+        # test writing
+        other_xyz = os.path.join(self.temp_dir, 'u.inp')
+
+        with open(other_xyz, 'w') as f:
+            fi.write(f)
+
+        with open(other_xyz) as f:
+            fi2 = gamess.Input()
+            fi2.read(f)
+
+            self.assertEqual(len(fi.modules), len(fi2.modules))
+            self.assertEqual(len(fi2.molecule), len(fi.molecule))
+
+            for index, a in enumerate(fi2.molecule):
+                self.assertEqual(a.symbol, fi.molecule[index].symbol)
+                self.assertArrayAlmostEqual(a.position, fi.molecule[index].position)
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.input_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Input)
