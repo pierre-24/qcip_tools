@@ -1,5 +1,3 @@
-import contextlib
-
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
 from qcip_tools.chemistry_files import InputOutputChemistryFile
@@ -11,8 +9,8 @@ class InputModule():
     A "special" module is a multiline module (i.e. ``$DATA`` or ``$TDHFX``)
     """
 
-    def __init__(self, title, options, special_module=False):
-        self.title = title
+    def __init__(self, name, options, special_module=False):
+        self.name = name
         self.options = options
         self.special_module = special_module
 
@@ -48,7 +46,7 @@ class InputModule():
     def __repr__(self):
         """Note: shifts everything by one space"""
 
-        r = ' $' + self.title.upper()
+        r = ' $' + self.name.upper()
 
         if self.special_module:
             r += '\n'
@@ -76,12 +74,17 @@ class Input(InputOutputChemistryFile):
     .. container:: class-members
 
         + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
-        + ``self.modules``: the different modules (``list`` of ``InputModule``)
+        + ``self.modules``: the different modules (``dict`` of ``InputModule``,
+          where the key is the name of the module **in lowercase**)
         + ``self.title``: the title of the run (from $DATA)
 
     .. warning::
 
-        All title are stored in lowercase.
+        All module are stored in lowercase.
+
+    .. warning::
+
+        Does not implement Z-matrix molecule definition and other symmetries than C1.
 
     """
 
@@ -90,7 +93,7 @@ class Input(InputOutputChemistryFile):
 
     def __init__(self):
         self.molecule = Molecule()
-        self.modules = []
+        self.modules = {}
         self.title = ''
 
     @classmethod
@@ -99,7 +102,7 @@ class Input(InputOutputChemistryFile):
 
     @classmethod
     def attempt_recognition(cls, f):
-        """To damn "$"!!!"""
+        """A GAMESS input file contains too many "$"!!!"""
 
         num_dollar = 0
         num_end = 0
@@ -112,15 +115,10 @@ class Input(InputOutputChemistryFile):
         return num_dollar > 4 and num_end > 2
 
     def __contains__(self, item):
-        return item.lower() in [a.title for a in self.modules]
+        return item.lower() in self.modules
 
     def __getitem__(self, item):
-        try:
-            pos = [a.title for a in self.modules].index(item.lower())
-        except ValueError:
-            raise KeyError(item)
-
-        return self.modules[pos]
+        return self.modules[item.lower()]
 
     def __setitem__(self, key, value):
         if not isinstance(value, InputModule):
@@ -131,11 +129,7 @@ class Input(InputOutputChemistryFile):
         if value.title != key.lower():
             raise Exception('cannot set {} while title is {}'.format(value.title, key.lower()))
 
-        with contextlib.suppress(ValueError):
-            pos = [a.title for a in self.modules].index(key.lower())
-            del self.modules[pos]
-
-        self.modules.append(value)
+        self.modules[value.title] = value
 
     def read(self, f):
         """
@@ -166,19 +160,18 @@ class Input(InputOutputChemistryFile):
             if content[pos_end + 1:pos_end + 4].lower() != 'end':
                 raise Exception('no end !')
 
-            self.modules.append(InputModule.from_string(content[pos_begin:pos_end + 4]))
+            m = InputModule.from_string(content[pos_begin:pos_end + 4])
+            self.modules[m.name] = m
             prev_pos = pos_end
 
         if len(self.modules) == 0:
             raise Exception('empty file')
 
         # get molecule:
-        try:
-            data_position = [a.title for a in self.modules].index('data')
-        except ValueError:
-            raise Exception('no $DATA!')
+        if 'data' not in self:
+            raise Exception('no $DATA')
 
-        data = self.modules[data_position].options
+        data = self.modules['data'].options
         if len(data) < 3:
             raise Exception('$DATA is too small')
         if len(data[1]) != 1 or data[1][0].lower() != 'c1':
@@ -201,10 +194,10 @@ class Input(InputOutputChemistryFile):
 
         # first, all modules except $DATA
         for module_ in self.modules:
-            if module_.title == 'data':
+            if module_ == 'data':
                 continue
 
-            r += str(module_) + '\n'
+            r += str(self.modules[module_]) + '\n'
 
         # then, $DATA
         r += ' $DATA\n'
