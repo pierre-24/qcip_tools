@@ -16,10 +16,12 @@ class ChemistryFileTestCase(QcipToolsTestCase):
         f = InputChemistryFile()
 
         # use existing callback
+        self.assertTrue(f.has_property('file_type'))
         self.assertEqual(f.property('file_type'), f.file_type)
 
         # define custom property
         property_name = 'custom_property'
+        self.assertFalse(f.has_property(property_name))
 
         with self.assertRaises(Exception):
             f.property(property_name)
@@ -28,7 +30,17 @@ class ChemistryFileTestCase(QcipToolsTestCase):
         def get_(obj, **kwargs):
             return obj.file_type
 
+        self.assertTrue(f.has_property(property_name))
         self.assertEqual(f.property(property_name), f.file_type)
+
+        # test heritage
+        class T(InputChemistryFile):
+            file_type = 'XXX'
+
+        ft = T()
+
+        self.assertTrue(ft.has_property(property_name))
+        self.assertEqual(ft.property(property_name), ft.file_type)
 
 
 class GaussianTestCase(QcipToolsTestCase):

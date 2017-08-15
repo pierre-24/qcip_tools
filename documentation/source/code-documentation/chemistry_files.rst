@@ -16,7 +16,7 @@ This is especially true for input files, which follows rigorous syntax, while ou
   - ``possible_file_extensions()`` and ``attempt_recognition()`` (both class methods): helps file recognition.
 
   Thanks to the dispatcher pattern, derivation from this class allow to define taylor-made accessors: use the ``@Class.define_property(property_name)`` decorator to give the ability to use this callback function with ``property(property_name[, optional kwargs ...])``.
-  Callbacks should have the following form: ``callback_func(obj, **kwargs)``, where ``obj`` is the current object. In the code, those callbacks have the form ``property__*(obj, **kwargs)``.
+  Callbacks should have the following form: ``callback_func(obj, **kwargs)``, where ``obj`` is the current object. In the code, those callbacks have the form ``property__*(obj, **kwargs)``. One can check if a property is available with ``has_property()``.
 
 + Some of them (typically input files of programs) also derive from `InputOutputChemistryFile <#qcip_tools.chemistry_files.InputOutputChemistryFile>`_, which gives the ability to ``write()`` in a new file.
   Note that it is easier to override ``to_string()`` in this case.

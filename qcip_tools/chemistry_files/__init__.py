@@ -44,6 +44,14 @@ class InputChemistryFile(Dispatcher):
 
         return callback(self, **kwargs)
 
+    def has_property(self, property_):
+        """Checks whether a given property is available or not.
+
+        :rtype: bool
+        """
+
+        return property_ in self.dispatcher
+
     def get_molecule(self):
         """Get the corresponding  molecular geometry. Raises ``NotImplementedError`` if ``self.molecule`` is ``None``.
 
