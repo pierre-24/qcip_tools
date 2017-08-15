@@ -5,7 +5,30 @@ import random
 
 from tests import QcipToolsTestCase
 from qcip_tools import math as qcip_math
-from qcip_tools.chemistry_files import gaussian, dalton, helpers, xyz, gamess
+from qcip_tools.chemistry_files import InputChemistryFile, gaussian, dalton, helpers, xyz, gamess
+
+
+class ChemistryFileTestCase(QcipToolsTestCase):
+    """base stuffs"""
+
+    def test_add_property(self):
+
+        f = InputChemistryFile()
+
+        # use existing callback
+        self.assertEqual(f.property('file_type'), f.file_type)
+
+        # define custom property
+        property_name = 'custom_property'
+
+        with self.assertRaises(Exception):
+            f.property(property_name)
+
+        @InputChemistryFile.define_property(property_name)
+        def get_(obj, **kwargs):
+            return obj.file_type
+
+        self.assertEqual(f.property(property_name), f.file_type)
 
 
 class GaussianTestCase(QcipToolsTestCase):

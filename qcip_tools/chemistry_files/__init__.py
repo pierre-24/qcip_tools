@@ -1,4 +1,7 @@
-class InputChemistryFile:
+from qcip_tools.mixins import Dispatcher
+
+
+class InputChemistryFile(Dispatcher):
     """Purely abstract class that implement some basic methods that any child should implement if possible.
 
     Input methods:
@@ -21,14 +24,25 @@ class InputChemistryFile:
     def read(self, f):
         raise NotImplementedError
 
-    def property(self, property_):
+    @classmethod
+    def define_property(cls, key):
+        def wrapper(callback):
+            return cls.set_callback(key, callback)
+        return wrapper
+
+    def property(self, property_, **kwargs):
         """
 
         :param property_: the property
         :type property_: str
         """
 
-        raise NotImplementedError('property')
+        callback = self.dispatch(property_)
+
+        if callback is None:
+            raise Exception('property {} not defined for {}'.format(property_, type(self)))
+
+        return callback(self, **kwargs)
 
     def get_molecule(self):
         """Get the corresponding  molecular geometry. Raises ``NotImplementedError`` if ``self.molecule`` is ``None``.
@@ -64,13 +78,19 @@ class InputChemistryFile:
         raise NotImplementedError
 
 
+@InputChemistryFile.define_property('file_type')
+def property__file_type(obj, **kwargs):
+    """Get the file type trough ``file_type``"""
+    return obj.file_type
+
+
 class InputOutputChemistryFile(InputChemistryFile):
     """Purely abstract class that implement some basic methods that any child should implement if possible.
 
 
     Output methods:
 
-    - ``to_string()`` (preferably to override)
+    - ``to_string()`` (preferable to override)
     - ``write()``
     """
 

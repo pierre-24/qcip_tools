@@ -22,7 +22,7 @@ class InputModule():
 
         :param s: the string
         :type s: str
-        :rtype: InputModule
+        :rtype: qcip_tools.chemistry_files.gamess.InputModule
         """
 
         if s.count('$') != 2:

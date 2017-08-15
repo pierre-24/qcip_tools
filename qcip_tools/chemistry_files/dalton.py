@@ -483,7 +483,7 @@ class InputModule:
         """Set up a submodule
 
         :param submodule: module
-        :type submodule: InputModule
+        :type submodule: qcip_tools.chemistry_files.dalton.InputModule
         :param force: force replacing  the submodule if exists
         :type force: bool
         """
