@@ -40,7 +40,7 @@ class ChemistryFileTestCase(QcipToolsTestCase):
         ft = T()
 
         self.assertTrue(ft.has_property(property_name))
-        self.assertEqual(ft.property(property_name), ft.file_type)
+        self.assertEqual(ft.property(property_name), T.file_type)
 
 
 class GaussianTestCase(QcipToolsTestCase):

@@ -282,15 +282,20 @@ class Output(InputChemistryFile):
     @classmethod
     def attempt_recognition(cls, f):
         """A dalton output ... Does contains a lot of (european) countries and universities name at some point
+        (and a little bit of "Dalton" as well)
         """
 
         count = 0
         found_countries = 0
         found_universities = 0
+        found_dalton = 0
         countries = ['Norway', 'Denmark', 'Italy', 'Sweden', 'Germany']
 
         for l in f.readlines():
             count += 1
+
+            if 'Dalton' in l or 'dalton' in l:
+                found_dalton += 1
 
             if 60 < count < 150:
                 if 'University' in l:
@@ -302,7 +307,7 @@ class Output(InputChemistryFile):
             if count > 150:
                 break
 
-        return found_countries > 20 and found_universities > 20
+        return found_countries > 20 and found_universities > 20 and found_dalton > 4
 
     def read(self, f):
         """
