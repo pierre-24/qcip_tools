@@ -1,8 +1,8 @@
 from qcip_tools import molecule, atom
-from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin
 
 
-class File(qcip_ChemistryFile):
+class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
     """The (in)famous XYZ file
 
     .. container:: class-members
@@ -50,6 +50,21 @@ class File(qcip_ChemistryFile):
                     return False
 
         return True
+
+    @classmethod
+    def from_molecule(cls, molecule, title='', *args, **kwargs):
+        """Create a file from molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :param title: title of the run
+        :type title: str
+        :rtype: qcip_tools.chemistry_files.xyz.File
+        """
+
+        obj = super().from_molecule(molecule, *args, **kwargs)
+        obj.title = title
+        return obj
 
     def read(self, f, trust_number_of_atoms=True):
 
