@@ -1,6 +1,6 @@
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutput, WithMolecule, apply_over_list
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile
 from qcip_tools.quantities import AuToAngstrom
 
 
@@ -77,7 +77,7 @@ class InputModule(object):
         return item.lower() in [a[0].lower() for a in self.options]
 
 
-class Input(ChemistryFile, WithOutput, WithMolecule):
+class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
     """GAMESS (US) input file.
 
     .. container:: class-members
@@ -262,29 +262,24 @@ class OutputStep:
         return 'Step {}: {}:{}'.format(self.step_name, self.line_start, self.line_end)
 
 
-class Output(ChemistryFile, WithMolecule):
+class Output(ChemistryLogFile, WithMoleculeMixin):
     """Output of GAMESS.
 
     .. container:: class-members
 
         + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
         + ``self.lines``: the lines of the file (``list`` of ``str``)
-        + ``self.sections``: the different sections (``list`` of
+        + ``self.chunks``: the different sections (``list`` of
           `OutputStep <#qcip_tools.chemistry_files.gamess.OutputStep>`_)
 
     """
 
     #: The identifier
     file_type = 'GAMESS_LOG'
+    chunk_title_variable = 'step_name'
 
     def __init__(self):
         self.molecule = Molecule()
-        self.lines = []
-        self.steps = []
-
-    @classmethod
-    def possible_file_extensions(cls):
-        return ['out', 'log']
 
     @classmethod
     def attempt_recognition(cls, f):
@@ -315,10 +310,6 @@ class Output(ChemistryFile, WithMolecule):
 
         return found_states > 5 and found_universities > 10 and found_gamess > 2
 
-    @classmethod
-    def from_molecule(cls, molecule, *args, **kwargs):
-        raise NotImplementedError('from_molecule')
-
     def read(self, f):
         """
 
@@ -326,14 +317,13 @@ class Output(ChemistryFile, WithMolecule):
         :type f: file
         """
 
-        self.lines = f.readlines()
-        self.from_read = True
+        super().read(f)
 
-        self.steps.append(OutputStep('X', 0, -1))
+        self.chunks.append(OutputStep('X', 0, -1))
 
         for index, line in enumerate(self.lines):
             if 'EXECUTION OF GAMESS BEGUN' in line:
-                self.steps[-1].line_start = index
+                self.chunks[-1].line_start = index
                 continue
             elif '.....' in line and 'STEP CPU' in self.lines[index + 1]:
                 title = line.replace('.', '')\
@@ -342,16 +332,16 @@ class Output(ChemistryFile, WithMolecule):
                     .replace('DONE ', '')\
                     .strip()
 
-                self.steps[-1].line_end = index
-                self.steps[-1].step_name = title
-                self.steps.append(OutputStep('X', index + 1, -1))
+                self.chunks[-1].line_end = index
+                self.chunks[-1].step_name = title
+                self.chunks.append(OutputStep('X', index + 1, -1))
                 continue
             elif 'EXECUTION OF GAMESS TERMINATED' in line:
-                self.steps.pop()
+                self.chunks.pop()
                 break
 
         # molecule
-        line_coordinates = self.search('COORDINATES (BOHR)', in_step='SETTING UP THE RUN')
+        line_coordinates = self.search('COORDINATES (BOHR)', into='SETTING UP THE RUN')
 
         if line_coordinates < 0:
             raise Exception('no molecule ?')
@@ -374,7 +364,7 @@ class Output(ChemistryFile, WithMolecule):
 
         # charge and multiplicity
         num_of_electron_line = self.search(
-            'NUMBER OF ELECTRONS', line_start=line_coordinates + len(self.molecule), in_step='SETTING UP THE RUN')
+            'NUMBER OF ELECTRONS', line_start=line_coordinates + len(self.molecule), into='SETTING UP THE RUN')
 
         if num_of_electron_line < 0:
             raise Exception('cannot find charge and multiplicity')
@@ -386,51 +376,3 @@ class Output(ChemistryFile, WithMolecule):
         if number_of_electrons != self.molecule.number_of_electrons():
             raise Exception('not the same number of electron {} != {}'.format(
                 number_of_electrons, self.molecule.number_of_electrons()))
-
-    def apply_function(self, func, line_start=0, line_end=None, in_step=None, **kwargs):
-        """Apply ``apply_over_list()`` to the lines.
-
-        :param lines: lines of the log
-        :type lines: list
-        :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
-        :type func: callback
-        :param line_start: starting index
-        :type line_start: int
-        :param line_end: end the search at some point
-        :type line_end: int
-        :param in_step: restrict the search to a given link
-        :type in_step: str
-        :type kwargs: dict
-        :rtype: bool
-        """
-
-        if in_step is not None:
-            for step_info in self.steps:
-                if step_info.step_name == in_step:
-                    r = apply_over_list(self.lines, func, step_info.line_start, step_info.line_end, **kwargs)
-                    if r:
-                        return True
-
-            return False
-
-        else:
-            return apply_over_list(self.lines, func, line_start, line_end, **kwargs)
-
-    def search(self, s, line_start=0, line_end=None, in_step=None):
-        """Returns the line when the string is found in this line or -1 if nothing was found.
-
-        :rtype: int
-        """
-
-        class FunctionScope:
-            line_found = -1
-
-        def find_string(line, current_index):
-            if s in line:
-                FunctionScope.line_found = current_index
-                return True
-            else:
-                return False
-
-        self.apply_function(find_string, line_start=line_start, line_end=line_end, in_step=in_step)
-        return FunctionScope.line_found

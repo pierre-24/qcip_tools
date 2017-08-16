@@ -1,8 +1,8 @@
 from qcip_tools import molecule, atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutput, WithMolecule
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin
 
 
-class File(ChemistryFile, WithOutput, WithMolecule):
+class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
     """The (in)famous XYZ file
 
     .. container:: class-members

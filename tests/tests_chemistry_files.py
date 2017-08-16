@@ -225,9 +225,9 @@ class GaussianTestCase(QcipToolsTestCase):
 
         self.assertTrue(fo.from_read)
 
-        self.assertTrue(fo.link_called(1))  # the real beginning of the program
-        self.assertTrue(fo.link_called(202))  # Link 202 deals with geometry
-        self.assertFalse(fo.link_called(9998))  # Does not exists (apart from 9999 and 1, all link have the form xxx)
+        self.assertTrue(fo.chunk_exists(1))  # the real beginning of the program
+        self.assertTrue(fo.chunk_exists(202))  # Link 202 deals with geometry
+        self.assertFalse(fo.chunk_exists(9998))  # Does not exists (apart from 9999 and 1, all links have the form xxx)
 
         # test molecule
         symbols = ['O', 'H', 'H']
@@ -246,8 +246,8 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(fo.search(to_find, line_start=line_found), line_found)
         self.assertEqual(fo.search(to_find, line_end=line_found), -1)
         self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
-        self.assertEqual(fo.search(to_find, in_link=1), line_found)
-        self.assertEqual(fo.search(to_find, in_link=101), -1)
+        self.assertEqual(fo.search(to_find, into=1), line_found)
+        self.assertEqual(fo.search(to_find, into=101), -1)
 
     def test_cube_file(self):
         """Test the cube files"""
@@ -527,14 +527,17 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertEqual(a.symbol, symbols[index])
 
         # test find string:
+        self.assertTrue(fl.chunk_exists('SIRIUS'))
+        self.assertFalse(fl.chunk_exists('XXXX'))
+
         to_find = '@    Occupied SCF orbitals'
         line_found = 515
         self.assertEqual(fl.search(to_find), line_found)
         self.assertEqual(fl.search(to_find, line_start=line_found), line_found)
         self.assertEqual(fl.search(to_find, line_end=line_found), -1)
         self.assertEqual(fl.search(to_find, line_start=line_found + 1), -1)
-        self.assertEqual(fl.search(to_find, in_section='SIRIUS'), line_found)
-        self.assertEqual(fl.search(to_find, in_section='CC'), -1)
+        self.assertEqual(fl.search(to_find, into='SIRIUS'), line_found)
+        self.assertEqual(fl.search(to_find, into='CC'), -1)
 
         # compare with the archive output:
         fa = dalton.ArchiveOutput()
@@ -833,14 +836,17 @@ class GAMESSTestCase(QcipToolsTestCase):
             self.assertEqual(symbols[index], a.symbol)
 
         # test find string:
+        self.assertTrue(fo.chunk_exists('RHF CALCULATION'))
+        self.assertFalse(fo.chunk_exists('XXXX'))
+
         to_find = 'TOTAL NUMBER OF BASIS SET SHELLS'
         line_found = 231
         self.assertEqual(fo.search(to_find), line_found)
         self.assertEqual(fo.search(to_find, line_start=line_found), line_found)
         self.assertEqual(fo.search(to_find, line_end=line_found), -1)
         self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
-        self.assertEqual(fo.search(to_find, in_step='SETTING UP THE RUN'), line_found)
-        self.assertEqual(fo.search(to_find, in_step='RHF CALCULATION'), -1)
+        self.assertEqual(fo.search(to_find, into='SETTING UP THE RUN'), line_found)
+        self.assertEqual(fo.search(to_find, into='RHF CALCULATION'), -1)
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""

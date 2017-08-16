@@ -5,10 +5,10 @@ import collections
 import io
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile, WithOutput, WithMolecule, apply_over_list
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile
 
 
-class MoleculeInput(ChemistryFile, WithOutput, WithMolecule):
+class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
     """Dalton mol input file.
 
     .. warning::
@@ -170,7 +170,7 @@ class MoleculeInput(ChemistryFile, WithOutput, WithMolecule):
         f.write(self.to_string(in_angstrom, nosym, group_atoms))
 
 
-class ArchiveOutput(ChemistryFile, WithMolecule):
+class ArchiveOutput(ChemistryFile, WithMoleculeMixin):
     """Archive output of Dalton. Contains lots of information for who can extract them.
 
     .. container:: class-members
@@ -278,7 +278,7 @@ class OutputSection:
         return 'Section {}: {}:{}'.format(self.section, self.line_start, self.line_end)
 
 
-class Output(ChemistryFile, WithMolecule):
+class Output(ChemistryLogFile, WithMoleculeMixin):
     """Output of Dalton.
 
     .. container:: class-members
@@ -292,15 +292,10 @@ class Output(ChemistryFile, WithMolecule):
 
     #: The identifier
     file_type = 'DALTON_LOG'
+    chunk_title_variable = 'section'
 
     def __init__(self):
         self.molecule = molecule.Molecule()
-        self.lines = []
-        self.sections = []
-
-    @classmethod
-    def possible_file_extensions(cls):
-        return ['out', 'log']
 
     @classmethod
     def attempt_recognition(cls, f):
@@ -332,10 +327,6 @@ class Output(ChemistryFile, WithMolecule):
 
         return found_countries > 20 and found_universities > 20 and found_dalton > 4
 
-    @classmethod
-    def from_molecule(cls, molecule, *args, **kwargs):
-        raise NotImplementedError('from_molecule')
-
     def read(self, f):
         """
 
@@ -343,24 +334,24 @@ class Output(ChemistryFile, WithMolecule):
         :type f: file
         """
 
-        self.lines = f.readlines()
-        self.sections.append(OutputSection('START', 0, -1))
-        self.from_read = True
+        super().read(f)
+
+        self.chunks.append(OutputSection('START', 0, -1))
 
         for index, line in enumerate(self.lines):
             if '.----------------' in line:
                 if 'Starting in' in self.lines[index + 1]:
-                    self.sections[-1].line_end = index
+                    self.chunks[-1].line_end = index
                     section_end = self.lines[index + 1].rfind(')')
                     section_start = self.lines[index + 1].rfind('(')
                     if -1 in [section_end, section_start]:
                         raise Exception('no section found for line {}'.format(index))
 
-                    self.sections.append(
+                    self.chunks.append(
                         OutputSection(self.lines[index + 1][section_start + 1:section_end], index + 1, -1))
 
         # fetch molecule
-        coordinates_line = self.search('Cartesian Coordinates (a.u.)', in_section='START')
+        coordinates_line = self.search('Cartesian Coordinates (a.u.)', into='START')
         if coordinates_line == -1:
             raise Exception('cannot find molecule')
 
@@ -374,7 +365,7 @@ class Output(ChemistryFile, WithMolecule):
                         float(content[4]), float(content[7]), float(content[10])]]
                 ))
 
-        charge_line = self.search('@    Total charge of the molecule', in_section='SIRIUS')
+        charge_line = self.search('@    Total charge of the molecule', into='SIRIUS')
         if charge_line == -1:
             raise Exception('cannot find charge of the molecule')
         self.molecule.charge = int(self.lines[charge_line][-6:])
@@ -384,64 +375,15 @@ class Output(ChemistryFile, WithMolecule):
             raise Exception(
                 'Not the right number of electron, is the charge (found {}) wrong?'.format(self.molecule.charge))
 
-    def apply_function(self, func, line_start=0, line_end=None, in_section=None, **kwargs):
-        """Apply ``apply_over_list()`` to the lines.
-
-        :param lines: lines of the log
-        :type lines: list
-        :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
-        :type func: callback
-        :param line_start: starting index
-        :type line_start: int
-        :param line_end: end the search at some point
-        :type line_end: int
-        :param in_section: restrict the search to a given link
-        :type in_section: str
-        :type kwargs: dict
-        :rtype: bool
-        """
-
-        if in_section is not None:
-
-            for section_info in self.sections:
-                if section_info.section == in_section:
-                    r = apply_over_list(self.lines, func, section_info.line_start, section_info.line_end, **kwargs)
-                    if r:
-                        return True
-
-            return False
-
-        else:
-            return apply_over_list(self.lines, func, line_start, line_end, **kwargs)
-
-    def search(self, s, line_start=0, line_end=None, in_section=None):
-        """Returns the line when the string is found in this line or -1 if nothing was found.
-
-        :rtype: int
-        """
-
-        class FunctionScope:
-            line_found = -1
-
-        def find_string(line, current_index):
-            if s in line:
-                FunctionScope.line_found = current_index
-                return True
-            else:
-                return False
-
-        self.apply_function(find_string, line_start=line_start, line_end=line_end, in_section=in_section)
-        return FunctionScope.line_found
-
     def get_inputs(self):
         """Fetch the inputs from the log file
 
         :rtype: tuple
         """
 
-        line_dal = self.search('Content of the .dal input file', in_section='START')
-        line_mol = self.search('Content of the .mol file', line_start=line_dal, in_section='START')
-        line_end = self.search('Output from DALTON general input processing', line_start=line_mol, in_section='START')
+        line_dal = self.search('Content of the .dal input file', into='START')
+        line_mol = self.search('Content of the .mol file', line_start=line_dal, into='START')
+        line_end = self.search('Output from DALTON general input processing', line_start=line_mol, into='START')
 
         if -1 in [line_dal, line_mol, line_end]:
             raise Exception('inputs not found')
@@ -637,7 +579,7 @@ class InputCard:
         return r
 
 
-class Input(ChemistryFile, WithOutput):
+class Input(ChemistryFile, WithOutputMixin):
     """Dalton dal input file.
 
     Do NOT contains a molecule!
