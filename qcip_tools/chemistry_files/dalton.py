@@ -263,7 +263,8 @@ class Output(InputChemistryFile):
 
         + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
         + ``self.lines``: the lines of the file (``list`` of ``str``)
-        + ``self.sections``: the different sections (``list`` of ``OutputSection``)
+        + ``self.sections``: the different sections (``list`` of
+          `OutputSection <#qcip_tools.chemistry_files.dalton.OutputSection>`_)
 
     """
 
@@ -376,9 +377,9 @@ class Output(InputChemistryFile):
 
         if in_section is not None:
 
-            for link_info in self.sections:
-                if link_info.section == in_section:
-                    r = apply_over_list(self.lines, func, link_info.line_start, link_info.line_end, **kwargs)
+            for section_info in self.sections:
+                if section_info.section == in_section:
+                    r = apply_over_list(self.lines, func, section_info.line_start, section_info.line_end, **kwargs)
                     if r:
                         return True
 
@@ -458,7 +459,7 @@ class InputModule:
         Since Dalton only interpret the 7 first characters of any input card or module (``*`` or ``.`` included),
         the storage key is reduced to that.
 
-    :param level: level of the module (either 0 if princiap or 1 if submodule)
+    :param level: level of the module (either 0 if principal or 1 if submodule)
     :type level: int
     :param name: name of the module
     :type name: str
@@ -622,7 +623,8 @@ class Input(InputOutputChemistryFile):
 
     .. container:: class-members
 
-        + ``self.module``: modules (``collections.OrderedDict`` of ``InputModule``)
+        + ``self.module``: modules (``collections.OrderedDict`` of
+          `InputModule <#qcip_tools.chemistry_files.dalton.InputModule>`_)
 
     """
 

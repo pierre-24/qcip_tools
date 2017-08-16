@@ -423,7 +423,8 @@ class Output(InputChemistryFile):
 
         + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
         + ``self.input_orientation``: wether the molecule has been reoriented w.r.t. input (``bool``)
-        + ``self.links_called``: the different links called (``list`` of ``LinkCalled``)
+        + ``self.links_called``: the different links called (``list`` of
+          `LinkCalled <#qcip_tools.chemistry_files.gaussian.LinkCalled>`_)
         + ``self.lines``: the lines of the file (``list`` of ``str``)
 
     """

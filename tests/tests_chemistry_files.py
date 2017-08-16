@@ -675,9 +675,14 @@ class GAMESSTestCase(QcipToolsTestCase):
         self.temp_dir = tempfile.mkdtemp()
 
         self.input_file = os.path.join(self.temp_dir, 'gamess_input.inp')
+        self.output_file = os.path.join(self.temp_dir, 'gamess_output.log')
 
         with open(self.input_file, 'w') as f:
             with open(os.path.join(self.test_directory, 'tests_files/gamess_input.inp')) as fx:
+                f.write(fx.read())
+
+        with open(self.output_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gamess_output.log')) as fx:
                 f.write(fx.read())
 
     def test_input(self):
@@ -713,12 +718,12 @@ class GAMESSTestCase(QcipToolsTestCase):
             self.assertEqual(symbols[index], a.symbol)
 
         # test writing
-        other_xyz = os.path.join(self.temp_dir, 'u.inp')
+        other_input = os.path.join(self.temp_dir, 'u.inp')
 
-        with open(other_xyz, 'w') as f:
+        with open(other_input, 'w') as f:
             fi.write(f)
 
-        with open(other_xyz) as f:
+        with open(other_input) as f:
             fi2 = gamess.Input()
             fi2.read(f)
 
@@ -729,8 +734,39 @@ class GAMESSTestCase(QcipToolsTestCase):
                 self.assertEqual(a.symbol, fi.molecule[index].symbol)
                 self.assertArrayAlmostEqual(a.position, fi.molecule[index].position)
 
+    def test_output(self):
+        """Test the behavior of the output"""
+
+        fo = gamess.Output()
+        self.assertFalse(fo.from_read)
+
+        with open(self.output_file) as f:
+            fo.read(f)
+
+        self.assertTrue(fo.from_read)
+
+        # test molecule
+        symbols = ['O', 'H', 'H']
+        self.assertEqual(len(symbols), len(fo.molecule))
+
+        for index, a in enumerate(fo.molecule):
+            self.assertEqual(symbols[index], a.symbol)
+
+        # test find string:
+        to_find = 'TOTAL NUMBER OF BASIS SET SHELLS'
+        line_found = 231
+        self.assertEqual(fo.search(to_find), line_found)
+        self.assertEqual(fo.search(to_find, line_start=line_found), line_found)
+        self.assertEqual(fo.search(to_find, line_end=line_found), -1)
+        self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
+        self.assertEqual(fo.search(to_find, in_step='SETTING UP THE RUN'), line_found)
+        self.assertEqual(fo.search(to_find, in_step='RHF CALCULATION'), -1)
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
         with open(self.input_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Input)
+
+        with open(self.output_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Output)

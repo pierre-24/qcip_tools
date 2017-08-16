@@ -1,12 +1,18 @@
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
-from qcip_tools.chemistry_files import InputOutputChemistryFile
+from qcip_tools.chemistry_files import InputOutputChemistryFile, apply_over_list, InputChemistryFile
+from qcip_tools.quantities import AuToAngstrom
 
 
 class InputModule():
     """GAMESS input module (ends with ``$END``).
 
     A "special" module is a multiline module (i.e. ``$DATA`` or ``$TDHFX``)
+
+    .. warning::
+
+        Does not deal with comments (``!``) or modules for which one line is "just" too short.
+
     """
 
     def __init__(self, name, options, special_module=False):
@@ -74,7 +80,8 @@ class Input(InputOutputChemistryFile):
     .. container:: class-members
 
         + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
-        + ``self.modules``: the different modules (``dict`` of ``InputModule``,
+        + ``self.modules``: the different modules (``dict`` of
+          `InputModule <#qcip_tools.chemistry_files.gamess.InputModule>`_,
           where the key is the name of the module **in lowercase**)
         + ``self.title``: the title of the run (from $DATA)
 
@@ -207,3 +214,192 @@ class Input(InputOutputChemistryFile):
         r += ' $END'
 
         return r
+
+
+class OutputStep:
+    """Remind when a "step" is entered and exited
+
+    :param step_name: name of the step
+    :type step_name: str
+    :type line_start: int
+    :type line_end: int
+    """
+
+    def __init__(self, step_name, line_start, line_end):
+
+        self.step_name = step_name
+        self.line_start = line_start
+        self.line_end = line_end
+
+    def __repr__(self):
+        return 'Step {}: {}:{}'.format(self.step_name, self.line_start, self.line_end)
+
+
+class Output(InputChemistryFile):
+    """Output of Dalton.
+
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.lines``: the lines of the file (``list`` of ``str``)
+        + ``self.sections``: the different sections (``list`` of
+          `OutputStep <#qcip_tools.chemistry_files.gamess.OutputStep>`_)
+
+    """
+
+    #: The identifier
+    file_type = 'GAMESS_LOG'
+
+    def __init__(self):
+        self.molecule = Molecule()
+        self.lines = []
+        self.steps = []
+
+    @classmethod
+    def possible_file_extensions(cls):
+        return ['out', 'log']
+
+    @classmethod
+    def attempt_recognition(cls, f):
+        """Same trick as Dalton: check for universities and states name
+        """
+
+        count = 0
+        found_states = 0
+        found_universities = 0
+        found_gamess = 0
+        states = ['IOWA', 'MICHIGAN', 'CALIFORNIA', 'PENNSYLVANIA', 'NEBRASKA']
+
+        for l in f.readlines():
+            count += 1
+
+            if 'GAMESS' in l:
+                found_gamess += 1
+
+            if 10 < count < 100:
+                if 'UNIVERSITY' in l:
+                    found_universities += 1
+                for c in states:
+                    if c in l:
+                        found_states += 1
+                        break
+            if count > 100:
+                break
+
+        return found_states > 5 and found_universities > 10 and found_gamess > 2
+
+    def read(self, f):
+        """
+
+        :param f: File
+        :type f: file
+        """
+
+        self.lines = f.readlines()
+        self.from_read = True
+
+        self.steps.append(OutputStep('X', 0, -1))
+
+        for index, line in enumerate(self.lines):
+            if 'EXECUTION OF GAMESS BEGUN' in line:
+                self.steps[-1].line_start = index
+                continue
+            elif '.....' in line and 'STEP CPU' in self.lines[index + 1]:
+                title = line.replace('.', '')\
+                    .replace('END OF ', '')\
+                    .replace('DONE WITH ', '')\
+                    .replace('DONE ', '')\
+                    .strip()
+
+                self.steps[-1].line_end = index
+                self.steps[-1].step_name = title
+                self.steps.append(OutputStep('X', index + 1, -1))
+                continue
+            elif 'EXECUTION OF GAMESS TERMINATED' in line:
+                self.steps.pop()
+                break
+
+        # molecule
+        line_coordinates = self.search('COORDINATES (BOHR)', in_step='SETTING UP THE RUN')
+
+        if line_coordinates < 0:
+            raise Exception('no molecule ?')
+
+        for line in self.lines[line_coordinates + 2:]:
+            atom_def = line.split()
+            if len(atom_def) == 0:
+                break
+
+            elif len(atom_def) != 5:
+                raise Exception('Wrong molecule definition: {}'.format(line))
+
+            try:
+                atomic_number = int(atom_def[1][:-2])
+            except ValueError:
+                raise Exception('not a correct atomic number: {}'.format(atom_def[1]))
+
+            self.molecule.insert(
+                Atom(atomic_number=atomic_number, position=[float(a) * AuToAngstrom for a in atom_def[2:]]))
+
+        # charge and multiplicity
+        num_of_electron_line = self.search(
+            'NUMBER OF ELECTRONS', line_start=line_coordinates + len(self.molecule), in_step='SETTING UP THE RUN')
+
+        if num_of_electron_line < 0:
+            raise Exception('cannot find charge and multiplicity')
+
+        number_of_electrons = int(self.lines[num_of_electron_line][-5:])
+        self.molecule.charge = int(self.lines[num_of_electron_line + 1][-5:])
+        self.molecule.multiplicity = int(self.lines[num_of_electron_line + 2][-5:])
+
+        if number_of_electrons != self.molecule.number_of_electrons():
+            raise Exception('not the same number of electron {} != {}'.format(
+                number_of_electrons, self.molecule.number_of_electrons()))
+
+    def apply_function(self, func, line_start=0, line_end=None, in_step=None, **kwargs):
+        """Apply ``apply_over_list()`` to the lines.
+
+        :param lines: lines of the log
+        :type lines: list
+        :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
+        :type func: callback
+        :param line_start: starting index
+        :type line_start: int
+        :param line_end: end the search at some point
+        :type line_end: int
+        :param in_step: restrict the search to a given link
+        :type in_step: str
+        :type kwargs: dict
+        :rtype: bool
+        """
+
+        if in_step is not None:
+            for step_info in self.steps:
+                if step_info.step_name == in_step:
+                    r = apply_over_list(self.lines, func, step_info.line_start, step_info.line_end, **kwargs)
+                    if r:
+                        return True
+
+            return False
+
+        else:
+            return apply_over_list(self.lines, func, line_start, line_end, **kwargs)
+
+    def search(self, s, line_start=0, line_end=None, in_step=None):
+        """Returns the line when the string is found in this line or -1 if nothing was found.
+
+        :rtype: int
+        """
+
+        class FunctionScope:
+            line_found = -1
+
+        def find_string(line, current_index):
+            if s in line:
+                FunctionScope.line_found = current_index
+                return True
+            else:
+                return False
+
+        self.apply_function(find_string, line_start=line_start, line_end=line_end, in_step=in_step)
+        return FunctionScope.line_found
