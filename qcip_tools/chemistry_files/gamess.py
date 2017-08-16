@@ -8,11 +8,6 @@ class InputModule():
     """GAMESS input module (ends with ``$END``).
 
     A "special" module is a multiline module (i.e. ``$DATA`` or ``$TDHFX``)
-
-    .. warning::
-
-        Does not deal with comments (``!``) or modules for which one line is "just" too short.
-
     """
 
     def __init__(self, name, options, special_module=False):
@@ -38,15 +33,16 @@ class InputModule():
         if lines[-1][-4:].lower() != '$end':
             raise Exception('malformed input {} (not ending with $END)'.format(s))
 
-        if len(lines) == 1:
-            l = lines[0].split()
-            return InputModule(l[0][1:].lower(), [a.split('=') for a in l[1:-1]])
-        else:  # "special" (= multiline) module
-            if len(lines[0].split()) != 1:
-                raise Exception('not a correct input: {}'.format(lines[0]))
+        if len(lines[0].split()) != 1:
+            full_module = ' '.join(x for x in lines if x.strip()[0] != '!')
+            l = full_module.split()
+            title = l[0][1:].lower()
+            rest_of_module = [a.split('=') for a in l[1:-1]]
+            return InputModule(title, rest_of_module)
+        else:
             return InputModule(
                 lines[0][1:].strip().lower(),
-                [a.split() for a in lines[1:-1]],
+                [a.split() for a in lines[1:-1] if a.strip()[0] != '!'],
                 special_module=True)
 
     def __repr__(self):
@@ -57,10 +53,17 @@ class InputModule():
         if self.special_module:
             r += '\n'
 
+        length_line = len(r)
+
         for option in self.options:
             if self.special_module:
                 r += ' ' + ' '.join(option) + '\n'
             else:
+                to_add = ' {}={}'.format(*option)
+                if length_line + len(to_add) > 79:
+                    r += '\n'
+                    length_line = 0
+                length_line += len(to_add)
                 r += ' {}={}'.format(*option)
 
         r += ' $END'

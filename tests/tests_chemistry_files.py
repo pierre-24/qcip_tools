@@ -675,10 +675,15 @@ class GAMESSTestCase(QcipToolsTestCase):
         self.temp_dir = tempfile.mkdtemp()
 
         self.input_file = os.path.join(self.temp_dir, 'gamess_input.inp')
+        self.input_file_2 = os.path.join(self.temp_dir, 'gamess_input2.inp')
         self.output_file = os.path.join(self.temp_dir, 'gamess_output.log')
 
         with open(self.input_file, 'w') as f:
             with open(os.path.join(self.test_directory, 'tests_files/gamess_input.inp')) as fx:
+                f.write(fx.read())
+
+        with open(self.input_file_2, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gamess_input_2.inp')) as fx:
                 f.write(fx.read())
 
         with open(self.output_file, 'w') as f:
@@ -733,6 +738,23 @@ class GAMESSTestCase(QcipToolsTestCase):
             for index, a in enumerate(fi2.molecule):
                 self.assertEqual(a.symbol, fi.molecule[index].symbol)
                 self.assertArrayAlmostEqual(a.position, fi.molecule[index].position)
+
+        # test with a more tricky input (comment and too long line)
+        fi2 = gamess.Input()
+
+        with open(self.input_file_2) as f:
+            fi2.read(f)
+
+        self.assertTrue('force' in fi2)
+        force_module = fi2['force']
+        self.assertEqual(len(force_module.options), 4)
+
+        options = ['method', 'vibanl', 'temp(1)', 'sclfac']
+        for o in options:
+            self.assertTrue(o in force_module, msg=o)
+
+        self.assertNotIn('!', str(force_module))
+        self.assertIn('\n', str(force_module))
 
     def test_output(self):
         """Test the behavior of the output"""
