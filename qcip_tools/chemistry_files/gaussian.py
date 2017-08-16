@@ -67,6 +67,37 @@ class Input(ChemistryFile, WithOutput, WithMolecule):
         # TODO: if ``found_some_lines`` is equal to 1, maybe an extra test ? (charge and multiplicity, for example)
         return True
 
+    @classmethod
+    def from_molecule(cls, molecule, title='', input_card='', options=None, other_blocks=None, *args, **kwargs):
+        """Create a file from molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :param title: title of the run
+        :type title: str
+        :param input_card: the input card (starting with ``#P``)
+        :type input_card: str|list
+        :param options: calculation options
+        :type options: dict
+        :param other_blocks: the other input blocks
+        :type other_blocks: list
+        :rtype: qcip_tools.chemistry_files.gaussian.Input
+        """
+
+        obj = super().from_molecule(molecule, *args, **kwargs)
+        obj.title = title
+
+        if type(input_card) is str:
+            obj.input_card = [input_card]
+        elif type(input_card) is list:
+            obj.input_card = input_card
+        else:
+            raise TypeError(input_card)
+
+        obj.options = {} if options is None else options
+        obj.other_blocks = [] if other_blocks is None else other_blocks
+        return obj
+
     def read(self, f):
         """
 
@@ -269,6 +300,10 @@ class FCHK(ChemistryFile, WithMolecule):
 
         return False
 
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
+
     def get(self, key):
         """Get the content from a given keyword
 
@@ -459,6 +494,10 @@ class Output(ChemistryFile, WithMolecule):
             count += 1
 
         return num_of_gaussian > 10
+
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
 
     def read(self, f):
         """
@@ -690,6 +729,10 @@ class Cube(ChemistryFile, WithOutput, WithMolecule):
                 return True
 
         return False
+
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
 
     def read(self, f):
         """

@@ -112,6 +112,20 @@ class WithMolecule(object):
 
         return self.molecule
 
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        """Create an object out of a molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :rtype: WithMolecule
+        """
+
+        obj = cls()
+        obj.molecule = molecule
+        obj.from_read = False
+        return obj
+
 
 def apply_over_list(lst, func, start=0, end=None, **kwargs):
     """

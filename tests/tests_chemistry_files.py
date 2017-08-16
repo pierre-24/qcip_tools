@@ -4,7 +4,7 @@ import os
 import random
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess
 
 
@@ -157,6 +157,21 @@ class GaussianTestCase(QcipToolsTestCase):
         with open(other_file) as f:
             content = f.read()
             self.assertTrue('%chk=calculation_0002\n' in content)  # chk remains the same as the original
+
+        #  test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        inp_ = gaussian.Input.from_molecule(m, title='test', input_card='#P B3LYP', options={'mem': '1GB'})
+        self.assertEqual(inp_.title, 'test')
+        self.assertEqual(inp_.molecule, m)
+        self.assertEqual(inp_.input_card[0], '#P B3LYP')
+        self.assertIn('mem', inp_.options)
 
     def test_fchk_file(self):
 
@@ -454,6 +469,20 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('0.115904592' in content[6])
             self.assertTrue('Charge=1.0 Atoms=2' in content[7])  # hydrogens are grouped
 
+        # test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        inp_ = dalton.MoleculeInput.from_molecule(m, title='test', basis_set='aug-cc-pVDZ')
+        self.assertEqual(inp_.title, 'test')
+        self.assertEqual(inp_.basis_set, 'aug-cc-pVDZ')
+        self.assertEqual(inp_.molecule, m)
+
     def test_output_archive(self):
         """Test archive output"""
 
@@ -661,6 +690,19 @@ class XYZTestCase(QcipToolsTestCase):
                 self.assertEqual(a.symbol, fx.molecule[index].symbol)
                 self.assertArrayAlmostEqual(a.position, fx.molecule[index].position)
 
+        # test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        xyz_ = xyz.File.from_molecule(m, title='test')
+        self.assertEqual(xyz_.title, 'test')
+        self.assertEqual(xyz_.molecule, m)
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
@@ -755,6 +797,22 @@ class GAMESSTestCase(QcipToolsTestCase):
 
         self.assertNotIn('!', str(force_module))
         self.assertIn('\n', str(force_module))
+
+        # test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+        mod = '$CONTRL SCFTYP=RHF RUNTYP=ENERGY $END'
+
+        inp_ = gamess.Input.from_molecule(m, title='test', modules=[gamess.InputModule.from_string(mod)])
+        self.assertEqual(inp_.title, 'test')
+        self.assertEqual(inp_.molecule, m)
+        self.assertEqual(len(inp_.modules), 1)
+        self.assertTrue('contrl' in inp_)
 
     def test_output(self):
         """Test the behavior of the output"""

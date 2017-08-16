@@ -124,6 +124,30 @@ class Input(ChemistryFile, WithOutput, WithMolecule):
 
         return num_dollar > 4 and num_end > 2
 
+    @classmethod
+    def from_molecule(cls, molecule, title='', modules=None, *args, **kwargs):
+        """Create a file from molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :param title: title of the run
+        :type title: str
+        :param modules: running module
+        :type modules: list
+        :rtype: qcip_tools.chemistry_files.gamess.Input
+        """
+
+        obj = super().from_molecule(molecule, *args, **kwargs)
+        obj.title = title
+        obj.modules = {}
+
+        for m in modules:
+            if type(m) is str:
+                m = InputModule.from_string(m)
+            obj.modules[m.name] = m
+
+        return obj
+
     def __contains__(self, item):
         return item.lower() in self.modules
 
@@ -290,6 +314,10 @@ class Output(ChemistryFile, WithMolecule):
                 break
 
         return found_states > 5 and found_universities > 10 and found_gamess > 2
+
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
 
     def read(self, f):
         """

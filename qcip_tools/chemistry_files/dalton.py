@@ -54,6 +54,24 @@ class MoleculeInput(ChemistryFile, WithOutput, WithMolecule):
 
         return found_charge > 1
 
+    @classmethod
+    def from_molecule(cls, molecule, title='', basis_set='', *args, **kwargs):
+        """Create a file from molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :param title: title of the run
+        :type title: str
+        :param basis_set: the basis set
+        :type basis_set: str
+        :rtype: qcip_tools.chemistry_files.dalton.MoleculeInput
+        """
+
+        obj = super().from_molecule(molecule, *args, **kwargs)
+        obj.title = title
+        obj.basis_set = basis_set
+        return obj
+
     def read(self, f):
         """
 
@@ -191,6 +209,10 @@ class ArchiveOutput(ChemistryFile, WithMolecule):
 
         return found_dalton > 3
 
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
+
     def read(self, f):
         """Expects ``f`` to be open on binary mode.
 
@@ -309,6 +331,10 @@ class Output(ChemistryFile, WithMolecule):
                 break
 
         return found_countries > 20 and found_universities > 20 and found_dalton > 4
+
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
 
     def read(self, f):
         """
