@@ -10,15 +10,18 @@ Concepts
 Human readable text files are widely used in the field of quantum chemistry, but there is large syntaxic differences from one to another (when there IS a syntax).
 This is especially true for input files, which follows rigorous syntax, while output files are more or less incoherent. This module implement access to different formats.
 
-+ All classes derive from `InputChemistryFile <#qcip_tools.chemistry_files.InputChemistryFile>`_. Some function to override:
+All classes derive from `ChemistryFile <#qcip_tools.chemistry_files.ChemistryFile>`_. Some function to override:
 
-  - ``read()``: read from a file. One should also (if it makes sense) fill ``self.molecule``, which is accessible trough ``get_molecule()`` ;
-  - ``possible_file_extensions()`` and ``attempt_recognition()`` (both class methods): helps file recognition.
+- ``read()``: read from a file.
+- ``possible_file_extensions()`` and ``attempt_recognition()`` (both class methods): helps file recognition.
 
-  Thanks to the `dispatcher pattern <mixins.html#qcip_tools.mixins.Dispatcher>`_, derivation from this class allow to define taylor-made accessors: use the ``@Class.define_property(property_name)`` decorator to give the ability to use this callback function with ``property(property_name[, optional kwargs ...])``.
-  Callbacks should have the following form: ``callback_func(obj, **kwargs)``, where ``obj`` is the current object. In the code, those callbacks have the form ``property__*(obj, **kwargs)``. One can check if a property is available with ``has_property()``.
+Thanks to the `dispatcher pattern <mixins.html#qcip_tools.mixins.Dispatcher>`_, derivation from this class allow to define taylor-made accessors: use the ``@Class.define_property(property_name)`` decorator to give the ability to use this callback function with ``property(property_name[, optional kwargs ...])``.
+Callbacks should have the following form: ``callback_func(obj, **kwargs)``, where ``obj`` is the current object. In the code, those callbacks have the form ``property__*(obj, **kwargs)``. One can check if a property is available with ``has_property()``.
 
-+ Some of them (typically input files of programs) also derive from `InputOutputChemistryFile <#qcip_tools.chemistry_files.InputOutputChemistryFile>`_, which gives the ability to ``write()`` in a new file.
+There is some *mixins* to add functionnalities:
+
++ `WithMolecule <#qcip_tools.chemistry_files.WithOutput>`_ adds ``self.molecule``, which is accessible trough ``get_molecule()``.
++ `WithOutput <#qcip_tools.chemistry_files.WithOutput>`_, which gives the ability to ``write()`` in a new file.
   Note that it is easier to override ``to_string()`` in this case.
 
 Specific remarks:

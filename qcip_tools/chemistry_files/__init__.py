@@ -1,7 +1,7 @@
 from qcip_tools.mixins import Dispatcher
 
 
-class InputChemistryFile(Dispatcher):
+class ChemistryFile(Dispatcher):
     """Purely abstract class that implement some basic methods that any child should implement if possible.
 
     Input methods:
@@ -17,7 +17,6 @@ class InputChemistryFile(Dispatcher):
 
     """
 
-    molecule = None
     file_type = 'MISC'
     from_read = False
 
@@ -52,19 +51,6 @@ class InputChemistryFile(Dispatcher):
 
         return property_ in self.dispatcher
 
-    def get_molecule(self):
-        """Get the corresponding  molecular geometry. Raises ``NotImplementedError`` if ``self.molecule`` is ``None``.
-
-        :rtype: qcip_tools.molecule.Molecule
-        """
-
-        molecule = self.molecule
-
-        if molecule is None:
-            raise NotImplementedError
-
-        return molecule
-
     @classmethod
     def possible_file_extensions(cls):
         """Return the common extention of this kind of files
@@ -86,14 +72,14 @@ class InputChemistryFile(Dispatcher):
         raise NotImplementedError
 
 
-@InputChemistryFile.define_property('file_type')
+@ChemistryFile.define_property('file_type')
 def property__file_type(obj, **kwargs):
     """Get the file type trough ``file_type``"""
     return obj.file_type
 
 
-class InputOutputChemistryFile(InputChemistryFile):
-    """Purely abstract class that implement some basic methods that any child should implement if possible.
+class WithOutput(object):
+    """Mixin to add output methods.
 
 
     Output methods:
@@ -110,6 +96,21 @@ class InputOutputChemistryFile(InputChemistryFile):
 
     def __repr__(self):
         return self.to_string()
+
+
+class WithMolecule(object):
+    """Mixin to add a molecule.
+    """
+
+    molecule = None
+
+    def get_molecule(self):
+        """Get the corresponding molecular geometry.
+
+        :rtype: qcip_tools.molecule.Molecule
+        """
+
+        return self.molecule
 
 
 def apply_over_list(lst, func, start=0, end=None, **kwargs):

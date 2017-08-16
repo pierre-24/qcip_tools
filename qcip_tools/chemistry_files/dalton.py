@@ -5,10 +5,10 @@ import collections
 import io
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import InputChemistryFile, InputOutputChemistryFile, apply_over_list
+from qcip_tools.chemistry_files import ChemistryFile, WithOutput, WithMolecule, apply_over_list
 
 
-class MoleculeInput(InputOutputChemistryFile):
+class MoleculeInput(ChemistryFile, WithOutput, WithMolecule):
     """Dalton mol input file.
 
     .. warning::
@@ -152,7 +152,7 @@ class MoleculeInput(InputOutputChemistryFile):
         f.write(self.to_string(in_angstrom, nosym, group_atoms))
 
 
-class ArchiveOutput(InputChemistryFile):
+class ArchiveOutput(ChemistryFile, WithMolecule):
     """Archive output of Dalton. Contains lots of information for who can extract them.
 
     .. container:: class-members
@@ -256,7 +256,7 @@ class OutputSection:
         return 'Section {}: {}:{}'.format(self.section, self.line_start, self.line_end)
 
 
-class Output(InputChemistryFile):
+class Output(ChemistryFile, WithMolecule):
     """Output of Dalton.
 
     .. container:: class-members
@@ -611,7 +611,7 @@ class InputCard:
         return r
 
 
-class Input(InputOutputChemistryFile):
+class Input(ChemistryFile, WithOutput):
     """Dalton dal input file.
 
     Do NOT contains a molecule!

@@ -15,7 +15,7 @@ def chemistry_file_objects():
             continue
 
         for class_name, obj in inspect.getmembers(module, inspect.isclass):
-            if issubclass(obj, chemistry_files.InputChemistryFile) and obj != chemistry_files.InputChemistryFile:
+            if issubclass(obj, chemistry_files.ChemistryFile) and obj != chemistry_files.ChemistryFile:
                 yield obj
 
 
@@ -32,7 +32,7 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
     :type must_be: list
     :param trust_extension: do not run a second pass on every other possibility if the content does not match extension
     :type trust_extension: bool
-    :rtype: qcip_tools.chemistry_files.InputChemistryFile
+    :rtype: qcip_tools.chemistry_files.ChemistryFile
     """
 
     def attempt_recognition(objs, exclusion=None):

@@ -5,7 +5,7 @@ import random
 
 from tests import QcipToolsTestCase
 from qcip_tools import math as qcip_math
-from qcip_tools.chemistry_files import InputChemistryFile, gaussian, dalton, helpers, xyz, gamess
+from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess
 
 
 class ChemistryFileTestCase(QcipToolsTestCase):
@@ -13,7 +13,7 @@ class ChemistryFileTestCase(QcipToolsTestCase):
 
     def test_add_property(self):
 
-        f = InputChemistryFile()
+        f = ChemistryFile()
 
         # use existing callback
         self.assertTrue(f.has_property('file_type'))
@@ -26,7 +26,7 @@ class ChemistryFileTestCase(QcipToolsTestCase):
         with self.assertRaises(Exception):
             f.property(property_name)
 
-        @InputChemistryFile.define_property(property_name)
+        @ChemistryFile.define_property(property_name)
         def get_(obj, **kwargs):
             return obj.file_type
 
@@ -34,7 +34,7 @@ class ChemistryFileTestCase(QcipToolsTestCase):
         self.assertEqual(f.property(property_name), f.file_type)
 
         # test heritage
-        class T(InputChemistryFile):
+        class T(ChemistryFile):
             file_type = 'XXX'
 
         ft = T()

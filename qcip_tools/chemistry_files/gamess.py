@@ -1,10 +1,10 @@
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
-from qcip_tools.chemistry_files import InputOutputChemistryFile, apply_over_list, InputChemistryFile
+from qcip_tools.chemistry_files import ChemistryFile, WithOutput, WithMolecule, apply_over_list
 from qcip_tools.quantities import AuToAngstrom
 
 
-class InputModule():
+class InputModule(object):
     """GAMESS input module (ends with ``$END``).
 
     A "special" module is a multiline module (i.e. ``$DATA`` or ``$TDHFX``)
@@ -77,7 +77,7 @@ class InputModule():
         return item.lower() in [a[0].lower() for a in self.options]
 
 
-class Input(InputOutputChemistryFile):
+class Input(ChemistryFile, WithOutput, WithMolecule):
     """GAMESS (US) input file.
 
     .. container:: class-members
@@ -238,8 +238,8 @@ class OutputStep:
         return 'Step {}: {}:{}'.format(self.step_name, self.line_start, self.line_end)
 
 
-class Output(InputChemistryFile):
-    """Output of Dalton.
+class Output(ChemistryFile, WithMolecule):
+    """Output of GAMESS.
 
     .. container:: class-members
 
