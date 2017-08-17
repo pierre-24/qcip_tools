@@ -2,7 +2,7 @@ import math
 
 import numpy
 
-from qcip_tools import atom as qcip_atom, math as qcip_math
+from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
 
 
 class Bond:
@@ -42,6 +42,11 @@ class Bond:
 
     def __str__(self):
         return 'bond between {} and {}'.format(self.atom_1, self.atom_2)
+
+
+class ShiftedIndexError(ValueOutsideDomain):
+    def __init__(self, val, mol):
+        super().__init__(val, 1, len(mol))
 
 
 class Molecule:
@@ -100,12 +105,16 @@ class Molecule:
         Add atom in the list.
 
         :param atom: an atom (raise Exception if it's not the case)
-        :type atom: qcip_tools.atom.Atom
+        :type atom: qcip_tools.atom.Atom|int|str
         :param position: position in the list.
         :type position: int
         """
 
-        if type(atom) is not qcip_atom.Atom:
+        if type(atom) is int:
+            atom = qcip_atom.Atom(atomic_number=atom)
+        elif type(atom) is str:
+            atom = qcip_atom.Atom(symbol=atom)
+        elif type(atom) is not qcip_atom.Atom:
             raise TypeError(atom)
 
         if position is None:
@@ -125,7 +134,7 @@ class Molecule:
         if len(self) >= shifted_index > 0:
             self.atom_list.pop(shifted_index - 1)
         else:
-            raise ValueError(shifted_index)
+            raise ShiftedIndexError(shifted_index, self)
 
     def atom(self, shifted_index):
         """
@@ -139,7 +148,7 @@ class Molecule:
         if len(self) >= shifted_index > 0:
             return self.atom_list[shifted_index - 1]
         else:
-            raise KeyError(shifted_index)
+            raise ShiftedIndexError(shifted_index, self)
 
     def atoms(self, **kwargs):
         """Get a list of atom (index) based on some criterion"""
@@ -192,7 +201,7 @@ class Molecule:
             return [a for a in range(len(self))]
 
         if shifted_index < 1 or shifted_index > len(self):
-            raise ValueError(shifted_index)
+            raise ShiftedIndexError(shifted_index, self)
 
         connectivity = self.connectivities()
 
@@ -367,7 +376,7 @@ class Molecule:
             numpy.dot(end_vector, start_vector) / numpy.linalg.norm(end_vector) / numpy.linalg.norm(start_vector))
 
         if math.fabs(math.pi - rot_angle) < 1e-3:
-            raise ValueError()
+            raise ValueError('180° angle between vectors, cannot reorient()')
 
         rot_axis = qcip_math.normalize(numpy.cross(end_vector, start_vector))
 

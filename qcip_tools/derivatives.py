@@ -41,7 +41,8 @@ class Derivative:
                 self.basis = basis
                 if basis.spacial_dof:
                     if spacial_dof and basis.spacial_dof and spacial_dof != basis.spacial_dof:
-                        raise ValueError(spacial_dof)
+                        raise ValueError('basis and current does not have the same dof'.format(
+                            spacial_dof, basis.spacial_dof))
                     if not spacial_dof and basis.spacial_dof:
                         self.spacial_dof = basis.spacial_dof
             else:
@@ -265,7 +266,7 @@ class Derivative:
 
 def representation_to_operator(representation, component=None, molecule=None):
     if representation not in ALLOWED_DERIVATIVES:
-        raise ValueError(representation)
+        raise RepresentationError(representation)
 
     if representation == 'N':
         return 'dQ' + ('({})'.format(component + 1) if component is not None else '')
@@ -303,7 +304,7 @@ class Tensor:
 
         self.spacial_dof = spacial_dof
 
-        if 'D' in self.representation.representation() and not frequency:
+        if 'D' in self.representation.representation() and frequency is None:
             raise ValueError(frequency)
 
         self.frequency = frequency

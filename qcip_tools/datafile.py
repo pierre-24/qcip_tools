@@ -25,7 +25,7 @@ def transform_string_from_type(data, data_type):
     elif data_type == 'S':
         return data  # data is already a string ...
     else:
-        raise TypeError(data_type)
+        raise DataFileTypeError(data_type)
 
 
 class ChunkInformation:
@@ -47,7 +47,7 @@ class ChunkInformation:
 
     def __init__(self, keyword, data_type, data_length, offset_start=-1, offset_end=-1, modified=False):
         if data_type not in ALLOWED_DATA_TYPES:
-            raise ValueError(data_type)
+            raise DataFileTypeError(data_type)
 
         self.keyword = keyword
         self.data_type = data_type
@@ -55,6 +55,11 @@ class ChunkInformation:
         self.offset_start = offset_start
         self.offset_end = offset_end
         self.modified = modified
+
+
+class DataFileTypeError(TypeError):
+    def __init__(self, s):
+        super().__init__('type {} is not in {}'.format(s, ', '.join(ALLOWED_DATA_TYPES)))
 
 
 class DataFile:
@@ -134,11 +139,12 @@ class DataFile:
         """
 
         if data_type not in ALLOWED_DATA_TYPES:
-            raise TypeError(data_type)
+            raise DataFileTypeError(data_type)
 
         if not force_change_type:
             if key in self.chunks_information and self.chunks_information[key].data_type != data_type:
-                raise TypeError(data_type)
+                raise TypeError('new type {} != previous type {}'.format(
+                    data_type, self.chunks_information[key].data_type))
 
         self.chunks_information[key] = ChunkInformation(key, data_type, len(data), modified=True)
         self.chunks_parsed[key] = data
@@ -159,7 +165,8 @@ class DataFile:
 
             if data_type is not None:
                 if data_type != self.chunks_information[key].data_type:
-                    raise TypeError(data_type)
+                    raise TypeError('new type {} != previous type {}'.format(
+                        data_type, self.chunks_information[key].data_type))
 
             return self.chunks_parsed[key]
         else:

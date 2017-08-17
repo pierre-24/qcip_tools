@@ -1,7 +1,11 @@
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, FormatError
 from qcip_tools.quantities import AuToAngstrom
+
+
+class InputFormatError(FormatError):
+    pass
 
 
 class InputModule(object):
@@ -25,13 +29,13 @@ class InputModule(object):
         """
 
         if s.count('$') != 2:
-            raise Exception('Incorrect number of $ in {}'.format(s))
+            raise InputFormatError('Incorrect number of $ in {}'.format(s))
 
         lines = s.strip().split('\n')
         if lines[0][0] != '$':
-            raise Exception('malformed input {} (not starting with $)'.format(s))
+            raise InputFormatError('malformed input {} (not starting with $)'.format(s))
         if lines[-1][-4:].lower() != '$end':
-            raise Exception('malformed input {} (not ending with $END)'.format(s))
+            raise InputFormatError('malformed input {} (not ending with $END)'.format(s))
 
         if len(lines[0].split()) != 1:
             full_module = ' '.join(x for x in lines if x.strip()[0] != '!')
@@ -186,13 +190,13 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
             pos_end = content.find('$', pos_begin + 1)
 
             if pos_end < 0:
-                raise Exception('module started but never ended')
+                raise InputFormatError('module started but never ended')
 
             if pos_end + 4 > len_content:
-                raise Exception('malformed end')
+                raise InputFormatError('malformed end')
 
             if content[pos_end + 1:pos_end + 4].lower() != 'end':
-                raise Exception('no end !')
+                raise InputFormatError('no $END!')
 
             m = InputModule.from_string(content[pos_begin:pos_end + 4])
             self.modules[m.name] = m
@@ -203,23 +207,23 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
 
         # get molecule:
         if 'data' not in self:
-            raise Exception('no $DATA')
+            raise InputFormatError('no $DATA')
 
         data = self.modules['data'].options
         if len(data) < 3:
-            raise Exception('$DATA is too small')
+            raise InputFormatError('$DATA is too small')
         if len(data[1]) != 1 or data[1][0].lower() != 'c1':
             raise NotImplementedError('Symmetry != c1')
 
         self.title = ' '.join(data[0])
         for atom_def in data[2:]:
             if len(atom_def) != 5:
-                raise Exception('wrong atom definition: {}'.format(atom_def))
+                raise InputFormatError('wrong atom definition: {}'.format(atom_def))
 
             try:
                 atomic_number = int(atom_def[1][:-2])
             except ValueError:
-                raise Exception('not a correct atomic number: {}'.format(atom_def[1]))
+                raise InputFormatError('not a correct atomic number: {}'.format(atom_def[1]))
 
             self.molecule.insert(Atom(atomic_number=atomic_number, position=[float(a) for a in atom_def[2:]]))
 
@@ -260,6 +264,10 @@ class OutputStep:
 
     def __repr__(self):
         return 'Step {}: {}:{}'.format(self.step_name, self.line_start, self.line_end)
+
+
+class OutputFormatError(FormatError):
+    pass
 
 
 class Output(ChemistryLogFile, WithMoleculeMixin):
@@ -344,7 +352,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         line_coordinates = self.search('COORDINATES (BOHR)', into='SETTING UP THE RUN')
 
         if line_coordinates < 0:
-            raise Exception('no molecule ?')
+            raise OutputFormatError('no molecule is found in SETTING UP THE RUN')
 
         for line in self.lines[line_coordinates + 2:]:
             atom_def = line.split()
@@ -352,12 +360,12 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
                 break
 
             elif len(atom_def) != 5:
-                raise Exception('Wrong molecule definition: {}'.format(line))
+                raise OutputFormatError('Wrong molecule definition: {}'.format(line))
 
             try:
                 atomic_number = int(atom_def[1][:-2])
             except ValueError:
-                raise Exception('not a correct atomic number: {}'.format(atom_def[1]))
+                raise OutputFormatError('not a correct atomic number: {} in {}'.format(atom_def[1], line))
 
             self.molecule.insert(
                 Atom(atomic_number=atomic_number, position=[float(a) * AuToAngstrom for a in atom_def[2:]]))
@@ -367,12 +375,12 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
             'NUMBER OF ELECTRONS', line_start=line_coordinates + len(self.molecule), into='SETTING UP THE RUN')
 
         if num_of_electron_line < 0:
-            raise Exception('cannot find charge and multiplicity')
+            raise OutputFormatError('cannot find charge and multiplicity')
 
         number_of_electrons = int(self.lines[num_of_electron_line][-5:])
         self.molecule.charge = int(self.lines[num_of_electron_line + 1][-5:])
         self.molecule.multiplicity = int(self.lines[num_of_electron_line + 2][-5:])
 
         if number_of_electrons != self.molecule.number_of_electrons():
-            raise Exception('not the same number of electron {} != {}'.format(
+            raise OutputFormatError('not the same number of electron {} != {}'.format(
                 number_of_electrons, self.molecule.number_of_electrons()))

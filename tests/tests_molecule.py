@@ -46,13 +46,13 @@ class MoleculeTestCase(QcipToolsTestCase):
         self.assertTrue(numpy.array_equal(m2.atom(1).position, [-.5, 0, 0]))
         self.assertTrue(numpy.array_equal(m2.atom(2).position, [.5, 0, 0]))
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(qcip_molecule.ShiftedIndexError):
             m2.atom(0)
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(qcip_molecule.ShiftedIndexError):
             m2.atom(-1)
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(qcip_molecule.ShiftedIndexError):
             m2.atom(3)
 
         # test add atom:

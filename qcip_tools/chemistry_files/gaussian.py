@@ -5,7 +5,11 @@ import numpy
 import copy
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, FormatError
+
+
+class InputFormatError(FormatError):
+    pass
 
 
 class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
@@ -122,7 +126,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         if len(temp) > 0:
             raw_blocks.append(temp)
         if len(raw_blocks) < 3:
-            raise Exception('The file contains less than 3 raw_blocks')
+            raise InputFormatError('The file contains less than 3 raw_blocks')
 
         # try to understand first block
         for line in raw_blocks[0]:
@@ -143,7 +147,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         for atm in coordinates:
             s = atm.split()
             if len(s) != 4:
-                raise Exception('Wrong atom definition "' + atm + '"')
+                raise InputFormatError('Wrong atom definition "' + atm + '"')
             else:
                 coords = [float(i) for i in s[1:]]
                 atm_ = s[0]
@@ -221,6 +225,10 @@ def transform_string_from_fchk(data, data_type):
         return data
     else:
         raise Exception('Unknown data type {}'.format(data_type))
+
+
+class FCHKFormatError(FormatError):
+    pass
 
 
 class FCHKChunkInformation:
@@ -326,7 +334,7 @@ class FCHK(ChemistryFile, WithMoleculeMixin):
                     for d in matrix:
                         content.append(transform_string_from_fchk(d, chunk.data_type))
                 else:
-                    raise Exception('Size is not the same as defined for {}'.format(key))
+                    raise FCHKFormatError('Size is not the same as defined for {}'.format(key))
             else:
                 content = self.lines[chunk.line_start][49:].strip()
                 content = transform_string_from_fchk(content, chunk.data_type)
@@ -363,7 +371,7 @@ class FCHK(ChemistryFile, WithMoleculeMixin):
                 data_type = current_line[43]
 
                 if data_type not in FCHK_AUTHORIZED_TYPES:
-                    raise Exception('Type of {} ({}) is unknown'.format(keyword, data_type))
+                    raise FCHKFormatError('Type of {} ({}) is unknown'.format(keyword, data_type))
 
                 is_matrix = current_line[47] == 'N'
 
@@ -399,16 +407,6 @@ class FCHK(ChemistryFile, WithMoleculeMixin):
             raise ValueError('Number of electron does not match: {} != {}'.format(
                 self.get('Number of electrons'), self.molecule.number_of_electrons()))
 
-    def property(self, property_):
-        """Rewritten to get access to keywords as well (which starts with uppercase letters,
-        so cannot be variable name anyway).
-        """
-
-        if property_ in self.chunks_information:
-            return self.get(property_)
-
-        return super().property(property_)
-
     def __getitem__(self, item):
         """
         Implement access trough ``[]``
@@ -439,6 +437,10 @@ class LinkCalled:
 
     def __repr__(self):
         return 'Link {}: {}:{}'.format(self.link, self.line_start, self.line_end)
+
+
+class OutputFormatError(FormatError):
+    pass
 
 
 class Output(ChemistryLogFile, WithMoleculeMixin):
@@ -507,7 +509,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
                 break
 
         if not found_enter_link1:
-            raise Exception('this does not seems to be a Gaussian output')
+            raise OutputFormatError('this does not seems to be a Gaussian output')
 
         for index, line in enumerate(self.lines):
             # List links (needs a job that ran with `#p`)
@@ -525,7 +527,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         orientation_line = self.search('orientation:', into=202)
 
         if -1 in [charge_and_multiplicity_line, orientation_line]:
-            raise Exception('Could not find geometry')
+            raise OutputFormatError('Could not find geometry')
 
         self.input_orientation = self.lines[orientation_line][26] == 'I'
 
@@ -561,6 +563,10 @@ class ChargeTransferInformation:
         self.barycenter_p = barycenter_p
         self.vector = barycenter_m - barycenter_p
         self.distance = numpy.linalg.norm(self.vector)
+
+
+class CubeFormatError(FormatError):
+    pass
 
 
 class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
@@ -735,7 +741,7 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         self.records = self.records.reshape(tuple(reshape))
 
         if actual_num_of_data != total_num_of_data:
-            raise Exception(
+            raise CubeFormatError(
                 'num of record is not equal to total num of records ({}!={})'.format(
                     actual_num_of_data, total_num_of_data))
 

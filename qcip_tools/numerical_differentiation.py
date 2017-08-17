@@ -1,6 +1,7 @@
 import math
-
 import numpy
+
+from qcip_tools import assert_in_domain
 
 
 def akf_(a, k, f):
@@ -60,7 +61,7 @@ class Coefficients:
     def __init__(self, d, p, ratio=2., method='C'):
 
         if method not in ['C', 'F', 'B']:
-            raise ValueError(method)
+            raise ValueError('{} not in CFB'.format(method))
 
         self.method = method
         self.i_min = 0
@@ -203,11 +204,8 @@ class RombergTriangle:
         :rtype: float
         """
 
-        if m > self.side - 2 or m < 0:
-            raise ValueError(m)
-
-        if k > (self.side - m - 2) or k < 0:
-            raise ValueError(k)
+        assert_in_domain(m, 0, self.side - 2)
+        assert_in_domain(k, 0, (self.side - m - 2))
 
         return self.romberg_triangle[k + 1, m] - self.romberg_triangle[k, m]
 
@@ -221,11 +219,8 @@ class RombergTriangle:
         :rtype: float
         """
 
-        if m > self.side - 2 or m < 0:
-            raise ValueError(m)
-
-        if k > (self.side - m - 2) or k < 0:
-            raise ValueError(k)
+        assert_in_domain(m, 0, self.side - 2)
+        assert_in_domain(k, 0, (self.side - m - 2))
 
         return self.romberg_triangle[k, m + 1] - self.romberg_triangle[k, m]
 
