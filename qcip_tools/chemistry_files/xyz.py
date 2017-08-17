@@ -1,5 +1,9 @@
 from qcip_tools import molecule, atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, FormatError
+
+
+class XYZFormatError(FormatError):
+    pass
 
 
 class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
@@ -73,7 +77,7 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         try:
             number_of_atoms = int(f.readline())
         except ValueError:
-            raise Exception('XYZ must start with number of atoms')
+            raise XYZFormatError('XYZ must start with number of atoms')
 
         self.title = f.readline().strip()
         count = 0
@@ -85,7 +89,7 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
                 break
 
             if len(info) != 4:
-                raise Exception('wrong number of data in {}'.format(info))
+                raise XYZFormatError('wrong number of data in {}'.format(info))
 
             position = [float(a) for a in info[1:]]
             if info[0].isnumeric():
@@ -96,7 +100,7 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
             count += 1
 
         if trust_number_of_atoms and count != number_of_atoms:
-            raise Exception('the actual number of atom ({}) is no coherent (!={})'.format(count, number_of_atoms))
+            raise XYZFormatError('the actual number of atom ({}) is no coherent (!={})'.format(count, number_of_atoms))
 
     def to_string(self):
         r = str(len(self.molecule)) + '\n'

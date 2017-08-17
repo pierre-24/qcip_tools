@@ -208,7 +208,7 @@ class GaussianTestCase(QcipToolsTestCase):
         # fool the storage system to make sure that it use it:
         fi.chunks_parsed['Number of basis functions'] = 8
         self.assertEqual(fi.get('Number of basis functions'), 8)
-        self.assertEqual(fi.property('Number of basis functions'), 8)
+        self.assertEqual(fi.get('Number of basis functions'), 8)
         self.assertEqual(fi['Number of basis functions'], 8)
 
         # test molecule (conversion from a.u. to angstrom):

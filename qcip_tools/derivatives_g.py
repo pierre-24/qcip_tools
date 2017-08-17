@@ -28,7 +28,7 @@ class BaseGeometricalDerivativeTensor(derivatives.Tensor):
     def __init__(self, spacial_dof, trans_plus_rot=0, representation='', components=None):
 
         if 'F' in representation or 'D' in representation:
-            raise ValueError(representation)
+            raise derivatives.RepresentationError(representation)
 
         self.trans_plus_rot = trans_plus_rot
 
@@ -63,7 +63,7 @@ class BaseGeometricalDerivativeTensor(derivatives.Tensor):
             raise Exception('already projected ?!?')
 
         if displacements.shape != (self.spacial_dof, self.spacial_dof):
-            raise ValueError(displacements)
+            raise ValueError('displacements shape does not match')
 
         if self.representation == 'G':
             projected_tensor = numpy.dot(displacements, self.components)

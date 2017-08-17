@@ -5,7 +5,11 @@ import collections
 import io
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, FormatError
+
+
+class InputFormatError(FormatError):
+    pass
 
 
 class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
@@ -83,7 +87,7 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         self.from_read = True
 
         if len(lines) < 6:
-            raise Exception('something wrong with dalton .mol: too short')
+            raise InputFormatError('something wrong with dalton .mol: too short')
 
         self.basis_set = lines[1].strip()
         self.title = (lines[2] + '\n' + lines[3]).strip()
@@ -278,6 +282,10 @@ class OutputSection:
         return 'Section {}: {}:{}'.format(self.section, self.line_start, self.line_end)
 
 
+class OutputFormatError(FormatError):
+    pass
+
+
 class Output(ChemistryLogFile, WithMoleculeMixin):
     """Output of Dalton.
 
@@ -353,7 +361,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         # fetch molecule
         coordinates_line = self.search('Cartesian Coordinates (a.u.)', into='START')
         if coordinates_line == -1:
-            raise Exception('cannot find molecule')
+            raise OutputFormatError('cannot find molecule in START')
 
         number_of_atoms = math.floor(int(self.lines[coordinates_line + 3][-5:]) / 3)
         for i in range(number_of_atoms):
@@ -367,12 +375,12 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
 
         charge_line = self.search('@    Total charge of the molecule', into='SIRIUS')
         if charge_line == -1:
-            raise Exception('cannot find charge of the molecule')
+            raise OutputFormatError('cannot find charge of the molecule in SIRIUS')
         self.molecule.charge = int(self.lines[charge_line][-6:])
         self.molecule.multiplicity = int(self.lines[charge_line + 2][45:55])
 
         if self.molecule.number_of_electrons() != int(self.lines[charge_line - 2][-5:]):
-            raise Exception(
+            raise OutputFormatError(
                 'Not the right number of electron, is the charge (found {}) wrong?'.format(self.molecule.charge))
 
     def get_inputs(self):
@@ -386,7 +394,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         line_end = self.search('Output from DALTON general input processing', line_start=line_mol, into='START')
 
         if -1 in [line_dal, line_mol, line_end]:
-            raise Exception('inputs not found')
+            raise OutputFormatError('inputs not found in START')
 
         dal_file = Input()
         mol_file = MoleculeInput()
@@ -419,6 +427,10 @@ def check_module(name):
     return allowed
 
 
+class InputModuleError(Exception):
+    pass
+
+
 class InputModule:
     """The dalton (sub)modules, with level indicating it they are module (level=0) or submodule (level=1)
 
@@ -439,14 +451,14 @@ class InputModule:
 
     def __init__(self, level=1, name=None, input_cards=None, submodules=None):
         if level not in [0, 1]:
-            raise Exception('level should be zero or one')
+            raise InputModuleError('level should be zero or one')
 
         if level == 0 and name is not None:
             if not check_module(name):
-                raise Exception('not an allowed module: {}'.format(name))
+                raise InputModuleError('not an allowed module: {}'.format(name))
 
         if level == 1 and submodules is not None:
-            raise Exception('subdmodule {} with subsubmodules'.format(name))
+            raise InputModuleError('subdmodule {} with subsubmodules'.format(name))
 
         self.name = name
         self.level = level
@@ -463,10 +475,10 @@ class InputModule:
         """
 
         if self.level != 0:
-            raise Exception('no subsubmodule allowed!')
+            raise InputModuleError('no subsubmodule allowed in {}!'.format(self.name))
 
         if not force and submodule.name[:6] in self.submodules:
-            raise Exception('submodule {} already exists'.format(submodule.name))
+            raise InputModuleError('submodule {} already exists in {}'.format(submodule.name, self.name))
 
         self.submodules[submodule.name[:6]] = submodule
         submodule.level = 1
@@ -485,7 +497,7 @@ class InputModule:
             name = name[1:]
 
         if not force and name[:6] in self.input_cards:
-            raise Exception('input card {} already exists'.format(input_card.name))
+            raise InputModuleError('input card {} already exists in {}'.format(input_card.name, self.name))
 
         self.input_cards[name[:6]] = input_card
 
@@ -513,19 +525,19 @@ class InputModule:
 
         if type(value) is InputModule:
             if key[0] == '.':
-                raise Exception('module should not start with "."')
+                raise InputModuleError('module should not start with "."')
 
             if value.name is None:
                 value.name = key
 
             if key[:6] != value.name[:6]:
-                raise Exception('key ({}) and name divergence ({})'.format(key[:6], value.name[:6]))
+                raise InputModuleError('key ({}) and name divergence ({})'.format(key[:6], value.name[:6]))
 
             self.set_submodule(value)
 
         else:
             if key[0] != '.':
-                raise Exception('input card should start with "."')
+                raise InputModuleError('input card should start with "."')
 
             if value.name is None:
                 value.name = key[1:]
@@ -535,7 +547,7 @@ class InputModule:
                 name = name[1:]
 
             if key[1:7] != name[:6]:
-                raise Exception('key ({}) and name divergence ({})'.format(key[1:7], name[:6]))
+                raise InputModuleError('key ({}) and name divergence ({})'.format(key[1:7], name[:6]))
 
             self.set_input_card(value)
 
@@ -692,12 +704,12 @@ class Input(ChemistryFile, WithOutputMixin):
             raise TypeError(value)
 
         if value.name is not None and key[:5] != value.name[:5]:
-            raise Exception('key ({}) and name ({}) divergence'.format(key[:5], value.name[:5]))
+            raise InputModuleError('key ({}) and name ({}) divergence'.format(key[:5], value.name[:5]))
 
         elif value.name is None:
 
             if not check_module(key):
-                raise Exception('not an allowed module: {}'.format(key))
+                raise InputModuleError('not an allowed module: {}'.format(key))
 
             value.name = key
 

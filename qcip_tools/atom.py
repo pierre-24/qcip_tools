@@ -412,7 +412,7 @@ class Atom:
         if symbol is not None:
 
             if symbol not in Definition.keys():
-                raise ValueError(symbol)
+                raise ValueError('{} is not a chemical element'.format(symbol))
 
             self.symbol = symbol
             self.atomic_number = Definition[symbol][0]
@@ -420,7 +420,7 @@ class Atom:
         elif atomic_number is not None:
 
             if atomic_number < 0 or atomic_number > 92:
-                raise ValueError(atomic_number)
+                raise ValueError('{} is not an allowed Z'.format(atomic_number))
 
             self.atomic_number = atomic_number
             self.symbol = AtomicNumberToSymbol[self.atomic_number]

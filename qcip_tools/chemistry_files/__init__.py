@@ -78,6 +78,11 @@ def property__file_type(obj, **kwargs):
     return obj.file_type
 
 
+class FormatError(Exception):
+    """Raised when the format is different from what expected"""
+    pass
+
+
 class WithOutputMixin(object):
     """Mixin to add output methods.
 
