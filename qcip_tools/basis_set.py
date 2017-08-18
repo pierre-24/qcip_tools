@@ -53,8 +53,9 @@ class Function:
     """Contracted Gaussian type orbital (basis function)
     """
 
-    def __init__(self):
+    def __init__(self, normalization=1.0):
         self.primitives = []
+        self.normalization = normalization
 
     def __len__(self):
         return len(self.primitives)
@@ -74,9 +75,9 @@ class Function:
     def is_diffuse(self, exponent_threshold=.1):
         """Test if the function correspond to a diffuse one, based on the following criterions:
 
-        + number of primitive is one
-        + this primitive have a contraction coefficient of 1
-        + this primitive have a exponent lower than ``exponent_threshold``
+        + There is only one primitive in the basis function ;
+        + This primitive have a contraction coefficient of 1.0 ;
+        + This primitive have a exponent lower than ``exponent_threshold``.
 
         :param exponent_threshold: threshold for the exponent of the primitive
         :type exponent_threshold: float
