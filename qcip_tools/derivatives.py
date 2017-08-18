@@ -72,21 +72,35 @@ class Derivative:
         :rtype: str
         """
 
-        each_diff = collections.Counter(self.diff_representation)
-        each_basis = collections.Counter(self.basis.diff_representation if self.basis else '')
+        each_ = collections.Counter(self.raw_representation(exclude=['F', 'D']))
 
         r = ''
 
-        for i in 'GNFD':
-            n = 0
-            if i in each_basis:
-                n += each_basis[i]
-            if i in each_diff:
-                n += each_diff[i]
+        for i in 'GN':
+            if i not in each_:
+                continue
 
-            r += i * n
+            r += i * each_[i]
 
-        return r
+        return r + self.raw_representation(exclude=['G', 'N'])
+
+    def raw_representation(self, exclude=None):
+        """Get raw representation (simply the parent representation + obj representation).
+
+        .. warning::
+
+            Dangerous to use, prefer ``representation()``.
+
+        :param exclude: exclude some element from the representation
+        :type exclude: list|str
+        :rtype: str
+        """
+
+        raw = (self.basis.diff_representation if self.basis else '') + self.diff_representation
+        if exclude is None:
+            return raw
+
+        return ''.join(a for a in raw if a not in exclude)
 
     def differentiate(self, derivatives_representation, spacial_dof=None):
         """Create a new derivative from the differentiation of of the current one.
@@ -158,49 +172,80 @@ class Derivative:
 
         return (self.basis.order() if self.basis else 0) + len(self.diff_representation)
 
+    @classmethod
+    def expend_list(cls, iterable, sub_iterable):
+        """For each element of ``iterable``, create a new list by adding each element of ``sub_iterable``.
+
+        :param iterable: main list
+        :type iterable: list
+        :param sub_iterable: sub list
+        :type sub_iterable: list
+        :rtype list
+        """
+
+        if not iterable:
+            return sub_iterable
+        if not sub_iterable:
+            return iterable
+        else:
+            prev_iterable = iterable.copy()
+            iterable = []
+            for i in prev_iterable:
+                e = list(i)
+                for a in sub_iterable:
+                    el = e.copy()
+                    el.extend(list(a))
+                    iterable.append(el)
+
+        return iterable
+
     def smart_iterator(self):
         """Apply the
         `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem>`_
-        and only return as subset of independant coordinates. Order guaranteed."""
+        and only return as subset of independant coordinates. Order guaranteed.
+
+        .. note::
+
+            Electrical derivatives are treated separatelly from geometrical derivatives, since only the last "n"
+            element of the tensor are permutable.
+
+        """
 
         if self.representation() == '':  # special case of energy
             yield 0
             return
 
-        shape = self.shape()
-        each = collections.Counter(self.representation())
+        ned_representation = self.raw_representation(['F', 'D'])
+        ed_representation = self.raw_representation(['G', 'N'])
+        each = collections.Counter(ned_representation)
 
-        iterable = None
+        iterable = []
 
-        for c in 'GNFD':
-
+        for c in 'GN':
             if c not in each:
                 continue
 
-            permutable = [
-                a for a in itertools.combinations_with_replacement(
-                    range(3 if c in 'FD' else self.spacial_dof), each[c])
-            ]
+            permutable = [a for a in itertools.combinations_with_replacement(range(self.spacial_dof), each[c])]
+            iterable = Derivative.expend_list(iterable, permutable)
 
-            if not iterable:
-                iterable = permutable
-            else:
-                prev_iterable = iterable.copy()
-                iterable = []
-                for i in prev_iterable:
-                    e = list(i)
-                    for a in permutable:
-                        el = e.copy()
-                        el.extend(list(a))
-                        iterable.append(el)
+        if ed_representation != '':
+            max_FD_permutation = 1
+            ref = ed_representation[-1]
+            for i in reversed(ed_representation[:-1]):
+                if i == ref:
+                    max_FD_permutation += 1
+                else:
+                    break
+
+            permutable = [a for a in itertools.combinations_with_replacement(range(3), max_FD_permutation)]
+            not_permutable = [a for a in itertools.product(
+                range(3),
+                repeat=len(ed_representation) - max_FD_permutation)]
+
+            iterable = Derivative.expend_list(Derivative.expend_list(iterable, not_permutable), permutable)
 
         for component in iterable:
-
-            n = 0
-            for i, e in enumerate(component):
-                n += e * qcip_math.prod(shape[i + 1:])
-
-            yield n
+            yield self.components_to_flatten_component(component)
 
     def inverse_smart_iterator(self, element):
         """Back-iterate over all the other components :
@@ -214,43 +259,48 @@ class Derivative:
             yield 0
             return
 
-        each = collections.Counter(self.representation())
-        shape = self.shape()
+        ned_representation = self.raw_representation(['F', 'D'])
+        ed_representation = self.raw_representation(['G', 'N'])
+        each = collections.Counter(ned_representation)
         components = self.flatten_component_to_components(element)
 
         iterable = []
         index = 0
 
-        for c in 'GNFD':
+        for c in 'GN':
             if c not in each:
                 continue
 
             n = each[c]
             permutations = [a for a in qcip_math.unique_everseen(itertools.permutations(components[index:index + n]))]
-            # Since it will be called more than once, it must be a list rather than an iterator !
-
-            if not iterable:
-                iterable = list(permutations)
-            else:
-                prev_iterable = iterable.copy()
-                iterable = []
-                for i in prev_iterable:
-                    e = list(i)
-                    for a in permutations:
-                        el = e.copy()
-                        el.extend(list(a))
-                        iterable.append(el)
-
+            iterable = Derivative.expend_list(iterable, permutations)
             index += n
 
-        for component in iterable:
-            n = 0
-            for i, e in enumerate(component):
-                n += e * qcip_math.prod(shape[i + 1:])
+        if ed_representation != '':
+            max_FD_permutation = 1
+            ref = ed_representation[-1]
+            for i in reversed(ed_representation[:-1]):
+                if i == ref:
+                    max_FD_permutation += 1
+                else:
+                    break
 
-            yield n
+            not_permutable = [components[index:-max_FD_permutation]]
+            permutable = [
+                a for a in qcip_math.unique_everseen(itertools.permutations(components[-max_FD_permutation:]))]
+
+            iterable = Derivative.expend_list(Derivative.expend_list(iterable, not_permutable), permutable)
+
+        for component in iterable:
+            yield self.components_to_flatten_component(component)
 
     def flatten_component_to_components(self, i):
+        """From the index if the array would be flatten, gives the components
+
+        :param i: flatten index
+        :type i: int
+        :rtype: list
+        """
 
         components = []
         rest = i
@@ -262,6 +312,22 @@ class Derivative:
             rest -= current * qcip_math.prod(shape[i + 1:])
 
         return components
+
+    def components_to_flatten_component(self, components):
+        """Given a component, give the index if the array would be flatten
+
+        :param components: components
+        :type components: list|tuple
+        :rtype: int
+        """
+
+        shape = self.shape()
+
+        n = 0
+        for i, e in enumerate(components):
+            n += e * qcip_math.prod(shape[i + 1:])
+
+        return n
 
 
 def representation_to_operator(representation, component=None, molecule=None):

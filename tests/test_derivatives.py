@@ -106,6 +106,28 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertTrue(numpy.all(r == 1))
         self.assertEqual(num_smart_iterator_call, 6 * 21)  # Note: 21 = 6 * (6+1) / 2
 
+        # tricky one
+        d4 = derivatives.Derivative(from_representation='FDF')
+        self.assertEqual(d4.diff_representation, 'FDF')
+        self.assertEqual(d4.representation(), 'FDF')
+        self.assertEqual(d4.dimension(), 3 * 3 * 3)
+        self.assertEqual(d4.shape(), [3, 3, 3])
+        self.assertIsNone(d4.basis)
+        self.assertEqual(d4.order(), 3)
+
+        # test smart iterator
+        num_smart_iterator_call = 0
+
+        r = numpy.zeros(d4.shape()).flatten()
+        for i in d4.smart_iterator():
+            num_smart_iterator_call += 1
+            self.assertTrue(i < d4.dimension(), i)
+            for j in d4.inverse_smart_iterator(i):
+                r[j] += 1
+
+        self.assertEqual(num_smart_iterator_call, 27)
+        self.assertTrue(numpy.all(r == 1))
+
         # make the code cry:
         with self.assertRaises(derivatives.RepresentationError):
             derivatives.Derivative(from_representation='NE', spacial_dof=6)  # "E"
