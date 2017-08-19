@@ -28,29 +28,31 @@ where :math:`\alpha` (the letter :math:`\zeta` is also used) is the exponent of 
 
 To mimic STO's, a linear combination (a contraction) of GTO's (**primitives**) is used to form a **basis function**.
 
-The sum of exponents :math:`L=l+m+n` is used analogously to the angular quantum number for atom, to mark function as *s*-type (:math:`L=0`), *p*-type (:math:`L=1`), *d*-type  (:math:`L=2`), etc.
-Primitives (and basis functions) are regrouped in shells (S, P, D, F ...), forming a collection of GTO's with the same :math:`L`: in each shell :math:`\mu`, the primitives are contracted in :math:`n_\mu` basis functions :math:`\gamma`.
+The sum of exponents :math:`L=l+m+n` (which are not quantum numbers) is used analogously to the angular quantum number for atom, to mark function as *s*-type (:math:`L=0`), *p*-type (:math:`L=1`), *d*-type  (:math:`L=2`), etc.
+Primitives (and basis functions) are regrouped in shells (S, P, D, F ...), forming a collection of GTO's with the same :math:`L`: in each shell :math:`\mu`, the primitives are contracted in :math:`n_\mu` basis functions :math:`\mu\gamma` (for example, with *s*-type basis function, the usual atomic orbitals 1s, 2s, 3s ...).
 
 The general expression for an atomic basis set centered in :math:`\mathbf{R}` is therefore:
 
 .. math::
+    :label: atomicbasisset
 
-    \phi^{\mathbf{R}}(\mathbf{r}) = \sum_\mu^{\text{S, P, D, }\ldots} \sum_{\gamma}^{n_\mu} \underbrace{N_{\mu\gamma}\,\sum_k^{n_{\mu\gamma}} c_{\mu\gamma k} \sum_{(l,m,n)\in \mu} G_{lmn}^{\mathbf{R}, \alpha_{\mu\gamma k}}(\mathbf{r})}_{\text{basis function}\,\gamma\,\equiv\,\text{contraction of }n_{\mu\gamma}\text{ primitives}},
+    \phi^{\mathbf{R}}(\mathbf{r}) = \sum_\mu^{\text{S, P, D, }\ldots}\sum_{(l,m,n)\in \mu} \sum_{\gamma}^{n_\mu} \underbrace{N_{\mu\gamma}\,\sum_k^{n_{\mu\gamma}} c_{\mu\gamma k}\,G_{lmn}^{\mathbf{R}, \alpha_{\mu\gamma k}}(\mathbf{r})}_{\begin{array}{c}\text{basis function}\,\mu\gamma\,\equiv\\\text{contraction of }n_{\mu\gamma}\text{ primitives}\end{array}},
 
-where :math:`c_{\mu\gamma k}` is the contraction coefficient of the primitive :math:`k` in basis function :math:`\gamma` in shell :math:`\mu`, to which correspond a exponent :math:`\alpha_{\mu\gamma k}`.
+where :math:`c_{\mu\gamma k}` is the contraction coefficient of the primitive :math:`k` in basis function :math:`\mu\gamma` in shell :math:`\mu`, to which correspond a exponent :math:`\alpha_{\mu\gamma k}`.
 :math:`N_{\mu\gamma}` is a normalization constant for the whole basis function :math:`\gamma` in :math:`\mu`.
+
+In the calculation, a LCAO coefficient is associated to each :math:`\mu\gamma` basis function.
 
 
 Construction
 ************
 
 Some basis sets are constucted using the same number of basis function in each shell. This number of contractions helps to label the basis set as *n*-uple :math:`\zeta`: simple :math:`\zeta` (for example the infamous STO-3G), double :math:`\zeta` (DZ),  triple :math:`\zeta` (TZ), quadruple :math:`\zeta` (QZ) and so all (5Z, 6Z, ...).
-Dunning's basis sets (cc-pVXZ) are named after that convention (although it is only true for the valence shell).
 
 On the other hand, since valence orbitals are affected than the core (inner) orbitals by chemical processes, more basis functions (contractions) are sometimes used to describe these (which does not mean more primitives).
 The corresponding basis sets (for example the Pople basis sets) are sometimes called *split-valence*.
 These basis sets are usually structured in such a way that most diffuse primitives (small :math:`\alpha`) are left uncontracted.
-For example, in the 6-31G basis set of Pople, a contraction of 6 primitives is used for core orbitals while 2 contractions (of 3 and 1 primitives, respectively) is used for valence orbitals.
+For example, in the 6-31G basis set of Pople, a contraction of 6 primitives is used for core orbitals while 2 contractions (of 3 and 1 primitives, respectively) is used for valence orbitals. It is therefore referred as double :math:`\zeta`.
 
 Basis sets are frequently augmented with others functions:
 
@@ -72,7 +74,9 @@ Basis sets are frequently augmented with others functions:
     For example ``[10s4p1d|3s2p1d]`` for second row atoms (6-31G* in the notation of Pople), which is constituted of 10 *s*-type primitives (contracted in 3 *s*-type basis functions), 4 *p*-type primitives (contracted in 2 *p*-type basis functions) and 1 *d*-type primitive (in one *d*-type polarization basis function).
     The representation of a atomic basis function in the code follows this notation.
 
-    **Number of basis basis functions and primitives**. Don't forget that for each *p*-type "basis function", there is actually 3 basis function defined (:math:`p_x`, :math:`p_y` and :math:`p_z`), 5 for each *d*-type orbitals, and so all. The same goes for the number of primitives.
+    **Basis functions**. Therefore, when using a basis set defined by ``[10s4p1d|3s2p1d]`` for second row atoms, in means that there is, on an atomic point of view the [1s, 2s, 2p, 3s', 3p', 3d'] orbitals (where ' represents the added polarization orbitals).
+
+    **Number of basis basis functions and primitives**. Don't forget that for each *p*-type "basis function", there is actually 3 basis function (:math:`p_x`, :math:`p_y` and :math:`p_z`) defined, as emphasized by the sum of over :math:`(l,m,n)\in\mu` in Eq. :eq:`atomicbasisset`, 5 for each *d*-type orbitals (or six if one consider the carthesian counterparts), and so all. The same goes for the number of primitives.
     For example, water with a 6-31+G(d) basis set (``[11s5p1d|4s3p1d]`` for oxygen, ``[4s|2s]`` for oxygen) contains actually 18 basis functions for the oxygen (= :math:`4\times 1+3\times 3+1\times 5`) and 31 primitives (= :math:`11\times 1+5\times 3 + 1\times 5`), so in total there is 22 basis functions and 39 GTO's for the water molecule.
 
     **Output**. By convention, the primitives of a basis set are listed shell by shell, in decrasing order of number of primitive per basis function and starting from the highest coefficient.
@@ -85,6 +89,7 @@ Sources
 + http://www.ccl.net/cca/documents/basis-sets/img/basis-sets.shtml ;
 + http://vergil.chemistry.gatech.edu/courses/chem6485/pdf/basis-sets.pdf ;
 + http://www.helsinki.fi/kemia/fysikaalinen/opetus/jlk/luennot/Lecture5.pdf ;
++ https://en.wikipedia.org/wiki/Basis_set_(chemistry) ;
 
 (last consultation on the 18th of August, 2017)
 
