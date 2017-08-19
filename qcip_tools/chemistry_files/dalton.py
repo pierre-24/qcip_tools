@@ -5,14 +5,15 @@ import collections
 import io
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, FormatError
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
+    FormatError, WithIdentificationMixin
 
 
 class InputFormatError(FormatError):
     pass
 
 
-class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
+class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """Dalton mol input file.
 
     .. warning::
@@ -40,7 +41,7 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         return ['mol']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A dalton molecule is quite unique ("charge=")
         """
 
@@ -174,7 +175,7 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         f.write(self.to_string(in_angstrom, nosym, group_atoms))
 
 
-class ArchiveOutput(ChemistryFile, WithMoleculeMixin):
+class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
     """Archive output of Dalton. Contains lots of information for who can extract them.
 
     .. container:: class-members
@@ -196,7 +197,7 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin):
         return ['gz', 'tar.gz']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A dalton archive does contain a lot of files name "DALTON"
         """
 
@@ -286,7 +287,7 @@ class OutputFormatError(FormatError):
     pass
 
 
-class Output(ChemistryLogFile, WithMoleculeMixin):
+class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
     """Output of Dalton.
 
     .. container:: class-members
@@ -306,7 +307,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         self.molecule = molecule.Molecule()
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A dalton output ... Does contains a lot of (european) countries and universities name at some point
         (and a little bit of "Dalton" as well)
         """
@@ -591,7 +592,7 @@ class InputCard:
         return r
 
 
-class Input(ChemistryFile, WithOutputMixin):
+class Input(ChemistryFile, WithOutputMixin, WithIdentificationMixin):
     """Dalton dal input file.
 
     Do NOT contains a molecule!
@@ -619,7 +620,7 @@ class Input(ChemistryFile, WithOutputMixin):
         return ['dal']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """Very specific beginning (``**DALTON INPUT``) and end (``'*END OF INPUT``)
         """
 

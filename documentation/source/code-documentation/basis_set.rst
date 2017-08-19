@@ -29,13 +29,13 @@ where :math:`\alpha` (the letter :math:`\zeta` is also used) is the exponent of 
 To mimic STO's, a linear combination (a contraction) of GTO's (**primitives**) is used to form a **basis function**.
 
 The sum of exponents :math:`L=l+m+n` is used analogously to the angular quantum number for atom, to mark function as *s*-type (:math:`L=0`), *p*-type (:math:`L=1`), *d*-type  (:math:`L=2`), etc.
-Primitives (and basis functions) are regrouped in shells (S, P, D, F ...), forming a collection of GTO's with the same :math:`L`: in each shell :math:`\mu`, the primitives are contracted in :math:`N_\mu` basis functions.
+Primitives (and basis functions) are regrouped in shells (S, P, D, F ...), forming a collection of GTO's with the same :math:`L`: in each shell :math:`\mu`, the primitives are contracted in :math:`n_\mu` basis functions :math:`\gamma`.
 
 The general expression for an atomic basis set centered in :math:`\mathbf{R}` is therefore:
 
 .. math::
 
-    \phi^{\mathbf{R}}(\mathbf{r}) = \sum_\mu^{\text{S, P, D, }\ldots} \sum_{\gamma}^{N_\mu} \underbrace{N_{\mu\gamma}\,\sum_k c_{\mu\gamma k} \sum_{(l,m,n)\in \mu} G_{lmn}^{\mathbf{R}, \alpha_{\mu\gamma k}}(\mathbf{r})}_{\text{basis function}\,\equiv\,\text{contraction of primitives}},
+    \phi^{\mathbf{R}}(\mathbf{r}) = \sum_\mu^{\text{S, P, D, }\ldots} \sum_{\gamma}^{n_\mu} \underbrace{N_{\mu\gamma}\,\sum_k^{n_{\mu\gamma}} c_{\mu\gamma k} \sum_{(l,m,n)\in \mu} G_{lmn}^{\mathbf{R}, \alpha_{\mu\gamma k}}(\mathbf{r})}_{\text{basis function}\,\gamma\,\equiv\,\text{contraction of }n_{\mu\gamma}\text{ primitives}},
 
 where :math:`c_{\mu\gamma k}` is the contraction coefficient of the primitive :math:`k` in basis function :math:`\gamma` in shell :math:`\mu`, to which correspond a exponent :math:`\alpha_{\mu\gamma k}`.
 :math:`N_{\mu\gamma}` is a normalization constant for the whole basis function :math:`\gamma` in :math:`\mu`.

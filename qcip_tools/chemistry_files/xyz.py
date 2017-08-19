@@ -1,12 +1,13 @@
 from qcip_tools import molecule, atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, FormatError
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, FormatError, \
+    WithIdentificationMixin
 
 
 class XYZFormatError(FormatError):
     pass
 
 
-class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
+class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """The (in)famous XYZ file
 
     .. container:: class-members
@@ -28,7 +29,7 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         return ['xyz']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """An XYZ is kinda simple: it starts with a number, then contains series of 4 things (the 3 last being floats)
         """
 

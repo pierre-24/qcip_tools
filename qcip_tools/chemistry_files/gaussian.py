@@ -5,14 +5,15 @@ import numpy
 import copy
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, FormatError
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
+    FormatError, WithIdentificationMixin
 
 
 class InputFormatError(FormatError):
     pass
 
 
-class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
+class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """Gaussian input file.
 
     .. container:: class-members
@@ -44,7 +45,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         return ['com', 'inp', 'gau']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A gaussian input should contains '%' or '#' as the first character of the line of the "first block"
         """
 
@@ -254,7 +255,7 @@ class FCHKChunkInformation:
         self.line_end = line_end
 
 
-class FCHK(ChemistryFile, WithMoleculeMixin):
+class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
     """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).
 
     .. container:: class-members
@@ -290,7 +291,7 @@ class FCHK(ChemistryFile, WithMoleculeMixin):
         return ['fchk']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A gaussian fchk starts with two two line of info, then "Number of atoms"
         """
 
@@ -443,7 +444,7 @@ class OutputFormatError(FormatError):
     pass
 
 
-class Output(ChemistryLogFile, WithMoleculeMixin):
+class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
     """Log file of Gaussian. Contains a lot of informations, but not well printed or located.
     If possible, rely on the FCHK rather than on the LOG file.
 
@@ -475,7 +476,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         self.input_orientation = False
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A gaussian log ... Contains a lot of "gaussian" in the beginning (limit to the 150 first lines)"
         """
 
@@ -569,7 +570,7 @@ class CubeFormatError(FormatError):
     pass
 
 
-class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
+class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """Gaussian cube.
 
     Documentation on that format can be found `here <http://gaussian.com/cubegen/>`_.
@@ -615,7 +616,7 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         return ['cub', 'cube']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A cube file contains, in line 3-6, quadruplets of numbers, the first one being an integer, then 3 floats.
         Then, after the different atoms, line should contains numbers in scientific notation.
         """

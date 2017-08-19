@@ -1,6 +1,7 @@
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, FormatError
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
+    FormatError, WithIdentificationMixin
 from qcip_tools.quantities import AuToAngstrom
 
 
@@ -81,7 +82,7 @@ class InputModule(object):
         return item.lower() in [a[0].lower() for a in self.options]
 
 
-class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
+class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """GAMESS (US) input file.
 
     .. container:: class-members
@@ -115,7 +116,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin):
         return ['inp']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A GAMESS input file contains too many "$"!!!"""
 
         num_dollar = 0
@@ -270,7 +271,7 @@ class OutputFormatError(FormatError):
     pass
 
 
-class Output(ChemistryLogFile, WithMoleculeMixin):
+class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
     """Output of GAMESS.
 
     .. container:: class-members
@@ -290,7 +291,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin):
         self.molecule = Molecule()
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """Same trick as Dalton: check for universities and states name
         """
 
