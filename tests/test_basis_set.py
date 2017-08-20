@@ -22,6 +22,10 @@ class AtomTestCase(QcipToolsTestCase):
         self.bf_O_SP.add_primitive(basis_set.Primitive(1.1695961, 0.39951283, 0.60768372))
         self.bf_O_SP.add_primitive(basis_set.Primitive(0.3803890, 0.70011547, 0.39195739))
 
+        # Oyxgen d-type polarization function [from 6-31G(d)]
+        self.bf_O_D = basis_set.Function()
+        self.bf_O_D.add_primitive(basis_set.Primitive(1.2920000, 1.))
+
     def tearDown(self):
         pass
 
@@ -82,6 +86,11 @@ class AtomTestCase(QcipToolsTestCase):
         self.assertEqual(len(b_O.basis_functions_per_shell['SP']), 1)
 
         self.assertEqual(str(b_O), 'O [6s3p|2s1p]')
+
+        b_O.add_basis_function('d', self.bf_O_D)
+        self.assertTrue('D' in b_O)
+        self.assertEqual(len(b_O.basis_functions_per_shell['D']), 1)
+        self.assertEqual(str(b_O), 'O [6s3p1d|2s1p1d]')
 
         # fire exceptions
         with self.assertRaises(Exception):

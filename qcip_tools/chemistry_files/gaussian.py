@@ -4,7 +4,7 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom, quantities
+from qcip_tools import molecule, atom, quantities, basis_set
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
     FormatError, WithIdentificationMixin
 
@@ -1001,3 +1001,159 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
                             sums[key] += current_value
 
         return sums
+
+
+class BasisSetFormatError(FormatError):
+    pass
+
+
+class BasisSet(ChemistryFile, WithOutputMixin):
+    """File containing a basis set in the gaussian format.
+
+    This file format does not exists, but lets say that copy/paste from ESML basis set exchange should work.
+
+    .. container:: class-members
+
+        + ``self.basis_set``: the basis_set (``qcip_tools.basis_set.BasisSet``)
+
+    """
+
+    file_type = 'GAUSSIAN_BASIS_SET'
+
+    def __init__(self):
+        self.basis_set = basis_set.BasisSet()
+
+    def __contains__(self, item):
+        return item in self.basis_set
+
+    def __getitem__(self, item):
+        return self.basis_set[item]
+
+    def read(self, f, fail_for_same_atom=False):
+        """
+
+        :param f: f
+        :type f: file
+        :param fail_for_same_atom: raise an exception is the same atom is defined more than once
+        :type fail_for_same_atom: bool
+        """
+
+        def treat_atomic_basis_set(part):
+            lines = [
+                a.strip() for a in part.splitlines() if len(a) != 0 and a[0] != '!' and a.strip() not in ['', '****']]
+
+            if len(lines) == 0:
+                return  # nothing to search here
+
+            if len(lines) < 3:
+                raise BasisSetFormatError('atomic basis set too short for {}'.format(lines))
+
+            atom_def = lines[0].split()
+
+            if len(atom_def) != 2:
+                raise BasisSetFormatError('wrong atom definition {}'.format(lines[0]))
+
+            try:
+                if atom_def[0] in self.basis_set:
+                    if fail_for_same_atom:
+                        raise BasisSetFormatError('two times {}'.format(atom_def[0]))
+                    else:
+                        return
+            except KeyError as e:
+                raise BasisSetFormatError('not a atomic symbol: {}'.format(e))
+
+            a = basis_set.AtomicBasisSet(atom_def[0])
+            next_basis_function = 1
+
+            while True:
+                if next_basis_function >= len(lines):
+                    break
+
+                def_basis_function = lines[next_basis_function].split()
+                if len(def_basis_function) != 3:
+                    raise BasisSetFormatError(
+                        'wrong definition of shell {} for {}'.format(lines[next_basis_function], atom))
+
+                shell = def_basis_function[0]
+                number_of_primitives = int(def_basis_function[1])
+                normalization = float(def_basis_function[2])
+
+                if shell not in basis_set.SHELL_TO_TAM:
+                    raise BasisSetFormatError('unknown shell {} for {}'.format(shell, atom))
+
+                if next_basis_function + number_of_primitives >= len(lines):
+                    raise BasisSetFormatError('expected {} primitives for shell {} of {}'.format(
+                        number_of_primitives, shell, atom))
+
+                f = basis_set.Function(normalization=normalization)
+
+                for i in range(number_of_primitives):
+                    def_primitive = lines[next_basis_function + i + 1].split()
+                    if len(def_primitive) not in [2, 3]:
+                        raise BasisSetFormatError('wrong primitive {} in shell {} of {}'.format(
+                            def_primitive, shell, atom))
+
+                    if shell == 'SP' and len(def_primitive) == 2:
+                        raise BasisSetFormatError('for SP shell, 3 number are needed (in {})'.format(atom))
+                    elif shell != 'SP' and len(def_primitive) == 3:
+                        raise BasisSetFormatError('for non-SP shell {}, only 2 number are needed (in {})'.format(
+                            shell, atom))
+
+                    f.add_primitive(basis_set.Primitive(*[float(a) for a in def_primitive]))
+
+                next_basis_function += number_of_primitives + 1
+                a.add_basis_function(shell, f)
+
+            self.basis_set.add_atomic_basis_set(a)
+
+        content = f.read()
+        prev_pos = 0
+        self.from_read = True
+
+        while True:
+            next_separator = content.find('****', prev_pos + 4)
+
+            if next_separator < 0:
+                break
+
+            treat_atomic_basis_set(content[prev_pos:next_separator])
+            prev_pos = next_separator
+
+        if len(self.basis_set) == 0:
+            raise BasisSetFormatError('empty basis set')
+
+    def to_string(self, for_molecule=None):
+        """Give basis set
+
+        :param for_molecule: if defined, only output for the atoms contained in the molecule
+        :type for_molecule: qcip_tools.molecule.Molecule
+        :rtype: str
+        """
+
+        to_output = self.basis_set.atomic_basis_sets.keys()
+        if for_molecule:
+            to_output = for_molecule.symbols_contained
+
+        r = ''
+
+        for i in to_output:
+            if i not in self.basis_set:
+                raise ValueError('No basis set for {} defined'.format(i))
+
+            atomic_basis_set = self.basis_set[i]
+            atom = atomic_basis_set.atom.symbol
+
+            r += '****\n{}     0\n'.format(atom)
+            for shell in atomic_basis_set.shells():
+                for basis_function in atomic_basis_set[shell]:
+                    r += '{:3} {:<3} {:.2f}\n'.format(shell, len(basis_function), basis_function.normalization)
+                    for primitive in basis_function.primitives:
+                        r += ' {:15.7f}            {: .8f}{}\n'.format(
+                            primitive.exponent,
+                            primitive.contraction_coefficient,
+                            '            {: .8f}'.format(primitive.p_coefficient) if shell == 'SP' else '')
+
+        return r + '****'
+
+    def write(self, f, for_molecule=None):
+        f.write(self.to_string(for_molecule=for_molecule))

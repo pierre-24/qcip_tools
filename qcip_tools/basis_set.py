@@ -133,6 +133,11 @@ class AtomicBasisSet:
     def __getitem__(self, item):
         return self.basis_functions_per_shell[AtomicBasisSet.to_key(item)]
 
+    def shells(self):
+        shells = [a for a in self.basis_functions_per_shell.keys()]
+        shells.sort(key=lambda x: SHELL_TO_TAM[x] if x != 'SP' else 1)
+        return shells
+
     def add_basis_function(self, shell, basis_function):
         """
 
@@ -175,10 +180,8 @@ class AtomicBasisSet:
             len_sp = len(self['SP'])
             r += '{}s{}p'.format(len_s + len_sp, len_sp)
 
-        for i in range(start, len(TAM_TO_SHELL) - 1):
-            if i in self:
-                shell = TAM_TO_SHELL[i]
-                r += '{}{}'.format(len(self[shell]), shell.lower())
+        for shell in self.shells()[start:]:
+            r += '{}{}'.format(len(self[shell]), shell.lower())
         return r
 
     def full_representation(self):
@@ -191,10 +194,8 @@ class AtomicBasisSet:
             len_sp = sum(len(a) for a in self['SP'])
             r += '{}s{}p'.format(len_s + len_sp, len_sp)
 
-        for i in range(start, len(TAM_TO_SHELL) - 1):
-            if i in self:
-                shell = TAM_TO_SHELL[i]
-                r += '{}{}'.format(sum(len(a) for a in self[shell]), shell.lower())
+        for shell in self.shells()[start:]:
+            r += '{}{}'.format(sum(len(a) for a in self[shell]), shell.lower())
         return r
 
     def __repr__(self):
@@ -243,6 +244,9 @@ class BasisSet:
             raise ValueError('key and atom mismatch, Z {} != {}'.format(t_key, e_key))
 
         self.atomic_basis_sets[t_key] = value
+
+    def __len__(self):
+        return len(self.atomic_basis_sets)
 
     def add_atomic_basis_set(self, atomic_basis_set, force_replace=True):
         """

@@ -77,7 +77,7 @@ Basis sets are frequently augmented with others functions:
     **Basis functions**. Therefore, when using a basis set defined by ``[10s4p1d|3s2p1d]`` for second row atoms, in means that there is, on an atomic point of view the [1s, 2s, 2p, 3s', 3p', 3d'] orbitals (where ' represents the added polarization orbitals).
 
     **Number of basis basis functions and primitives**. Don't forget that for each *p*-type "basis function", there is actually 3 basis function (:math:`p_x`, :math:`p_y` and :math:`p_z`) defined, as emphasized by the sum of over :math:`(l,m,n)\in\mu` in Eq. :eq:`atomicbasisset`, 5 for each *d*-type orbitals (or six if one consider the carthesian counterparts), and so all. The same goes for the number of primitives.
-    For example, water with a 6-31+G(d) basis set (``[11s5p1d|4s3p1d]`` for oxygen, ``[4s|2s]`` for oxygen) contains actually 18 basis functions for the oxygen (= :math:`4\times 1+3\times 3+1\times 5`) and 31 primitives (= :math:`11\times 1+5\times 3 + 1\times 5`), so in total there is 22 basis functions and 39 GTO's for the water molecule.
+    For example, water with a 6-31+G(d) basis set (``[11s5p1d|4s3p1d]`` for oxygen, ``[4s|2s]`` for hydrogen) contains actually 18 basis functions for the oxygen (= :math:`4\times 1+3\times 3+1\times 5`) and 31 primitives (= :math:`11\times 1+5\times 3 + 1\times 5`), so in total there is 22 basis functions and 39 GTO's for the water molecule.
 
     **Output**. By convention, the primitives of a basis set are listed shell by shell, in decrasing order of number of primitive per basis function and starting from the highest coefficient.
     The code handle that order by sorting internal lists.
