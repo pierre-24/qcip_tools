@@ -2,6 +2,7 @@ import tempfile
 import shutil
 import os
 import random
+import io
 
 from tests import QcipToolsTestCase
 from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom
@@ -84,6 +85,18 @@ class GaussianTestCase(QcipToolsTestCase):
 
         with open(self.cube_file3, 'w') as f:
             with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_3.cub')) as fx:
+                f.write(fx.read())
+
+        self.basis_set1 = os.path.join(self.temp_dir, 'basis1.gbs')
+
+        with open(self.basis_set1, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/STO-3G.gbs')) as fx:
+                f.write(fx.read())
+
+        self.basis_set2 = os.path.join(self.temp_dir, 'basis2.gbs')
+
+        with open(self.basis_set2, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/cc-pVDZ.gbs')) as fx:
                 f.write(fx.read())
 
     def tearDown(self):
@@ -357,6 +370,138 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(results['almost_nothing'], .0)
         self.assertAlmostEqual(results['lithium_atom'], 2.25, delta=.5)
         self.assertAlmostEqual(results['hydrogen_atom'], .25, delta=.5)
+
+    def test_basis_set(self):
+        """Test basis set"""
+
+        # test reading
+        b1 = gaussian.BasisSet()
+
+        with open(self.basis_set1) as f:
+            b1.read(f)
+
+        self.assertTrue(b1.from_read)
+
+        b2 = gaussian.BasisSet()
+
+        with open(self.basis_set2) as f:
+            b2.read(f)
+
+        self.assertTrue(b2.from_read)
+
+        atoms = ['H', 'C', 'O']
+
+        for a in atoms:
+            self.assertTrue(a in b1, msg=a)
+            self.assertTrue(a in b2, msg=a)
+
+        self.assertEqual(str(b1['H']), 'H [3s|1s]')
+        self.assertEqual(str(b1['C']), 'C [6s3p|2s1p]')
+        self.assertEqual(str(b1['O']), 'O [6s3p|2s1p]')
+
+        self.assertEqual(str(b2['H']), 'H [4s1p|2s1p]')
+        self.assertEqual(str(b2['C']), 'C [17s4p1d|3s2p1d]')
+        self.assertEqual(str(b2['O']), 'O [17s4p1d|3s2p1d]')
+
+        # try to fire exceptions:
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\n****')  # Empty basis set
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nX\n****')  # Too short
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nQ 0\n S 1 1.0\n 10.0 1.0\n****')  # atom does not exists
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0 0\n S 1 1.0\n 10.0 1.0\n****')  # too much arguments for atom
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0 1.0\n 10.0 1.0\n****')  # Too much argument for basis function
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n Q 1 1.0\n 10.0 1.0\n****')  # Not a shell
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 2 1.0\n 10.0 1.0\n****')  # Not the good number of primitives
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0\n 10.0 1.0 1.0 1.0 1.0\n****')  # Wrong definition of primitive
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0\n 10.0 1.0 1.0\n****')  # p coefficient for s-type shell
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0\n 10.0 1.0\nSP 1 1.0\n10.0 1.0\n****')  # Not p coefficient for SP
+            b_test.read(o)
+
+        # test writing
+        other_file = os.path.join(self.temp_dir, 'other.gbs')
+
+        with open(other_file, 'w') as f:
+            b1.write(f)
+
+        b1p = gaussian.BasisSet()
+
+        with open(other_file, 'r') as f:
+            b1p.read(f)
+
+        self.assertEqual(str(b1p['H']), 'H [3s|1s]')
+        self.assertEqual(str(b1p['C']), 'C [6s3p|2s1p]')
+        self.assertEqual(str(b1p['O']), 'O [6s3p|2s1p]')
+
+        for a in atoms:
+            a_1 = b1.basis_set[a]
+            a_2 = b1p.basis_set[a]
+
+            for bl_1, bl_2 in zip(a_1.shells(), a_2.shells()):
+                self.assertEqual(len(a_1[bl_1]), len(a_2[bl_2]))
+                for b_1, b_2 in zip(a_1[bl_1], a_2[bl_2]):
+                    self.assertEqual(len(b_1), len(b_2))
+                    for p_1, p_2 in zip(b_1.primitives, b_2.primitives):
+                        self.assertAlmostEqual(p_1.exponent, p_2.exponent, places=5)
+                        self.assertAlmostEqual(p_1.contraction_coefficient, p_2.contraction_coefficient, places=5)
+                        self.assertAlmostEqual(p_1.p_coefficient, p_2.p_coefficient, places=5)
+
+        #  test writing, only for given atoms
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        with open(other_file, 'w') as f:
+            b1.write(f, for_molecule=m)
+
+        b1p = gaussian.BasisSet()
+
+        with open(other_file, 'r') as f:
+            b1p.read(f)
+
+        self.assertTrue('H' in b1p)
+        self.assertTrue('O' in b1p)
+        self.assertFalse('C' in b1p)
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""

@@ -252,10 +252,10 @@ class Derivative:
         from a coordinates, give all the other ones that are equivalents
 
         :param element: the coordinates
-        :type element: tuple|list
+        :type element: int
         """
 
-        if self.diff_representation == '':  # special case of energy
+        if self.representation() == '':  # special case of energy
             yield 0
             return
 

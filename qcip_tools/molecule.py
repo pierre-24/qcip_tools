@@ -66,13 +66,13 @@ class Molecule:
         :type charge: float
         """
 
-        self.atom_list = atom_list if atom_list else []
+        self.atom_list = []
         self.symbols_contained = []
         self.charge = charge
 
-        for a in self.atom_list:
-            if a.symbol not in self.symbols_contained:
-                self.symbols_contained.append(a.symbol)
+        if atom_list is not None:
+            for a in atom_list:
+                self.insert(a)
 
         self.multiplicity = 1 if self.number_of_electrons() % 2 == 0 else 2
 

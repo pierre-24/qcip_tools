@@ -7,15 +7,16 @@ class ProbablyNotAChemistryFile(Exception):
     pass
 
 
-def chemistry_file_objects():
-    """Yield all objects"""
+def identifiable_chemistry_file_objects():
+    """Yield all objects with the ``WithIdentificationMixin``."""
 
     for module_name, module in inspect.getmembers(chemistry_files, inspect.ismodule):
         if module_name == 'helpers':
             continue
 
         for class_name, obj in inspect.getmembers(module, inspect.isclass):
-            if issubclass(obj, chemistry_files.ChemistryFile) and obj != chemistry_files.ChemistryFile:
+            if issubclass(obj, chemistry_files.WithIdentificationMixin) and \
+                    obj != chemistry_files.WithIdentificationMixin:
                 yield obj
 
 
@@ -46,7 +47,7 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
             f.seek(0, 0)
 
             try:
-                if obj_.attempt_recognition(f):
+                if obj_.attempt_identification(f):
                     f.seek(0, 0)
                     o = obj_()
                     o.read(f)
@@ -60,7 +61,7 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
     file_extension = None
 
     if not must_be:
-        must_be = chemistry_file_objects()
+        must_be = identifiable_chemistry_file_objects()
 
     # first try is based on file extension:
     try:
@@ -69,7 +70,7 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
         pass
 
     if file_extension:
-        for obj in chemistry_file_objects():
+        for obj in identifiable_chemistry_file_objects():
             if obj not in must_be:
                 continue
 

@@ -13,7 +13,7 @@ class ChemistryFile(Dispatcher):
     Methods to help file recognition:
 
     - ``possible_file_extensions()`` (class method)
-    - ``attempt_recognition()`` (class method)
+    - ``attempt_identification()`` (class method)
 
     """
 
@@ -51,6 +51,10 @@ class ChemistryFile(Dispatcher):
 
         return property_ in self.dispatcher
 
+
+class WithIdentificationMixin(object):
+    """Mixin for recogintion of the file by the *helpers*"""
+
     @classmethod
     def possible_file_extensions(cls):
         """Return the common extention of this kind of files
@@ -61,7 +65,7 @@ class ChemistryFile(Dispatcher):
         raise NotImplementedError
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """Attempt to identify the file as a possible file of this type
 
         :param f: file (in read mode)
