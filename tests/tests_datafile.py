@@ -1,6 +1,7 @@
 import os
 import tempfile
 import math
+import numpy
 
 from tests import QcipToolsTestCase
 from qcip_tools import datafile
@@ -244,3 +245,93 @@ class DataFileTestCase(QcipToolsTestCase):
         self.assertEqual(g['text' + utf8_stuff], some_text + utf8_stuff)
         self.assertEqual(g['integers'], some_integers)
         self.assertEqual(g['floats'], some_floats)  # ok, good!
+
+    def test_array_type(self):
+        """A type added a bit after"""
+
+        array = numpy.eye(3)
+
+        # TextDataFile:
+        ft = datafile.TextDataFile()
+        ft.set('array', 'A', array)
+
+        self.assertEqual(ft.chunks_information['array'].data_length, 9)
+        self.assertEqual(ft.chunks_information['array'].shape, (3, 3))
+
+        with open(self.temporary_file, 'w') as fx:
+            ft.write(fx)
+
+        file_ = open(self.temporary_file)
+        file_content = file_.read()
+        file_.close()
+        self.assertTrue('A3x3 array' in file_content)
+
+        g = datafile.TextDataFile()
+        with open(self.temporary_file) as fx:
+            g.read(fx)
+
+        self.assertEqual(len(g.chunks_information), 1)
+
+        self.assertEqual(ft.chunks_information['array'].data_length, 9)
+        self.assertEqual(ft.chunks_information['array'].shape, (3, 3))
+        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+
+        g = datafile.TextDataFile()  # open-read-close, then reopen
+        with open(self.temporary_file) as fx:
+            g.read(fx)
+
+        g.set('test', 'I', [1, 2])
+
+        with open(self.temporary_file, 'w') as fx:
+            g.write(fx)
+
+        g = datafile.TextDataFile()
+        with open(self.temporary_file) as fx:
+            g.read(fx)
+
+        self.assertEqual(len(g.chunks_information), 2)
+        self.assertArrayAlmostEqual(g['test'], [1, 2])
+
+        self.assertEqual(ft.chunks_information['array'].data_length, 9)
+        self.assertEqual(ft.chunks_information['array'].shape, (3, 3))
+        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+
+        # BinaryDataFile:
+        fb = datafile.BinaryDataFile()
+        fb.set('array', 'A', array)
+
+        self.assertEqual(fb.chunks_information['array'].data_length, 9)
+        self.assertEqual(fb.chunks_information['array'].shape, (3, 3))
+
+        with open(self.temporary_file, 'wb') as fx:
+            fb.write(fx)
+
+        g = datafile.BinaryDataFile()
+        with open(self.temporary_file, 'rb') as fx:
+            g.read(fx)
+
+        self.assertEqual(len(g.chunks_information), 1)
+
+        self.assertEqual(g.chunks_information['array'].data_length, 9)
+        self.assertEqual(g.chunks_information['array'].shape, (3, 3))
+        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+
+        g = datafile.BinaryDataFile()  # open-read-close, then reopen
+        with open(self.temporary_file, 'rb') as fx:
+            g.read(fx)
+
+        g.set('test', 'I', [1, 2])
+
+        with open(self.temporary_file, 'wb') as fx:
+            g.write(fx)
+
+        g = datafile.BinaryDataFile()
+        with open(self.temporary_file, 'rb') as fx:
+            g.read(fx)
+
+        self.assertEqual(len(g.chunks_information), 2)
+        self.assertArrayAlmostEqual(g['test'], [1, 2])
+
+        self.assertEqual(g.chunks_information['array'].data_length, 9)
+        self.assertEqual(g.chunks_information['array'].shape, (3, 3))
+        self.assertArrayAlmostEqual(g['array'], array)  # ok.
