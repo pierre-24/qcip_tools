@@ -21,8 +21,8 @@ There is some *mixins* and derived classes to add functionnalities:
 + `WithMoleculeMixin <#qcip_tools.chemistry_files.WithMoleculeMixin>`_ adds ``self.molecule``, which is accessible trough ``get_molecule()``.
   It also provides a ``Class.from_molecule(molecule, *args, **kwargs)`` class method to ease creation of a file from scratch (if defined in subclass).
 + `WithIdentificationMixin <#qcip_tools.chemistry_files.WithIdentificationMixin>`_ adds ``Class.possible_file_extensions()`` and ``Class.attempt_identification()`` to allow file recognition by `helpers <#helpers-helpers>`_.
-    + ``possible_file_extensions()`` helps to avoid some possibilities if the extention is trusted. The helper expects a list of possible extentions (without the dot).
-    + ``attempt_identification()`` actually make the recognition of the file: given ``f`` (the file open in read mode), the helper function expects ``True`` or ``False`` if it is a file corresponding to a given objects.
+    * ``possible_file_extensions()`` helps to avoid some possibilities if the extension is trusted. The helper expects a list of possible extentions (without the dot).
+    * ``attempt_identification()`` actually make the recognition of the file: given ``f`` (the file open in read mode), the helper function expects ``True`` or ``False`` if it is a file corresponding to a given objects.
       This recognition is usually based on patterns or words (like the name of the program) that frequently appears.
 + `WithOutputMixin <#qcip_tools.chemistry_files.WithOutputMixin>`_, which gives the ability to ``write()`` in a new file.
   Note that it is easier to override ``to_string()`` in this case.
@@ -62,6 +62,10 @@ API documentation
       - Gaussian output (.log or .out)
       - Yes
       - **No**
+    * - `gaussian.BasisSet <#qcip_tools.chemistry_files.gaussian.BasisSet>`_
+      - Gaussian basis set (.gbs ?)
+      - Yes
+      - Yes
     * - `dalton.ArchiveOutput <#qcip_tools.chemistry_files.dalton.ArchiveOutput>`_
       - Dalton archive (.tar.gz)
       - Yes

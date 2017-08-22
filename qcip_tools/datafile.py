@@ -1,4 +1,5 @@
 import math
+import struct
 
 #: Allowed data types in datafiles: ``I`` and ``R`` correspond to a **list** of integer or floats,
 #: while ``S`` defines a list of characters, so a string.
@@ -56,6 +57,10 @@ class ChunkInformation:
         self.offset_end = offset_end
         self.modified = modified
 
+    def __repr__(self):
+        return '{} ({}{}): {}:{}'.format(
+            self.keyword, self.data_type, self.data_length, self.offset_start, self.offset_end)
+
 
 class DataFileTypeError(TypeError):
     def __init__(self, s):
@@ -85,9 +90,8 @@ class DataFile:
     def __init__(self):
 
         self.chunks_information = {}  #: Dict of ``ChunkInformation`` for **all** available keywords in the source file.
-        self.chunks_parsed = {}  #: parsed chunks, so list of stuffs
+        self.chunks_parsed = {}  #: parsed chunks, so dict of stuffs
         self.raw = None  #: variable for storage of chunks for ``parse_chunk()``,  so "whatever floats you boat".
-        self.data_source = None  #: source pipe, should not be used normally (memory access is faster than the others)
 
     def __getitem__(self, item):
         """
@@ -224,7 +228,6 @@ class TextDataFile(DataFile):
         self.raw = f.readlines()
         self.chunks_information = {}
         self.chunks_parsed = {}
-        self.data_source = f
 
         for index, line in enumerate(self.raw):
             if line.strip() == '':
@@ -266,3 +269,224 @@ class TextDataFile(DataFile):
             self.chunks_parsed[keyword] = data
         else:
             self.chunks_parsed[keyword] = ''.join([s.strip() for s in self.raw[info.offset_start:info.offset_end]])
+
+
+TYPE_TO_BINARY_IDENTIFIER = {'I': 0, 'R': 1, 'S': 2}
+BINARY_IDENTIFIER_TO_TYPE = dict((b, a) for a, b in TYPE_TO_BINARY_IDENTIFIER.items())
+TYPE_TO_BINARY_SIZE = {'I': 8, 'R': 8, 'S': 1}
+TYPE_TO_STRUCT_IDENTIFIER = {'I': 'q', 'R': 'd', 'S': 's'}
+
+
+class BinaryDataFile(DataFile):
+    """Binary data file. Same principle, but data stored in binary form: may be a bit faster, and there is no loss
+    of information (other than the limit of the representation on computers).
+
+    The file structure is
+
+    + Header
+    + Chunks table
+    + Chunks
+
+    The different part are detailed below. Note that the size are a consequence of the use of ``struct``
+    (see `documentation <https://docs.python.org/3/library/struct.html#format-characters>`_).
+    The file is little-endian (use ``<`` of the ``struct`` library).
+
+    .. warning::
+
+        String are encoded in UTF-8 before storage. So the ``data_length`` contains the size of the encoded string
+        (so the number of bytes) rather than the number of letters (that ``len()`` gives).
+
+    **File header** (``<iIII``)
+
+    .. list-table::
+        :header-rows: 1
+        :widths: 30 25 20 25
+
+        * - Name
+          - Type
+          - Size
+          - Default value
+        * - Magic number
+          - Int
+          - 4
+          - ``0x17B1DAF1``
+        * - Version
+          - Unsigned int
+          - 4
+          - ``1``
+        * - Number of chunks
+          - Unsigned int
+          - 4
+          - ``0``
+        * - Offset chunks start
+          - Unsigned int
+          - 4
+          - ``16``
+
+    **Chunk table** (For each chunk, ``<IIIII`` and then ``<XXs`` for the keyword, where ``XX`` is the length)
+
+    .. list-table::
+        :header-rows: 1
+        :widths: 30 25 20 25
+
+        * - Name
+          - Type
+          - Size
+          - Default value
+        * - Chunk type
+          - Unsigned int
+          - 4
+          - ``0``
+        * - Number of data
+          - Unsigned int
+          - 4
+          - ``0``
+        * - Offset start
+          - Unsigned int
+          - 4
+          - ``16``
+        * - Offset end
+          - Unsigned int
+          - 4
+          - ``16``
+        * - Keyword length
+          - Unsigned int
+          - 4
+          - ``0``
+        * - Keyword
+          - String
+          - 1 x ``length``
+          - ``''``
+
+    .. warning::
+
+        Offset are always absolute positions with respect to the **beginning of the chunk section** !!
+
+    For chunk type:
+
+     +  ``0``: Integers (``I``). The long type (``q``) is used to pack these data.
+     + ``1``: floats (``R``). The double type (``d``) is used to pack these data.
+     + ``2``: string (``S``). The string (``s``) is used to pack these data, after encoding in UTF-8.
+
+    **Chunks** (for each chunk)
+
+    From offset start to offset end, data (size of the chunk is given by
+    ``offset_end-offset_size``, and ``(offset_end-offset_size)/len(type)`` should give ``number_of_data``).
+    """
+
+    last_version = 1
+    magic_number = 0x17B1DAF1
+
+    def __init__(self, version=None):
+        super().__init__()
+        self.version = version if version is not None else self.last_version
+        self.offset_chunk_start = 0
+
+    def read(self, f):
+        self.raw = f.read()
+        self.chunks_information = {}
+        self.chunks_parsed = {}
+
+        # header
+        magic_number, version, number_of_chunk, self.offset_chunk_start = struct.unpack('<iIII', self.raw[:16])
+
+        if magic_number != self.magic_number:
+            raise InvalidDataFile('wrong magic number 0x{:04X} != 0x{}'.format(magic_number, self.magic_number))
+        if version > self.last_version:
+            raise InvalidDataFile('Version {} unknown, should be <= {}'.format(version, self.last_version))
+
+        # chunks:
+        offset = 16
+        for i in range(number_of_chunk):
+            chunk_type, number_of_data, offset_start, offset_end, keyword_size = \
+                struct.unpack('<IIIII', self.raw[offset:offset + 20])
+
+            chunk_keyword = struct.unpack(
+                '<{}s'.format(keyword_size), self.raw[offset + 20: offset + 20 + keyword_size])[0].decode('utf-8')
+
+            if chunk_type not in BINARY_IDENTIFIER_TO_TYPE:
+                raise InvalidDataFile('Invalid type {} near offset {} in chunks table'.format(chunk_type, offset))
+
+            if offset_end - offset_start != number_of_data * TYPE_TO_BINARY_SIZE[BINARY_IDENTIFIER_TO_TYPE[chunk_type]]:
+                raise InvalidDataFile(
+                    'number of data does not match offset for {} in chunk table'.format(chunk_keyword))
+
+            self.chunks_information[chunk_keyword] = ChunkInformation(
+                chunk_keyword, BINARY_IDENTIFIER_TO_TYPE[chunk_type], number_of_data, offset_start, offset_end)
+
+            offset += 20 + keyword_size
+
+        if offset != self.offset_chunk_start:
+            raise InvalidDataFile('{} informations in chunk table'.format(
+                'missing' if offset < self.offset_chunk_start else 'extra'))
+
+    def parse_chunk(self, keyword):
+        if keyword not in self.chunks_information:
+            raise KeyError(keyword)
+
+        info = self.chunks_information[keyword]
+
+        if info.data_type == 'S':
+            self.chunks_parsed[keyword] = struct.unpack(
+                '<{}s'.format(info.data_length),
+                self.raw[info.offset_start + self.offset_chunk_start:info.offset_end + self.offset_chunk_start])[0]\
+                .decode('utf-8')
+        else:
+            self.chunks_parsed[keyword] = list(struct.unpack(
+                '<{}{}'.format(info.data_length, TYPE_TO_STRUCT_IDENTIFIER[info.data_type]),
+                self.raw[info.offset_start + self.offset_chunk_start:info.offset_end + self.offset_chunk_start]))
+
+    def set(self, key, data_type, data, force_change_type=False):
+        """Override so that the length of a string correspond to the number of bytes in the encoded form"""
+
+        r = super().set(key, data_type, data, force_change_type=force_change_type)
+
+        if data_type == 'S':
+            info = self.chunks_information[key]
+            info.data_length = len(self.get(key).encode('utf-8'))
+
+        return r
+
+    def write(self, f):
+        # first, create chunk table (to know its size) and chunks:
+        chunk_table = b''
+        chunks = b''
+        offset = 0
+
+        for k in self.chunks_information:
+            info = self.chunks_information[k]
+
+            offset_end = offset + info.data_length * TYPE_TO_BINARY_SIZE[info.data_type]
+            keyword_in_binary = info.keyword.encode('utf-8')
+            chunk_table += struct.pack(
+                '<IIIII',
+                TYPE_TO_BINARY_IDENTIFIER[info.data_type],
+                info.data_length,
+                offset,
+                offset_end,
+                len(keyword_in_binary))
+
+            chunk_table += struct.pack('< {}s'.format(len(keyword_in_binary)), keyword_in_binary)
+
+            if info.modified:  # avoid interpreting data if not needed
+                val = self.get(k)
+                if info.data_type == 'S':
+                    encoded_string = val.encode('utf-8')
+                    chunks += struct.pack(
+                        '<{}{}'.format(info.data_length, TYPE_TO_STRUCT_IDENTIFIER[info.data_type]), encoded_string)
+                else:
+                    chunks += struct.pack(
+                        '<{}{}'.format(info.data_length, TYPE_TO_STRUCT_IDENTIFIER[info.data_type]), *val)
+            else:
+                chunks += self.raw[
+                    self.offset_chunk_start + info.offset_start:self.offset_chunk_start + info.offset_end]
+
+            offset = offset_end
+
+        # write:
+        # header is 16 bytes long!
+        f.write(struct.pack(
+            '<iIII', self.magic_number, self.version, len(self.chunks_information), len(chunk_table) + 16))
+
+        f.write(chunk_table)
+        f.write(chunks)
