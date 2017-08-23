@@ -213,7 +213,7 @@ class AABoundingBox(BoundingObject):
             self.size = size
 
         else:
-            RuntimeError('you must give either maximum or size')
+            ValueError('you must give either maximum or size')
 
         for i, val in enumerate(self.size):  # change origin if maximum was actually the minimum
             if val < 0.0:

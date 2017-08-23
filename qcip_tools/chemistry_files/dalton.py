@@ -5,18 +5,30 @@ import collections
 import io
 
 from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
+    FormatError, WithIdentificationMixin
 
 
-class MoleculeInput(qcip_ChemistryFile):
+class InputFormatError(FormatError):
+    pass
+
+
+class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """Dalton mol input file.
 
     .. warning::
 
         Multiplicity seems to be given in the .dal file, so it may be wrong!!
 
-    **I/O class.**"""
+    .. container:: class-members
 
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.title``: the title (``str``)
+        + ``self.basis_set``: the basis set (``str``)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_MOL'
 
     def __init__(self):
@@ -29,7 +41,7 @@ class MoleculeInput(qcip_ChemistryFile):
         return ['mol']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A dalton molecule is quite unique ("charge=")
         """
 
@@ -47,6 +59,24 @@ class MoleculeInput(qcip_ChemistryFile):
 
         return found_charge > 1
 
+    @classmethod
+    def from_molecule(cls, molecule, title='', basis_set='', *args, **kwargs):
+        """Create a file from molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :param title: title of the run
+        :type title: str
+        :param basis_set: the basis set
+        :type basis_set: str
+        :rtype: qcip_tools.chemistry_files.dalton.MoleculeInput
+        """
+
+        obj = super().from_molecule(molecule, *args, **kwargs)
+        obj.title = title
+        obj.basis_set = basis_set
+        return obj
+
     def read(self, f):
         """
 
@@ -58,7 +88,7 @@ class MoleculeInput(qcip_ChemistryFile):
         self.from_read = True
 
         if len(lines) < 6:
-            raise Exception('something wrong with dalton .mol: too short')
+            raise InputFormatError('something wrong with dalton .mol: too short')
 
         self.basis_set = lines[1].strip()
         self.title = (lines[2] + '\n' + lines[3]).strip()
@@ -145,11 +175,17 @@ class MoleculeInput(qcip_ChemistryFile):
         f.write(self.to_string(in_angstrom, nosym, group_atoms))
 
 
-class ArchiveOutput(qcip_ChemistryFile):
+class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
     """Archive output of Dalton. Contains lots of information for who can extract them.
 
-    **Input only class.**"""
+    .. container:: class-members
 
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.tar_file``: pipe to the tar file (``tarfile.TarFile``)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_ARCHIVE'
 
     def __init__(self):
@@ -161,7 +197,7 @@ class ArchiveOutput(qcip_ChemistryFile):
         return ['gz', 'tar.gz']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A dalton archive does contain a lot of files name "DALTON"
         """
 
@@ -177,6 +213,10 @@ class ArchiveOutput(qcip_ChemistryFile):
                 found_dalton += 1
 
         return found_dalton > 3
+
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
 
     def read(self, f):
         """Expects ``f`` to be open on binary mode.
@@ -243,34 +283,46 @@ class OutputSection:
         return 'Section {}: {}:{}'.format(self.section, self.line_start, self.line_end)
 
 
-class Output(qcip_ChemistryFile):
+class OutputFormatError(FormatError):
+    pass
+
+
+class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
     """Output of Dalton.
 
-    **Input only class.**"""
+    .. container:: class-members
 
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.lines``: the lines of the file (``list`` of ``str``)
+        + ``self.sections``: the different sections (``list`` of
+          `OutputSection <#qcip_tools.chemistry_files.dalton.OutputSection>`_)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_LOG'
+    chunk_title_variable = 'section'
 
     def __init__(self):
         self.molecule = molecule.Molecule()
-        self.lines = []
-        self.sections = []
 
     @classmethod
-    def possible_file_extensions(cls):
-        return ['out', 'log']
-
-    @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A dalton output ... Does contains a lot of (european) countries and universities name at some point
+        (and a little bit of "Dalton" as well)
         """
 
         count = 0
         found_countries = 0
         found_universities = 0
+        found_dalton = 0
         countries = ['Norway', 'Denmark', 'Italy', 'Sweden', 'Germany']
 
         for l in f.readlines():
             count += 1
+
+            if 'Dalton' in l or 'dalton' in l:
+                found_dalton += 1
 
             if 60 < count < 150:
                 if 'University' in l:
@@ -282,7 +334,7 @@ class Output(qcip_ChemistryFile):
             if count > 150:
                 break
 
-        return found_countries > 20 and found_universities > 20
+        return found_countries > 20 and found_universities > 20 and found_dalton > 4
 
     def read(self, f):
         """
@@ -291,25 +343,26 @@ class Output(qcip_ChemistryFile):
         :type f: file
         """
 
-        self.lines = f.readlines()
-        self.sections.append(OutputSection('START', 0, -1))
+        super().read(f)
+
+        self.chunks.append(OutputSection('START', 0, -1))
 
         for index, line in enumerate(self.lines):
             if '.----------------' in line:
                 if 'Starting in' in self.lines[index + 1]:
-                    self.sections[-1].line_end = index
+                    self.chunks[-1].line_end = index
                     section_end = self.lines[index + 1].rfind(')')
                     section_start = self.lines[index + 1].rfind('(')
                     if -1 in [section_end, section_start]:
                         raise Exception('no section found for line {}'.format(index))
 
-                    self.sections.append(
+                    self.chunks.append(
                         OutputSection(self.lines[index + 1][section_start + 1:section_end], index + 1, -1))
 
         # fetch molecule
-        coordinates_line = self.search('Cartesian Coordinates (a.u.)', in_section='START')
+        coordinates_line = self.search('Cartesian Coordinates (a.u.)', into='START')
         if coordinates_line == -1:
-            raise Exception('cannot find molecule')
+            raise OutputFormatError('cannot find molecule in START')
 
         number_of_atoms = math.floor(int(self.lines[coordinates_line + 3][-5:]) / 3)
         for i in range(number_of_atoms):
@@ -321,64 +374,15 @@ class Output(qcip_ChemistryFile):
                         float(content[4]), float(content[7]), float(content[10])]]
                 ))
 
-        charge_line = self.search('@    Total charge of the molecule', in_section='SIRIUS')
+        charge_line = self.search('@    Total charge of the molecule', into='SIRIUS')
         if charge_line == -1:
-            raise Exception('cannot find charge of the molecule')
+            raise OutputFormatError('cannot find charge of the molecule in SIRIUS')
         self.molecule.charge = int(self.lines[charge_line][-6:])
         self.molecule.multiplicity = int(self.lines[charge_line + 2][45:55])
 
         if self.molecule.number_of_electrons() != int(self.lines[charge_line - 2][-5:]):
-            raise Exception(
+            raise OutputFormatError(
                 'Not the right number of electron, is the charge (found {}) wrong?'.format(self.molecule.charge))
-
-    def apply_function(self, func, line_start=0, line_end=None, in_section=None, **kwargs):
-        """Apply ``apply_over_list()`` to the lines.
-
-        :param lines: lines of the log
-        :type lines: list
-        :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
-        :type func: callback
-        :param line_start: starting index
-        :type line_start: int
-        :param line_end: end the search at some point
-        :type line_end: int
-        :param in_section: restrict the search to a given link
-        :type in_section: str
-        :type kwargs: dict
-        :rtype: bool
-        """
-
-        if in_section is not None:
-
-            for link_info in self.sections:
-                if link_info.section == in_section:
-                    r = apply_over_list(self.lines, func, link_info.line_start, link_info.line_end, **kwargs)
-                    if r:
-                        return True
-
-            return False
-
-        else:
-            return apply_over_list(self.lines, func, line_start, line_end, **kwargs)
-
-    def search(self, s, line_start=0, line_end=None, in_section=None):
-        """Returns the line when the string is found in this line or -1 if nothing was found.
-
-        :rtype: int
-        """
-
-        class FunctionScope:
-            line_found = -1
-
-        def find_string(line, current_index):
-            if s in line:
-                FunctionScope.line_found = current_index
-                return True
-            else:
-                return False
-
-        self.apply_function(find_string, line_start=line_start, line_end=line_end, in_section=in_section)
-        return FunctionScope.line_found
 
     def get_inputs(self):
         """Fetch the inputs from the log file
@@ -386,12 +390,12 @@ class Output(qcip_ChemistryFile):
         :rtype: tuple
         """
 
-        line_dal = self.search('Content of the .dal input file', in_section='START')
-        line_mol = self.search('Content of the .mol file', line_start=line_dal, in_section='START')
-        line_end = self.search('Output from DALTON general input processing', line_start=line_mol, in_section='START')
+        line_dal = self.search('Content of the .dal input file', into='START')
+        line_mol = self.search('Content of the .mol file', line_start=line_dal, into='START')
+        line_end = self.search('Output from DALTON general input processing', line_start=line_mol, into='START')
 
         if -1 in [line_dal, line_mol, line_end]:
-            raise Exception('inputs not found')
+            raise OutputFormatError('inputs not found in START')
 
         dal_file = Input()
         mol_file = MoleculeInput()
@@ -424,15 +428,19 @@ def check_module(name):
     return allowed
 
 
+class InputModuleError(Exception):
+    pass
+
+
 class InputModule:
     """The dalton (sub)modules, with level indicating it they are module (level=0) or submodule (level=1)
 
-    ..note::
+    .. note::
 
         Since Dalton only interpret the 7 first characters of any input card or module (``*`` or ``.`` included),
         the storage key is reduced to that.
 
-    :param level: level of the module (either 0 if princiap or 1 if submodule)
+    :param level: level of the module (either 0 if principal or 1 if submodule)
     :type level: int
     :param name: name of the module
     :type name: str
@@ -444,14 +452,14 @@ class InputModule:
 
     def __init__(self, level=1, name=None, input_cards=None, submodules=None):
         if level not in [0, 1]:
-            raise Exception('level should be zero or one')
+            raise InputModuleError('level should be zero or one')
 
         if level == 0 and name is not None:
             if not check_module(name):
-                raise Exception('not an allowed module: {}'.format(name))
+                raise InputModuleError('not an allowed module: {}'.format(name))
 
         if level == 1 and submodules is not None:
-            raise Exception('subdmodule {} with subsubmodules'.format(name))
+            raise InputModuleError('subdmodule {} with subsubmodules'.format(name))
 
         self.name = name
         self.level = level
@@ -462,16 +470,16 @@ class InputModule:
         """Set up a submodule
 
         :param submodule: module
-        :type submodule: InputModule
+        :type submodule: qcip_tools.chemistry_files.dalton.InputModule
         :param force: force replacing  the submodule if exists
         :type force: bool
         """
 
         if self.level != 0:
-            raise Exception('no subsubmodule allowed!')
+            raise InputModuleError('no subsubmodule allowed in {}!'.format(self.name))
 
         if not force and submodule.name[:6] in self.submodules:
-            raise Exception('submodule {} already exists'.format(submodule.name))
+            raise InputModuleError('submodule {} already exists in {}'.format(submodule.name, self.name))
 
         self.submodules[submodule.name[:6]] = submodule
         submodule.level = 1
@@ -490,7 +498,7 @@ class InputModule:
             name = name[1:]
 
         if not force and name[:6] in self.input_cards:
-            raise Exception('input card {} already exists'.format(input_card.name))
+            raise InputModuleError('input card {} already exists in {}'.format(input_card.name, self.name))
 
         self.input_cards[name[:6]] = input_card
 
@@ -518,19 +526,19 @@ class InputModule:
 
         if type(value) is InputModule:
             if key[0] == '.':
-                raise Exception('module should not start with "."')
+                raise InputModuleError('module should not start with "."')
 
             if value.name is None:
                 value.name = key
 
             if key[:6] != value.name[:6]:
-                raise Exception('key ({}) and name divergence ({})'.format(key[:6], value.name[:6]))
+                raise InputModuleError('key ({}) and name divergence ({})'.format(key[:6], value.name[:6]))
 
             self.set_submodule(value)
 
         else:
             if key[0] != '.':
-                raise Exception('input card should start with "."')
+                raise InputModuleError('input card should start with "."')
 
             if value.name is None:
                 value.name = key[1:]
@@ -540,7 +548,7 @@ class InputModule:
                 name = name[1:]
 
             if key[1:7] != name[:6]:
-                raise Exception('key ({}) and name divergence ({})'.format(key[1:7], name[:6]))
+                raise InputModuleError('key ({}) and name divergence ({})'.format(key[1:7], name[:6]))
 
             self.set_input_card(value)
 
@@ -584,22 +592,27 @@ class InputCard:
         return r
 
 
-class Input(qcip_ChemistryFile):
+class Input(ChemistryFile, WithOutputMixin, WithIdentificationMixin):
     """Dalton dal input file.
 
     Do NOT contains a molecule!
 
-    ..note::
+    .. note::
 
         Since Dalton only interpret the 7 first characters of any module (``**`` included),
         the storage key is reduced to 5 characters.
 
-    **I/O class.**"""
+    .. container:: class-members
 
+        + ``self.module``: modules (``collections.OrderedDict`` of
+          `InputModule <#qcip_tools.chemistry_files.dalton.InputModule>`_)
+
+    """
+
+    #: The identifier
     file_type = 'DALTON_DAL'
 
     def __init__(self):
-        self.lines = []
         self.modules = collections.OrderedDict()
 
     @classmethod
@@ -607,7 +620,7 @@ class Input(qcip_ChemistryFile):
         return ['dal']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """Very specific beginning (``**DALTON INPUT``) and end (``'*END OF INPUT``)
         """
 
@@ -633,12 +646,12 @@ class Input(qcip_ChemistryFile):
         """
 
         self.from_read = True
-        self.lines = f.readlines()
+        lines = f.readlines()
 
         current_module = None
         current_submodule = None
 
-        for index, line in enumerate(self.lines):  # comments
+        for index, line in enumerate(lines):  # comments
             if line[0] in ['!', '#']:
                 continue
             if line[0] not in ['*', '.']:  # parameters will be read directly
@@ -661,7 +674,7 @@ class Input(qcip_ChemistryFile):
                 current_input_card = line[1:].strip()
                 parameters = []
 
-                for line_param in self.lines[index + 1:]:
+                for line_param in lines[index + 1:]:
                     if line_param[0] in ['.', '*']:
                         break
                     elif line_param[0] in ['!', '#']:
@@ -692,12 +705,12 @@ class Input(qcip_ChemistryFile):
             raise TypeError(value)
 
         if value.name is not None and key[:5] != value.name[:5]:
-            raise Exception('key ({}) and name ({}) divergence'.format(key[:5], value.name[:5]))
+            raise InputModuleError('key ({}) and name ({}) divergence'.format(key[:5], value.name[:5]))
 
         elif value.name is None:
 
             if not check_module(key):
-                raise Exception('not an allowed module: {}'.format(key))
+                raise InputModuleError('not an allowed module: {}'.format(key))
 
             value.name = key
 

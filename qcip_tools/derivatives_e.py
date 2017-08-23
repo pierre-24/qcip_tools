@@ -216,7 +216,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
     def __init__(self, tensor=None, input_fields=(1, 1), frequency='static'):
 
         if len(input_fields) != 2:
-            raise ValueError(input_fields)
+            raise ValueError('There should be 2 input fields')
 
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
@@ -585,7 +585,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
     def __init__(self, tensor=None, input_fields=(1, 1, 1), frequency='static'):
 
         if len(input_fields) != 3:
-            raise ValueError(input_fields)
+            raise ValueError('There should be 3 input fields')
 
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 

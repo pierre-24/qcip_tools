@@ -4,35 +4,48 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom, quantities
-from qcip_tools.chemistry_files import ChemistryFile as qcip_ChemistryFile, apply_over_list
+from qcip_tools import molecule, atom, quantities, basis_set
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
+    FormatError, WithIdentificationMixin
 
 
-class Input(qcip_ChemistryFile):
+class InputFormatError(FormatError):
+    pass
+
+
+class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """Gaussian input file.
 
-    **Input/Output class.**
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.options``: the different options (starting with ``%`` in the file, ``dict`` of ``str``
+          [if ``%xxx=yyy``, key is ``xxx`` and value is ``yyy``])
+        + ``self.input_card``: the input card (starting with ``#`` in the file, ``list`` of ``str``
+          [the different lines])
+        + ``self.title``: the title (``str``)
+        + ``self.other_blocks``: the additionnal blocks after the molecule
+          (``list`` of ``list`` of ``str`` [the different lines])
     """
 
+    #: The identifier
     file_type = 'GAUSSIAN_INPUT'
 
     def __init__(self):
 
         self.molecule = molecule.Molecule()
 
-        self.raw_blocks = []
         self.other_blocks = []
         self.title = ''
-        self.options = []
-        self.options_dict = {}
+        self.options = {}
         self.input_card = []
 
     @classmethod
     def possible_file_extensions(cls):
-        return ['com', 'inp']
+        return ['com', 'inp', 'gau']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A gaussian input should contains '%' or '#' as the first character of the line of the "first block"
         """
 
@@ -59,6 +72,37 @@ class Input(qcip_ChemistryFile):
         # TODO: if ``found_some_lines`` is equal to 1, maybe an extra test ? (charge and multiplicity, for example)
         return True
 
+    @classmethod
+    def from_molecule(cls, molecule, title='', input_card='', options=None, other_blocks=None, *args, **kwargs):
+        """Create a file from molecule
+
+        :param molecule: the molecule
+        :type molecule: qcip_tools.molecule.Molecule
+        :param title: title of the run
+        :type title: str
+        :param input_card: the input card (starting with ``#P``)
+        :type input_card: str|list
+        :param options: calculation options
+        :type options: dict
+        :param other_blocks: the other input blocks
+        :type other_blocks: list
+        :rtype: qcip_tools.chemistry_files.gaussian.Input
+        """
+
+        obj = super().from_molecule(molecule, *args, **kwargs)
+        obj.title = title
+
+        if type(input_card) is str:
+            obj.input_card = [input_card]
+        elif type(input_card) is list:
+            obj.input_card = input_card
+        else:
+            raise TypeError(input_card)
+
+        obj.options = {} if options is None else options
+        obj.other_blocks = [] if other_blocks is None else other_blocks
+        return obj
+
     def read(self, f):
         """
 
@@ -69,41 +113,42 @@ class Input(qcip_ChemistryFile):
         self.from_read = True
         lines = f.readlines()
 
+        raw_blocks = []
+
         temp = []
         for l in lines:
             if len(temp) > 0 and l.strip() == '':
-                self.raw_blocks.append(temp)
+                raw_blocks.append(temp)
                 temp = []
             else:
                 temp.append(l.strip())
 
         # add last
         if len(temp) > 0:
-            self.raw_blocks.append(temp)
-        if len(self.raw_blocks) < 3:
-            raise Exception('The file contains less than 3 raw_blocks')
+            raw_blocks.append(temp)
+        if len(raw_blocks) < 3:
+            raise InputFormatError('The file contains less than 3 raw_blocks')
 
         # try to understand first block
-        for line in self.raw_blocks[0]:
+        for line in raw_blocks[0]:
             if line[0] == '%':
-                self.options.append(line[1:])
                 opt = line[1:].split('=')
-                self.options_dict[opt[0].lower()] = opt[1]
+                self.options[opt[0].lower()] = opt[1]
             else:
                 self.input_card.append(line)
 
         # read title, charge and multiplicity:
-        self.title = ' '.join(self.raw_blocks[1])
-        charge_and_multiplicity = [int(i) for i in self.raw_blocks[2][0].strip().split()]
+        self.title = ' '.join(raw_blocks[1])
+        charge_and_multiplicity = [int(i) for i in raw_blocks[2][0].strip().split()]
         self.molecule.charge = charge_and_multiplicity[0]
         self.molecule.multiplicity = charge_and_multiplicity[1]
 
         # read coordinates:
-        coordinates = self.raw_blocks[2][1:]
+        coordinates = raw_blocks[2][1:]
         for atm in coordinates:
             s = atm.split()
             if len(s) != 4:
-                raise Exception('Wrong atom definition "' + atm + '"')
+                raise InputFormatError('Wrong atom definition "' + atm + '"')
             else:
                 coords = [float(i) for i in s[1:]]
                 atm_ = s[0]
@@ -112,8 +157,8 @@ class Input(qcip_ChemistryFile):
                 self.molecule.insert(atom.Atom(symbol=atm_, position=coords))
 
         # then store "other blocks"
-        if len(self.raw_blocks) > 3:
-            self.other_blocks = self.raw_blocks[3:]
+        if len(raw_blocks) > 3:
+            self.other_blocks = raw_blocks[3:]
 
     def to_string(self, chk='', original_chk=False):
         """
@@ -128,11 +173,11 @@ class Input(qcip_ChemistryFile):
         rstr = ''
 
         # first, options:
-        for key in self.options_dict:
+        for key in self.options:
             if not original_chk and key == 'chk':
                 rstr += '%{}={}\n'.format(key, chk)
             else:
-                rstr += '%{}={}\n'.format(key, self.options_dict[key])
+                rstr += '%{}={}\n'.format(key, self.options[key])
 
         # then, input card and title
         rstr += '\n'.join(self.input_card) + '\n\n'
@@ -183,6 +228,10 @@ def transform_string_from_fchk(data, data_type):
         raise Exception('Unknown data type {}'.format(data_type))
 
 
+class FCHKFormatError(FormatError):
+    pass
+
+
 class FCHKChunkInformation:
     """Where to find a given keyword in the FCHK file
 
@@ -206,12 +255,23 @@ class FCHKChunkInformation:
         self.line_end = line_end
 
 
-class FCHK(qcip_ChemistryFile):
+class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
     """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).
 
-    **Input only class.**
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.title``: the title (``str``)
+        + ``self.calculation_type``: the type of calculation (``str``)
+        + ``self.calculation_method``: the method used (``str``)
+        + ``self.basis_set``: the basis set (``str``)
+        + ``self.chunks_information``: information about every chunk (``dict`` of ``FCHKChunkInformation``)
+        + ``self.chunks_parsed``: parsed chunks are stored here (``dict`` of ``int|float|str|numpy.ndarray``)
+        + ``self.lines``: the different lines of the file, used for interpretation (``list`` of ``str``)
+
     """
 
+    #: The identifier
     file_type = 'GAUSSIAN_FCHK'
 
     def __init__(self):
@@ -231,7 +291,7 @@ class FCHK(qcip_ChemistryFile):
         return ['fchk']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A gaussian fchk starts with two two line of info, then "Number of atoms"
         """
 
@@ -248,6 +308,10 @@ class FCHK(qcip_ChemistryFile):
             i += 1
 
         return False
+
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
 
     def get(self, key):
         """Get the content from a given keyword
@@ -271,7 +335,7 @@ class FCHK(qcip_ChemistryFile):
                     for d in matrix:
                         content.append(transform_string_from_fchk(d, chunk.data_type))
                 else:
-                    raise Exception('Size is not the same as defined for {}'.format(key))
+                    raise FCHKFormatError('Size is not the same as defined for {}'.format(key))
             else:
                 content = self.lines[chunk.line_start][49:].strip()
                 content = transform_string_from_fchk(content, chunk.data_type)
@@ -308,7 +372,7 @@ class FCHK(qcip_ChemistryFile):
                 data_type = current_line[43]
 
                 if data_type not in FCHK_AUTHORIZED_TYPES:
-                    raise Exception('Type of {} ({}) is unknown'.format(keyword, data_type))
+                    raise FCHKFormatError('Type of {} ({}) is unknown'.format(keyword, data_type))
 
                 is_matrix = current_line[47] == 'N'
 
@@ -344,16 +408,6 @@ class FCHK(qcip_ChemistryFile):
             raise ValueError('Number of electron does not match: {} != {}'.format(
                 self.get('Number of electrons'), self.molecule.number_of_electrons()))
 
-    def property(self, property_):
-        """Rewritten to get access to keywords as well (which starts with uppercase letters,
-        so cannot be variable name anyway).
-        """
-
-        if property_ in self.chunks_information:
-            return self.get(property_)
-
-        return super().property(property_)
-
     def __getitem__(self, item):
         """
         Implement access trough ``[]``
@@ -386,11 +440,13 @@ class LinkCalled:
         return 'Link {}: {}:{}'.format(self.link, self.line_start, self.line_end)
 
 
-class Output(qcip_ChemistryFile):
+class OutputFormatError(FormatError):
+    pass
+
+
+class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
     """Log file of Gaussian. Contains a lot of informations, but not well printed or located.
     If possible, rely on the FCHK rather than on the LOG file.
-
-    **Input only class.**
 
     .. note::
 
@@ -401,23 +457,26 @@ class Output(qcip_ChemistryFile):
 
         Results are not guaranteed if the job ran without ``#P``.
 
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.input_orientation``: wether the molecule has been reoriented w.r.t. input (``bool``)
+        + ``self.chunks``: the different links called (``list`` of
+          `LinkCalled <#qcip_tools.chemistry_files.gaussian.LinkCalled>`_)
+        + ``self.lines``: the lines of the file (``list`` of ``str``)
+
     """
 
+    #: The identifier
     file_type = 'GAUSSIAN_LOG'
+    chunk_title_variable = 'link'
 
     def __init__(self):
         self.molecule = molecule.Molecule()
         self.input_orientation = False
 
-        self.links_called = []
-        self.lines = []
-
     @classmethod
-    def possible_file_extensions(cls):
-        return ['log', 'out']
-
-    @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A gaussian log ... Contains a lot of "gaussian" in the beginning (limit to the 150 first lines)"
         """
 
@@ -440,36 +499,36 @@ class Output(qcip_ChemistryFile):
         :type f: file
         """
 
-        self.lines = f.readlines()
+        super().read(f)
 
         found_enter_link1 = False
 
         for index, line in enumerate(self.lines):
             if 'Entering Link 1' in line:
-                self.links_called.append(LinkCalled(1, index, -1))
+                self.chunks.append(LinkCalled(1, index, -1))
                 found_enter_link1 = True
                 break
 
         if not found_enter_link1:
-            raise Exception('this does not seems to be a Gaussian output')
+            raise OutputFormatError('this does not seems to be a Gaussian output')
 
         for index, line in enumerate(self.lines):
             # List links (needs a job that ran with `#p`)
             if '(Enter ' in line:
-                self.links_called[-1].line_end = index - 1
+                self.chunks[-1].line_end = index - 1
 
                 link_num = line[-10:-6]
                 if link_num[0] == 'l':
                     link_num = link_num[1:]
                 current_link = int(link_num)
-                self.links_called.append(LinkCalled(current_link, line_start=index, line_end=-1))
+                self.chunks.append(LinkCalled(current_link, line_start=index, line_end=-1))
 
         # fetch molecule:
-        charge_and_multiplicity_line = self.search('Charge = ', in_link=101)
-        orientation_line = self.search('orientation:', in_link=202)
+        charge_and_multiplicity_line = self.search('Charge = ', into=101)
+        orientation_line = self.search('orientation:', into=202)
 
         if -1 in [charge_and_multiplicity_line, orientation_line]:
-            raise Exception('Could not find geometry')
+            raise OutputFormatError('Could not find geometry')
 
         self.input_orientation = self.lines[orientation_line][26] == 'I'
 
@@ -483,78 +542,6 @@ class Output(qcip_ChemistryFile):
 
         self.molecule.charge = int(self.lines[charge_and_multiplicity_line][9:13])
         self.molecule.multiplicity = int(self.lines[charge_and_multiplicity_line][27:])
-
-    def link_called(self, link, all_times=False):
-        """Is a link called in the file?
-
-        :param link: the link to search
-        :type link: int
-        :param all_times: rater than stopping at the first time the link is found, go until the end and count
-        :type all_times: bool
-        :return: the number of times the link is found (max 1 if ``all_times`` is ``False``)
-        :rtype: int
-        """
-        times = 0
-
-        for link_info in self.links_called:
-            if link_info.link == link:
-                if not all_times:
-                    return 1
-                else:
-                    times += 1
-
-        return times
-
-    def apply_function(self, func, line_start=0, line_end=None, in_link=None, **kwargs):
-        """Apply ``apply_over_list()`` to the lines.
-
-        :param lines: lines of the log
-        :type lines: list
-        :param func: function, for which the first parameter is the line, and the followings are the ``**kwargs``.
-        :type func: callback
-        :param line_start: starting index
-        :type line_start: int
-        :param line_end: end the search at some point
-        :type line_end: int
-        :param in_link: restrict the search to a given link
-        :type in_link: int
-        :type kwargs: dict
-        :rtype: bool
-        """
-
-        if in_link is not None:
-            if type(in_link) is not int:
-                raise TypeError(in_link)
-
-            for link_info in self.links_called:
-                if link_info.link == in_link:
-                    r = apply_over_list(self.lines, func, link_info.line_start, link_info.line_end, **kwargs)
-                    if r:
-                        return True
-
-            return False
-
-        else:
-            return apply_over_list(self.lines, func, line_start, line_end, **kwargs)
-
-    def search(self, s, line_start=0, line_end=None, in_link=None):
-        """Returns the line when the string is found in this line or -1 if nothing was found.
-
-        :rtype: int
-        """
-
-        class FunctionScope:
-            line_found = -1
-
-        def find_string(line, current_index):
-            if s in line:
-                FunctionScope.line_found = current_index
-                return True
-            else:
-                return False
-
-        self.apply_function(find_string, line_start=line_start, line_end=line_end, in_link=in_link)
-        return FunctionScope.line_found
 
 
 class ChargeTransferInformation:
@@ -579,18 +566,41 @@ class ChargeTransferInformation:
         self.distance = numpy.linalg.norm(self.vector)
 
 
-class Cube(qcip_ChemistryFile):
+class CubeFormatError(FormatError):
+    pass
+
+
+class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin):
     """Gaussian cube.
 
     Documentation on that format can be found `here <http://gaussian.com/cubegen/>`_.
 
-    **Input/output class**."""
+    .. note::
 
+        Increments and origin are stored as found, in bohr.
+
+    .. container:: class-members
+
+        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.cube_type``: set to ``MO`` if the cube contains MOs (``str``)
+        + ``self.records_per_directions``: number of point in the grid (``list`` of ``int``)
+        + ``self.origin``: origin of the grid (3x1 ``numpy.ndarray``)
+        + ``self.increments``: increments between each point (3x1 ``numpy.ndarray``)
+        + ``self.data_per_records``: data per point (``int``)
+        + ``self.records``: the records (``numpy.ndarray``)
+        + ``self.title``: the title (``str``)
+        + ``self.subtitle``: the second line (``str``)
+        + ``self.MOs``: the MOs contained in the file, if any (``list`` of ``int``)
+
+    """
+
+    #: The identifier
     file_type = 'GAUSSIAN_CUBE'
 
     def __init__(self):
 
         self.molecule = molecule.Molecule()
+
         self.cube_type = ''
         self.records_per_direction = [0, 0, 0]
         self.origin = numpy.zeros(3)
@@ -599,14 +609,14 @@ class Cube(qcip_ChemistryFile):
         self.records = None
         self.title = ''
         self.subtitle = ''
-        self.MOs = ''
+        self.MOs = []
 
     @classmethod
     def possible_file_extensions(cls):
         return ['cub', 'cube']
 
     @classmethod
-    def attempt_recognition(cls, f):
+    def attempt_identification(cls, f):
         """A cube file contains, in line 3-6, quadruplets of numbers, the first one being an integer, then 3 floats.
         Then, after the different atoms, line should contains numbers in scientific notation.
         """
@@ -644,16 +654,16 @@ class Cube(qcip_ChemistryFile):
 
         return False
 
+    @classmethod
+    def from_molecule(cls, molecule, *args, **kwargs):
+        raise NotImplementedError('from_molecule')
+
     def read(self, f):
         """
 
         .. warning::
 
             The charge/multiplicity may be wrong !
-
-        .. note::
-
-            Increments and origin are stored as found, in bohr.
 
         :param f: File
         :type f: file
@@ -732,7 +742,7 @@ class Cube(qcip_ChemistryFile):
         self.records = self.records.reshape(tuple(reshape))
 
         if actual_num_of_data != total_num_of_data:
-            raise Exception(
+            raise CubeFormatError(
                 'num of record is not equal to total num of records ({}!={})'.format(
                     actual_num_of_data, total_num_of_data))
 
@@ -742,9 +752,12 @@ class Cube(qcip_ChemistryFile):
         .. note::
 
             According to the documentation:
-            "Cube files have one row per record (i.e., N1*N2 records each of length N3*NVal)" (where N1 and N2
-            are the record per direction in the X and Y direction, while N3 is for the Z direction, the fastest
-            running index).
+
+             |  Cube files have one row per record (i.e., N1*N2 records each of length N3*NVal) (where N1 and N2
+               are the record per direction in the X and Y direction, while N3 is for the Z direction, the fastest
+               running index).
+
+            So it returns the number of rows, and should not be mistaken with ``number_of_data()``.
 
         :rtype: int
         """
@@ -988,3 +1001,159 @@ class Cube(qcip_ChemistryFile):
                             sums[key] += current_value
 
         return sums
+
+
+class BasisSetFormatError(FormatError):
+    pass
+
+
+class BasisSet(ChemistryFile, WithOutputMixin):
+    """File containing a basis set in the gaussian format.
+
+    This file format does not exists, but lets say that copy/paste from ESML basis set exchange should work.
+
+    .. container:: class-members
+
+        + ``self.basis_set``: the basis_set (``qcip_tools.basis_set.BasisSet``)
+
+    """
+
+    file_type = 'GAUSSIAN_BASIS_SET'
+
+    def __init__(self):
+        self.basis_set = basis_set.BasisSet()
+
+    def __contains__(self, item):
+        return item in self.basis_set
+
+    def __getitem__(self, item):
+        return self.basis_set[item]
+
+    def read(self, f, fail_for_same_atom=False):
+        """
+
+        :param f: f
+        :type f: file
+        :param fail_for_same_atom: raise an exception is the same atom is defined more than once
+        :type fail_for_same_atom: bool
+        """
+
+        def treat_atomic_basis_set(part):
+            lines = [
+                a.strip() for a in part.splitlines() if len(a) != 0 and a[0] != '!' and a.strip() not in ['', '****']]
+
+            if len(lines) == 0:
+                return  # nothing to search here
+
+            if len(lines) < 3:
+                raise BasisSetFormatError('atomic basis set too short for {}'.format(lines))
+
+            atom_def = lines[0].split()
+
+            if len(atom_def) != 2:
+                raise BasisSetFormatError('wrong atom definition {}'.format(lines[0]))
+
+            try:
+                if atom_def[0] in self.basis_set:
+                    if fail_for_same_atom:
+                        raise BasisSetFormatError('two times {}'.format(atom_def[0]))
+                    else:
+                        return
+            except KeyError as e:
+                raise BasisSetFormatError('not a atomic symbol: {}'.format(e))
+
+            a = basis_set.AtomicBasisSet(atom_def[0])
+            next_basis_function = 1
+
+            while True:
+                if next_basis_function >= len(lines):
+                    break
+
+                def_basis_function = lines[next_basis_function].split()
+                if len(def_basis_function) != 3:
+                    raise BasisSetFormatError(
+                        'wrong definition of shell {} for {}'.format(lines[next_basis_function], atom))
+
+                shell = def_basis_function[0]
+                number_of_primitives = int(def_basis_function[1])
+                normalization = float(def_basis_function[2])
+
+                if shell not in basis_set.SHELL_TO_TAM:
+                    raise BasisSetFormatError('unknown shell {} for {}'.format(shell, atom))
+
+                if next_basis_function + number_of_primitives >= len(lines):
+                    raise BasisSetFormatError('expected {} primitives for shell {} of {}'.format(
+                        number_of_primitives, shell, atom))
+
+                f = basis_set.Function(normalization=normalization)
+
+                for i in range(number_of_primitives):
+                    def_primitive = lines[next_basis_function + i + 1].split()
+                    if len(def_primitive) not in [2, 3]:
+                        raise BasisSetFormatError('wrong primitive {} in shell {} of {}'.format(
+                            def_primitive, shell, atom))
+
+                    if shell == 'SP' and len(def_primitive) == 2:
+                        raise BasisSetFormatError('for SP shell, 3 number are needed (in {})'.format(atom))
+                    elif shell != 'SP' and len(def_primitive) == 3:
+                        raise BasisSetFormatError('for non-SP shell {}, only 2 number are needed (in {})'.format(
+                            shell, atom))
+
+                    f.add_primitive(basis_set.Primitive(*[float(a) for a in def_primitive]))
+
+                next_basis_function += number_of_primitives + 1
+                a.add_basis_function(shell, f)
+
+            self.basis_set.add_atomic_basis_set(a)
+
+        content = f.read()
+        prev_pos = 0
+        self.from_read = True
+
+        while True:
+            next_separator = content.find('****', prev_pos + 4)
+
+            if next_separator < 0:
+                break
+
+            treat_atomic_basis_set(content[prev_pos:next_separator])
+            prev_pos = next_separator
+
+        if len(self.basis_set) == 0:
+            raise BasisSetFormatError('empty basis set')
+
+    def to_string(self, for_molecule=None):
+        """Give basis set
+
+        :param for_molecule: if defined, only output for the atoms contained in the molecule
+        :type for_molecule: qcip_tools.molecule.Molecule
+        :rtype: str
+        """
+
+        to_output = self.basis_set.atomic_basis_sets.keys()
+        if for_molecule:
+            to_output = for_molecule.symbols_contained
+
+        r = ''
+
+        for i in to_output:
+            if i not in self.basis_set:
+                raise ValueError('No basis set for {} defined'.format(i))
+
+            atomic_basis_set = self.basis_set[i]
+            atom = atomic_basis_set.atom.symbol
+
+            r += '****\n{}     0\n'.format(atom)
+            for shell in atomic_basis_set.shells():
+                for basis_function in atomic_basis_set[shell]:
+                    r += '{:3} {:<3} {:.2f}\n'.format(shell, len(basis_function), basis_function.normalization)
+                    for primitive in basis_function.primitives:
+                        r += ' {:15.7f}            {: .8f}{}\n'.format(
+                            primitive.exponent,
+                            primitive.contraction_coefficient,
+                            '            {: .8f}'.format(primitive.p_coefficient) if shell == 'SP' else '')
+
+        return r + '****'
+
+    def write(self, f, for_molecule=None):
+        f.write(self.to_string(for_molecule=for_molecule))

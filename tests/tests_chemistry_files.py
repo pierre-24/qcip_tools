@@ -2,10 +2,46 @@ import tempfile
 import shutil
 import os
 import random
+import io
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math
-from qcip_tools.chemistry_files import gaussian, dalton, helpers
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom
+from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess
+
+
+class ChemistryFileTestCase(QcipToolsTestCase):
+    """base stuffs"""
+
+    def test_add_property(self):
+
+        f = ChemistryFile()
+
+        # use existing callback
+        self.assertTrue(f.has_property('file_type'))
+        self.assertEqual(f.property('file_type'), f.file_type)
+
+        # define custom property
+        property_name = 'custom_property'
+        self.assertFalse(f.has_property(property_name))
+
+        with self.assertRaises(Exception):
+            f.property(property_name)
+
+        @ChemistryFile.define_property(property_name)
+        def get_(obj, **kwargs):
+            return obj.file_type
+
+        self.assertTrue(f.has_property(property_name))
+        self.assertEqual(f.property(property_name), f.file_type)
+
+        # test heritage
+        class T(ChemistryFile):
+            file_type = 'XXX'
+
+        ft = T()
+
+        self.assertTrue(ft.has_property(property_name))
+        self.assertEqual(ft.property(property_name), T.file_type)
 
 
 class GaussianTestCase(QcipToolsTestCase):
@@ -51,6 +87,18 @@ class GaussianTestCase(QcipToolsTestCase):
             with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_3.cub')) as fx:
                 f.write(fx.read())
 
+        self.basis_set1 = os.path.join(self.temp_dir, 'basis1.gbs')
+
+        with open(self.basis_set1, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/STO-3G.gbs')) as fx:
+                f.write(fx.read())
+
+        self.basis_set2 = os.path.join(self.temp_dir, 'basis2.gbs')
+
+        with open(self.basis_set2, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/cc-pVDZ.gbs')) as fx:
+                f.write(fx.read())
+
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
 
@@ -61,9 +109,12 @@ class GaussianTestCase(QcipToolsTestCase):
 
         # test with existing input
         gi1 = gaussian.Input()
+        self.assertFalse(gi1.from_read)
 
         with open(self.input_file) as f:
             gi1.read(f)
+
+        self.assertTrue(gi1.from_read)
 
         self.assertIsNotNone(gi1.molecule)
         self.assertEqual(len(gi1.molecule), 3)
@@ -71,10 +122,16 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(gi1.molecule.charge, -1)
         self.assertEqual(gi1.molecule.number_of_electrons(), 11)  # = 2 (H and H) + 8 (O) + 1 (charge)
 
-        self.assertEqual(len(gi1.options_dict), 3)
-        self.assertIn('mem', gi1.options_dict)
-        self.assertIn('nprocshared', gi1.options_dict)
-        self.assertIn('chk', gi1.options_dict)
+        symbols = ['O', 'H', 'H']
+        self.assertEqual(len(symbols), len(gi1.molecule))
+
+        for index, a in enumerate(gi1.molecule):
+            self.assertEqual(a.symbol, symbols[index])
+
+        self.assertEqual(len(gi1.options), 3)
+        self.assertIn('mem', gi1.options)
+        self.assertIn('nprocshared', gi1.options)
+        self.assertIn('chk', gi1.options)
 
         self.assertEqual(len(gi1.other_blocks), 1)  # one block for the electric field
 
@@ -114,12 +171,30 @@ class GaussianTestCase(QcipToolsTestCase):
             content = f.read()
             self.assertTrue('%chk=calculation_0002\n' in content)  # chk remains the same as the original
 
+        #  test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        inp_ = gaussian.Input.from_molecule(m, title='test', input_card='#P B3LYP', options={'mem': '1GB'})
+        self.assertEqual(inp_.title, 'test')
+        self.assertEqual(inp_.molecule, m)
+        self.assertEqual(inp_.input_card[0], '#P B3LYP')
+        self.assertIn('mem', inp_.options)
+
     def test_fchk_file(self):
 
         fi = gaussian.FCHK()
+        self.assertFalse(fi.from_read)
 
         with open(self.fchk_file) as f:
             fi.read(f)
+
+        self.assertTrue(fi.from_read)
 
         self.assertEqual(fi.title, 'Ground state of LiH_mini with gen')
         self.assertEqual(fi.calculation_method, 'RHF')
@@ -146,7 +221,7 @@ class GaussianTestCase(QcipToolsTestCase):
         # fool the storage system to make sure that it use it:
         fi.chunks_parsed['Number of basis functions'] = 8
         self.assertEqual(fi.get('Number of basis functions'), 8)
-        self.assertEqual(fi.property('Number of basis functions'), 8)
+        self.assertEqual(fi.get('Number of basis functions'), 8)
         self.assertEqual(fi['Number of basis functions'], 8)
 
         # test molecule (conversion from a.u. to angstrom):
@@ -156,18 +231,21 @@ class GaussianTestCase(QcipToolsTestCase):
     def test_log_file(self):
 
         fo = gaussian.Output()
+        self.assertFalse(fo.from_read)
 
         with open(self.log_file) as f:
             fo.read(f)
 
-        self.assertTrue(fo.link_called(1))  # the real beginning of the program
-        self.assertTrue(fo.link_called(202))  # Link 202 deals with geometry
-        self.assertFalse(fo.link_called(9998))  # Does not exists (apart from 9999 and 1, all link have the form xxx)
+        self.assertTrue(fo.from_read)
+
+        self.assertTrue(fo.chunk_exists(1))  # the real beginning of the program
+        self.assertTrue(fo.chunk_exists(202))  # Link 202 deals with geometry
+        self.assertFalse(fo.chunk_exists(9998))  # Does not exists (apart from 9999 and 1, all links have the form xxx)
 
         # test molecule
-        self.assertEqual(len(fo.molecule), 3)
-
         symbols = ['O', 'H', 'H']
+        self.assertEqual(len(symbols), len(fo.molecule))
+
         for index, a in enumerate(fo.molecule):
             self.assertEqual(a.symbol, symbols[index])
 
@@ -181,16 +259,19 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(fo.search(to_find, line_start=line_found), line_found)
         self.assertEqual(fo.search(to_find, line_end=line_found), -1)
         self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
-        self.assertEqual(fo.search(to_find, in_link=1), line_found)
-        self.assertEqual(fo.search(to_find, in_link=101), -1)
+        self.assertEqual(fo.search(to_find, into=1), line_found)
+        self.assertEqual(fo.search(to_find, into=101), -1)
 
     def test_cube_file(self):
         """Test the cube files"""
 
         fc = gaussian.Cube()
+        self.assertFalse(fc.from_read)
 
         with open(self.cube_file) as f:
             fc.read(f)
+
+        self.assertTrue(fc.from_read)
 
         self.assertEqual(fc.records_per_direction, [29, 29, 29])
         self.assertEqual(fc.data_per_record, 2)
@@ -202,6 +283,8 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(len(fc.molecule), 2)
 
         symbols = ['Li', 'H']
+        self.assertEqual(len(symbols), len(fc.molecule))
+
         for index, a in enumerate(fc.molecule):
             self.assertEqual(a.symbol, symbols[index])
 
@@ -288,6 +371,138 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(results['lithium_atom'], 2.25, delta=.5)
         self.assertAlmostEqual(results['hydrogen_atom'], .25, delta=.5)
 
+    def test_basis_set(self):
+        """Test basis set"""
+
+        # test reading
+        b1 = gaussian.BasisSet()
+
+        with open(self.basis_set1) as f:
+            b1.read(f)
+
+        self.assertTrue(b1.from_read)
+
+        b2 = gaussian.BasisSet()
+
+        with open(self.basis_set2) as f:
+            b2.read(f)
+
+        self.assertTrue(b2.from_read)
+
+        atoms = ['H', 'C', 'O']
+
+        for a in atoms:
+            self.assertTrue(a in b1, msg=a)
+            self.assertTrue(a in b2, msg=a)
+
+        self.assertEqual(str(b1['H']), 'H [3s|1s]')
+        self.assertEqual(str(b1['C']), 'C [6s3p|2s1p]')
+        self.assertEqual(str(b1['O']), 'O [6s3p|2s1p]')
+
+        self.assertEqual(str(b2['H']), 'H [4s1p|2s1p]')
+        self.assertEqual(str(b2['C']), 'C [17s4p1d|3s2p1d]')
+        self.assertEqual(str(b2['O']), 'O [17s4p1d|3s2p1d]')
+
+        # try to fire exceptions:
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\n****')  # Empty basis set
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nX\n****')  # Too short
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nQ 0\n S 1 1.0\n 10.0 1.0\n****')  # atom does not exists
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0 0\n S 1 1.0\n 10.0 1.0\n****')  # too much arguments for atom
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0 1.0\n 10.0 1.0\n****')  # Too much argument for basis function
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n Q 1 1.0\n 10.0 1.0\n****')  # Not a shell
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 2 1.0\n 10.0 1.0\n****')  # Not the good number of primitives
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0\n 10.0 1.0 1.0 1.0 1.0\n****')  # Wrong definition of primitive
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0\n 10.0 1.0 1.0\n****')  # p coefficient for s-type shell
+            b_test.read(o)
+
+        with self.assertRaises(gaussian.BasisSetFormatError):
+            b_test = gaussian.BasisSet()
+            o = io.StringIO('****\nH 0\n S 1 1.0\n 10.0 1.0\nSP 1 1.0\n10.0 1.0\n****')  # Not p coefficient for SP
+            b_test.read(o)
+
+        # test writing
+        other_file = os.path.join(self.temp_dir, 'other.gbs')
+
+        with open(other_file, 'w') as f:
+            b1.write(f)
+
+        b1p = gaussian.BasisSet()
+
+        with open(other_file, 'r') as f:
+            b1p.read(f)
+
+        self.assertEqual(str(b1p['H']), 'H [3s|1s]')
+        self.assertEqual(str(b1p['C']), 'C [6s3p|2s1p]')
+        self.assertEqual(str(b1p['O']), 'O [6s3p|2s1p]')
+
+        for a in atoms:
+            a_1 = b1.basis_set[a]
+            a_2 = b1p.basis_set[a]
+
+            for bl_1, bl_2 in zip(a_1.shells(), a_2.shells()):
+                self.assertEqual(len(a_1[bl_1]), len(a_2[bl_2]))
+                for b_1, b_2 in zip(a_1[bl_1], a_2[bl_2]):
+                    self.assertEqual(len(b_1), len(b_2))
+                    for p_1, p_2 in zip(b_1.primitives, b_2.primitives):
+                        self.assertAlmostEqual(p_1.exponent, p_2.exponent, places=5)
+                        self.assertAlmostEqual(p_1.contraction_coefficient, p_2.contraction_coefficient, places=5)
+                        self.assertAlmostEqual(p_1.p_coefficient, p_2.p_coefficient, places=5)
+
+        #  test writing, only for given atoms
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        with open(other_file, 'w') as f:
+            b1.write(f, for_molecule=m)
+
+        b1p = gaussian.BasisSet()
+
+        with open(other_file, 'r') as f:
+            b1p.read(f)
+
+        self.assertTrue('H' in b1p)
+        self.assertTrue('O' in b1p)
+        self.assertFalse('C' in b1p)
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
@@ -337,9 +552,12 @@ class DaltonTestCase(QcipToolsTestCase):
     def test_input_mol(self):
 
         fm = dalton.MoleculeInput()
+        self.assertFalse(fm.from_read)
 
         with open(self.input_mol_file) as f:
             fm.read(f)
+
+        self.assertTrue(fm.from_read)
 
         self.assertEqual(fm.basis_set, 'd-aug-cc-pVDZ')
         self.assertEqual(fm.title, 'no-field')
@@ -348,6 +566,8 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertEqual(len(fm.molecule), 3)
 
         symbols = ['O', 'H', 'H']
+        self.assertEqual(len(symbols), len(fm.molecule))
+
         for index, a in enumerate(fm.molecule):
             self.assertEqual(a.symbol, symbols[index])
 
@@ -394,18 +614,37 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('0.115904592' in content[6])
             self.assertTrue('Charge=1.0 Atoms=2' in content[7])  # hydrogens are grouped
 
+        # test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        inp_ = dalton.MoleculeInput.from_molecule(m, title='test', basis_set='aug-cc-pVDZ')
+        self.assertEqual(inp_.title, 'test')
+        self.assertEqual(inp_.basis_set, 'aug-cc-pVDZ')
+        self.assertEqual(inp_.molecule, m)
+
     def test_output_archive(self):
         """Test archive output"""
 
         fa = dalton.ArchiveOutput()
+        self.assertFalse(fa.from_read)
 
         with open(self.output_archive, 'rb') as f:
             fa.read(f)
+
+            self.assertTrue(fa.from_read)
 
             # test molecule
             self.assertEqual(len(fa.molecule), 3)
 
             symbols = ['O', 'H', 'H']
+            self.assertEqual(len(symbols), len(fa.molecule))
+
             for index, a in enumerate(fa.molecule):
                 self.assertEqual(a.symbol, symbols[index])
 
@@ -416,26 +655,34 @@ class DaltonTestCase(QcipToolsTestCase):
         """Test the bare dalton output"""
 
         fl = dalton.Output()
+        self.assertFalse(fl.from_read)
 
         with open(self.output_log) as f:
             fl.read(f)
+
+        self.assertTrue(fl.from_read)
 
         # test molecule
         self.assertEqual(len(fl.molecule), 3)
 
         symbols = ['O', 'H', 'H']
+        self.assertEqual(len(symbols), len(fl.molecule))
+
         for index, a in enumerate(fl.molecule):
             self.assertEqual(a.symbol, symbols[index])
 
         # test find string:
+        self.assertTrue(fl.chunk_exists('SIRIUS'))
+        self.assertFalse(fl.chunk_exists('XXXX'))
+
         to_find = '@    Occupied SCF orbitals'
         line_found = 515
         self.assertEqual(fl.search(to_find), line_found)
         self.assertEqual(fl.search(to_find, line_start=line_found), line_found)
         self.assertEqual(fl.search(to_find, line_end=line_found), -1)
         self.assertEqual(fl.search(to_find, line_start=line_found + 1), -1)
-        self.assertEqual(fl.search(to_find, in_section='SIRIUS'), line_found)
-        self.assertEqual(fl.search(to_find, in_section='CC'), -1)
+        self.assertEqual(fl.search(to_find, into='SIRIUS'), line_found)
+        self.assertEqual(fl.search(to_find, into='CC'), -1)
 
         # compare with the archive output:
         fa = dalton.ArchiveOutput()
@@ -459,8 +706,12 @@ class DaltonTestCase(QcipToolsTestCase):
         """Test .dal files"""
 
         fi = dalton.Input()
+        self.assertFalse(fi.from_read)
+
         with open(self.input_dal_file) as fx:
             fi.read(fx)
+
+        self.assertTrue(fi.from_read)
 
         # check if reading is done properly (and if "__contains__()" works)
         available_modules = ['DALTON INPUT', 'INTEGRALS', 'WAVE FUNCTIONS']
@@ -539,3 +790,214 @@ class DaltonTestCase(QcipToolsTestCase):
 
         with open(self.output_archive) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), dalton.ArchiveOutput)
+
+
+class XYZTestCase(QcipToolsTestCase):
+    """XYZ stuffs"""
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+        self.xyz_file = os.path.join(self.temp_dir, 'molecule.xyz')
+
+        with open(self.xyz_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/xyz_molecule.xyz')) as fx:
+                f.write(fx.read())
+
+    def test_xyz(self):
+        """Test the behavior of the xyz"""
+
+        fx = xyz.File()
+        self.assertFalse(fx.from_read)
+
+        with open(self.xyz_file) as f:
+            fx.read(f)
+
+        self.assertTrue(fx.from_read)
+
+        # test molecule
+        symbols = ['C', 'H', 'H', 'H', 'C', 'H', 'H', 'C', 'H', 'H', 'C', 'H', 'H', 'H']
+        self.assertEqual(len(symbols), len(fx.molecule))
+
+        for index, a in enumerate(fx.molecule):
+            self.assertEqual(symbols[index], a.symbol)
+
+        # test writing
+        other_xyz = os.path.join(self.temp_dir, 'n.xyz')
+
+        with open(other_xyz, 'w') as f:
+            fx.write(f)
+
+        with open(other_xyz) as f:
+            fx2 = xyz.File()
+            fx2.read(f)
+
+            self.assertEqual(len(fx2.molecule), len(fx.molecule))
+
+            for index, a in enumerate(fx2.molecule):
+                self.assertEqual(a.symbol, fx.molecule[index].symbol)
+                self.assertArrayAlmostEqual(a.position, fx.molecule[index].position)
+
+        # test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+
+        xyz_ = xyz.File.from_molecule(m, title='test')
+        self.assertEqual(xyz_.title, 'test')
+        self.assertEqual(xyz_.molecule, m)
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.xyz_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), xyz.File)
+
+
+class GAMESSTestCase(QcipToolsTestCase):
+    """GAMESS stuffs"""
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+
+        self.input_file = os.path.join(self.temp_dir, 'gamess_input.inp')
+        self.input_file_2 = os.path.join(self.temp_dir, 'gamess_input2.inp')
+        self.output_file = os.path.join(self.temp_dir, 'gamess_output.log')
+
+        with open(self.input_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gamess_input.inp')) as fx:
+                f.write(fx.read())
+
+        with open(self.input_file_2, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gamess_input_2.inp')) as fx:
+                f.write(fx.read())
+
+        with open(self.output_file, 'w') as f:
+            with open(os.path.join(self.test_directory, 'tests_files/gamess_output.log')) as fx:
+                f.write(fx.read())
+
+    def test_input(self):
+        """Test the behavior of the input"""
+
+        fi = gamess.Input()
+        self.assertFalse(fi.from_read)
+
+        with open(self.input_file) as f:
+            fi.read(f)
+
+        self.assertTrue(fi.from_read)
+
+        # test modules
+        modules = ['basis', 'contrl', 'scf', 'tdhfx', 'system', 'data']
+        for m in modules:
+            self.assertTrue(m in fi, msg='{} not in!'.format(m))
+
+        basis_module = fi['basis']
+        self.assertEqual(len(basis_module.options), 2)
+        self.assertTrue('gbasis' in basis_module)
+
+        control_module = fi['contrl']
+        self.assertEqual(len(control_module.options), 2)
+        self.assertTrue('scftyp' in control_module)
+        self.assertTrue('runtyp' in control_module)
+
+        # test molecule
+        symbols = ['C', 'H', 'H', 'H', 'H']
+        self.assertEqual(len(symbols), len(fi.molecule))
+
+        for index, a in enumerate(fi.molecule):
+            self.assertEqual(symbols[index], a.symbol)
+
+        # test writing
+        other_input = os.path.join(self.temp_dir, 'u.inp')
+
+        with open(other_input, 'w') as f:
+            fi.write(f)
+
+        with open(other_input) as f:
+            fi2 = gamess.Input()
+            fi2.read(f)
+
+            self.assertEqual(len(fi.modules), len(fi2.modules))
+            self.assertEqual(len(fi2.molecule), len(fi.molecule))
+
+            for index, a in enumerate(fi2.molecule):
+                self.assertEqual(a.symbol, fi.molecule[index].symbol)
+                self.assertArrayAlmostEqual(a.position, fi.molecule[index].position)
+
+        # test with a more tricky input (comment and too long line)
+        fi2 = gamess.Input()
+
+        with open(self.input_file_2) as f:
+            fi2.read(f)
+
+        self.assertTrue('force' in fi2)
+        force_module = fi2['force']
+        self.assertEqual(len(force_module.options), 4)
+
+        options = ['method', 'vibanl', 'temp(1)', 'sclfac']
+        for o in options:
+            self.assertTrue(o in force_module, msg=o)
+
+        self.assertNotIn('!', str(force_module))
+        self.assertIn('\n', str(force_module))
+
+        # test creation:
+        atom_list = [
+            qcip_atom.Atom(symbol='O', position=[0, 0, -.115]),
+            qcip_atom.Atom(symbol='H', position=[0, .767, .460]),
+            qcip_atom.Atom(symbol='H', position=[0, -.767, .460])
+        ]
+
+        m = qcip_molecule.Molecule(atom_list=atom_list)
+        mod = '$CONTRL SCFTYP=RHF RUNTYP=ENERGY $END'
+
+        inp_ = gamess.Input.from_molecule(m, title='test', modules=[gamess.InputModule.from_string(mod)])
+        self.assertEqual(inp_.title, 'test')
+        self.assertEqual(inp_.molecule, m)
+        self.assertEqual(len(inp_.modules), 1)
+        self.assertTrue('contrl' in inp_)
+
+    def test_output(self):
+        """Test the behavior of the output"""
+
+        fo = gamess.Output()
+        self.assertFalse(fo.from_read)
+
+        with open(self.output_file) as f:
+            fo.read(f)
+
+        self.assertTrue(fo.from_read)
+
+        # test molecule
+        symbols = ['O', 'H', 'H']
+        self.assertEqual(len(symbols), len(fo.molecule))
+
+        for index, a in enumerate(fo.molecule):
+            self.assertEqual(symbols[index], a.symbol)
+
+        # test find string:
+        self.assertTrue(fo.chunk_exists('RHF CALCULATION'))
+        self.assertFalse(fo.chunk_exists('XXXX'))
+
+        to_find = 'TOTAL NUMBER OF BASIS SET SHELLS'
+        line_found = 231
+        self.assertEqual(fo.search(to_find), line_found)
+        self.assertEqual(fo.search(to_find, line_start=line_found), line_found)
+        self.assertEqual(fo.search(to_find, line_end=line_found), -1)
+        self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
+        self.assertEqual(fo.search(to_find, into='SETTING UP THE RUN'), line_found)
+        self.assertEqual(fo.search(to_find, into='RHF CALCULATION'), -1)
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.input_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Input)
+
+        with open(self.output_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Output)

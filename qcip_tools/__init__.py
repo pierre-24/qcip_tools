@@ -16,3 +16,14 @@ ureg.define('wavenumber = 100 * planck_constant * speed_of_light / meter = cm-1'
 
 #: Shortcut for quantities
 Q_ = ureg.Quantity
+
+
+class ValueOutsideDomain(ValueError):
+    """Raised when a value is larger or lower that given boundaries"""
+    def __init__(self, val, min_, max_, help_=''):
+        super().__init__('{}{} outside [{};{}]'.format('' if not help_ else help_ + ' ', val, min_, max_))
+
+
+def assert_in_domain(val, min_, max_, help_=''):
+    if val > max_ or val < min_:
+        raise ValueOutsideDomain(val, min_, max_, help_='')
