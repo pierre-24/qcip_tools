@@ -2,6 +2,11 @@
 Contributing
 ============
 
+Please note that the code is not actually developed on the git server of the University of Namur (which only contains the releases) but on a personal protected git server (with CI activated and properly configured).
+Feel free to ask access if needed.
+
+You first need to `install <./install.html>`_ if you wan to contribute to the code.
+
 Design rules
 ------------
 

@@ -10,7 +10,13 @@ Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the m
 
 ## Installation
 
-See the [installation page](./documentation/source/install.rst).
+With pip:
+
+```bash
+pip install git+ssh://git@gitlab.unamur.be/pierre.beaujean/qcip_tools.git
+```
+
+See the [installation page](./documentation/source/install.rst) for more information.
 
 ## API documentation
 
@@ -21,4 +27,5 @@ Build the documentation with `make doc`.
 You can reports bugs and suggestions any time by email or using the bugtracker.
 
 If you want to contribute to the code, see the [contribution page](./documentation/source/contributing.rst). 
-Please note that the code is not actually developed on the git server of the University of Namur (which only contains the releases) but on a personnal protected git server (with CI activated and properly configured). Feel free to ask access if needed.
+Please note that the code is not actually developed on the git server of the University of Namur (which only contains the releases) but on a personal protected git server (with CI activated and properly configured). 
+Feel free to ask access if needed.
