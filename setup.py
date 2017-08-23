@@ -11,7 +11,7 @@ for pkg in parse_requirements('requirements.txt', session=session):
 setup(
     name='qcip_tools',
     packages=['qcip_tools'],
-    version='0.1',
+    version='0.2',
     include_package_data=True,
     classifiers=[
         'Environment :: Scientific',

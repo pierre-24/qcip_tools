@@ -7,9 +7,9 @@ Design rules
 
 + The code is written in Python 3, and follows the (in)famous `PEP-8 <http://legacy.python.org/dev/peps/pep-0008/>`_. You can check it by running ``make lint``, which launch the ``flake`` utility.
 + Codes and comments are written in english.
-+ The code is documented using docstrings. The docstrings must contains the basic description of the function, as well as a description of the paramters (with their types !!!).
-+ The code is tested. You can launch the test series by using ``make test``. Every functionality should be provided with at least one unit test.
-+ The package is documented. You can generate this documentation by using ``make doc``. Non-basic stuffs should be explained in this documentation. Don't forget to cite some article if needed.
++ The code is documented using docstrings. The docstrings must contains the basic description of the function, as well as a description of the paramters (with the ``:type`` instruction, please).
++ The code is tested. You can launch the test series by using ``make test``. Every functionality should be provided with at least one unit test. Even though *coverage* is not monitored (yet?), it should be ok.
++ The package is documented. You can generate this documentation by using ``make doc``. Non-basic stuffs should be explained in this documentation. Don't forget to cite some articles or website if needed.
 + Before reimplementing something, please consider if there is no library that already exists to do the job.
 
 Workflow
@@ -25,10 +25,10 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
 Licence
 -------
 
-This code belong to me, Pierre Beaujean, and to the `University of Namur <https://www.unamur.be>`_ since it is developed and used in the frame of my PhD thesis.
+This code belong to me, `Pierre Beaujean <pierre.beaujean@unamur.be>`_, and to the `University of Namur <https://www.unamur.be>`_ since it is developed and used in the frame of my PhD thesis.
 
-Units
------
+A note about units
+------------------
 
 Unless mentioned in the docstring, atomic units (Hartree) are used. The two exceptions are:
 
