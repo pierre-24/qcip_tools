@@ -7,6 +7,8 @@ Feel free to ask access if needed.
 
 You first need to `install <./install.html>`_ if you wan to contribute to the code.
 
+You may want to take a look into `qcip_scripts <https://gitlab.unamur.be/pierre.beaujean/qcip_scripts>`_, a collection of scripts based on this library.
+
 Design rules
 ------------
 
@@ -25,12 +27,13 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
 + Development is mad in ``dev`` branch, while ``master`` contains the production version.
 + Functionalities are added through merge request (MR) in the ``dev`` branch.
 + Theses merge requests should be unitary, and include unit test(s) and documentation if needed. The test suite must succeed for the merge request to be accepted.
-+ At some (random) points, ``dev`` will be merged into ``master`` to create a new version.
++ At some (random) points, ``dev`` will be merged by the maintainer into ``master`` to create a new version, with a tag of the form ``release-vXX``.
 
 Licence
 -------
 
 This code belong to me, `Pierre Beaujean <pierre.beaujean@unamur.be>`_, and to the `University of Namur <https://www.unamur.be>`_ since it is developed and used in the frame of my PhD thesis.
+Of course, if you contribute, you will be added to this list ;)
 
 A note about units
 ------------------

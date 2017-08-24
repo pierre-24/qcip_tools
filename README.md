@@ -1,4 +1,6 @@
-# Quantum chemistry in python (QCiP)
+# Quantum chemistry in python (QCiP) tools library
+
+Stable version 0.2.1 (tag: [`release-v0.2.1`](https://git.pierrebeaujean.net/pierre/qcip_tools/tree/release-v0.2.1).
 
 Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
 
