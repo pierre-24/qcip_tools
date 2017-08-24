@@ -11,7 +11,7 @@ for pkg in parse_requirements('requirements.txt', session=session):
 setup(
     name='qcip_tools',
     packages=['qcip_tools', 'qcip_tools.chemistry_files'],
-    version='0.2',
+    version='0.2.2',
     author='Pierre Beaujean',
     author_email='pierre.beaujean@unamur.be',
     description='Library to ease the manipulation of quantum chemistry results in Python 3',

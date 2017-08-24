@@ -1,5 +1,7 @@
 import inspect
 from qcip_tools import chemistry_files
+# Note: we need to import all modules, so that they are inspected!
+from qcip_tools.chemistry_files import gamess, gaussian, dalton, xyz  # noqa
 
 
 class ProbablyNotAChemistryFile(Exception):
