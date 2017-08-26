@@ -164,6 +164,16 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertIsNone(t.spacial_dof)
         self.assertTrue(numpy.array_equal(beta_tensor, t.components))
 
+        gamma_tensor = numpy.array([a * (-1) ** a for a in range(81)]).reshape((3, 3, 3, 3))
+        # Note: a tensor is suppose to be symmetric, which is not the case here
+        t = derivatives.Tensor('FdDD', components=gamma_tensor, frequency='static')
+
+        self.assertEqual(t.representation.representation(), 'FdDD')
+        self.assertEqual(t.representation.dimension(), 81)
+        self.assertEqual(t.frequency, 'static')
+        self.assertIsNone(t.spacial_dof)
+        self.assertTrue(numpy.array_equal(gamma_tensor, t.components))
+
         # make the code cry:
         with self.assertRaises(ValueError):
             derivatives.Tensor('FDD')  # no frequency
@@ -238,9 +248,9 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
-        dipole = numpy.array([.0, .0, 0.625899])
+        dipole = derivatives_e.ElectricDipole(dipole=[.0, .0, 0.625899])
 
-        d = derivatives_e.ElectricDipole(dipole=dipole)
+        d = derivatives_e.ElectricDipole(dipole=dipole.components)
         self.assertAlmostEqual(d.norm(), 0.625899)
 
         alpha = numpy.array(
@@ -417,6 +427,27 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx())
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
+
+        # test conversion
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('2eV'), 0.073, places=3)
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1500cm-1'), 0.0068, places=4)
+
+        # order and name
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(0, 1))
+        self.assertEqual(g.representation.representation(), 'FDF')
+        self.assertEqual(g.name, 'beta(-w;w,0)')
+        self.assertEqual(g.rank(), 3)
+
+        # just check that DFWM is now possible:
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(1, 1, -1))
+        self.assertEqual(g.representation.representation(), 'FDDd')
+        self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
+        self.assertEqual(g.rank(), 4)
+
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(-1, 1, 1))
+        self.assertEqual(g.representation.representation(), 'FDDd')  # reordering
+        self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
 
     def test_geometrical_derivatives(self):
         """Test geometrical ones.
