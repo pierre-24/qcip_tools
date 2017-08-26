@@ -1,5 +1,6 @@
 import itertools
 import math
+import collections
 from scipy import constants
 
 import numpy
@@ -8,6 +9,7 @@ from qcip_tools import derivatives, quantities
 
 field_to_out = {-1: '-w', 0: '0', 1: 'w'}
 in_to_field = dict((b, a) for (a, b) in field_to_out.items())
+field_to_representation = {-1: 'd', 0: 'F', 1: 'D'}
 
 #: Correspondence between a name and a representation
 REPRESENTATIONS = {
@@ -17,16 +19,29 @@ REPRESENTATIONS = {
     'alpha(-w;w)': 'FD',
     'beta(-2w;w,w)': 'FDD',
     'beta(-w;w,0)': 'FDF',
+    'beta(0;w,-w)': 'FDd',
     'gamma': 'FFFF',
     'gamma(-w;w,0,0)': 'FDFF',
-    'gamma(-w;-w,w,w)': 'FDDD',
     'gamma(-2w;w,w,0)': 'FDDF',
+    'gamma(-w;w,w,-w)': 'FDDd',
     'gamma(-3w;w,w,w)': 'FDDD',
 }
 
-DERIVATIVES = list(REPRESENTATIONS)
+DERIVATIVES = list(REPRESENTATIONS.values())
 
 NAMES = dict((b, a) for (a, b) in REPRESENTATIONS.items())
+
+PHENOMENON = {
+    'FFF': 'static first hyperpolarizability',
+    'FDF': 'electro-optical Pockels effect (EOP)',
+    'FDd': 'optical rectification',
+    'FDD': 'second harmonic generation',
+    'FFFF': 'static second hyperpolarizability',
+    'FDFF': 'dc-Kerr effect',
+    'FDDF': '(static) electric field-induced second harmonic generation (EFISHG)',
+    'FDDd': 'intensity dependent refractive index (IDRI/DFWM)',
+    'FDDD': 'Third harmonic generation'
+}
 
 #: List of all simplified names
 SIMPLIFIED_NAMES = {
@@ -39,8 +54,8 @@ SIMPLIFIED_NAMES = {
     'beta(-w;w,0)': 'β(-w;w,0)',
     'gamma': 'γ(0;0,0,0)',
     'gamma(-w;w,0,0)': 'γ(-w;w,0,0)',
-    'gamma(-w;-w,w,w)': 'γ(-w;-w,w,w)',
     'gamma(-2w;w,w,0)': 'γ(-2w;w,w,0)',
+    'gamma(-w;w,w,-w)': 'γ(-w;w,w,-w)',
     'gamma(-3w;w,w,w)': 'γ(-3w;w,w,w)',
 }
 
@@ -115,11 +130,24 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
         self.input_fields = input_fields if input_fields is not None else []
 
         if input_fields:
-            representation = ''.join(['F' if i == 0 else 'D' for i in input_fields])
+            representation = ''.join([field_to_representation[i] for i in input_fields])
         else:
             representation = ''
 
+        if ('F' + representation) not in DERIVATIVES:
+            each = collections.Counter(representation)
+            n_repr = ''
+
+            for i in 'DdF':
+                n_repr += each[i] * i
+
+            if ('F' + n_repr) not in DERIVATIVES:
+                raise derivatives.RepresentationError('F' + n_repr)
+            else:
+                representation = n_repr
+
         super().__init__('F' + representation, frequency=frequency, components=tensor)
+        self.name = self.to_name()
 
     def to_string(self, threshold=1e-5, **kwargs):
         """Rewritten to get a better output with this kind of tensor
@@ -141,18 +169,21 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
             s += '\n'
         return s
 
-    def to_name(self):
+    def to_name(self, simplified=False):
         """Get the name of the tensor from its representation, by using ``REPRESENTATION``.
 
         :rtype: str
         """
 
         r = self.representation.representation()
-        for i in DERIVATIVES:
-            if REPRESENTATIONS[i] == r:
-                return i
-
-        raise KeyError(r)
+        if r in NAMES:
+            x = NAMES[r]
+            if simplified:
+                return SIMPLIFIED_NAMES[x]
+            else:
+                return x
+        else:
+            raise KeyError(r)
 
     def rank(self):
         """Alias for the order
@@ -584,6 +615,10 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         if not disable_extras:
             r += '\n'
+
+            if self.representation.representation() in PHENOMENON:
+                r += '({})\n\n'.format(PHENOMENON[self.representation.representation()])
+
             beta_vector = self.beta_vector()
             r += '||B||     {: .5e}\n'.format(numpy.linalg.norm(beta_vector))
 
@@ -769,7 +804,12 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         r = super().to_string(threshold=threshold, **kwargs)
 
         if not disable_extras:
+
             r += '\n'
+
+            if self.representation.representation() in PHENOMENON:
+                r += '({})\n\n'.format(PHENOMENON[self.representation.representation()])
+
             para = self.gamma_parallel()
             perp = self.gamma_perpendicular()
             G2zzzz = self.gamma_squared_zzzz()

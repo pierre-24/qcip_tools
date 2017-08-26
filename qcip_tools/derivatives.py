@@ -7,8 +7,9 @@ from qcip_tools import math as qcip_math
 
 #: In term of derivative of the energy
 #: ``F`` = static electric field derivative, ``D`` = dynamic electric field derivative (which can be static),
+#: ``d`` = inverse of the dynamic electric field (-w)
 #: ``G`` = geometrical derivative, ``N`` = normal mode derivative
-ALLOWED_DERIVATIVES = ('F', 'D', 'G', 'N')
+ALLOWED_DERIVATIVES = ('F', 'D', 'd', 'G', 'N')
 
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
@@ -72,7 +73,7 @@ class Derivative:
         :rtype: str
         """
 
-        each_ = collections.Counter(self.raw_representation(exclude=['F', 'D']))
+        each_ = collections.Counter(self.raw_representation(exclude='FDd'))
 
         r = ''
 
@@ -146,7 +147,7 @@ class Derivative:
         size = self.basis.dimension() if self.basis else 1
 
         for i in self.diff_representation:
-            size *= 3 if i in 'FD' else self.spacial_dof
+            size *= 3 if i in 'FDd' else self.spacial_dof
 
         return size
 
@@ -160,7 +161,7 @@ class Derivative:
         shape = [1] if self.representation() == '' else []
 
         for i in self.representation():
-            shape.append(3 if i in ['F', 'D'] else self.spacial_dof)
+            shape.append(3 if i in 'FDd' else self.spacial_dof)
 
         return shape
 
@@ -215,8 +216,8 @@ class Derivative:
             yield 0
             return
 
-        ned_representation = self.raw_representation(['F', 'D'])
-        ed_representation = self.raw_representation(['G', 'N'])
+        ned_representation = self.raw_representation('FDd')
+        ed_representation = self.raw_representation('GN')
         each = collections.Counter(ned_representation)
 
         iterable = []
@@ -259,8 +260,8 @@ class Derivative:
             yield 0
             return
 
-        ned_representation = self.raw_representation(['F', 'D'])
-        ed_representation = self.raw_representation(['G', 'N'])
+        ned_representation = self.raw_representation('FDd')
+        ed_representation = self.raw_representation('GN')
         each = collections.Counter(ned_representation)
         components = self.flatten_component_to_components(element)
 
@@ -343,7 +344,7 @@ def representation_to_operator(representation, component=None, molecule=None):
                 molecule[math.floor(component / 3)].symbol, COORDINATES[component % 3]))
             if component is not None else '')
 
-    if representation in 'FD':
+    if representation in 'FDd':
         return 'dF' + ('({})'.format(COORDINATES[component]) if component is not None else '')
 
 
