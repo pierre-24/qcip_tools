@@ -812,10 +812,11 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
             para = self.gamma_parallel()
             perp = self.gamma_perpendicular()
-            G2zzzz = self.gamma_squared_zzzz()
-            G2zxxx = self.gamma_squared_zxxx()
 
             if sum(self.input_fields) == 3 or self.frequency == .0 or self.frequency == 'static':  # THG
+                G2zzzz = self.gamma_squared_zzzz()
+                G2zxxx = self.gamma_squared_zxxx()
+
                 r += '<G2zzzz>  {: .5e}\n'.format(G2zzzz)
                 r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
                 r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
