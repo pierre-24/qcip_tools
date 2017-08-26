@@ -1,11 +1,13 @@
 import itertools
 import math
+from scipy import constants
 
 import numpy
-from qcip_tools import derivatives
+from qcip_tools import derivatives, quantities
+
 
 field_to_out = {-1: '-w', 0: '0', 1: 'w'}
-in_to_field = {'w': 1, '-w': -1, '0': 0}
+in_to_field = dict((b, a) for (a, b) in field_to_out.items())
 
 #: Correspondence between a name and a representation
 REPRESENTATIONS = {
@@ -14,15 +16,17 @@ REPRESENTATIONS = {
     'beta': 'FFF',
     'alpha(-w;w)': 'FD',
     'beta(-2w;w,w)': 'FDD',
-    'beta(-w;w,0)': 'FFD',
+    'beta(-w;w,0)': 'FDF',
     'gamma': 'FFFF',
-    'gamma(-w;w,0,0)': 'FFFD',
+    'gamma(-w;w,0,0)': 'FDFF',
     'gamma(-w;-w,w,w)': 'FDDD',
-    'gamma(-2w;w,w,0)': 'FFDD',
+    'gamma(-2w;w,w,0)': 'FDDF',
     'gamma(-3w;w,w,w)': 'FDDD',
 }
 
 DERIVATIVES = list(REPRESENTATIONS)
+
+NAMES = dict((b, a) for (a, b) in REPRESENTATIONS.items())
 
 #: List of all simplified names
 SIMPLIFIED_NAMES = {
@@ -65,6 +69,40 @@ def fields_to_str(input_):
     r += ','.join(field_to_out[f] for f in input_)
 
     return r
+
+
+def convert_frequency_from_string(f):
+    """Convert the string value to the value in atomic units.
+
+    :param f: the string value
+    :type f: str|float
+    :rtype: float
+    """
+
+    if type(f) is float:
+        return f
+    elif type(f) is not str:
+        raise TypeError(f)
+
+    if f == 'static':
+        return 0.0
+
+    if f[-2:].lower() == 'nm':
+        freq = float(f[:-2])
+        if freq != 0:
+            val = constants.h * \
+                constants.c / (float(f[:-2]) * 1e-9) * \
+                quantities.convert(quantities.ureg.joule, quantities.ureg.hartree)
+        else:
+            raise Exception('A wavelength of 0nm is requested, which is impossible')
+    elif f[-2:].lower() in ['ev', 'eV']:
+        val = float(f[:-2]) * quantities.convert(quantities.ureg.electron_volt, quantities.ureg.hartree)
+    elif f[-4:].lower() == 'cm-1':
+        val = float(f[:-4]) * quantities.convert(quantities.ureg.wavenumber, quantities.ureg.hartree)
+    else:
+        val = float(f)
+
+    return val
 
 
 class BaseElectricalDerivativeTensor(derivatives.Tensor):
@@ -479,9 +517,12 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         where :math:`\\beta_{i}` is a component of the beta "tensor".
 
         :param dipole: dipole moment of the molecule
-        :type dipole: numpy.ndarray
+        :type dipole: numpy.ndarray|qcip_tools.derivatives_e.ElectricDipole
         :rtype: float
         """
+
+        if type(dipole) is ElectricDipole:
+            dipole = dipole.components
 
         norm = numpy.linalg.norm(dipole)
         val = 0.0
@@ -503,9 +544,12 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
 
         :param dipole: the dipole moment
-        :type dipole: numpy.ndarray
+        :type dipole: numpy.ndarray|qcip_tools.derivatives_e.ElectricDipole
         :rtype: float
         """
+
+        if type(dipole) is ElectricDipole:
+            dipole = dipole.components
 
         norm = numpy.linalg.norm(dipole)
         val = 0.0
@@ -731,10 +775,11 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
             G2zzzz = self.gamma_squared_zzzz()
             G2zxxx = self.gamma_squared_zxxx()
 
-            r += '<G2zzzz>  {: .5e}\n'.format(G2zzzz)
-            r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
-            r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
-            r += 'DR        {: .3f}\n'.format(G2zzzz / G2zxxx)
+            if sum(self.input_fields) == 3 or self.frequency == .0 or self.frequency == 'static':  # THG
+                r += '<G2zzzz>  {: .5e}\n'.format(G2zzzz)
+                r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
+                r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
+                r += 'DR        {: .3f}\n'.format(G2zzzz / G2zxxx)
 
             r += 'gamma_||  {: .5e}\n'.format(para)
             r += 'gamma_per {: .5e}\n'.format(perp)

@@ -365,6 +365,9 @@ class Tensor:
             self.representation = Derivative(from_representation=representation, spacial_dof=spacial_dof)
 
         if components is not None:
+            if type(components) is list:
+                components = numpy.array(components)
+
             if components.shape != self.representation.shape():
                 components = components.reshape(self.representation.shape())
 

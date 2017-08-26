@@ -238,9 +238,9 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
-        dipole = numpy.array([.0, .0, 0.625899])
+        dipole = derivatives_e.ElectricDipole(dipole=[.0, .0, 0.625899])
 
-        d = derivatives_e.ElectricDipole(dipole=dipole)
+        d = derivatives_e.ElectricDipole(dipole=dipole.components)
         self.assertAlmostEqual(d.norm(), 0.625899)
 
         alpha = numpy.array(
@@ -417,6 +417,11 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx())
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
+
+        # test conversion
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('2eV'), 0.073, places=3)
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1500cm-1'), 0.0068, places=4)
 
     def test_geometrical_derivatives(self):
         """Test geometrical ones.
