@@ -225,8 +225,8 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
     Polarisability  tensor, commonly written :math:`\\alpha(-\\omega_\\sigma;\\omega_1)`.
     """
 
-    def __init__(self, tensor=None, frequency='static'):
-        super().__init__(tensor=tensor, input_fields=(1,), frequency=frequency)
+    def __init__(self, tensor=None, input_fields=(1,), frequency='static'):
+        super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
     def isotropic_value(self):
         """Isotropic value:
