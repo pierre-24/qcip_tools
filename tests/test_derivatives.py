@@ -64,14 +64,14 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         # differentiate
         d1 = derivatives.Derivative(
-            from_representation='G', basis=d0, spacial_dof=6)
+            from_representation='G', basis=d0, spacial_dof=9)
 
         self.assertEqual(d1.diff_representation, 'G')
         self.assertEqual(d1.basis.diff_representation, 'FF')
         self.assertEqual(d1.representation(), 'GFF')
 
-        self.assertEqual(d1.dimension(), 6 * 3 * 3)
-        self.assertEqual(d1.shape(), [6, 3, 3])
+        self.assertEqual(d1.dimension(), 9 * 3 * 3)
+        self.assertEqual(d1.shape(), [9, 3, 3])
         self.assertEqual(d1.order(), 3)
 
         # test smart iterator
@@ -85,7 +85,7 @@ class DerivativesTestCase(QcipToolsTestCase):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
-        self.assertEqual(num_smart_iterator_call, 6 * 6)
+        self.assertEqual(num_smart_iterator_call, 9 * 6)
 
         # differentiate again:
         d2 = d1.differentiate('G')
@@ -104,9 +104,9 @@ class DerivativesTestCase(QcipToolsTestCase):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
-        self.assertEqual(num_smart_iterator_call, 6 * 21)  # Note: 21 = 6 * (6+1) / 2
+        self.assertEqual(num_smart_iterator_call, 6 * 45)  # Note: 45 = 9 * (9+1) / 2
 
-        # tricky one
+        # tricky one:
         d4 = derivatives.Derivative(from_representation='FDF')
         self.assertEqual(d4.diff_representation, 'FDF')
         self.assertEqual(d4.representation(), 'FDF')
@@ -126,6 +126,28 @@ class DerivativesTestCase(QcipToolsTestCase):
                 r[j] += 1
 
         self.assertEqual(num_smart_iterator_call, 18)  # 3 * 6
+        self.assertTrue(numpy.all(r == 1))
+
+        # another tricky one:
+        d5 = derivatives.Derivative(from_representation='FDDF')
+        self.assertEqual(d5.diff_representation, 'FDDF')
+        self.assertEqual(d5.representation(), 'FDDF')
+        self.assertEqual(d5.dimension(), 3 * 3 * 3 * 3)
+        self.assertEqual(d5.shape(), [3, 3, 3, 3])
+        self.assertIsNone(d5.basis)
+        self.assertEqual(d5.order(), 4)
+
+        # test smart iterator
+        num_smart_iterator_call = 0
+
+        r = numpy.zeros(d5.shape()).flatten()
+        for i in d5.smart_iterator():
+            num_smart_iterator_call += 1
+            self.assertTrue(i < d5.dimension(), i)
+            for j in d5.inverse_smart_iterator(i):
+                r[j] += 1
+
+        self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
         self.assertTrue(numpy.all(r == 1))
 
         # make the code cry:
