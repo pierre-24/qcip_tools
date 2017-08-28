@@ -125,7 +125,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             for j in d4.inverse_smart_iterator(i):
                 r[j] += 1
 
-        self.assertEqual(num_smart_iterator_call, 27)
+        self.assertEqual(num_smart_iterator_call, 18)  # 3 * 6
         self.assertTrue(numpy.all(r == 1))
 
         # make the code cry:

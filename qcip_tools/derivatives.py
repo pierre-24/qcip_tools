@@ -9,7 +9,8 @@ from qcip_tools import math as qcip_math
 #: ``F`` = static electric field derivative, ``D`` = dynamic electric field derivative (which can be static),
 #: ``d`` = inverse of the dynamic electric field (-w)
 #: ``G`` = geometrical derivative, ``N`` = normal mode derivative
-ALLOWED_DERIVATIVES = ('F', 'D', 'd', 'G', 'N')
+#: Note: do not change the order, except if you have good reasons to do so.
+ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd')
 
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
@@ -203,47 +204,26 @@ class Derivative:
     def smart_iterator(self):
         """Apply the
         `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem>`_
-        and only return as subset of independant coordinates. Order guaranteed.
-
-        .. note::
-
-            Electrical derivatives are treated separatelly from geometrical derivatives, since only the last "n"
-            element of the tensor are permutable.
-
+        and only return as subset of independant coordinates. Order normally guaranteed.
         """
 
         if self.representation() == '':  # special case of energy
             yield 0
             return
 
-        ned_representation = self.raw_representation('FDd')
-        ed_representation = self.raw_representation('GN')
-        each = collections.Counter(ned_representation)
+        representation = self.representation()
+        each = collections.Counter(representation)
 
         iterable = []
 
-        for c in 'GN':
+        for c in ALLOWED_DERIVATIVES:
             if c not in each:
                 continue
 
-            permutable = [a for a in itertools.combinations_with_replacement(range(self.spacial_dof), each[c])]
+            permutable = [a for a in itertools.combinations_with_replacement(
+                range(self.spacial_dof if c in ['G', 'N'] else 3), each[c])]
+
             iterable = Derivative.expend_list(iterable, permutable)
-
-        if ed_representation != '':
-            max_FD_permutation = 1
-            ref = ed_representation[-1]
-            for i in reversed(ed_representation[:-1]):
-                if i == ref:
-                    max_FD_permutation += 1
-                else:
-                    break
-
-            permutable = [a for a in itertools.combinations_with_replacement(range(3), max_FD_permutation)]
-            not_permutable = [a for a in itertools.product(
-                range(3),
-                repeat=len(ed_representation) - max_FD_permutation)]
-
-            iterable = Derivative.expend_list(Derivative.expend_list(iterable, not_permutable), permutable)
 
         for component in iterable:
             yield self.components_to_flatten_component(component)
@@ -260,15 +240,14 @@ class Derivative:
             yield 0
             return
 
-        ned_representation = self.raw_representation('FDd')
-        ed_representation = self.raw_representation('GN')
-        each = collections.Counter(ned_representation)
+        representation = self.representation()
+        each = collections.Counter(representation)
         components = self.flatten_component_to_components(element)
 
         iterable = []
         index = 0
 
-        for c in 'GN':
+        for c in ALLOWED_DERIVATIVES:
             if c not in each:
                 continue
 
@@ -276,21 +255,6 @@ class Derivative:
             permutations = [a for a in qcip_math.unique_everseen(itertools.permutations(components[index:index + n]))]
             iterable = Derivative.expend_list(iterable, permutations)
             index += n
-
-        if ed_representation != '':
-            max_FD_permutation = 1
-            ref = ed_representation[-1]
-            for i in reversed(ed_representation[:-1]):
-                if i == ref:
-                    max_FD_permutation += 1
-                else:
-                    break
-
-            not_permutable = [components[index:-max_FD_permutation]]
-            permutable = [
-                a for a in qcip_math.unique_everseen(itertools.permutations(components[-max_FD_permutation:]))]
-
-            iterable = Derivative.expend_list(Derivative.expend_list(iterable, not_permutable), permutable)
 
         for component in iterable:
             yield self.components_to_flatten_component(component)
