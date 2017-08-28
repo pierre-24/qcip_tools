@@ -31,10 +31,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(e.shape()).flatten()
-        for i in e.smart_iterator():
+        for i in e.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < e.dimension(), i)
-            for j in e.inverse_smart_iterator(i):
+            for j in e.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
@@ -53,10 +53,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d0.shape()).flatten()
-        for i in d0.smart_iterator():
+        for i in d0.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d0.dimension(), i)
-            for j in d0.inverse_smart_iterator(i):
+            for j in d0.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
@@ -78,10 +78,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d1.shape()).flatten()
-        for i in d1.smart_iterator():
+        for i in d1.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d1.dimension(), i)
-            for j in d1.inverse_smart_iterator(i):
+            for j in d1.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
@@ -97,10 +97,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d2.shape()).flatten()
-        for i in d2.smart_iterator():
+        for i in d2.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d2.dimension(), i)
-            for j in d2.inverse_smart_iterator(i):
+            for j in d2.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
@@ -119,10 +119,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d4.shape()).flatten()
-        for i in d4.smart_iterator():
+        for i in d4.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d4.dimension(), i)
-            for j in d4.inverse_smart_iterator(i):
+            for j in d4.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertEqual(num_smart_iterator_call, 18)  # 3 * 6
@@ -141,14 +141,28 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d5.shape()).flatten()
-        for i in d5.smart_iterator():
+        for i in d5.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d5.dimension(), i)
-            for j in d5.inverse_smart_iterator(i):
+            for j in d5.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
         self.assertTrue(numpy.all(r == 1))
+
+        # once again, but with full components (not flatten indices)
+        num_smart_iterator_call = 0
+
+        r = numpy.zeros(d5.shape())
+        for i in d5.smart_iterator(as_flatten=False):
+            num_smart_iterator_call += 1
+            self.assertEqual(len(i), d5.order())
+            self.assertTrue(all(x < y for x, y in zip(i, d5.shape())))
+            for j in d5.inverse_smart_iterator(i, as_flatten=False):
+                r[j] += 1
+
+        self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
+        self.assertTrue(numpy.all(r.flatten() == 1))
 
         # make the code cry:
         with self.assertRaises(derivatives.RepresentationError):
