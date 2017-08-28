@@ -627,7 +627,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 r += 'theta     {: .3f}°\n'.format(numpy.rad2deg(math.acos(
                     numpy.dot(dipole, beta_vector) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(beta_vector)))))
 
-                if sum(self.input_fields) == -1 or self.frequency == .0 or self.frequency == 'static':  # OEP
+                if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
                     r += 'beta^K    {: .5e}\n'.format(self.beta_kerr(dipole))
 
             if sum(self.input_fields) == 2 or self.frequency == .0 or self.frequency == 'static':  # SHG
