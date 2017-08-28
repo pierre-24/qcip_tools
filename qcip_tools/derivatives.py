@@ -250,16 +250,18 @@ class Derivative:
             for index, components in enumerate(list_of_components):
                 list_of_components[index] = Derivative.apply_permutation(components, zip(diff, changed))
 
-    def smart_iterator(self):
+    def smart_iterator(self, as_flatten=False):
         """Apply the
         `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem>`_
-        and only return as subset of independant coordinates. Order guaranteed.
+        and only return as subset of independant coordinates. Order normally guaranteed.
 
         .. note::
 
             Ideally, the different type derivatives follows each other. This is not always the case for electrical
             ones, so there is a stage of re-ordering.
 
+        :param as_flatten: yield full components, not flatten ones
+        :type as_flatten: bool
         """
 
         representation = self.representation()
@@ -287,15 +289,19 @@ class Derivative:
         Derivative.correct_components(ideal_representation, representation, list_of_components)
 
         for components in list_of_components:
-            # print(components)
-            yield self.components_to_flatten_component(components)
+            if as_flatten:
+                yield self.components_to_flatten_component(components)
+            else:
+                yield tuple(components)
 
-    def inverse_smart_iterator(self, element):
+    def inverse_smart_iterator(self, element, as_flatten=False):
         """Back-iterate over all the other components :
         from a coordinates, give all the other ones that are equivalents
 
-        :param element: the coordinates
-        :type element: int
+        :param element: the coordinates, either a flatten index (if ``as_flatten=True``) or a tuple
+        :type element: int|tuple
+        :param as_flatten: yield full components, not flatten ones
+        :type as_flatten: bool
         """
 
         representation = self.representation()
@@ -305,7 +311,13 @@ class Derivative:
             return
 
         each = collections.Counter(representation)
-        components = self.flatten_component_to_components(element)
+
+        if as_flatten:
+            components = self.flatten_component_to_components(element)
+        else:
+            if len(element) != self.order():
+                raise ValueError('the element is not of the right size ({} != {})'.format(len(element), self.order()))
+            components = element
 
         list_of_components = []
         ideal_representation = ''
@@ -328,8 +340,11 @@ class Derivative:
         # correct the order:
         Derivative.correct_components(ideal_representation, representation, list_of_components)
 
-        for component in list_of_components:
-            yield self.components_to_flatten_component(component)
+        for components_ in list_of_components:
+            if as_flatten:
+                yield self.components_to_flatten_component(components_)
+            else:
+                yield tuple(components_)
 
     def flatten_component_to_components(self, i):
         """From the index if the array would be flatten, gives the components
