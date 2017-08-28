@@ -1,5 +1,3 @@
-import tempfile
-import shutil
 import os
 import random
 import io
@@ -48,59 +46,16 @@ class GaussianTestCase(QcipToolsTestCase):
     """Gaussian stuffs"""
 
     def setUp(self):
+        self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
+        self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
+        self.log_file = self.copy_to_temporary_directory('gaussian_output.log')
 
-        self.temp_dir = tempfile.mkdtemp()
+        self.cube_file = self.copy_to_temporary_directory('gaussian_cube.cub')
+        self.cube_file2 = self.copy_to_temporary_directory('gaussian_cube_2.cub')
+        self.cube_file3 = self.copy_to_temporary_directory('gaussian_cube_3.cub')
 
-        self.input_file = os.path.join(self.temp_dir, 'input.com')
-
-        with open(self.input_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_input.com')) as fx:
-                f.write(fx.read())
-
-        self.fchk_file = os.path.join(self.temp_dir, 'file.fchk')
-
-        with open(self.fchk_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_fchk.fchk')) as fx:
-                f.write(fx.read())
-
-        self.log_file = os.path.join(self.temp_dir, 'file.log')
-
-        with open(self.log_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_output.log')) as fx:
-                f.write(fx.read())
-
-        self.cube_file = os.path.join(self.temp_dir, 'file.cub')
-
-        with open(self.cube_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube.cub')) as fx:
-                f.write(fx.read())
-
-        self.cube_file2 = os.path.join(self.temp_dir, 'file2.cub')
-
-        with open(self.cube_file2, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_2.cub')) as fx:
-                f.write(fx.read())
-
-        self.cube_file3 = os.path.join(self.temp_dir, 'file3.cub')
-
-        with open(self.cube_file3, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_3.cub')) as fx:
-                f.write(fx.read())
-
-        self.basis_set1 = os.path.join(self.temp_dir, 'basis1.gbs')
-
-        with open(self.basis_set1, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/STO-3G.gbs')) as fx:
-                f.write(fx.read())
-
-        self.basis_set2 = os.path.join(self.temp_dir, 'basis2.gbs')
-
-        with open(self.basis_set2, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/cc-pVDZ.gbs')) as fx:
-                f.write(fx.read())
-
-    def tearDown(self):
-        shutil.rmtree(self.temp_dir)
+        self.basis_set1 = self.copy_to_temporary_directory('STO-3G.gbs')
+        self.basis_set2 = self.copy_to_temporary_directory('cc-pVDZ.gbs')
 
     def test_input_files(self):
         """Test the behavior of gaussian input file class"""
@@ -136,7 +91,7 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(len(gi1.other_blocks), 1)  # one block for the electric field
 
         # write it
-        other_file = os.path.join(self.temp_dir, 'other.com')
+        other_file = os.path.join(self.temporary_directory, 'other.com')
         gi1.title = text
 
         with open(other_file, 'w') as f:
@@ -455,7 +410,7 @@ class GaussianTestCase(QcipToolsTestCase):
             b_test.read(o)
 
         # test writing
-        other_file = os.path.join(self.temp_dir, 'other.gbs')
+        other_file = os.path.join(self.temporary_directory, 'other.gbs')
 
         with open(other_file, 'w') as f:
             b1.write(f)
@@ -523,31 +478,10 @@ class DaltonTestCase(QcipToolsTestCase):
     """Dalton stuffs"""
 
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-
-        self.input_mol_file = os.path.join(self.temp_dir, 'input.mol')
-
-        with open(self.input_mol_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_molecule.mol')) as fx:
-                f.write(fx.read())
-
-        self.input_dal_file = os.path.join(self.temp_dir, 'input.dal')
-
-        with open(self.input_dal_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_input.dal')) as fx:
-                f.write(fx.read())
-
-        self.output_archive = os.path.join(self.temp_dir, 'output.tar.gz')
-
-        with open(self.output_archive, 'wb') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_archive.tar.gz'), 'rb') as fx:
-                f.write(fx.read())
-
-        self.output_log = os.path.join(self.temp_dir, 'output.out')
-
-        with open(self.output_log, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_output.out'), 'r') as fx:
-                f.write(fx.read())
+        self.input_mol_file = self.copy_to_temporary_directory('dalton_molecule.mol')
+        self.input_dal_file = self.copy_to_temporary_directory('dalton_input.dal')
+        self.output_archive = self.copy_to_temporary_directory('dalton_archive.tar.gz')
+        self.output_log = self.copy_to_temporary_directory('dalton_output.out')
 
     def test_input_mol(self):
 
@@ -576,7 +510,7 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertEqual(fm.molecule.number_of_electrons(), 12)
 
         # test generation with no symmetry
-        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
         with open(new_input, 'w') as f:
             fm.write(f, nosym=True)
 
@@ -589,7 +523,7 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('Charge=1.0 Atoms=1' in content[7])
 
         # test generation in atomic units
-        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
         with open(new_input, 'w') as f:
             fm.write(f, in_angstrom=False)
 
@@ -602,7 +536,7 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('Charge=1.0 Atoms=1' in content[7])
 
         # test generation with grouping
-        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
         with open(new_input, 'w') as f:
             fm.write(f, group_atoms=True)
 
@@ -773,7 +707,7 @@ class DaltonTestCase(QcipToolsTestCase):
         fix['WAVE F'] = dalton.InputModule()  # "WAVE F" is 6 characters, so it is larger than the required 5 ones
         fix['WAVE F']['.DFT'] = dalton.InputCard(parameters=['B3LYP'])
 
-        with open(os.path.join(self.test_directory, 'tests_files/dalton_input_2.dal'), 'r') as fx:
+        with open(os.path.join(self.tests_files_directory, 'dalton_input_2.dal'), 'r') as fx:
             self.assertEqual(str(fix), fx.read())
 
     def test_file_recognition(self):
@@ -796,13 +730,7 @@ class XYZTestCase(QcipToolsTestCase):
     """XYZ stuffs"""
 
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-
-        self.xyz_file = os.path.join(self.temp_dir, 'molecule.xyz')
-
-        with open(self.xyz_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/xyz_molecule.xyz')) as fx:
-                f.write(fx.read())
+        self.xyz_file = self.copy_to_temporary_directory('xyz_molecule.xyz')
 
     def test_xyz(self):
         """Test the behavior of the xyz"""
@@ -823,7 +751,7 @@ class XYZTestCase(QcipToolsTestCase):
             self.assertEqual(symbols[index], a.symbol)
 
         # test writing
-        other_xyz = os.path.join(self.temp_dir, 'n.xyz')
+        other_xyz = os.path.join(self.temporary_directory, 'n.xyz')
 
         with open(other_xyz, 'w') as f:
             fx.write(f)
@@ -862,23 +790,9 @@ class GAMESSTestCase(QcipToolsTestCase):
     """GAMESS stuffs"""
 
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-
-        self.input_file = os.path.join(self.temp_dir, 'gamess_input.inp')
-        self.input_file_2 = os.path.join(self.temp_dir, 'gamess_input2.inp')
-        self.output_file = os.path.join(self.temp_dir, 'gamess_output.log')
-
-        with open(self.input_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gamess_input.inp')) as fx:
-                f.write(fx.read())
-
-        with open(self.input_file_2, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gamess_input_2.inp')) as fx:
-                f.write(fx.read())
-
-        with open(self.output_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gamess_output.log')) as fx:
-                f.write(fx.read())
+        self.input_file = self.copy_to_temporary_directory('gamess_input.inp')
+        self.input_file_2 = self.copy_to_temporary_directory('gamess_input_2.inp')
+        self.output_file = self.copy_to_temporary_directory('gamess_output.log')
 
     def test_input(self):
         """Test the behavior of the input"""
@@ -913,7 +827,7 @@ class GAMESSTestCase(QcipToolsTestCase):
             self.assertEqual(symbols[index], a.symbol)
 
         # test writing
-        other_input = os.path.join(self.temp_dir, 'u.inp')
+        other_input = os.path.join(self.temporary_directory, 'u.inp')
 
         with open(other_input, 'w') as f:
             fi.write(f)
