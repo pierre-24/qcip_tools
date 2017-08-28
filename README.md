@@ -21,7 +21,7 @@ Previous releases:
 With pip:
 
 ```bash
-pip install git+ssh://git@gitlab.unamur.be/pierre.beaujean/qcip_tools.git
+pip install git+ssh://git@gitlab.unamur.be/pierre.beaujean/qcip_tools.git@master
 ```
 
 See the [installation page](./documentation/source/install.rst) for more information.
