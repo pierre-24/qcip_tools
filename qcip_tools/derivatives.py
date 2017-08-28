@@ -14,6 +14,9 @@ from qcip_tools import math as qcip_math
 #: Note: do not change the order, except if you know what your are doing
 ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd')
 
+GEOMETRICAL_DERIVATIVES = ('G', 'N')
+ELECTRICAL_DERIVATIVES = ('F', 'D', 'd')
+
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
 ORDERS = {1: 'first', 2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth'}  #: number to x*th*.
@@ -57,7 +60,7 @@ class Derivative:
                 if i not in ALLOWED_DERIVATIVES:
                     raise RepresentationError(from_representation)
 
-                if i in 'GN' and not spacial_dof:
+                if i in GEOMETRICAL_DERIVATIVES and not spacial_dof:
                     raise Exception('geometrical derivative and no spacial_dof !')
 
             self.diff_representation = from_representation
@@ -80,7 +83,8 @@ class Derivative:
         :rtype: str
         """
 
-        return self.raw_representation(exclude='FDd') + self.raw_representation(exclude='GN')
+        return self.raw_representation(exclude=ELECTRICAL_DERIVATIVES) + \
+            self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES)
 
     def raw_representation(self, exclude=None):
         """Get raw representation (simply the parent representation + obj representation).
@@ -90,7 +94,7 @@ class Derivative:
             Dangerous to use, prefer ``representation()``.
 
         :param exclude: exclude some element from the representation
-        :type exclude: list|str
+        :type exclude: tuple|list|str
         :rtype: str
         """
 
@@ -125,7 +129,7 @@ class Derivative:
 
         sdof = spacial_dof if spacial_dof else self.spacial_dof
 
-        if 'N' in representation and not sdof:
+        if ('N' in representation and not sdof) or ('G' in representation and not sdof):
             raise Exception('No DOF')
 
         return Derivative(
@@ -159,7 +163,7 @@ class Derivative:
         shape = [1] if representation == '' else []
 
         for i in representation:
-            shape.append(3 if i in 'FDd' else self.spacial_dof)
+            shape.append(3 if i in ELECTRICAL_DERIVATIVES else self.spacial_dof)
 
         return shape
 
@@ -280,7 +284,7 @@ class Derivative:
 
             perms = [
                 a for a in itertools.combinations_with_replacement(
-                    range(self.spacial_dof if c in 'GN' else 3), each[c])]
+                    range(self.spacial_dof if c in GEOMETRICAL_DERIVATIVES else 3), each[c])]
             list_of_components = Derivative.expend_list(list_of_components, perms)
 
             ideal_representation += each[c] * c
@@ -395,7 +399,7 @@ def representation_to_operator(representation, component=None, molecule=None):
                 molecule[math.floor(component / 3)].symbol, COORDINATES[component % 3]))
             if component is not None else '')
 
-    if representation in 'FDd':
+    if representation in ELECTRICAL_DERIVATIVES:
         return 'dF' + ('({})'.format(COORDINATES[component]) if component is not None else '')
 
 
