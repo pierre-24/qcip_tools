@@ -926,6 +926,72 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
         return self.gamma_squared_zzzz() / self.gamma_squared_zxxx()
 
+    def isotropic_contribution_squared(self, first_version=True):
+        """Compute the isotropic contribution
+
+        :param first_version: version assuming static limit
+        :type first_version: bool
+        :rtype: float
+        """
+
+        if not first_version:
+            raise NotImplementedError('full version!')
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += 1 / 5 * self.components[i, i, j, j] * self.components[k, k, l, l]
+
+        return tmp
+
+    def quadrupolar_contribution_squared(self, first_version=True):
+        """Compute the quadrupolar contribution
+
+        :param first_version: version assuming static limit
+        :type first_version: bool
+        :rtype: float
+        """
+
+        if not first_version:
+            raise NotImplementedError('full version!')
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
+                            tmp -= 2 / 7 * self.components[i, i, j, j] * self.components[k, k, l, l]
+
+        return tmp
+
+    def hexacadecapolar_contribution_squared(self, first_version=True):
+        """Compute the hexacadecapolar (bless you!) contribution
+
+        :param first_version: version assuming static limit
+        :type first_version: bool
+        :rtype: float
+        """
+
+        if not first_version:
+            raise NotImplementedError('full version!')
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += self.components[i, j, k, l] ** 2
+                            tmp -= 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
+                            tmp += 3 / 35 * self.components[i, i, j, j] * self.components[k, k, l, l]
+
+        return tmp
+
     def to_string(self, threshold=1e-5, disable_extras=False, dipole=None, **kwargs):
         """Rewritten to add information
         """
@@ -946,10 +1012,23 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
                 G2zzzz = self.gamma_squared_zzzz()
                 G2zxxx = self.gamma_squared_zxxx()
 
+                GJ0 = math.sqrt(self.isotropic_contribution_squared(first_version=True))
+                GJ2 = math.sqrt(self.quadrupolar_contribution_squared(first_version=True))
+                GJ4 = math.sqrt(self.hexacadecapolar_contribution_squared(first_version=True))
+
                 r += '<G2zzzz>  {: .5e}\n'.format(G2zzzz)
                 r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
                 r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
                 r += 'DR        {: .3f}\n'.format(G2zzzz / G2zxxx)
+                r += 'G|J=0|*   {: .5e}\n'.format(GJ0)
+                r += 'G|J=2|*   {: .5e}\n'.format(GJ2)
+                r += 'G|J=4|*   {: .5e}\n'.format(GJ4)
+
+                try:
+                    r += 'rho_2*    {: .5e}\n'.format(GJ2 / GJ0)
+                    r += 'rho_4*    {: .5e}\n'.format(GJ4 / GJ0)
+                except ValueError:
+                    pass
 
             r += 'gamma_||  {: .5e}\n'.format(para)
             r += 'gamma_per {: .5e}\n'.format(perp)
