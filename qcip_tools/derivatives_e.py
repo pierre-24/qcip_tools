@@ -490,10 +490,14 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         if old_version:
             for i in derivatives.COORDINATES_LIST:
+                tmp += 3 / 5 * self.components[i, i, i] ** 2
                 for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        if old_version:
-                            tmp += 3 / 5 * self.components[i, j, j] * self.components[i, k, k]
+                    if i != j:
+                        tmp += 6 / 5 * self.components[i, i, i] * self.components[i, j, j]
+                        tmp += 3 / 5 * self.components[i, j, j] ** 2
+                        for k in derivatives.COORDINATES_LIST:
+                            if i != k and j != k:
+                                tmp += 3 / 5 * self.components[i, j, j] * self.components[i, k, k]
         else:
             tmp = self.dipolar_fs_contribution_squared() + self.dipolar_ms_contribution_squared()
 
@@ -520,14 +524,22 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             raise NotSHG(self.input_fields)
 
         tmp = 0
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                for k in derivatives.COORDINATES_LIST:
 
-                    if old_version:
-                        tmp -= 3 / 5 * self.components[i, j, j] * self.components[i, k, k]
-                        tmp += self.components[i, j, k] ** 2
-                    else:
+        if old_version:
+            for i in derivatives.COORDINATES_LIST:
+                tmp += 2 / 5 * self.components[i, i, i] ** 2
+                for j in derivatives.COORDINATES_LIST:
+                    if i != j:
+                        tmp -= 6 / 5 * self.components[i, i, i] * self.components[i, j, j]
+                        tmp += 12 / 5 * self.components[i, j, j] ** 2
+                        for k in derivatives.COORDINATES_LIST:
+                            if i != k and j != k:
+                                tmp -= 3 / 5 * self.components[i, j, j] * self.components[i, k, k]
+                                tmp += self.components[i, j, k] ** 2
+        else:
+            for i in derivatives.COORDINATES_LIST:
+                for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
                         tmp -= 1 / 15 * self.components[i, j, j] * self.components[i, k, k]
                         tmp -= 4 / 15 * self.components[i, i, j] * self.components[j, k, k]
                         tmp -= 4 / 15 * self.components[i, i, j] * self.components[k, j, k]
@@ -750,18 +762,18 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             if sum(self.input_fields) == 2 or self.frequency == .0 or self.frequency == 'static':  # SHG
                 B2zzz = self.beta_squared_zzz()
                 B2zxx = self.beta_squared_zxx()
-                BJ1 = self.dipolar_contribution()
-                BJ3 = self.octupolar_contribution()
+                BJ1 = self.dipolar_contribution(old_version=True)
+                BJ3 = self.octupolar_contribution(old_version=True)
 
                 r += '<B2zzz>   {: .5e}\n'.format(B2zzz)
                 r += '<B2zxx>   {: .5e}\n'.format(B2zxx)
                 r += 'beta_HRS  {: .5e}\n'.format(math.sqrt(B2zxx + B2zzz))
                 r += 'DR        {: .3f}\n'.format(B2zzz / B2zxx)
-                r += 'B|J=1|    {: .5e}\n'.format(BJ1)
-                r += 'B|J=3|    {: .5e}\n'.format(BJ3)
+                r += 'B|J=1|*   {: .5e}\n'.format(BJ1)
+                r += 'B|J=3|*   {: .5e}\n'.format(BJ3)
 
                 try:
-                    r += 'rho       {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
+                    r += 'rho*      {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
                 except ValueError:
                     pass
 
