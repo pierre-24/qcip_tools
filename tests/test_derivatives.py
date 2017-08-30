@@ -281,6 +281,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 3.4320, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 167.0257, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), 99.3520, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
@@ -331,6 +332,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 3.2587, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 398.6438, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), 209.3432, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.3799, places=3)
 
         # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
@@ -369,8 +371,36 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 1.5, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 829.4336, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
 
         # ... since CH4 has no dipole moment, the rest of the properties failed ;)
+
+        # dynamic (911.3nm) water BLYP/d-aug-cc-pVTZ (Dalton)
+        beta = numpy.array(
+            [[[0.000000e+00, 0.000000e+00, -1.164262e+01],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [-1.164262e+01, 0.000000e+00, 0.000000e+00]],
+             [[0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -1.451377e+01],
+              [0.000000e+00, -1.451377e+01, 0.000000e+00]],
+             [[-9.491719e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -1.475714e+01, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -2.222017e+01]]]
+        )
+
+        for angles in angles_set:
+            new_beta = qcip_math.tensor_rotate(beta, *angles)
+            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
+
+            # Values obtained directly from the contribution matrices
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 123.3727, places=3)
+            # self.assertAlmostEqual(nb.dipolar_contribution_squared(), 1367.5055 + 1.2128, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), 1.9108, places=3)
+
+            self.assertAlmostEqual(nb.beta_squared_zzz(), 280.551, places=3)
+            self.assertAlmostEqual(nb.beta_squared_zxx(), 31.304, places=3)
+            self.assertAlmostEqual(nb.beta_hrs(), 17.659, places=3)
+            self.assertAlmostEqual(nb.depolarization_ratio(), 8.962, places=3)
 
         # static CH2Cl2, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array(
@@ -418,6 +448,18 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
 
+            GJ4 = ng.hexacadecapolar_contribution_squared(first_version=True)
+            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
+            GJ0 = ng.isotropic_contribution_squared()
+
+            rho_2 = GJ2 / GJ0
+            rho_4 = GJ4 / GJ0
+
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2)
+            self.assertAlmostEqual(
+                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2))
+
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
             [[[-2.229953e+03, -3.839926e-05, -3.112595e-05],
@@ -463,6 +505,18 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx())
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
+
+            GJ4 = ng.hexacadecapolar_contribution_squared(first_version=True)
+            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
+            GJ0 = ng.isotropic_contribution_squared()
+
+            rho_2 = GJ2 / GJ0
+            rho_4 = GJ4 / GJ0
+
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2)
+            self.assertAlmostEqual(
+                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2))
 
         # test conversion
         self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
