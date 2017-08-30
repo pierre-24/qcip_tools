@@ -455,10 +455,10 @@ class DerivativesTestCase(QcipToolsTestCase):
             rho_2 = GJ2 / GJ0
             rho_4 = GJ4 / GJ0
 
-            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0)
-            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2)
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
             self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2))
+                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
 
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
@@ -513,10 +513,10 @@ class DerivativesTestCase(QcipToolsTestCase):
             rho_2 = GJ2 / GJ0
             rho_4 = GJ4 / GJ0
 
-            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0)
-            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2)
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
             self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2))
+                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
 
         # test conversion
         self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
