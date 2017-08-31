@@ -2,6 +2,7 @@ import itertools
 import math
 import collections
 from scipy import constants
+from contextlib import suppress
 
 import numpy
 from qcip_tools import derivatives, quantities
@@ -772,10 +773,8 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 r += 'B|J=1|*   {: .5e}\n'.format(BJ1)
                 r += 'B|J=3|*   {: .5e}\n'.format(BJ3)
 
-                try:
+                with suppress(ValueError):
                     r += 'rho*      {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
-                except ValueError:
-                    pass
 
         return r
 
@@ -1024,11 +1023,13 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
                 r += 'G|J=2|*   {: .5e}\n'.format(GJ2)
                 r += 'G|J=4|*   {: .5e}\n'.format(GJ4)
 
-                try:
+                with suppress(ValueError):
                     r += 'rho_2*    {: .5e}\n'.format(GJ2 / GJ0)
                     r += 'rho_4*    {: .5e}\n'.format(GJ4 / GJ0)
-                except ValueError:
-                    pass
+
+                with suppress(ValueError):
+                    r += 'rho_2m*    {: .5e}\n'.format(GJ0 / GJ2)
+                    r += 'rho_4m*    {: .5e}\n'.format(GJ4 / GJ2)
 
             r += 'gamma_||  {: .5e}\n'.format(para)
             r += 'gamma_per {: .5e}\n'.format(perp)
