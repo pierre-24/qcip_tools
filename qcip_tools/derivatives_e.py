@@ -1028,8 +1028,8 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
                     r += 'rho_4*   {: .5e}\n'.format(GJ4 / GJ0)
 
                 with suppress(ValueError):
-                    r += 'rho_2m*    {: .5e}\n'.format(GJ0 / GJ2)
-                    r += 'rho_4m*    {: .5e}\n'.format(GJ4 / GJ2)
+                    r += 'rho_2m*   {: .5e}\n'.format(GJ0 / GJ2)
+                    r += 'rho_4m*   {: .5e}\n'.format(GJ4 / GJ2)
 
             r += 'gamma_||  {: .5e}\n'.format(para)
             r += 'gamma_per {: .5e}\n'.format(perp)
