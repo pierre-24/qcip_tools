@@ -329,13 +329,16 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
             chunk = self.chunks_information[key]
 
             if chunk.data_length != 1:
-                matrix = self.lines[chunk.line_start:chunk.line_end]
-                matrix = (''.join(matrix)).split()
-                if len(matrix) == chunk.data_length:
-                    for d in matrix:
-                        content.append(transform_string_from_fchk(d, chunk.data_type))
+                if chunk.data_type in ['R', 'I']:
+                    matrix = self.lines[chunk.line_start:chunk.line_end]
+                    matrix = (''.join(matrix)).split()
+                    if len(matrix) == chunk.data_length:
+                        for d in matrix:
+                            content.append(transform_string_from_fchk(d, chunk.data_type))
+                    else:
+                        raise FCHKFormatError('Size is not the same as defined for {}'.format(key))
                 else:
-                    raise FCHKFormatError('Size is not the same as defined for {}'.format(key))
+                    content = ''.join(a.strip() for a in self.lines[chunk.line_start:chunk.line_end])
             else:
                 content = self.lines[chunk.line_start][49:].strip()
                 content = transform_string_from_fchk(content, chunk.data_type)
@@ -364,30 +367,39 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         self.basis_set = second_line[2]
 
         # now, crawl trough information
-        for index, current_line in enumerate(self.lines[2:]):
-            current_line_index = index + 2
-            if current_line[0] != ' ':
-                keyword = current_line[:40].strip()  # name is contained in the 40 first characters
-                size = 1
-                data_type = current_line[43]
+        current_line_index = 2
+        while True:
+            current_line = self.lines[current_line_index]
+            keyword = current_line[:40].strip()  # name is contained in the 40 first characters
+            size = 1
+            data_type = current_line[43]
 
-                if data_type not in FCHK_AUTHORIZED_TYPES:
-                    raise FCHKFormatError('Type of {} ({}) is unknown'.format(keyword, data_type))
+            if data_type not in FCHK_AUTHORIZED_TYPES:
+                raise FCHKFormatError('Type of {} ({}) is unknown'.format(keyword, data_type))
 
-                is_matrix = current_line[47] == 'N'
+            is_matrix = current_line[47] == 'N'
 
-                if is_matrix:
-                    size = int(current_line[49:].strip())
+            if is_matrix:
+                size = int(current_line[49:].strip())
+                if data_type in ['I', 'R', 'C']:
                     values_per_line = 5
                     if data_type == 'I':
                         values_per_line = 6
                     num_lines = math.ceil(size / values_per_line)
-                    line_start, line_end = current_line_index + 1, current_line_index + 1 + num_lines
-
                 else:
-                    line_start = line_end = current_line_index
+                    raise FCHKFormatError('Unknown format {}!'.format(data_type))
 
-                self.chunks_information[keyword] = FCHKChunkInformation(keyword, data_type, size, line_start, line_end)
+                line_start, line_end = current_line_index + 1, current_line_index + 1 + num_lines
+                current_line_index = line_end
+
+            else:
+                line_start = line_end = current_line_index
+                current_line_index += 1
+
+            self.chunks_information[keyword] = FCHKChunkInformation(keyword, data_type, size, line_start, line_end)
+
+            if current_line_index >= len(self.lines):
+                break
 
         # finally, read the molecule
         nuclear_charges = self.get('Atomic numbers')
