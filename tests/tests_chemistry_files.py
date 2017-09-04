@@ -48,6 +48,7 @@ class GaussianTestCase(QcipToolsTestCase):
     def setUp(self):
         self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
         self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
+        self.fchk_file_v3 = self.copy_to_temporary_directory('gaussian_fchk_v3.fchk')
         self.log_file = self.copy_to_temporary_directory('gaussian_output.log')
 
         self.cube_file = self.copy_to_temporary_directory('gaussian_cube.cub')
@@ -182,6 +183,19 @@ class GaussianTestCase(QcipToolsTestCase):
         # test molecule (conversion from a.u. to angstrom):
         self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
         self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)
+
+    def test_fchk_file_v3(self):
+        """FCHK file with v3 are a bit different, because it includes characters"""
+
+        fi = gaussian.FCHK()
+        self.assertFalse(fi.from_read)
+
+        with open(self.fchk_file_v3) as f:
+            fi.read(f)
+
+        self.assertTrue(fi.from_read)
+        self.assertEqual(fi.get('Route'), '#p hf/cc-pVDZ polar=(DCSHG,cubic) cphf=rdfreq nosym')
+        self.assertEqual(fi.get('Full Title'), 'Water gamma (cc-pVDZ)')
 
     def test_log_file(self):
 
