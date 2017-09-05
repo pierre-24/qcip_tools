@@ -29,7 +29,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificatio
     """
 
     #: The identifier
-    file_type = 'GAUSSIAN_INPUT'
+    file_type = 'GAUSSIAN_INP'
 
     def __init__(self):
 
@@ -257,6 +257,9 @@ class FCHKChunkInformation:
 
 class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
     """A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).
+
+    Most of the information are found in the "FChk file" part of the
+    `"Interfacing" documentation of Gaussian <http://gaussian.com/interfacing/>`_.
 
     .. container:: class-members
 
@@ -1030,7 +1033,7 @@ class BasisSet(ChemistryFile, WithOutputMixin):
 
     """
 
-    file_type = 'GAUSSIAN_BASIS_SET'
+    file_type = 'GAUSSIAN_BS'
 
     def __init__(self):
         self.basis_set = basis_set.BasisSet()
