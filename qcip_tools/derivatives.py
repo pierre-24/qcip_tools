@@ -428,6 +428,9 @@ class Tensor:
             if components.shape != self.representation.shape():
                 components = components.reshape(self.representation.shape())
 
+        if spacial_dof is not None and spacial_dof % 3 != 0:
+            raise ValueError('DOF should be a multiple of 3 ?!?')
+
         self.spacial_dof = spacial_dof
 
         if 'D' in self.representation.representation() and frequency is None:
