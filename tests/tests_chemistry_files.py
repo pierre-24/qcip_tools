@@ -52,13 +52,13 @@ class HelpersTestCase(QcipToolsTestCase):
             self.assertNotEqual(cm.exception.code, 0)
 
         # open with identifier
-        args = parser.parse_args(['-a', 'GAUSSIAN_INPUT:' + self.input_file])
+        args = parser.parse_args(['-a', 'GAUSSIAN_INP:' + self.input_file])
         self.assertEqual(type(args.a), gaussian.Input)  # ok
 
-        args = parser.parse_args(['-b', 'GAUSSIAN_INPUT:' + self.input_file])
+        args = parser.parse_args(['-b', 'GAUSSIAN_INP:' + self.input_file])
         self.assertEqual(type(args.b), gaussian.Input)  # ok
 
-        args = parser.parse_args(['-c', 'GAUSSIAN_INPUT:' + self.input_file, 'DALTON_MOL:' + self.input_file_2])
+        args = parser.parse_args(['-c', 'GAUSSIAN_INP:' + self.input_file, 'DALTON_MOL:' + self.input_file_2])
         self.assertEqual(type(args.c[0]), gaussian.Input)
         self.assertEqual(type(args.c[1]), dalton.MoleculeInput)  # ... ok :)
 

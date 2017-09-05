@@ -121,7 +121,8 @@ def create_open_chemistry_file_action(must_be=None):
         parser.add_argument('-b', action=helpers.create_open_chemistry_file_action(must_be=[gaussian.Input]))
 
     String (or list) is parsed, and identifier can be added with ``IDENTIFIER:/path/to/file``.
-    Valid identifier are the values of ``file_path`` in the different ``ChemistryFile`` objects.
+    Valid identifier are the values of ``file_type`` in the different ``ChemistryFile`` objects
+    (a list can be found in the table on the beginning `of this section <chemistry_files.html#api-documentation>`_).
 
     :param must_be: restrict the list of possibilities
     :type must_be: list
