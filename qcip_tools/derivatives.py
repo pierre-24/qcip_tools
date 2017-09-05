@@ -388,6 +388,17 @@ class Derivative:
 
 
 def representation_to_operator(representation, component=None, molecule=None):
+    """Use the representation to find a translation for the operator
+
+    :param representation: the representation
+    :type representation: str
+    :param component: (flatten) component
+    :type component: int
+    :param molecule: the molecule (print the symbol of the atoms instead of a number if given)
+    :type molecule: qcip_tools.molecule.Molecule
+    :rtype: str
+    """
+
     if representation not in ALLOWED_DERIVATIVES:
         raise RepresentationError(representation)
 
@@ -396,8 +407,8 @@ def representation_to_operator(representation, component=None, molecule=None):
 
     if representation == 'G':
         return 'dG' + ('({})'.format(
-            component + 1 if not molecule else '{}{}'.format(
-                molecule[math.floor(component / 3)].symbol, COORDINATES[component % 3]))
+            component + 1 if not molecule else '{}{}{}'.format(
+                molecule[math.floor(component / 3)].symbol, math.floor(component / 3) + 1, COORDINATES[component % 3]))
             if component is not None else '')
 
     if representation in ELECTRICAL_DERIVATIVES:
