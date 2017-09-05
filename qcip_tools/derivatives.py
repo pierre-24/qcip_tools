@@ -177,13 +177,14 @@ class Derivative:
 
     @classmethod
     def expend_list(cls, iterable, sub_iterable):
-        """For each element of ``iterable``, create a new list by adding each element of ``sub_iterable``.
+        """
+        For each element of ``iterable``, create a new list by adding each element of ``sub_iterable``.
 
         :param iterable: main list
         :type iterable: list
         :param sub_iterable: sub list
         :type sub_iterable: list
-        :rtype list
+        :rtype: list
         """
 
         if not iterable:

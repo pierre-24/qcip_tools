@@ -1,10 +1,76 @@
 import os
 import random
 import io
+import argparse
+from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
 from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess
+
+
+class HelpersTestCase(QcipToolsTestCase):
+    """Gaussian stuffs"""
+
+    def setUp(self):
+        self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
+        self.input_file_2 = self.copy_to_temporary_directory('dalton_molecule.mol')
+
+    def test_argparse_action(self):
+        """Test the helper action"""
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-a', action=helpers.create_open_chemistry_file_action())
+        parser.add_argument('-b', action=helpers.create_open_chemistry_file_action(must_be=[gaussian.Input]))
+        parser.add_argument('-c', action=helpers.create_open_chemistry_file_action(), nargs='*')  # list
+
+        # 1. Open
+        args = parser.parse_args(['-a', self.input_file])
+        self.assertEqual(type(args.a), gaussian.Input)
+
+        args = parser.parse_args(['-a', self.input_file_2])
+        self.assertEqual(type(args.a), dalton.MoleculeInput)
+
+        args = parser.parse_args(['-c', self.input_file, self.input_file_2])
+        self.assertEqual(type(args.c[0]), gaussian.Input)
+        self.assertEqual(type(args.c[1]), dalton.MoleculeInput)
+
+        # 2. File does not exists:
+        argparse_mock = MagicMock()
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):  # ... Please shut up.
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-a', 'xxx'])
+            self.assertNotEqual(cm.exception.code, 0)
+
+        # 3. Open the right type:
+        args = parser.parse_args(['-b', self.input_file])
+        self.assertEqual(type(args.b), gaussian.Input)  # ok
+
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-b', self.input_file_2])
+            self.assertNotEqual(cm.exception.code, 0)
+
+        # open with identifier
+        args = parser.parse_args(['-a', 'GAUSSIAN_INPUT:' + self.input_file])
+        self.assertEqual(type(args.a), gaussian.Input)  # ok
+
+        args = parser.parse_args(['-b', 'GAUSSIAN_INPUT:' + self.input_file])
+        self.assertEqual(type(args.b), gaussian.Input)  # ok
+
+        args = parser.parse_args(['-c', 'GAUSSIAN_INPUT:' + self.input_file, 'DALTON_MOL:' + self.input_file_2])
+        self.assertEqual(type(args.c[0]), gaussian.Input)
+        self.assertEqual(type(args.c[1]), dalton.MoleculeInput)  # ... ok :)
+
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-a', 'DALTON_MOL:' + self.input_file])  # not a dalton mol
+            self.assertNotEqual(cm.exception.code, 0)
+
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-b', 'DALTON_MOL:' + self.input_file_2])  # not a correct possibility
+            self.assertNotEqual(cm.exception.code, 0)
 
 
 class ChemistryFileTestCase(QcipToolsTestCase):
