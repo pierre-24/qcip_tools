@@ -10,7 +10,9 @@ REPRESENTATIONS = {
     'cubic_FF': 'GGG',
 }
 
-DERIVATIVES = list(REPRESENTATIONS)
+DERIVATIVES = list(REPRESENTATIONS.values())
+
+NAMES = dict((b, a) for (a, b) in REPRESENTATIONS.items())
 
 #: List of all simplified names
 SIMPLIFIED_NAMES = {
