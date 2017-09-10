@@ -187,6 +187,7 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
 
     #: The identifier
     file_type = 'DALTON_ARCHIVE'
+    use_binary = True
 
     def __init__(self):
         self.tar_file = None
@@ -201,8 +202,11 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         """A dalton archive does contain a lot of files name "DALTON"
         """
 
+        if 'b' not in f.mode:
+            raise IOError('file {} must be open in binary mode!'.format(f.name))
+
         try:
-            t = tarfile.open(f.name)
+            t = tarfile.open(fileobj=f)
         except tarfile.TarError:
             return False
 
@@ -230,8 +234,11 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         :type f: file
         """
 
+        if 'b' not in f.mode:
+            raise IOError('file {} must be open in binary mode!'.format(f.name))
+
         self.from_read = True
-        self.tar_file = tarfile.open(f.name)
+        self.tar_file = tarfile.open(fileobj=f)
 
         # read molecule:
         mol_file = self.get_file('DALTON.MOL')
