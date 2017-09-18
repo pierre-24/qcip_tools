@@ -103,6 +103,11 @@ API documentation
       - ``GAMESS_LOG``
       - Yes
       - **No**
+    * - `chemistry_datafile.ChemistryDataFile <#qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile>`_
+      - QCIP chemistry data file (.chdf)
+      - ``QCIP_CDF``
+      - Yes
+      - Yes
 
 
 .. note::
@@ -148,4 +153,10 @@ GAMESS files (``gamess``)
 =========================
 
 .. automodule:: qcip_tools.chemistry_files.gamess
+    :members:
+
+Chemistry data files (``chemistry_datafile``)
+=============================================
+
+.. automodule:: qcip_tools.chemistry_files.chemistry_datafile
     :members:

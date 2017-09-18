@@ -2,15 +2,16 @@ import os
 import random
 import io
 import argparse
+import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom
-from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile
+from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
 class HelpersTestCase(QcipToolsTestCase):
-    """Gaussian stuffs"""
+    """test the helpers"""
 
     def setUp(self):
         self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
@@ -995,3 +996,82 @@ class GAMESSTestCase(QcipToolsTestCase):
 
         with open(self.output_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Output)
+
+
+class ChemistryDatafileTestCase(QcipToolsTestCase):
+    """Chemistry data file stuffs"""
+
+    def setUp(self):
+        self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
+        self.chemistry_datafile = self.copy_to_temporary_directory('chemistry_datafile.chdf')
+
+    def test_datafile(self):
+        """Test the behavior of the datafile"""
+
+        fx = gaussian.FCHK()
+        self.assertFalse(fx.from_read)
+
+        with open(self.fchk_file) as f:
+            fx.read(f)
+
+        fd = chemistry_datafile.ChemistryDataFile()
+        fd.title = 'test'
+        fd.molecule = fx.molecule
+        fd.spacial_dof = 3 * len(fx.molecule)
+        fd.trans_plus_rot_dof = 5
+        fd.derivatives['F'] = numpy.array(fx['Dipole Moment'])
+
+        # test writing
+        other_input = os.path.join(self.temporary_directory, 'u.chdf')
+
+        with open(other_input, 'wb') as f:
+            fd.write(f)
+
+        # test that everything is there
+        fb = datafile.BinaryDataFile()
+
+        with self.assertRaises(datafile.InvalidDataFile):  # need to change the default magic number
+            with open(other_input, 'rb') as f:
+                fb.read(f)
+
+        fb.magic_number = fd.magic_number
+
+        with open(other_input, 'rb') as f:
+            fb.read(f)
+
+        must_be = [
+            'version', 'title', 'molecule_charge_and_multiplicity', 'molecule_atoms', 'derivatives_available', 'd:F']
+
+        for a in must_be:
+            self.assertIn(a, fb, msg=a)
+
+        self.assertEqual(fb['title'], fd.title)
+        self.assertEqual(fb['molecule_charge_and_multiplicity'], [fx['Charge'], fx['Multiplicity']])
+        self.assertEqual(fb['derivatives_available'], 'F')
+        self.assertArrayAlmostEqual(fb['d:F'], numpy.array(fx['Dipole Moment']))
+
+        # test reading
+        fde = chemistry_datafile.ChemistryDataFile()
+        self.assertFalse(fde.from_read)
+        with open(other_input, 'rb') as f:
+            fde.read(f)
+
+        self.assertTrue(fde.from_read)
+
+        self.assertEqual(fde.title, fd.title)
+        self.assertEqual(fde.version, fd.version)
+        self.assertEqual(fde.molecule.charge, fd.molecule.charge)
+        self.assertEqual(fde.molecule.multiplicity, fd.molecule.multiplicity)
+        self.assertEqual(len(fde.molecule), len(fd.molecule))
+
+        for i, a in enumerate(fde.molecule):
+            self.assertEqual(a.symbol, fd.molecule[i].symbol)
+            self.assertArrayAlmostEqual(a.position, fd.molecule[i].position)
+
+        self.assertArrayAlmostEqual(fde.derivatives['F'], fd.derivatives['F'])
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.chemistry_datafile) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), chemistry_datafile.ChemistryDataFile)

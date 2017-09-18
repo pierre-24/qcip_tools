@@ -57,7 +57,7 @@ class Molecule:
         Each time a function requires a ``shifted_index``, indexing starts at 1 instead of 0.
     """
 
-    def __init__(self, atom_list=None, charge=0.0):
+    def __init__(self, atom_list=None, charge=0):
         """Create a molecule
 
         :param atom_list: list of atoms
