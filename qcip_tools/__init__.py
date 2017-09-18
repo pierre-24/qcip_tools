@@ -1,5 +1,16 @@
+"""
+Quantum Chemistry In Python (QCIP) tools package.
+"""
+
 from pint import UnitRegistry
 from scipy import constants
+
+__name__ = 'qcip_tools'
+__version__ = '0.3a'
+__author__ = 'Pierre Beaujean'
+__maintainer__ = 'Pierre Beaujean'
+__email__ = 'pierre.beaujean@unamur.be'
+__status__ = 'Development'
 
 #: Unit registry. Include definitions for:
 #:
