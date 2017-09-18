@@ -39,6 +39,10 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
 
         Despite the fact that it uses the file extension to pre-sort the possibilities, the performances are bad.
 
+    .. note::
+
+        Use the trick from https://stackoverflow.com/a/31123030 to serve a binary file if needed.
+
     :param f: file
     :type f: file
     :param must_be: restrict the list of possibilities
@@ -59,10 +63,10 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
             f.seek(0, 0)
 
             try:
-                if obj_.attempt_identification(f):
+                if obj_.attempt_identification(f if not obj_.use_binary else f.buffer.raw):
                     f.seek(0, 0)
                     o = obj_()
-                    o.read(f)
+                    o.read(f if not obj_.use_binary else f.buffer.raw)
                     return o
             except NotImplementedError:
                 continue

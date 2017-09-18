@@ -4,7 +4,7 @@ Welcome to qcip_tools's documentation!
 
 Quantum Chemistry In Python (QCIP) tools package.
 
-Written in `REST <http://www.sphinx-doc.org/en/stable/rest.html>`_.
+(the documentation is written in `REST <http://www.sphinx-doc.org/en/stable/rest.html>`_).
 
 
 .. toctree::

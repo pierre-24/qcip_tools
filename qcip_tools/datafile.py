@@ -77,7 +77,7 @@ class ChunkInformation:
 
 class DataFileTypeError(TypeError):
     def __init__(self, s):
-        super().__init__('type {} is not in {}'.format(s, ', '.join(ALLOWED_DATA_TYPES)))
+        super().__init__('{} ({})'.format(s, ', '.join(ALLOWED_DATA_TYPES)))
 
 
 class DataFile:
@@ -347,7 +347,7 @@ class BinaryDataFile(DataFile):
         String are encoded in UTF-8 before storage. So the ``data_length`` contains the size of the encoded string
         (so the number of bytes) rather than the number of letters (that ``len()`` gives).
 
-    + **File header** (``<iIII``)
+    + **File header** (``<IIII``)
 
       .. list-table::
           :header-rows: 1
@@ -358,7 +358,7 @@ class BinaryDataFile(DataFile):
             - Size
             - Default value
           * - Magic number
-            - Int
+            - Unsigned int
             - 4
             - ``0x17B1DAF1``
           * - Version
@@ -464,10 +464,10 @@ class BinaryDataFile(DataFile):
         self.chunks_parsed = {}
 
         # header
-        magic_number, version, number_of_chunk, self.offset_chunk_start = struct.unpack('<iIII', self.raw[:16])
+        magic_number, version, number_of_chunk, self.offset_chunk_start = struct.unpack('<IIII', self.raw[:16])
 
         if magic_number != self.magic_number:
-            raise InvalidDataFile('wrong magic number 0x{:04X} != 0x{}'.format(magic_number, self.magic_number))
+            raise InvalidDataFile('wrong magic number 0x{:04X} != 0x{:04X}'.format(magic_number, self.magic_number))
         if version > self.last_version:
             raise InvalidDataFile('Version {} unknown, should be <= {}'.format(version, self.last_version))
 
@@ -597,7 +597,7 @@ class BinaryDataFile(DataFile):
         # write:
         # header is 16 bytes long!
         f.write(struct.pack(
-            '<iIII', self.magic_number, self.version, len(self.chunks_information), len(chunk_table) + 16))
+            '<IIII', self.magic_number, self.version, len(self.chunks_information), len(chunk_table) + 16))
 
         f.write(chunk_table)
         f.write(chunks)

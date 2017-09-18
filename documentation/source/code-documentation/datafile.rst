@@ -34,7 +34,7 @@ It is therefore easy to store and retrieve some data:
     some_array = numpy.eye(3)
 
     # saving:
-    f = datafile.TextDataFile()
+    f = datafile.TextDataFile()  # or datafile.BinaryDataFile()
     f.set('integers', 'I', some_integers)
     f.set('floats', 'R', some_floats)
     f.set('text', 'S', some_text)
