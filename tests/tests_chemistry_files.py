@@ -6,7 +6,7 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -538,6 +538,19 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertTrue('H' in b1p)
         self.assertTrue('O' in b1p)
         self.assertFalse('C' in b1p)
+
+    def test_basis_set_esml(self):
+        """Test basis set coming from the ESML basis set exchange"""
+
+        # test basis set from ESML
+        fsio = io.StringIO(
+            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'], basis_set_format='Gaussian94'))
+
+        esml_gb = gaussian.BasisSet()
+        esml_gb.read(fsio)
+
+        self.assertEqual(str(esml_gb['H']), 'H [3s|1s]')
+        self.assertEqual(str(esml_gb['C']), 'C [6s3p|2s1p]')  # ok, cool :)
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
