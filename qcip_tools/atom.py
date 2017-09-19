@@ -199,6 +199,8 @@ AtomicNumberToSymbol = {
     92: 'U'
 }
 
+SymbolToAtomicNumber = dict((b, a) for a, b in AtomicNumberToSymbol.items())
+
 # defined using `Cordeo et al. Covalent radii revisited, Dalton Trans., 2008, 2832–2838`
 # [currently only for single bond]
 CovalentRadii = {

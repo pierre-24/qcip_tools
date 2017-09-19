@@ -2,6 +2,8 @@ from setuptools import setup
 from pip.download import PipSession
 from pip.req import parse_requirements
 
+import qcip_tools
+
 session = PipSession()
 pkgs = []
 for pkg in parse_requirements('requirements.txt', session=session):
@@ -9,12 +11,12 @@ for pkg in parse_requirements('requirements.txt', session=session):
         pkgs.append(str(pkg.req))
 
 setup(
-    name='qcip_tools',
+    name=qcip_tools.__name__,
     packages=['qcip_tools', 'qcip_tools.chemistry_files'],
-    version='0.2.2',
-    author='Pierre Beaujean',
-    author_email='pierre.beaujean@unamur.be',
-    description='Library to ease the manipulation of quantum chemistry results in Python 3',
+    version=qcip_tools.__version__,
+    author=qcip_tools.__author__,
+    author_email=qcip_tools.__email__,
+    description=qcip_tools.__doc__,
     classifiers=[
         'Environment :: Scientific',
         'Operating System :: OS Independent',
