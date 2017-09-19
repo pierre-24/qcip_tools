@@ -31,10 +31,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(e.shape()).flatten()
-        for i in e.smart_iterator():
+        for i in e.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < e.dimension(), i)
-            for j in e.inverse_smart_iterator(i):
+            for j in e.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
@@ -53,10 +53,10 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d0.shape()).flatten()
-        for i in d0.smart_iterator():
+        for i in d0.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d0.dimension(), i)
-            for j in d0.inverse_smart_iterator(i):
+            for j in d0.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
@@ -64,28 +64,28 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         # differentiate
         d1 = derivatives.Derivative(
-            from_representation='G', basis=d0, spacial_dof=6)
+            from_representation='G', basis=d0, spacial_dof=9)
 
         self.assertEqual(d1.diff_representation, 'G')
         self.assertEqual(d1.basis.diff_representation, 'FF')
         self.assertEqual(d1.representation(), 'GFF')
 
-        self.assertEqual(d1.dimension(), 6 * 3 * 3)
-        self.assertEqual(d1.shape(), [6, 3, 3])
+        self.assertEqual(d1.dimension(), 9 * 3 * 3)
+        self.assertEqual(d1.shape(), [9, 3, 3])
         self.assertEqual(d1.order(), 3)
 
         # test smart iterator
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d1.shape()).flatten()
-        for i in d1.smart_iterator():
+        for i in d1.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d1.dimension(), i)
-            for j in d1.inverse_smart_iterator(i):
+            for j in d1.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
-        self.assertEqual(num_smart_iterator_call, 6 * 6)
+        self.assertEqual(num_smart_iterator_call, 9 * 6)
 
         # differentiate again:
         d2 = d1.differentiate('G')
@@ -97,16 +97,16 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d2.shape()).flatten()
-        for i in d2.smart_iterator():
+        for i in d2.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d2.dimension(), i)
-            for j in d2.inverse_smart_iterator(i):
+            for j in d2.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
         self.assertTrue(numpy.all(r == 1))
-        self.assertEqual(num_smart_iterator_call, 6 * 21)  # Note: 21 = 6 * (6+1) / 2
+        self.assertEqual(num_smart_iterator_call, 6 * 45)  # Note: 45 = 9 * (9+1) / 2
 
-        # tricky one
+        # tricky one:
         d4 = derivatives.Derivative(from_representation='FDF')
         self.assertEqual(d4.diff_representation, 'FDF')
         self.assertEqual(d4.representation(), 'FDF')
@@ -119,14 +119,50 @@ class DerivativesTestCase(QcipToolsTestCase):
         num_smart_iterator_call = 0
 
         r = numpy.zeros(d4.shape()).flatten()
-        for i in d4.smart_iterator():
+        for i in d4.smart_iterator(as_flatten=True):
             num_smart_iterator_call += 1
             self.assertTrue(i < d4.dimension(), i)
-            for j in d4.inverse_smart_iterator(i):
+            for j in d4.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
-        self.assertEqual(num_smart_iterator_call, 27)
+        self.assertEqual(num_smart_iterator_call, 18)  # 3 * 6
         self.assertTrue(numpy.all(r == 1))
+
+        # another tricky one:
+        d5 = derivatives.Derivative(from_representation='FDDF')
+        self.assertEqual(d5.diff_representation, 'FDDF')
+        self.assertEqual(d5.representation(), 'FDDF')
+        self.assertEqual(d5.dimension(), 3 * 3 * 3 * 3)
+        self.assertEqual(d5.shape(), [3, 3, 3, 3])
+        self.assertIsNone(d5.basis)
+        self.assertEqual(d5.order(), 4)
+
+        # test smart iterator
+        num_smart_iterator_call = 0
+
+        r = numpy.zeros(d5.shape()).flatten()
+        for i in d5.smart_iterator(as_flatten=True):
+            num_smart_iterator_call += 1
+            self.assertTrue(i < d5.dimension(), i)
+            for j in d5.inverse_smart_iterator(i, as_flatten=True):
+                r[j] += 1
+
+        self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
+        self.assertTrue(numpy.all(r == 1))
+
+        # once again, but with full components (not flatten indices)
+        num_smart_iterator_call = 0
+
+        r = numpy.zeros(d5.shape())
+        for i in d5.smart_iterator(as_flatten=False):
+            num_smart_iterator_call += 1
+            self.assertEqual(len(i), d5.order())
+            self.assertTrue(all(x < y for x, y in zip(i, d5.shape())))
+            for j in d5.inverse_smart_iterator(i, as_flatten=False):
+                r[j] += 1
+
+        self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
+        self.assertTrue(numpy.all(r.flatten() == 1))
 
         # make the code cry:
         with self.assertRaises(derivatives.RepresentationError):
@@ -163,6 +199,16 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertEqual(t.frequency, 'static')
         self.assertIsNone(t.spacial_dof)
         self.assertTrue(numpy.array_equal(beta_tensor, t.components))
+
+        gamma_tensor = numpy.array([a * (-1) ** a for a in range(81)]).reshape((3, 3, 3, 3))
+        # Note: a tensor is suppose to be symmetric, which is not the case here
+        t = derivatives.Tensor('FdDD', components=gamma_tensor, frequency='static')
+
+        self.assertEqual(t.representation.representation(), 'FdDD')
+        self.assertEqual(t.representation.dimension(), 81)
+        self.assertEqual(t.frequency, 'static')
+        self.assertIsNone(t.spacial_dof)
+        self.assertTrue(numpy.array_equal(gamma_tensor, t.components))
 
         # make the code cry:
         with self.assertRaises(ValueError):
@@ -235,12 +281,13 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 3.4320, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 167.0257, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), 99.3520, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
-        dipole = numpy.array([.0, .0, 0.625899])
+        dipole = derivatives_e.ElectricDipole(dipole=[.0, .0, 0.625899])
 
-        d = derivatives_e.ElectricDipole(dipole=dipole)
+        d = derivatives_e.ElectricDipole(dipole=dipole.components)
         self.assertAlmostEqual(d.norm(), 0.625899)
 
         alpha = numpy.array(
@@ -285,6 +332,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 3.2587, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 398.6438, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), 209.3432, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.3799, places=3)
 
         # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
@@ -323,8 +371,36 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 1.5, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 829.4336, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
 
         # ... since CH4 has no dipole moment, the rest of the properties failed ;)
+
+        # dynamic (911.3nm) water BLYP/d-aug-cc-pVTZ (Dalton)
+        beta = numpy.array(
+            [[[0.000000e+00, 0.000000e+00, -1.164262e+01],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [-1.164262e+01, 0.000000e+00, 0.000000e+00]],
+             [[0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -1.451377e+01],
+              [0.000000e+00, -1.451377e+01, 0.000000e+00]],
+             [[-9.491719e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -1.475714e+01, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -2.222017e+01]]]
+        )
+
+        for angles in angles_set:
+            new_beta = qcip_math.tensor_rotate(beta, *angles)
+            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
+
+            # Values obtained directly from the contribution matrices
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 123.3727, places=3)
+            # self.assertAlmostEqual(nb.dipolar_contribution_squared(), 1367.5055 + 1.2128, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), 1.9108, places=3)
+
+            self.assertAlmostEqual(nb.beta_squared_zzz(), 280.551, places=3)
+            self.assertAlmostEqual(nb.beta_squared_zxx(), 31.304, places=3)
+            self.assertAlmostEqual(nb.beta_hrs(), 17.659, places=3)
+            self.assertAlmostEqual(nb.depolarization_ratio(), 8.962, places=3)
 
         # static CH2Cl2, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array(
@@ -372,6 +448,22 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
 
+            GJ4 = ng.hexacadecapolar_contribution_squared(first_version=True)
+            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
+            GJ0 = ng.isotropic_contribution_squared()
+
+            rho_2 = GJ2 / GJ0
+            rho_4 = GJ4 / GJ0
+            rho_0m = GJ0 / GJ2
+            rho_4m = GJ4 / GJ2
+
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
+            self.assertAlmostEqual(
+                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
+            self.assertAlmostEqual(
+                ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
+
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
             [[[-2.229953e+03, -3.839926e-05, -3.112595e-05],
@@ -417,6 +509,43 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx())
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
+
+            GJ4 = ng.hexacadecapolar_contribution_squared(first_version=True)
+            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
+            GJ0 = ng.isotropic_contribution_squared()
+
+            rho_2 = GJ2 / GJ0
+            rho_4 = GJ4 / GJ0
+            rho_0m = GJ0 / GJ2
+            rho_4m = GJ4 / GJ2
+
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
+            self.assertAlmostEqual(
+                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
+            self.assertAlmostEqual(
+                ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
+
+        # test conversion
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('2eV'), 0.073, places=3)
+        self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1500cm-1'), 0.0068, places=4)
+
+        # order and name
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(0, 1))
+        self.assertEqual(g.representation.representation(), 'FDF')
+        self.assertEqual(g.name, 'beta(-w;w,0)')
+        self.assertEqual(g.rank(), 3)
+
+        # just check that DFWM is now possible:
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(1, 1, -1))
+        self.assertEqual(g.representation.representation(), 'FDDd')
+        self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
+        self.assertEqual(g.rank(), 4)
+
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(-1, 1, 1))
+        self.assertEqual(g.representation.representation(), 'FDDd')  # reordering
+        self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
 
     def test_geometrical_derivatives(self):
         """Test geometrical ones.

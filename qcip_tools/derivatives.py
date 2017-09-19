@@ -6,9 +6,16 @@ import numpy
 from qcip_tools import math as qcip_math
 
 #: In term of derivative of the energy
-#: ``F`` = static electric field derivative, ``D`` = dynamic electric field derivative (which can be static),
-#: ``G`` = geometrical derivative, ``N`` = normal mode derivative
-ALLOWED_DERIVATIVES = ('F', 'D', 'G', 'N')
+#: ``G`` = geometrical derivative,
+#: ``N`` = normal mode derivative,
+#: ``F`` = static electric field derivative,
+#: ``D`` = dynamic electric field derivative (which can be static),
+#: ``d`` = inverse of the dynamic electric field (-w).
+#: Note: do not change the order, except if you know what your are doing
+ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd')
+
+GEOMETRICAL_DERIVATIVES = ('G', 'N')
+ELECTRICAL_DERIVATIVES = ('F', 'D', 'd')
 
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
@@ -53,7 +60,7 @@ class Derivative:
                 if i not in ALLOWED_DERIVATIVES:
                     raise RepresentationError(from_representation)
 
-                if i in 'GN' and not spacial_dof:
+                if i in GEOMETRICAL_DERIVATIVES and not spacial_dof:
                     raise Exception('geometrical derivative and no spacial_dof !')
 
             self.diff_representation = from_representation
@@ -69,20 +76,15 @@ class Derivative:
     def representation(self):
         """Get the full representation (mix basis and current)
 
+        .. note::
+
+            First comme the geometrical derivatives (G or N), then the electrical ones (F, D or d).
+
         :rtype: str
         """
 
-        each_ = collections.Counter(self.raw_representation(exclude=['F', 'D']))
-
-        r = ''
-
-        for i in 'GN':
-            if i not in each_:
-                continue
-
-            r += i * each_[i]
-
-        return r + self.raw_representation(exclude=['G', 'N'])
+        return self.raw_representation(exclude=ELECTRICAL_DERIVATIVES) + \
+            self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES)
 
     def raw_representation(self, exclude=None):
         """Get raw representation (simply the parent representation + obj representation).
@@ -92,7 +94,7 @@ class Derivative:
             Dangerous to use, prefer ``representation()``.
 
         :param exclude: exclude some element from the representation
-        :type exclude: list|str
+        :type exclude: tuple|list|str
         :rtype: str
         """
 
@@ -127,7 +129,7 @@ class Derivative:
 
         sdof = spacial_dof if spacial_dof else self.spacial_dof
 
-        if 'N' in representation and not sdof:
+        if ('N' in representation and not sdof) or ('G' in representation and not sdof):
             raise Exception('No DOF')
 
         return Derivative(
@@ -136,31 +138,32 @@ class Derivative:
             spacial_dof=sdof
         )
 
-    def dimension(self):
+    def dimension(self, raw=False):
         """Return the dimension of the (full) flatten tensor
 
+        :param raw: return the shape of the raw representation
+        :type raw: bool
         :return: the size
         :rtype: int
         """
 
-        size = self.basis.dimension() if self.basis else 1
+        return qcip_math.prod(self.shape(raw=raw))
 
-        for i in self.diff_representation:
-            size *= 3 if i in 'FD' else self.spacial_dof
-
-        return size
-
-    def shape(self):
+    def shape(self, raw=False):
         """Return the shape of the (full) tensor
 
+        :param raw: return the shape of the raw representation
+        :type raw: bool
         :return: the shape
         :rtype: list
         """
 
-        shape = [1] if self.representation() == '' else []
+        representation = self.raw_representation() if raw else self.representation()
 
-        for i in self.representation():
-            shape.append(3 if i in ['F', 'D'] else self.spacial_dof)
+        shape = [1] if representation == '' else []
+
+        for i in representation:
+            shape.append(3 if i in ELECTRICAL_DERIVATIVES else self.spacial_dof)
 
         return shape
 
@@ -174,13 +177,14 @@ class Derivative:
 
     @classmethod
     def expend_list(cls, iterable, sub_iterable):
-        """For each element of ``iterable``, create a new list by adding each element of ``sub_iterable``.
+        """
+        For each element of ``iterable``, create a new list by adding each element of ``sub_iterable``.
 
         :param iterable: main list
         :type iterable: list
         :param sub_iterable: sub list
         :type sub_iterable: list
-        :rtype list
+        :rtype: list
         """
 
         if not iterable:
@@ -199,100 +203,153 @@ class Derivative:
 
         return iterable
 
-    def smart_iterator(self):
+    @classmethod
+    def apply_permutation(cls, iterable, permutations):
+        """Apply the permutations (list of tuple ``(from, to)``) over iterable
+
+        :param iterable: an iterable that you can copy (a list)
+        :type iterable: list
+        :param permutations: list of permutation
+        :type permutations: list|iterator
+        :return: new iterable
+        :rtype: list
+        """
+
+        n_iterable = iterable.copy()
+        for a, b in permutations:
+            if a == b:
+                continue
+            n_iterable[b] = iterable[a]
+
+        return n_iterable
+
+    @classmethod
+    def correct_components(cls, ideal_representation, representation, list_of_components):
+        """Correct the order of the components
+
+        :param ideal_representation: representation when the different type of derivatives nicelly follows each others
+        :type ideal_representation: str
+        :param representation: real representation
+        :type representation: str
+        :param list_of_components: list of components to correct
+        :type list_of_components: list
+        """
+        if representation != ideal_representation:
+            diff = tuple(index for index, (x, y) in enumerate(zip(representation, ideal_representation)) if x != y)
+            changed = None
+
+            r_list = [a for a in representation]
+            ideal_list = [a for a in ideal_representation]
+            for p in itertools.permutations(diff):
+                if p == diff:
+                    continue
+                if Derivative.apply_permutation(ideal_list, zip(diff, p)) == r_list:
+                    changed = p
+                    break
+
+            if changed is None:
+                raise Exception(
+                    'cannot find permutation to go from {} to {} ?!?'.format(ideal_representation, representation))
+
+            # perform permutation
+            for index, components in enumerate(list_of_components):
+                list_of_components[index] = Derivative.apply_permutation(components, zip(diff, changed))
+
+    def smart_iterator(self, as_flatten=False):
         """Apply the
         `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem>`_
-        and only return as subset of independant coordinates. Order guaranteed.
+        and only return as subset of independant coordinates. Order normally guaranteed.
 
         .. note::
 
-            Electrical derivatives are treated separatelly from geometrical derivatives, since only the last "n"
-            element of the tensor are permutable.
+            Ideally, the different type derivatives follows each other. This is not always the case for electrical
+            ones, so there is a stage of re-ordering.
 
+        :param as_flatten: yield full components, not flatten ones
+        :type as_flatten: bool
         """
 
-        if self.representation() == '':  # special case of energy
+        representation = self.representation()
+
+        if representation == '':  # special case of energy
             yield 0
             return
 
-        ned_representation = self.raw_representation(['F', 'D'])
-        ed_representation = self.raw_representation(['G', 'N'])
-        each = collections.Counter(ned_representation)
+        each = collections.Counter(representation)
+        list_of_components = []
+        ideal_representation = ''
 
-        iterable = []
-
-        for c in 'GN':
+        for c in ALLOWED_DERIVATIVES:
             if c not in each:
                 continue
 
-            permutable = [a for a in itertools.combinations_with_replacement(range(self.spacial_dof), each[c])]
-            iterable = Derivative.expend_list(iterable, permutable)
+            perms = [
+                a for a in itertools.combinations_with_replacement(
+                    range(self.spacial_dof if c in GEOMETRICAL_DERIVATIVES else 3), each[c])]
+            list_of_components = Derivative.expend_list(list_of_components, perms)
 
-        if ed_representation != '':
-            max_FD_permutation = 1
-            ref = ed_representation[-1]
-            for i in reversed(ed_representation[:-1]):
-                if i == ref:
-                    max_FD_permutation += 1
-                else:
-                    break
+            ideal_representation += each[c] * c
 
-            permutable = [a for a in itertools.combinations_with_replacement(range(3), max_FD_permutation)]
-            not_permutable = [a for a in itertools.product(
-                range(3),
-                repeat=len(ed_representation) - max_FD_permutation)]
+        # correct the order:
+        Derivative.correct_components(ideal_representation, representation, list_of_components)
 
-            iterable = Derivative.expend_list(Derivative.expend_list(iterable, not_permutable), permutable)
+        for components in list_of_components:
+            if as_flatten:
+                yield self.components_to_flatten_component(components)
+            else:
+                yield tuple(components)
 
-        for component in iterable:
-            yield self.components_to_flatten_component(component)
-
-    def inverse_smart_iterator(self, element):
+    def inverse_smart_iterator(self, element, as_flatten=False):
         """Back-iterate over all the other components :
         from a coordinates, give all the other ones that are equivalents
 
-        :param element: the coordinates
-        :type element: int
+        :param element: the coordinates, either a flatten index (if ``as_flatten=True``) or a tuple
+        :type element: int|tuple
+        :param as_flatten: yield full components, not flatten ones
+        :type as_flatten: bool
         """
 
-        if self.representation() == '':  # special case of energy
+        representation = self.representation()
+
+        if representation == '':  # special case of energy
             yield 0
             return
 
-        ned_representation = self.raw_representation(['F', 'D'])
-        ed_representation = self.raw_representation(['G', 'N'])
-        each = collections.Counter(ned_representation)
-        components = self.flatten_component_to_components(element)
+        each = collections.Counter(representation)
 
-        iterable = []
-        index = 0
+        if as_flatten:
+            components = self.flatten_component_to_components(element)
+        else:
+            if len(element) != self.order():
+                raise ValueError('the element is not of the right size ({} != {})'.format(len(element), self.order()))
+            components = element
 
-        for c in 'GN':
+        list_of_components = []
+        ideal_representation = ''
+
+        for c in ALLOWED_DERIVATIVES:
             if c not in each:
                 continue
 
-            n = each[c]
-            permutations = [a for a in qcip_math.unique_everseen(itertools.permutations(components[index:index + n]))]
-            iterable = Derivative.expend_list(iterable, permutations)
-            index += n
+            components_with_this_derivative = []
+            for index, cp in enumerate(representation):
+                if cp == c:
+                    components_with_this_derivative.append(components[index])
 
-        if ed_representation != '':
-            max_FD_permutation = 1
-            ref = ed_representation[-1]
-            for i in reversed(ed_representation[:-1]):
-                if i == ref:
-                    max_FD_permutation += 1
-                else:
-                    break
+            permutations = [
+                a for a in qcip_math.unique_everseen(itertools.permutations(components_with_this_derivative))]
+            list_of_components = Derivative.expend_list(list_of_components, permutations)
 
-            not_permutable = [components[index:-max_FD_permutation]]
-            permutable = [
-                a for a in qcip_math.unique_everseen(itertools.permutations(components[-max_FD_permutation:]))]
+            ideal_representation += each[c] * c
 
-            iterable = Derivative.expend_list(Derivative.expend_list(iterable, not_permutable), permutable)
+        # correct the order:
+        Derivative.correct_components(ideal_representation, representation, list_of_components)
 
-        for component in iterable:
-            yield self.components_to_flatten_component(component)
+        for components_ in list_of_components:
+            if as_flatten:
+                yield self.components_to_flatten_component(components_)
+            else:
+                yield tuple(components_)
 
     def flatten_component_to_components(self, i):
         """From the index if the array would be flatten, gives the components
@@ -331,6 +388,17 @@ class Derivative:
 
 
 def representation_to_operator(representation, component=None, molecule=None):
+    """Use the representation to find a translation for the operator
+
+    :param representation: the representation
+    :type representation: str
+    :param component: (flatten) component
+    :type component: int
+    :param molecule: the molecule (print the symbol of the atoms instead of a number if given)
+    :type molecule: qcip_tools.molecule.Molecule
+    :rtype: str
+    """
+
     if representation not in ALLOWED_DERIVATIVES:
         raise RepresentationError(representation)
 
@@ -339,11 +407,11 @@ def representation_to_operator(representation, component=None, molecule=None):
 
     if representation == 'G':
         return 'dG' + ('({})'.format(
-            component + 1 if not molecule else '{}{}'.format(
-                molecule[math.floor(component / 3)].symbol, COORDINATES[component % 3]))
+            component + 1 if not molecule else '{}{}{}'.format(
+                molecule[math.floor(component / 3)].symbol, math.floor(component / 3) + 1, COORDINATES[component % 3]))
             if component is not None else '')
 
-    if representation in 'FD':
+    if representation in ELECTRICAL_DERIVATIVES:
         return 'dF' + ('({})'.format(COORDINATES[component]) if component is not None else '')
 
 
@@ -365,8 +433,14 @@ class Tensor:
             self.representation = Derivative(from_representation=representation, spacial_dof=spacial_dof)
 
         if components is not None:
+            if type(components) is list:
+                components = numpy.array(components)
+
             if components.shape != self.representation.shape():
                 components = components.reshape(self.representation.shape())
+
+        if spacial_dof is not None and spacial_dof % 3 != 0:
+            raise ValueError('DOF should be a multiple of 3 ?!?')
 
         self.spacial_dof = spacial_dof
 

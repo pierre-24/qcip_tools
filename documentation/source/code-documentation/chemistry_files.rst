@@ -36,60 +36,78 @@ API documentation
 
 .. list-table::
     :header-rows: 1
-    :widths: 35 55 10 10
+    :widths: 35 45 10 10 10
 
     * - Class
       - Description
+      - Identifier
       - Input
       - Ouput
     * - `xyz.File <#qcip_tools.chemistry_files.xyz.File>`_
       - XYZ file (.xyz)
+      - ``XYZ``
+      - Yes
+      - Yes
+    * - `gaussian.BasisSet <#qcip_tools.chemistry_files.gaussian.BasisSet>`_
+      - Gaussian basis set (.gbs ?)
+      - ``GAUSSIAN_BS``
       - Yes
       - Yes
     * - `gaussian.Cube <#qcip_tools.chemistry_files.gaussian.Cube>`_
       - `Gaussian Cube file <http://gaussian.com/cubegen/>`_ (.cub)
+      - ``GAUSSIAN_CUBE``
       - Yes
       - Yes
     * - `gaussian.FCHK <#qcip_tools.chemistry_files.gaussian.FCHK>`_
       - `Gaussian formated checkpoint file <http://gaussian.com/formchk/>`_ (.fchk)
+      - ``GAUSSIAN_FCHK``
       - Yes
       - **No**
     * - `gaussian.Input <#qcip_tools.chemistry_files.gaussian.Input>`_
       - Gaussian input file (.com, .gau or .inp)
+      - ``GAUSSIAN_INP``
       - Yes
       - Yes
     * - `gaussian.Output <#qcip_tools.chemistry_files.gaussian.Output>`_
       - Gaussian output (.log or .out)
+      - ``GAUSSIAN_LOG``
       - Yes
       - **No**
-    * - `gaussian.BasisSet <#qcip_tools.chemistry_files.gaussian.BasisSet>`_
-      - Gaussian basis set (.gbs ?)
-      - Yes
-      - Yes
     * - `dalton.ArchiveOutput <#qcip_tools.chemistry_files.dalton.ArchiveOutput>`_
       - Dalton archive (.tar.gz)
+      -  ``DALTON_ARCHIVE``
       - Yes
       - **No**
     * - `dalton.Input <#qcip_tools.chemistry_files.dalton.Input>`_
       - Dalton input file (.dal)
+      - ``DALTON_DAL``
       - Yes
       - Yes
     * - `dalton.MoleculeInput <#qcip_tools.chemistry_files.dalton.MoleculeInput>`_
       - Dalton molecule file (.mol)
+      - ``DALTON_MOL``
       - Yes
       - Yes
     * - `dalton.Output <#qcip_tools.chemistry_files.dalton.Output>`_
       - Dalton output file (.out)
+      - ``DALTON_LOG``
       - Yes
       - **No**
     * - `gamess.Input <#qcip_tools.chemistry_files.gamess.Input>`_
       - GAMESS input (.inp)
+      - ``GAMESS_INP``
       - Yes
       - Yes
     * - `gamess.Output <#qcip_tools.chemistry_files.gamess.Output>`_
       - GAMESS output (.log or .out)
+      - ``GAMESS_LOG``
       - Yes
       - **No**
+    * - `chemistry_datafile.ChemistryDataFile <#qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile>`_
+      - QCIP chemistry data file (.chdf)
+      - ``QCIP_CDF``
+      - Yes
+      - Yes
 
 
 .. note::
@@ -135,4 +153,10 @@ GAMESS files (``gamess``)
 =========================
 
 .. automodule:: qcip_tools.chemistry_files.gamess
+    :members:
+
+Chemistry data files (``chemistry_datafile``)
+=============================================
+
+.. automodule:: qcip_tools.chemistry_files.chemistry_datafile
     :members:

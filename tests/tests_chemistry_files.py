@@ -1,12 +1,77 @@
-import tempfile
-import shutil
 import os
 import random
 import io
+import argparse
+import numpy
+from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom
-from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set
+from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
+
+
+class HelpersTestCase(QcipToolsTestCase):
+    """test the helpers"""
+
+    def setUp(self):
+        self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
+        self.input_file_2 = self.copy_to_temporary_directory('dalton_molecule.mol')
+
+    def test_argparse_action(self):
+        """Test the helper action"""
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-a', action=helpers.create_open_chemistry_file_action())
+        parser.add_argument('-b', action=helpers.create_open_chemistry_file_action(must_be=[gaussian.Input]))
+        parser.add_argument('-c', action=helpers.create_open_chemistry_file_action(), nargs='*')  # list
+
+        # 1. Open
+        args = parser.parse_args(['-a', self.input_file])
+        self.assertEqual(type(args.a), gaussian.Input)
+
+        args = parser.parse_args(['-a', self.input_file_2])
+        self.assertEqual(type(args.a), dalton.MoleculeInput)
+
+        args = parser.parse_args(['-c', self.input_file, self.input_file_2])
+        self.assertEqual(type(args.c[0]), gaussian.Input)
+        self.assertEqual(type(args.c[1]), dalton.MoleculeInput)
+
+        # 2. File does not exists:
+        argparse_mock = MagicMock()
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):  # ... Please shut up.
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-a', 'xxx'])
+            self.assertNotEqual(cm.exception.code, 0)
+
+        # 3. Open the right type:
+        args = parser.parse_args(['-b', self.input_file])
+        self.assertEqual(type(args.b), gaussian.Input)  # ok
+
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-b', self.input_file_2])
+            self.assertNotEqual(cm.exception.code, 0)
+
+        # open with identifier
+        args = parser.parse_args(['-a', 'GAUSSIAN_INP:' + self.input_file])
+        self.assertEqual(type(args.a), gaussian.Input)  # ok
+
+        args = parser.parse_args(['-b', 'GAUSSIAN_INP:' + self.input_file])
+        self.assertEqual(type(args.b), gaussian.Input)  # ok
+
+        args = parser.parse_args(['-c', 'GAUSSIAN_INP:' + self.input_file, 'DALTON_MOL:' + self.input_file_2])
+        self.assertEqual(type(args.c[0]), gaussian.Input)
+        self.assertEqual(type(args.c[1]), dalton.MoleculeInput)  # ... ok :)
+
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-a', 'DALTON_MOL:' + self.input_file])  # not a dalton mol
+            self.assertNotEqual(cm.exception.code, 0)
+
+        with patch('argparse.ArgumentParser._print_message', argparse_mock):
+            with self.assertRaises(SystemExit) as cm:
+                parser.parse_args(['-b', 'DALTON_MOL:' + self.input_file_2])  # not a correct possibility
+            self.assertNotEqual(cm.exception.code, 0)
 
 
 class ChemistryFileTestCase(QcipToolsTestCase):
@@ -48,59 +113,17 @@ class GaussianTestCase(QcipToolsTestCase):
     """Gaussian stuffs"""
 
     def setUp(self):
+        self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
+        self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
+        self.fchk_file_v3 = self.copy_to_temporary_directory('gaussian_fchk_v3.fchk')
+        self.log_file = self.copy_to_temporary_directory('gaussian_output.log')
 
-        self.temp_dir = tempfile.mkdtemp()
+        self.cube_file = self.copy_to_temporary_directory('gaussian_cube.cub')
+        self.cube_file2 = self.copy_to_temporary_directory('gaussian_cube_2.cub')
+        self.cube_file3 = self.copy_to_temporary_directory('gaussian_cube_3.cub')
 
-        self.input_file = os.path.join(self.temp_dir, 'input.com')
-
-        with open(self.input_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_input.com')) as fx:
-                f.write(fx.read())
-
-        self.fchk_file = os.path.join(self.temp_dir, 'file.fchk')
-
-        with open(self.fchk_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_fchk.fchk')) as fx:
-                f.write(fx.read())
-
-        self.log_file = os.path.join(self.temp_dir, 'file.log')
-
-        with open(self.log_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_output.log')) as fx:
-                f.write(fx.read())
-
-        self.cube_file = os.path.join(self.temp_dir, 'file.cub')
-
-        with open(self.cube_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube.cub')) as fx:
-                f.write(fx.read())
-
-        self.cube_file2 = os.path.join(self.temp_dir, 'file2.cub')
-
-        with open(self.cube_file2, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_2.cub')) as fx:
-                f.write(fx.read())
-
-        self.cube_file3 = os.path.join(self.temp_dir, 'file3.cub')
-
-        with open(self.cube_file3, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gaussian_cube_3.cub')) as fx:
-                f.write(fx.read())
-
-        self.basis_set1 = os.path.join(self.temp_dir, 'basis1.gbs')
-
-        with open(self.basis_set1, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/STO-3G.gbs')) as fx:
-                f.write(fx.read())
-
-        self.basis_set2 = os.path.join(self.temp_dir, 'basis2.gbs')
-
-        with open(self.basis_set2, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/cc-pVDZ.gbs')) as fx:
-                f.write(fx.read())
-
-    def tearDown(self):
-        shutil.rmtree(self.temp_dir)
+        self.basis_set1 = self.copy_to_temporary_directory('STO-3G.gbs')
+        self.basis_set2 = self.copy_to_temporary_directory('cc-pVDZ.gbs')
 
     def test_input_files(self):
         """Test the behavior of gaussian input file class"""
@@ -136,7 +159,7 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(len(gi1.other_blocks), 1)  # one block for the electric field
 
         # write it
-        other_file = os.path.join(self.temp_dir, 'other.com')
+        other_file = os.path.join(self.temporary_directory, 'other.com')
         gi1.title = text
 
         with open(other_file, 'w') as f:
@@ -227,6 +250,19 @@ class GaussianTestCase(QcipToolsTestCase):
         # test molecule (conversion from a.u. to angstrom):
         self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
         self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)
+
+    def test_fchk_file_v3(self):
+        """FCHK file with v3 are a bit different, because it includes characters"""
+
+        fi = gaussian.FCHK()
+        self.assertFalse(fi.from_read)
+
+        with open(self.fchk_file_v3) as f:
+            fi.read(f)
+
+        self.assertTrue(fi.from_read)
+        self.assertEqual(fi.get('Route'), '#p hf/cc-pVDZ polar=(DCSHG,cubic) cphf=rdfreq nosym')
+        self.assertEqual(fi.get('Full Title'), 'Water gamma (cc-pVDZ)')
 
     def test_log_file(self):
 
@@ -455,7 +491,7 @@ class GaussianTestCase(QcipToolsTestCase):
             b_test.read(o)
 
         # test writing
-        other_file = os.path.join(self.temp_dir, 'other.gbs')
+        other_file = os.path.join(self.temporary_directory, 'other.gbs')
 
         with open(other_file, 'w') as f:
             b1.write(f)
@@ -503,6 +539,19 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertTrue('O' in b1p)
         self.assertFalse('C' in b1p)
 
+    def test_basis_set_esml(self):
+        """Test basis set coming from the ESML basis set exchange"""
+
+        # test basis set from ESML
+        fsio = io.StringIO(
+            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'], basis_set_format='Gaussian94'))
+
+        esml_gb = gaussian.BasisSet()
+        esml_gb.read(fsio)
+
+        self.assertEqual(str(esml_gb['H']), 'H [3s|1s]')
+        self.assertEqual(str(esml_gb['C']), 'C [6s3p|2s1p]')  # ok, cool :)
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
@@ -523,31 +572,10 @@ class DaltonTestCase(QcipToolsTestCase):
     """Dalton stuffs"""
 
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-
-        self.input_mol_file = os.path.join(self.temp_dir, 'input.mol')
-
-        with open(self.input_mol_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_molecule.mol')) as fx:
-                f.write(fx.read())
-
-        self.input_dal_file = os.path.join(self.temp_dir, 'input.dal')
-
-        with open(self.input_dal_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_input.dal')) as fx:
-                f.write(fx.read())
-
-        self.output_archive = os.path.join(self.temp_dir, 'output.tar.gz')
-
-        with open(self.output_archive, 'wb') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_archive.tar.gz'), 'rb') as fx:
-                f.write(fx.read())
-
-        self.output_log = os.path.join(self.temp_dir, 'output.out')
-
-        with open(self.output_log, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/dalton_output.out'), 'r') as fx:
-                f.write(fx.read())
+        self.input_mol_file = self.copy_to_temporary_directory('dalton_molecule.mol')
+        self.input_dal_file = self.copy_to_temporary_directory('dalton_input.dal')
+        self.output_archive = self.copy_to_temporary_directory('dalton_archive.tar.gz')
+        self.output_log = self.copy_to_temporary_directory('dalton_output.out')
 
     def test_input_mol(self):
 
@@ -576,7 +604,7 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertEqual(fm.molecule.number_of_electrons(), 12)
 
         # test generation with no symmetry
-        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
         with open(new_input, 'w') as f:
             fm.write(f, nosym=True)
 
@@ -589,7 +617,7 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('Charge=1.0 Atoms=1' in content[7])
 
         # test generation in atomic units
-        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
         with open(new_input, 'w') as f:
             fm.write(f, in_angstrom=False)
 
@@ -602,7 +630,7 @@ class DaltonTestCase(QcipToolsTestCase):
             self.assertTrue('Charge=1.0 Atoms=1' in content[7])
 
         # test generation with grouping
-        new_input = os.path.join(self.temp_dir, 'new_mol.mol')
+        new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
         with open(new_input, 'w') as f:
             fm.write(f, group_atoms=True)
 
@@ -773,7 +801,7 @@ class DaltonTestCase(QcipToolsTestCase):
         fix['WAVE F'] = dalton.InputModule()  # "WAVE F" is 6 characters, so it is larger than the required 5 ones
         fix['WAVE F']['.DFT'] = dalton.InputCard(parameters=['B3LYP'])
 
-        with open(os.path.join(self.test_directory, 'tests_files/dalton_input_2.dal'), 'r') as fx:
+        with open(os.path.join(self.tests_files_directory, 'dalton_input_2.dal'), 'r') as fx:
             self.assertEqual(str(fix), fx.read())
 
     def test_file_recognition(self):
@@ -796,13 +824,7 @@ class XYZTestCase(QcipToolsTestCase):
     """XYZ stuffs"""
 
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-
-        self.xyz_file = os.path.join(self.temp_dir, 'molecule.xyz')
-
-        with open(self.xyz_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/xyz_molecule.xyz')) as fx:
-                f.write(fx.read())
+        self.xyz_file = self.copy_to_temporary_directory('xyz_molecule.xyz')
 
     def test_xyz(self):
         """Test the behavior of the xyz"""
@@ -823,7 +845,7 @@ class XYZTestCase(QcipToolsTestCase):
             self.assertEqual(symbols[index], a.symbol)
 
         # test writing
-        other_xyz = os.path.join(self.temp_dir, 'n.xyz')
+        other_xyz = os.path.join(self.temporary_directory, 'n.xyz')
 
         with open(other_xyz, 'w') as f:
             fx.write(f)
@@ -862,23 +884,9 @@ class GAMESSTestCase(QcipToolsTestCase):
     """GAMESS stuffs"""
 
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-
-        self.input_file = os.path.join(self.temp_dir, 'gamess_input.inp')
-        self.input_file_2 = os.path.join(self.temp_dir, 'gamess_input2.inp')
-        self.output_file = os.path.join(self.temp_dir, 'gamess_output.log')
-
-        with open(self.input_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gamess_input.inp')) as fx:
-                f.write(fx.read())
-
-        with open(self.input_file_2, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gamess_input_2.inp')) as fx:
-                f.write(fx.read())
-
-        with open(self.output_file, 'w') as f:
-            with open(os.path.join(self.test_directory, 'tests_files/gamess_output.log')) as fx:
-                f.write(fx.read())
+        self.input_file = self.copy_to_temporary_directory('gamess_input.inp')
+        self.input_file_2 = self.copy_to_temporary_directory('gamess_input_2.inp')
+        self.output_file = self.copy_to_temporary_directory('gamess_output.log')
 
     def test_input(self):
         """Test the behavior of the input"""
@@ -913,7 +921,7 @@ class GAMESSTestCase(QcipToolsTestCase):
             self.assertEqual(symbols[index], a.symbol)
 
         # test writing
-        other_input = os.path.join(self.temp_dir, 'u.inp')
+        other_input = os.path.join(self.temporary_directory, 'u.inp')
 
         with open(other_input, 'w') as f:
             fi.write(f)
@@ -1001,3 +1009,82 @@ class GAMESSTestCase(QcipToolsTestCase):
 
         with open(self.output_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), gamess.Output)
+
+
+class ChemistryDatafileTestCase(QcipToolsTestCase):
+    """Chemistry data file stuffs"""
+
+    def setUp(self):
+        self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
+        self.chemistry_datafile = self.copy_to_temporary_directory('chemistry_datafile.chdf')
+
+    def test_datafile(self):
+        """Test the behavior of the datafile"""
+
+        fx = gaussian.FCHK()
+        self.assertFalse(fx.from_read)
+
+        with open(self.fchk_file) as f:
+            fx.read(f)
+
+        fd = chemistry_datafile.ChemistryDataFile()
+        fd.title = 'test'
+        fd.molecule = fx.molecule
+        fd.spacial_dof = 3 * len(fx.molecule)
+        fd.trans_plus_rot_dof = 5
+        fd.derivatives['F'] = numpy.array(fx['Dipole Moment'])
+
+        # test writing
+        other_input = os.path.join(self.temporary_directory, 'u.chdf')
+
+        with open(other_input, 'wb') as f:
+            fd.write(f)
+
+        # test that everything is there
+        fb = datafile.BinaryDataFile()
+
+        with self.assertRaises(datafile.InvalidDataFile):  # need to change the default magic number
+            with open(other_input, 'rb') as f:
+                fb.read(f)
+
+        fb.magic_number = fd.magic_number
+
+        with open(other_input, 'rb') as f:
+            fb.read(f)
+
+        must_be = [
+            'version', 'title', 'molecule_charge_and_multiplicity', 'molecule_atoms', 'derivatives_available', 'd:F']
+
+        for a in must_be:
+            self.assertIn(a, fb, msg=a)
+
+        self.assertEqual(fb['title'], fd.title)
+        self.assertEqual(fb['molecule_charge_and_multiplicity'], [fx['Charge'], fx['Multiplicity']])
+        self.assertEqual(fb['derivatives_available'], 'F')
+        self.assertArrayAlmostEqual(fb['d:F'], numpy.array(fx['Dipole Moment']))
+
+        # test reading
+        fde = chemistry_datafile.ChemistryDataFile()
+        self.assertFalse(fde.from_read)
+        with open(other_input, 'rb') as f:
+            fde.read(f)
+
+        self.assertTrue(fde.from_read)
+
+        self.assertEqual(fde.title, fd.title)
+        self.assertEqual(fde.version, fd.version)
+        self.assertEqual(fde.molecule.charge, fd.molecule.charge)
+        self.assertEqual(fde.molecule.multiplicity, fd.molecule.multiplicity)
+        self.assertEqual(len(fde.molecule), len(fd.molecule))
+
+        for i, a in enumerate(fde.molecule):
+            self.assertEqual(a.symbol, fd.molecule[i].symbol)
+            self.assertArrayAlmostEqual(a.position, fd.molecule[i].position)
+
+        self.assertArrayAlmostEqual(fde.derivatives['F'], fd.derivatives['F'])
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.chemistry_datafile) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), chemistry_datafile.ChemistryDataFile)

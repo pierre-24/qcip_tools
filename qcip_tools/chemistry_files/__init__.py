@@ -19,6 +19,7 @@ class ChemistryFile(Dispatcher):
 
     file_type = 'MISC'
     from_read = False
+    use_binary = False
 
     def read(self, f):
         raise NotImplementedError

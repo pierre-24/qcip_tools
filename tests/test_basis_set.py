@@ -2,7 +2,7 @@ from tests import QcipToolsTestCase
 from qcip_tools import basis_set
 
 
-class AtomTestCase(QcipToolsTestCase):
+class BasisSetTestCase(QcipToolsTestCase):
 
     def setUp(self):
         # STO-3G for hydrogen:
@@ -159,3 +159,21 @@ class AtomTestCase(QcipToolsTestCase):
 
         with self.assertRaises(Exception):
             44444 in sto3g  # non-existing atom
+
+    def test_ESML(self):
+        """Test scrapping data from ESML basis set exchange"""
+
+        with self.assertRaises(basis_set.ESMLBasisSetError):
+            basis_set.get_atomic_basis_set_from_ESML('xxx', ['C', 'H'])  # basis set does not exists
+        with self.assertRaises(basis_set.ESMLBasisSetError):
+            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H', 'D'])  # unknown atom
+        with self.assertRaises(basis_set.ESMLBasisSetError):
+            basis_set.get_atomic_basis_set_from_ESML('STO-3G', [1, 162])  # unknown atom
+        with self.assertRaises(basis_set.ESMLBasisSetError):
+            basis_set.get_atomic_basis_set_from_ESML('STO-3G', [])  # empty list of atom
+        with self.assertRaises(basis_set.ESMLBasisSetError):
+            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'], basis_set_format='x')  # unknown format
+
+        b = basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'])
+        self.assertIn('C', b)
+        self.assertIn('H', b)
