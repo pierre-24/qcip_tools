@@ -1,4 +1,22 @@
-from . import ureg
+from pint import UnitRegistry
+from scipy import constants
+
+#: Unit registry. Include definitions for:
+#:
+#:  - ``bohr``
+#:  - ``wavenumber``.
+ureg = UnitRegistry()
+
+# Define extra units
+# NOTE: most of it is already there :
+# - https://github.com/hgrecco/pint/blob/master/pint/constants_en.txt
+# -
+ureg.define('bohr_radius = {} m = bohr'.format(constants.value('Bohr radius')))
+ureg.define('wavenumber = 100 * planck_constant * speed_of_light / meter = cm-1')
+ureg.define('atomic_unit_of_time = {} s'.format(constants.value('atomic unit of time')))
+
+#: Shortcut for quantities
+Q_ = ureg.Quantity
 
 
 def convert(from_, to_, value=1.0):
