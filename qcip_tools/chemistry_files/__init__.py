@@ -1,13 +1,17 @@
 from qcip_tools.mixins import Dispatcher
 
 
+class PropertyNotPresent(Exception):
+    """Raised when a property is actually not in the file"""
+    pass
+
+
 class ChemistryFile(Dispatcher):
     """Purely abstract class that implement some basic methods that any child should implement if possible.
 
     Input methods:
 
     - ``read()``
-    - ``get_molecule()``
     - ``property()`` (not yet implemented)
 
     Methods to help file recognition:
@@ -53,6 +57,21 @@ class ChemistryFile(Dispatcher):
         return property_ in self.dispatcher
 
 
+@ChemistryFile.define_property('file_type')
+def chemistry_file__property__file_type(obj, **kwargs):
+    """Get the file type trough ``file_type``"""
+    return obj.file_type
+
+
+@ChemistryFile.define_property('molecule')
+def chemistry_file__property__molecule(obj, **kwargs):
+    """Get the file geometry"""
+    if issubclass(type(obj), WithMoleculeMixin):
+        return obj.molecule
+    else:
+        raise PropertyNotPresent('geometry')
+
+
 class WithIdentificationMixin(object):
     """Mixin for recogintion of the file by the *helpers*"""
 
@@ -75,12 +94,6 @@ class WithIdentificationMixin(object):
         """
 
         raise NotImplementedError
-
-
-@ChemistryFile.define_property('file_type')
-def property__file_type(obj, **kwargs):
-    """Get the file type trough ``file_type``"""
-    return obj.file_type
 
 
 class FormatError(Exception):

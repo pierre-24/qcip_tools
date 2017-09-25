@@ -1,7 +1,8 @@
 import numpy
 import math
+from scipy import constants
 
-from qcip_tools import derivatives, quantities
+from qcip_tools import derivatives, quantities, math as qcip_math
 
 #: Correspondence between a name and a representation
 REPRESENTATIONS = {
@@ -91,10 +92,24 @@ class MassWeightedHessian:
     :type carthesian_hessian: numpy.array
     """
 
-    def __init__(self, molecule, carthesian_hessian=None):
+    #: Convert inertia from UMA*A² to kg*m²
+    INERTIA_CONVERSION = quantities.convert(
+        quantities.ureg.atomic_mass_unit * quantities.ureg.angstrom ** 2,
+        quantities.ureg.kilogram * quantities.ureg.meter ** 2)
+    #: Convert mass from AMU to kg
+    MASS_CONVERSION = quantities.convert(
+        quantities.ureg.atomic_mass_unit, quantities.ureg.kilogram)
+    #: Convert hartree to hertz
+    VIB_ENERGY_CONVERSION = quantities.convert(
+        quantities.ureg.hartree / quantities.ureg.planck_constant, quantities.ureg.hertz)
+    #: Convert energy from J/mol to Hartree (per particle)
+    ENERGY_IN_AU_CONVERSION = quantities.convert(quantities.ureg.joule, quantities.ureg.hartree) / constants.Avogadro
+
+    def __init__(self, molecule, cartesian_hessian=None, scale=1.0):
 
         self.molecule = molecule
         self.linear = self.molecule.linear()
+        self.scale = scale
 
         self.dof = len(molecule) * 3
         self.trans_plus_rot_dof = 5 if self.linear else 6
@@ -114,13 +129,18 @@ class MassWeightedHessian:
         self.reduced_masses = numpy.zeros(self.dof)
         self.normal_modes = numpy.zeros((self.dof, self.dof))
 
-        if carthesian_hessian is not None:
-            self.from_cartesian_hessian(carthesian_hessian)
+        if cartesian_hessian is not None:
+            if issubclass(type(cartesian_hessian), BaseGeometricalDerivativeTensor):
+                self.from_cartesian_hessian(cartesian_hessian.components)
+            elif type(cartesian_hessian) is numpy.ndarray:
+                self.from_cartesian_hessian(cartesian_hessian)
+            else:
+                raise TypeError(cartesian_hessian)
 
     def from_cartesian_hessian(self, cartesian_hessian):
         """From a given carthesian hessian, create mass-weigted ones, and extracts frequencies and displacements.
 
-        :param cartesian_hessian: the carthesian hessian
+        :param cartesian_hessian: the cartesian hessian
         :type cartesian_hessian: numpy.ndarray
         """
 
@@ -210,3 +230,189 @@ class MassWeightedHessian:
                     r += '\n'
 
         return r
+
+    @staticmethod
+    def vibrational_temperature(vibrational_energy, scale=1.0):
+        """Convert a vibration energy (hartree) to a vibrational temperature (K)
+
+        :param vibrational_energy: the vibrational energy (in Hartree)
+        :type vibrational_energy: float
+        :param scale: scale of the vibrational energyµ
+        :type scale: float
+        :rtype: float
+        """
+        return constants.h * vibrational_energy * scale * \
+            MassWeightedHessian.VIB_ENERGY_CONVERSION / constants.Boltzmann
+
+    @staticmethod
+    def rotational_temperature(inertia_moment):
+        """Convert an inertia moment (in AMU*angstrom**2) to a rotational temperature (K)
+
+        :param inertia_moment: inertia moment
+        :type inertia_moment: float
+        :rtype: float
+        """
+
+        return constants.hbar ** 2 / (2 * inertia_moment * MassWeightedHessian.INERTIA_CONVERSION * constants.Boltzmann)
+
+    def compute_partition_functions(self, symmetry_number, temperature=298.15, pressure=1.01325e5):
+        """Compute the value of the different partition functions
+
+        .. note::
+
+            + Assume that the electronic partition is equal to the multiplicity (T<1000K?)
+            + Assume that the rotational partition function is equal to the "high" temperature limit (T>100K?)
+            + Assume that the first vibrational level is the zero energy (the "V=0" version of Gaussian)
+
+        :param symmetry_number: symmetry number for the rotation
+        :type symmetry_number: int
+        :param temperature: temperature considered (in Kelvin)
+        :type temperature: float
+        :param pressure: pressure (in pascal)
+        :type pressure: float
+        :return: (omega_e, omega_t, omega_r, omega_v) (as a tuple)
+        :rtype: tuple
+        """
+
+        omega_e = self.molecule.multiplicity
+
+        inertia_moments, _ = numpy.linalg.eigh(self.molecule.moments_of_inertia())
+        inertia_moments = sorted(list(inertia_moments))
+
+        if self.linear:
+            omega_r = (2 * self.INERTIA_CONVERSION * inertia_moments[2] * constants.Boltzmann * temperature) / \
+                      (symmetry_number * constants.hbar ** 2)
+        else:
+            omega_r = math.sqrt(math.pi) / symmetry_number * \
+                (2 * constants.Boltzmann * temperature / (constants.hbar ** 2)) ** (3 / 2) * \
+                math.sqrt(self.INERTIA_CONVERSION ** 3 * qcip_math.prod(inertia_moments))
+
+        omega_t = \
+            (2 * math.pi * self.molecule.mass() * self.MASS_CONVERSION * constants.Boltzmann * temperature) \
+            ** (3 / 2) * constants.R * \
+            temperature / (pressure * constants.h ** 3 * constants.Avogadro)
+
+        omega_v = 1.0
+
+        for i in self.frequencies[self.trans_plus_rot_dof:]:
+            omega_v *= 1 / (1 - math.exp(-MassWeightedHessian.vibrational_temperature(i, self.scale) / temperature))
+
+        return omega_e, omega_t, omega_r, omega_v
+
+    def compute_zpva(self):
+        """Compute the ZPVA (zero point vibrational averaging) energy from frequencies,
+        but WITHOUT the electronic (SCF) energy
+
+        :rtype: float
+        """
+
+        return sum(x * self.scale / 2 for x in self.frequencies[self.trans_plus_rot_dof:])
+
+    def compute_internal_energy(self, temperature=298.15):
+        """Compute the value of the different contribution (translation, rotation, vibration) to the internal energy,
+        **IN HARTREE** !
+
+        .. note::
+
+            + No electronic contribution (since it is the energy of the system)
+            + Assume that the rotational partition function is equal to the "high" temperature limit (T>100K?)
+            + The vibrational contribution does not include ZPVA
+
+        :param temperature: temperature considered (in Kelvin)
+        :type temperature: float
+        :return: (U_t, U_r, U_v) (as a tuple, in Hartree)
+        :rtype: tuple
+        """
+
+        U_t = 3 / 2 * constants.R * temperature * self.ENERGY_IN_AU_CONVERSION
+
+        if self.linear:
+            U_r = constants.R * temperature * self.ENERGY_IN_AU_CONVERSION
+        else:
+            U_r = 3 / 2 * constants.R * temperature * self.ENERGY_IN_AU_CONVERSION
+
+        U_v = .0
+
+        for i in self.frequencies[self.trans_plus_rot_dof:]:
+            theta_v = MassWeightedHessian.vibrational_temperature(i, scale=self.scale)
+            U_v += theta_v / (math.exp(theta_v / temperature) - 1)
+
+        U_v *= constants.R * self.ENERGY_IN_AU_CONVERSION
+
+        return U_t, U_r, U_v
+
+    def compute_enthalpy(self, temperature=298.15):
+        """Compute the value of the different contribution (translation, rotation, vibration) to the enthalpy,
+        **IN HARTREE** !
+
+        .. note::
+
+            Since :math:`H=U+RT`, the code just adds :math:`RT` to the translational contribution to internal energy,
+            and returns the whole thing (so the same remarks applies, in particular: NO ZPVA)
+
+        :param temperature: temperature considered (in Kelvin)
+        :type temperature: float
+        :return: (H_t, H_r, H_v) (as a tuple, in Hartree)
+        :rtype: tuple
+        """
+
+        U_t, U_r, U_v = self.compute_internal_energy(temperature)
+        return U_t + constants.R * temperature * self.ENERGY_IN_AU_CONVERSION, U_r, U_v
+
+    def compute_entropy(self, symmetry_number, temperature=298.15, pressure=1.01325e5):
+        """Compute the value of the different contribution (translation, rotation, vibration) to the entropy,
+        **IN HARTREE / KELVIN** !
+
+        .. note::
+
+            + Assume that the rotational partition function is equal to the "high" temperature limit (T>100K?)
+            + The vibrational contribution does include ZPVA (?)
+
+        :param symmetry_number: symmetry number for the rotation
+        :type symmetry_number: int
+        :param temperature: temperature considered (in Kelvin)
+        :type temperature: float
+        :param pressure: pressure (in pascal)
+        :type pressure: float
+        :return: (S_t, S_r, S_v) (as a tuple, in Hartree / Kelvin)
+        :rtype: tuple
+        """
+
+        omega_e, omega_t, omega_r, omega_v = self.compute_partition_functions(symmetry_number, temperature, pressure)
+
+        S_t = constants.R * (math.log(omega_t) + 5 / 2) * self.ENERGY_IN_AU_CONVERSION
+        S_r = constants.R * (math.log(omega_r) + (1 if self.linear else 3 / 2)) * self.ENERGY_IN_AU_CONVERSION
+
+        S_v = .0
+
+        for i in self.frequencies[self.trans_plus_rot_dof:]:
+            theta_over_T = MassWeightedHessian.vibrational_temperature(i, scale=self.scale) / temperature
+            S_v += theta_over_T / (math.exp(theta_over_T) - 1) - math.log(1 - math.exp(-theta_over_T))
+
+        S_v *= constants.R * self.ENERGY_IN_AU_CONVERSION
+
+        return S_t, S_r, S_v
+
+    def compute_gibbs_free_energy(self, symmetry_number, temperature=298.15, pressure=1.01325e5):
+        """Compute the value of the different contribution (translation, rotation, vibration) to gibbs free energy,
+        **IN HARTREE** !
+
+        .. note::
+
+            Since :math:`G=H-TS`, both enthalpy and entropy are computed, and that is it.
+            No ZPVA, no electronic energy (as usual)
+
+        :param symmetry_number: symmetry number for the rotation
+        :type symmetry_number: int
+        :param temperature: temperature considered (in Kelvin)
+        :type temperature: float
+        :param pressure: pressure (in pascal)
+        :type pressure: float
+        :return: (G_t, G_r, G_v) (as a tuple, in Hartree)
+        :rtype: tuple
+        """
+
+        H_t, H_r, H_v = self.compute_enthalpy(temperature)
+        S_t, S_r, S_v = self.compute_entropy(symmetry_number, temperature, pressure)
+
+        return H_t - temperature * S_t, H_r - temperature * S_r, H_v - temperature * S_v

@@ -45,6 +45,8 @@ Unless mentioned in the docstring, atomic units (Hartree) are used. The two exce
 
 + Angstrom for distances, since it is widely used in day-to-day chemistry, and widely used by quantum chemistry packages (Gaussian and GAMESS, to name a few).
 + Atomic units for masses, for the same kind of reason.
++ Kelvin for temperature (there is no conversion to atomic unit for the temperature, I think)
++ Pascal for the pressure (force atomic unit could be used to define pressure atomic unit, but it is a bit overthinking for thermochemistry)
 
 For unit conversions, the `Pint library <http://pint.readthedocs.io>`_ is used, which already define a whole bunch of `units <https://github.com/hgrecco/pint/blob/master/pint/default_en.txt>`_ and `constants <https://github.com/hgrecco/pint/blob/master/pint/constants_en.txt>`_.
 Also, take a look in the `code documentation for quantities <./code-documentation/quantities.html>`_ for extra units and conversion factors.
