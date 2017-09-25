@@ -1,7 +1,7 @@
 import math
 
 from tests import QcipToolsTestCase
-from qcip_tools import derivatives_g, quantities
+from qcip_tools import derivatives_g
 from qcip_tools.chemistry_files import gaussian
 
 
@@ -44,7 +44,7 @@ class PropertiesTestCase(QcipToolsTestCase):
     def test_electrical_derivatives(self):
         """Test electrical properties"""
 
-        # in FCHK:
+        # 1. in FCHK:
         fchk_file, path, electrical_derivatives = self.get_property(
             gaussian.FCHK, 'electrical_derivatives/gaussian_output.fchk', 'electrical_derivatives')
 
@@ -67,9 +67,7 @@ class PropertiesTestCase(QcipToolsTestCase):
     def test_geometrical_derivatives(self):
         """Test geometrical properties"""
 
-        HartreeToWavenumber = quantities.convert(quantities.ureg.hartree, quantities.ureg.wavenumber)
-
-        # in FCHK:
+        # 1. in FCHK:
         fchk_file, path, geometrical_derivatives = self.get_property(
             gaussian.FCHK, 'geometrical_derivatives/gaussian_output.fchk', 'geometrical_derivatives')
 
@@ -77,7 +75,8 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertIn('GG', geometrical_derivatives)
 
         mwh = derivatives_g.MassWeightedHessian(fchk_file.molecule, geometrical_derivatives['GG'])
-        frequencies_in_wavenumber = [a * HartreeToWavenumber for a in mwh.frequencies]
+        frequencies_in_wavenumber = [
+            a * derivatives_g.MassWeightedHessian.HARTREE_TO_WAVENUMBER_CONVERSION for a in mwh.frequencies]
         frequencies_and_occurrences = [
             (1430, 3),
             (1657, 2),
@@ -99,3 +98,20 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_internal_energy()), 0.049715, places=5)
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_enthalpy()), 0.050659, places=5)
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_gibbs_free_energy(12)), 0.029544, places=5)
+
+        # Test on the frequency calculation of a transition state
+        # Gaussian simply choose to ignore the imaginary frequency mode
+        fchk_file, path, geometrical_derivatives = self.get_property(
+            gaussian.FCHK, 'geometrical_derivatives/gaussian_output_TS.fchk', 'geometrical_derivatives')
+
+        mwh = derivatives_g.MassWeightedHessian(fchk_file.molecule, geometrical_derivatives['GG'])
+        self.assertTrue(mwh.frequencies[0] * derivatives_g.MassWeightedHessian.HARTREE_TO_WAVENUMBER_CONVERSION < -400)
+
+        mwh.included_modes.pop(0)
+        # Note: actually the imaginary mode is the first one, since it have the lowest frequency, so this line above
+        # remove a mode which is actually rotation (but whatever).
+
+        self.assertAlmostEqual(mwh.compute_zpva(), 0.040758, places=5)
+        self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_internal_energy()), 0.045152, places=5)
+        self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_enthalpy()), 0.046096, places=5)
+        self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_gibbs_free_energy(1)), 0.013912, places=5)

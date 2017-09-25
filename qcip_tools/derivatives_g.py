@@ -88,8 +88,13 @@ class BaseGeometricalDerivativeTensor(derivatives.Tensor):
 class MassWeightedHessian:
     """To be exact, this is not a derivatives of the energy. So it is not a child of ``derivatives.Tensor`` !
 
+    :param molecule: the molecule
     :type molecule: qcip_tools.molecule.Molecule
-    :type carthesian_hessian: numpy.array
+    :param cartesian_hessian: cartesian hessian (``GG``).
+    :type cartesian_hessian: numpy.array|qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor
+    :param scale: scaling factor for the vibrational frequencies. It is not applied directly on the frequencies, but
+      but used, for example, in thermochemistry
+    :type scale: float
     """
 
     #: Convert inertia from UMA*A² to kg*m²
@@ -104,6 +109,9 @@ class MassWeightedHessian:
         quantities.ureg.hartree / quantities.ureg.planck_constant, quantities.ureg.hertz)
     #: Convert energy from J/mol to Hartree (per particle)
     ENERGY_IN_AU_CONVERSION = quantities.convert(quantities.ureg.joule, quantities.ureg.hartree) / constants.Avogadro
+
+    #: Convert Hartree to wavenumber (cm⁻¹)
+    HARTREE_TO_WAVENUMBER_CONVERSION = quantities.convert(quantities.ureg.hartree, quantities.ureg.wavenumber)
 
     def __init__(self, molecule, cartesian_hessian=None, scale=1.0):
 
@@ -128,6 +136,8 @@ class MassWeightedHessian:
         self.displacements = numpy.zeros((self.dof, self.dof))
         self.reduced_masses = numpy.zeros(self.dof)
         self.normal_modes = numpy.zeros((self.dof, self.dof))
+
+        self.included_modes = list(range(self.trans_plus_rot_dof, self.dof))
 
         if cartesian_hessian is not None:
             if issubclass(type(cartesian_hessian), BaseGeometricalDerivativeTensor):
@@ -192,20 +202,22 @@ class MassWeightedHessian:
         """
 
         r = ''
+        max_modes = len(self.included_modes)
 
-        HartreeToWavenumber = quantities.convert(quantities.ureg.hartree, quantities.ureg.wavenumber)
-
-        for offset in range(0, self.vibrational_dof, 5):
+        for offset in range(0, max_modes, 5):
 
             line_mode = ' ' * 10
             line_freqs = 'Frequencies   '
             line_rmass = 'Reduced-masses'
 
-            for mode in range(self.trans_plus_rot_dof + offset, self.trans_plus_rot_dof + offset + 5):
-                if mode >= self.dof:
+            for mode_i in range(offset, offset + 5):
+                if mode_i >= max_modes:
                     break
-                line_mode += '{:15}'.format(mode + 1 - self.trans_plus_rot_dof)
-                line_freqs += '{: 15.4f}'.format(self.frequencies[mode] * HartreeToWavenumber)
+
+                mode = self.included_modes[mode_i]
+
+                line_mode += '{:15}'.format(mode_i + 1)
+                line_freqs += '{: 15.4f}'.format(self.frequencies[mode] * self.HARTREE_TO_WAVENUMBER_CONVERSION)
                 line_rmass += '{: 15.5f}'.format(self.reduced_masses[mode] / quantities.AMUToElectronMass)
 
             r += line_mode
@@ -220,9 +232,11 @@ class MassWeightedHessian:
                 for c, cx in enumerate(derivatives.COORDINATES_LIST):
                     r += '{:4} {:4} {:^6}'.format(c + 1, a.atomic_number, a.symbol)
 
-                    for mode in range(self.trans_plus_rot_dof + offset, self.trans_plus_rot_dof + offset + 5):
-                        if mode >= self.dof:
+                    for mode_i in range(offset, offset + 5):
+                        if mode_i >= max_modes:
                             break
+
+                        mode = self.included_modes[mode_i]
 
                         r += '{:15.9f}'.format(
                             self.displacements[mode, index * 3 + c] * math.sqrt(quantities.AMUToElectronMass))
@@ -294,8 +308,11 @@ class MassWeightedHessian:
 
         omega_v = 1.0
 
-        for i in self.frequencies[self.trans_plus_rot_dof:]:
-            omega_v *= 1 / (1 - math.exp(-MassWeightedHessian.vibrational_temperature(i, self.scale) / temperature))
+        for index, vib_energy in enumerate(self.frequencies):
+            if index not in self.included_modes:
+                continue
+            omega_v *= 1 / \
+                (1 - math.exp(-MassWeightedHessian.vibrational_temperature(vib_energy, self.scale) / temperature))
 
         return omega_e, omega_t, omega_r, omega_v
 
@@ -306,7 +323,14 @@ class MassWeightedHessian:
         :rtype: float
         """
 
-        return sum(x * self.scale / 2 for x in self.frequencies[self.trans_plus_rot_dof:])
+        zpva = .0
+
+        for index, vib_energy in enumerate(self.frequencies):
+            if index not in self.included_modes:
+                continue
+            zpva += vib_energy * self.scale / 2
+
+        return zpva
 
     def compute_internal_energy(self, temperature=298.15):
         """Compute the value of the different contribution (translation, rotation, vibration) to the internal energy,
@@ -333,8 +357,10 @@ class MassWeightedHessian:
 
         U_v = .0
 
-        for i in self.frequencies[self.trans_plus_rot_dof:]:
-            theta_v = MassWeightedHessian.vibrational_temperature(i, scale=self.scale)
+        for index, vib_energy in enumerate(self.frequencies):
+            if index not in self.included_modes:
+                continue
+            theta_v = MassWeightedHessian.vibrational_temperature(vib_energy, scale=self.scale)
             U_v += theta_v / (math.exp(theta_v / temperature) - 1)
 
         U_v *= constants.R * self.ENERGY_IN_AU_CONVERSION
@@ -385,8 +411,10 @@ class MassWeightedHessian:
 
         S_v = .0
 
-        for i in self.frequencies[self.trans_plus_rot_dof:]:
-            theta_over_T = MassWeightedHessian.vibrational_temperature(i, scale=self.scale) / temperature
+        for index, vib_energy in enumerate(self.frequencies):
+            if index not in self.included_modes:
+                continue
+            theta_over_T = MassWeightedHessian.vibrational_temperature(vib_energy, scale=self.scale) / temperature
             S_v += theta_over_T / (math.exp(theta_over_T) - 1) - math.log(1 - math.exp(-theta_over_T))
 
         S_v *= constants.R * self.ENERGY_IN_AU_CONVERSION
