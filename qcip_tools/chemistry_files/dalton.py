@@ -3,10 +3,12 @@ import math
 import os
 import collections
 import io
+import numpy
+import re
 
-from qcip_tools import molecule, atom, quantities
+from qcip_tools import molecule, atom, quantities, derivatives, derivatives_e
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
-    FormatError, WithIdentificationMixin
+    FormatError, WithIdentificationMixin, PropertyNotPresent
 
 
 class InputFormatError(FormatError):
@@ -187,7 +189,7 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
 
     #: The identifier
     file_type = 'DALTON_ARCHIVE'
-    use_binary = True
+    requires_binary_mode = True
 
     def __init__(self):
         self.tar_file = None
@@ -238,7 +240,7 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
             raise IOError('file {} must be open in binary mode!'.format(f.name))
 
         self.from_read = True
-        self.tar_file = tarfile.open(fileobj=f)
+        self.tar_file = tarfile.open(f.name)
 
         # read molecule:
         mol_file = self.get_file('DALTON.MOL')
@@ -269,6 +271,346 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
             return self.tar_file.extractfile(self.tar_file.getmember(name))
         else:
             raise FileNotFoundError(name)
+
+
+class WrongNumberOfData(ValueError):
+    def __init__(self, n, p):
+        super().__init__('wrong number of data ({}) for {}'.format(n, p))
+
+
+@ArchiveOutput.define_property('computed_energies')
+def dalton__archive_output__property__computed_energies(obj, *args, **kwargs):
+    """Get the energies. Returns only the energy found on top of ``DALTON.PROP`` as the total energy (+labeled)
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput
+    :rtype: dict
+    """
+
+    try:
+        f = obj.get_file('DALTON.PROP')
+    except FileNotFoundError:
+        raise PropertyNotPresent('computed_energies')
+
+    energy_line = f.readline().decode()
+    if 'ENERGY' not in energy_line:
+        raise PropertyNotPresent('computed_energies')
+
+    label = energy_line[13:23].strip()
+    value = float(energy_line[23:46])
+
+    return {'total': value, label: value}
+
+
+@ArchiveOutput.define_property('electrical_derivatives')
+def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwargs):
+    """Get electrical derivatives in Dalton archives. Returns a dictionary of dictionaries:
+
+    .. code-block:: text
+
+        + "F"
+            + static : ElectricDipole
+        + "FF":
+            + static : PolarizabilityTensor
+        + "FD":
+            + 0.042 : PolarizabilityTensor
+            + ...
+        + "FDD":
+            + static : FirstHyperpolarizabilityTensor
+            + ...
+        + ...
+
+    .. note ::
+
+        CC response calculations in Dalton are nice, since it allows form many order of response at the same time
+        (thought it takes some memory) and it gives all the responses in one single file: DALTON.PROP.
+
+        On the other hand, the ``**RESPONSE`` module of dalton does not allows for many order at the same time, and
+        is f\*\*\*g inconsistent:
+
+        + dipole moment is in DALTON.PROP
+        + alpha is in DALTON.PROP, but only the non-zero components
+        + beta is in RESULTS.RSP, because why not. You need to assume Kleinman condition for SHG, and
+          optical rectification is assumed to be the same as EOP, just permuted (and I'm not entirely sure
+          of the validity of what I did there).
+        + gamma is in DALTON.PROP (only non-zero component) and also in RESULTS.RSP (not used here).
+          Note that the first frequency is non-null for dc-Kerr, while it is the last one with CC response module.
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput
+    :rtype: dict
+    """
+
+    electrical_derivatives = {}
+    translate_diplens = {'X': 0, 'Y': 1, 'Z': 2}
+
+    # Check DALTON.PROP
+    f = None
+
+    try:
+        f = obj.get_file('DALTON.PROP')
+    except FileNotFoundError:
+        pass
+
+    if f is not None:
+        lines = f.read().decode('utf-8').splitlines()
+        splits = [0, 5, 8, 13, 23, 46, 55, 64, 73, 82, 105, 128, 151]
+        CC_methods = ['CCS', 'CC2', 'CCSD', 'CC3']
+        is_CC_calculation = False
+        check_CC_calculation = False
+
+        prop_sorted = {}
+        for line in lines:
+            info = []
+            for index, split in enumerate(splits[1:]):
+                info.append(line[splits[index]:split].strip())
+
+            if not check_CC_calculation and info[5] != 'ENERGY':
+                is_CC_calculation = info[3] in CC_methods
+
+            derivative = int(info[2])
+            if derivative not in prop_sorted:
+                prop_sorted[derivative] = []
+            prop_sorted[derivative].append(info)
+
+        # dipole moment
+        if 1 in prop_sorted:
+            if len(prop_sorted[1]) != 3:
+                raise WrongNumberOfData(len(prop_sorted[1]), 'dipole moment')
+
+            dipole = numpy.zeros(3)
+
+            for l in prop_sorted[1]:
+                dipole[translate_diplens[l[5][0]]] = float(l[4])
+
+            electrical_derivatives['F'] = {'static': derivatives_e.ElectricDipole(dipole=dipole)}
+
+        # polarizability
+        if 2 in prop_sorted:
+            if is_CC_calculation and len(prop_sorted[2]) % 9 != 0:
+                raise WrongNumberOfData(len(prop_sorted[2]), 'polarizability')
+
+            num_of_tensors = int(len(prop_sorted[2]) / 9)
+            found_frequencies = []
+            data_per_frequencies = {}
+
+            for l in prop_sorted[2]:
+                freq = float(l[9])
+                if freq not in found_frequencies:
+                    found_frequencies.append(freq)
+                    if is_CC_calculation and len(found_frequencies) > num_of_tensors:
+                        raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for alpha')
+                    data_per_frequencies[freq] = derivatives_e.PolarisabilityTensor(frequency=freq)
+
+                data_per_frequencies[freq]\
+                    .components[translate_diplens[l[5][0]], translate_diplens[l[6][0]]] \
+                    = float(l[4])
+
+            electrical_derivatives['FD'] = data_per_frequencies
+            if .0 in electrical_derivatives['FD']:
+                electrical_derivatives['FF'] = {'static': electrical_derivatives['FD'][.0]}
+                electrical_derivatives['FF']['static'].input_fields = (0,)
+                electrical_derivatives['FF']['static'].representation = derivatives.Derivative(from_representation='FF')
+                del electrical_derivatives['FD'][.0]
+
+        # hyperpolarizability
+        if 3 in prop_sorted:
+            if len(prop_sorted[3]) % 27 != 0:
+                raise WrongNumberOfData(len(prop_sorted[3]), 'hyperpolarizability')
+
+            num_of_tensors = int(len(prop_sorted[3]) / 27)
+            found_frequencies = {'FFF': [], 'FDF': [], 'FDd': [], 'FDD': []}
+            data = {}
+
+            for l in prop_sorted[3]:
+                if len(l[9]) == 22:
+                    freq_1 = float(l[9])
+                    freq_2 = float(l[10])
+                else:
+                    freq_1 = float(l[9][:22])
+                    freq_2 = float(l[9][22:45])
+
+                if freq_1 == freq_2 and freq_1 == .0:
+                    representation = 'FFF'
+                    freq_1 = 'static'
+                elif freq_1 == freq_2:
+                    representation = 'FDD'
+                elif freq_1 == -freq_2:
+                    representation = 'FDd'
+                elif freq_2 == .0:
+                    representation = 'FDF'
+                else:
+                    raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
+
+                if freq_1 not in found_frequencies[representation]:
+                    if representation not in data:
+                        data[representation] = {}
+
+                    found_frequencies[representation].append(freq_1)
+
+                    if sum(len(x) for x in found_frequencies.values()) > num_of_tensors:
+                        raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for beta')
+
+                    data[representation][freq_1] = derivatives_e.FirstHyperpolarisabilityTensor(
+                        frequency=freq_1, input_fields=tuple(
+                            derivatives_e.representation_to_field[x] for x in representation[1:]))
+
+                data[representation][freq_1] \
+                    .components[translate_diplens[l[5][0]], translate_diplens[l[6][0]], translate_diplens[l[7][0]]] \
+                    = float(l[4])
+
+            electrical_derivatives.update(data)
+
+        # second hyperpolarizability:
+        if 4 in prop_sorted:
+            if is_CC_calculation and len(prop_sorted[4]) % 81 != 0:
+                raise WrongNumberOfData(len(prop_sorted[4]), 'hyperpolarizability')
+
+            num_of_tensors = int(len(prop_sorted[4]) / 81)
+            found_frequencies = {'FFFF': [], 'FDFF': [], 'FDDF': [], 'FDDd': [], 'FDDD': []}
+            data = {}
+
+            for l in prop_sorted[4]:
+                freq_1 = float(l[9])
+
+                if len(l[10]) == 22:
+                    freq_2 = float(l[10])
+                    freq_3 = float(l[11])
+                else:
+                    freq_2 = float(l[10][:22])
+                    freq_3 = float(l[10][22:])
+
+                if freq_1 == freq_2 and freq_2 == freq_3 and freq_3 == .0:
+                    representation = 'FFFF'
+                    freq = 'static'
+                elif freq_1 == freq_2 and freq_2 == .0:
+                    representation = 'FDFF'
+                    freq = freq_3
+                elif freq_2 == freq_3 and freq_3 == .0:
+                    representation = 'FDFF'
+                    freq = freq_1
+                elif freq_1 == freq_2 and freq_3 == .0:
+                    representation = 'FDDF'
+                    freq = freq_1
+                elif freq_1 == freq_2 and freq_2 == -freq_3:
+                    representation = 'FDDd'
+                    freq = freq_1
+                elif freq_1 == freq_2 and freq_2 == freq_3:
+                    representation = 'FDDD'
+                    freq = freq_1
+                else:
+                    raise Exception('unknown combination of field ({}, {}, {})'.format(freq_1, freq_2, freq_3))
+
+                if freq not in found_frequencies[representation]:
+                    if representation not in data:
+                        data[representation] = {}
+
+                    found_frequencies[representation].append(freq)
+
+                    if is_CC_calculation and sum(len(x) for x in found_frequencies.values()) > num_of_tensors:
+                        raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for gamma')
+
+                    data[representation][freq] = derivatives_e.SecondHyperpolarizabilityTensor(
+                        frequency=freq, input_fields=tuple(
+                            derivatives_e.representation_to_field[x] for x in representation[1:]))
+
+                data[representation][freq] \
+                    .components[
+                        translate_diplens[l[5][0]],
+                        translate_diplens[l[6][0]],
+                        translate_diplens[l[7][0]],
+                        translate_diplens[l[8][0]]] \
+                    = float(l[4])
+
+            electrical_derivatives.update(data)
+
+    # CHECK RESULTS.RSP (response at the HF/DFT level)
+    f = None
+
+    try:
+        f = obj.get_file('RESULTS.RSP')
+    except FileNotFoundError:
+        pass
+
+    if f is not None:
+        lines = f.read().decode('utf-8').splitlines()
+        splits = [0, 10, 20, 29, 40, 48, 53, 59, 73]
+        is_optical_rectification_in_calculations = False
+        is_EOP_in_calculations = False
+        is_optical_rectification_use_later = []
+        found_frequencies = {'FFF': [], 'FDF': [], 'FDd': [], 'FDD': []}
+        data = {}
+
+        r_to_obj = {}  # to use inverse smart iterator
+        for x in ['FFF', 'FDF', 'FDd', 'FDD']:
+            r_to_obj[x] = derivatives.Derivative(from_representation=x)
+
+        for line in lines:
+            if len(line) == 0:
+                break
+            if 'Cubic response function' in line:
+                break
+
+            info = []
+            for index, split in enumerate(splits[1:]):
+                info.append(line[splits[index]:split].strip())
+
+            freq_1 = float(info[1])
+            freq_2 = float(info[3])
+            components = tuple(translate_diplens[x] for x in re.split('\W', info[5]))
+            value = float(info[7])
+
+            if freq_1 == freq_2 and freq_1 == .0:
+                representation = 'FFF'
+                freq_1 = 'static'
+            elif freq_1 == freq_2:
+                representation = 'FDD'
+            elif freq_1 == -freq_2:  # will be treated later
+                representation = 'FDd'
+                is_optical_rectification_in_calculations = True
+                if is_EOP_in_calculations:
+                    is_optical_rectification_use_later.append((freq_1, components, value))
+                    continue
+            elif freq_2 == .0:
+                representation = 'FDF'
+                is_EOP_in_calculations = True
+            else:
+                raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
+
+            if freq_1 not in found_frequencies[representation]:
+                if representation not in data:
+                    data[representation] = {}
+
+                found_frequencies[representation].append(freq_1)
+
+                data[representation][freq_1] = derivatives_e.FirstHyperpolarisabilityTensor(
+                    frequency=freq_1, input_fields=tuple(
+                        derivatives_e.representation_to_field[x] for x in representation[1:]))
+
+            for components_ in r_to_obj[representation].inverse_smart_iterator(components):
+                data[representation][freq_1].components[components_] = value
+
+        if is_optical_rectification_in_calculations and is_EOP_in_calculations:
+            freqs = list(data['FDF'].keys())
+            data['FDd'] = {}
+            for freq in freqs:
+                data['FDd'][freq] = derivatives_e.FirstHyperpolarisabilityTensor(
+                    frequency=freq, input_fields=(-1, 1))
+                for i in r_to_obj['FDF'].smart_iterator():
+                    if data['FDF'][freq].components[i] == .0:
+                        continue
+                    for j in r_to_obj['FDF'].inverse_smart_iterator(i):
+                        data['FDd'][freq].components[j[2], j[1], j[0]] = data['FDF'][freq].components[j]
+
+            for freq, components_, value in is_optical_rectification_use_later:
+                data['FDd'][freq].components[components_] = value
+
+        electrical_derivatives.update(data)
+
+    if not electrical_derivatives:
+        raise PropertyNotPresent('qs:electrical_derivatives')
+
+    return electrical_derivatives
 
 
 class OutputSection:
@@ -411,6 +753,41 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         mol_file.read(io.StringIO(''.join(self.lines[line_mol + 3:line_end - 3])))
 
         return dal_file, mol_file
+
+
+@Output.define_property('computed_energies')
+def dalton__output__computed_energies(obj, *args, **kwargs):
+    """Get the energies. Find the SCF/DFT energy, as well as the CCx one (which is given with MP2).
+
+    .. note::
+
+        + Not (yet?) CI, CASCI or MCSCF
+        + Probably wrong on geometry optimization.
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.Output
+    :rtype: dict
+    """
+
+    line_scf = obj.search('@    Final HF energy:', into='SIRIUS')
+    if line_scf < 0:
+        raise PropertyNotPresent('computed_energies')
+
+    value = float(obj.lines[line_scf][-40:])
+    energies = {'SCF/DFT': value, 'total': value}
+
+    if obj.chunk_exists('CC'):
+        line_ens = obj.search('Final results from the Coupled Cluster energy program', into='CC')
+
+        if line_ens < 0:
+            return energies
+
+        energies['MP2'] = float(obj.lines[line_ens + 7][-25:])
+        label = obj.lines[line_ens + 9][18:24].strip()
+        energies[label] = float(obj.lines[line_ens + 9][-25:])
+        energies['total'] = label
+
+    return energies
 
 
 #: Name of the allowed modules in dalton (according to documentation)

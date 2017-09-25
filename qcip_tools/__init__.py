@@ -24,6 +24,7 @@ ureg = UnitRegistry()
 # -
 ureg.define('bohr_radius = {} m = bohr'.format(constants.value('Bohr radius')))
 ureg.define('wavenumber = 100 * planck_constant * speed_of_light / meter = cm-1')
+ureg.define('atomic_unit_of_time = {} s'.format(constants.value('atomic unit of time')))
 
 #: Shortcut for quantities
 Q_ = ureg.Quantity

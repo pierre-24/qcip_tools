@@ -52,7 +52,7 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
     #: The identifier
     file_type = 'QCIP_CDF'
     magic_number = 0xCEB1DAF1
-    use_binary = True
+    requires_binary_mode = True
     version = 1
 
     def __init__(self):

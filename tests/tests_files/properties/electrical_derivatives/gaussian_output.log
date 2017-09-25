@@ -1,0 +1,2620 @@
+ Entering Gaussian System, Link 0=/home/acad/unamur-ucpts/pbeaujea/gaussian/g09/g09
+ Initial command:
+ /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l1.exe "/SCRATCH/acad/nlopt/pbeaujea/955201[1].frontal2/Gau-29889.inp" -scrdir="/SCRATCH/acad/nlopt/pbeaujea/955201[1].frontal2/"
+ Entering Link 1 = /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l1.exe PID=     29893.
+  
+ Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009,2013,
+            Gaussian, Inc.  All Rights Reserved.
+  
+ This is part of the Gaussian(R) 09 program.  It is based on
+ the Gaussian(R) 03 system (copyright 2003, Gaussian, Inc.),
+ the Gaussian(R) 98 system (copyright 1998, Gaussian, Inc.),
+ the Gaussian(R) 94 system (copyright 1995, Gaussian, Inc.),
+ the Gaussian 92(TM) system (copyright 1992, Gaussian, Inc.),
+ the Gaussian 90(TM) system (copyright 1990, Gaussian, Inc.),
+ the Gaussian 88(TM) system (copyright 1988, Gaussian, Inc.),
+ the Gaussian 86(TM) system (copyright 1986, Carnegie Mellon
+ University), and the Gaussian 82(TM) system (copyright 1983,
+ Carnegie Mellon University). Gaussian is a federally registered
+ trademark of Gaussian, Inc.
+  
+ This software contains proprietary and confidential information,
+ including trade secrets, belonging to Gaussian, Inc.
+  
+ This software is provided under written license and may be
+ used, copied, transmitted, or stored only in accord with that
+ written license.
+  
+ The following legend is applicable only to US Government
+ contracts under FAR:
+  
+                    RESTRICTED RIGHTS LEGEND
+  
+ Use, reproduction and disclosure by the US Government is
+ subject to restrictions as set forth in subparagraphs (a)
+ and (c) of the Commercial Computer Software - Restricted
+ Rights clause in FAR 52.227-19.
+  
+ Gaussian, Inc.
+ 340 Quinnipiac St., Bldg. 40, Wallingford CT 06492
+  
+  
+ ---------------------------------------------------------------
+ Warning -- This program may not be used in any manner that
+ competes with the business of Gaussian, Inc. or will provide
+ assistance to any competitor of Gaussian, Inc.  The licensee
+ of this program is prohibited from giving any competitor of
+ Gaussian, Inc. access to this program.  By using this program,
+ the user acknowledges that Gaussian, Inc. is engaged in the
+ business of creating and licensing software in the field of
+ computational chemistry and represents and warrants to the
+ licensee that it is not a competitor of Gaussian, Inc. and that
+ it will not use this program in any manner prohibited above.
+ ---------------------------------------------------------------
+  
+
+ Cite this work as:
+ Gaussian 09, Revision D.01,
+ M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, 
+ M. A. Robb, J. R. Cheeseman, G. Scalmani, V. Barone, B. Mennucci, 
+ G. A. Petersson, H. Nakatsuji, M. Caricato, X. Li, H. P. Hratchian, 
+ A. F. Izmaylov, J. Bloino, G. Zheng, J. L. Sonnenberg, M. Hada, 
+ M. Ehara, K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, 
+ Y. Honda, O. Kitao, H. Nakai, T. Vreven, J. A. Montgomery, Jr., 
+ J. E. Peralta, F. Ogliaro, M. Bearpark, J. J. Heyd, E. Brothers, 
+ K. N. Kudin, V. N. Staroverov, T. Keith, R. Kobayashi, J. Normand, 
+ K. Raghavachari, A. Rendell, J. C. Burant, S. S. Iyengar, J. Tomasi, 
+ M. Cossi, N. Rega, J. M. Millam, M. Klene, J. E. Knox, J. B. Cross, 
+ V. Bakken, C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmann, 
+ O. Yazyev, A. J. Austin, R. Cammi, C. Pomelli, J. W. Ochterski, 
+ R. L. Martin, K. Morokuma, V. G. Zakrzewski, G. A. Voth, 
+ P. Salvador, J. J. Dannenberg, S. Dapprich, A. D. Daniels, 
+ O. Farkas, J. B. Foresman, J. V. Ortiz, J. Cioslowski, 
+ and D. J. Fox, Gaussian, Inc., Wallingford CT, 2013.
+ 
+ ******************************************
+ Gaussian 09:  AM64L-G09RevD.01 24-Apr-2013
+                14-Mar-2017 
+ ******************************************
+ %chk=H2O_0001
+ %nprocshared=4
+ Will use up to    4 processors via shared memory.
+ %mem=3gb
+ ----------------------------------------------------------------------
+ #p HF gen nosym scf=(Conver=11,NoVarAcc,MaxCyc=600,vshift=1000) IOP(9/
+ 6=600,9/9=11) polar=dcshg cphf=(conver=11,rdfreq)
+ ----------------------------------------------------------------------
+ 1/38=1,83=1/1;
+ 2/12=2,15=1,17=6,18=5,40=1/2;
+ 3/5=7,11=9,16=1,25=1,30=1/1,2,3;
+ 4//1;
+ 5/5=2,6=11,7=600,10=1000,38=1,98=1/2;
+ 8/6=4,10=90,11=11/1;
+ 10/6=20001,7=11,13=10,31=1,72=3/2;
+ 6/7=2,8=2,9=2,10=2,28=1/1;
+ 99/5=1,9=1/99;
+ Leave Link    1 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.3
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l101.exe)
+ --------
+ no-field
+ --------
+ Symbolic Z-matrix:
+ Charge =  0 Multiplicity = 1
+ O                     0.        0.        0.11393 
+ H                     0.       -0.75394  -0.45573 
+ H                     0.        0.75394  -0.45573 
+ 
+ NAtoms=      3 NQM=        3 NQMF=       0 NMMI=      0 NMMIF=      0
+                NMic=       0 NMicF=      0.
+                    Isotopes and Nuclear Properties:
+ (Nuclear quadrupole moments (NQMom) in fm**2, nuclear magnetic moments (NMagM)
+  in nuclear magnetons)
+
+  Atom         1           2           3
+ IAtWgt=          16           1           1
+ AtmWgt=  15.9949146   1.0078250   1.0078250
+ NucSpn=           0           1           1
+ AtZEff=   0.0000000   0.0000000   0.0000000
+ NQMom=    0.0000000   0.0000000   0.0000000
+ NMagM=    0.0000000   2.7928460   2.7928460
+ AtZNuc=   8.0000000   1.0000000   1.0000000
+ Using perturbation frequencies:    0.000000    0.020000    0.040000    0.060000    0.080000
+ Using perturbation frequencies:    0.100000
+ Leave Link  101 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.4
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l202.exe)
+                          Input orientation:                          
+ ---------------------------------------------------------------------
+ Center     Atomic      Atomic             Coordinates (Angstroms)
+ Number     Number       Type             X           Y           Z
+ ---------------------------------------------------------------------
+      1          8           0        0.000000    0.000000    0.113932
+      2          1           0        0.000000   -0.753943   -0.455727
+      3          1           0        0.000000    0.753943   -0.455727
+ ---------------------------------------------------------------------
+                    Distance matrix (angstroms):
+                    1          2          3
+     1  O    0.000000
+     2  H    0.944956   0.000000
+     3  H    0.944956   1.507885   0.000000
+ Symmetry turned off by external request.
+ Stoichiometry    H2O
+ Framework group  C2V[C2(O),SGV(H2)]
+ Deg. of freedom     2
+ Full point group                 C2V     NOp   4
+ Rotational constants (GHZ):    869.9962829    441.0881823    292.6928731
+ Leave Link  202 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.0
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l301.exe)
+ General basis read from cards:  (5D, 7F)
+ Centers:       2      3
+ S 4 1.00
+     Exponent=  3.3865014000D+01 Coefficients=  6.0680000000D-03
+     Exponent=  5.0947880000D+00 Coefficients=  4.5316000000D-02
+     Exponent=  1.1587860000D+00 Coefficients=  2.0284600000D-01
+     Exponent=  3.2584000000D-01 Coefficients=  5.0370900000D-01
+ S 1 1.00
+     Exponent=  1.0274100000D-01 Coefficients=  1.0000000000D+00
+ S 1 1.00
+     Exponent=  3.2400000000D-02 Coefficients=  1.0000000000D+00
+ P 2 1.00
+     Exponent=  1.1588000000D+00 Coefficients=  1.8844000000D-01
+     Exponent=  3.2580000000D-01 Coefficients=  8.8242000000D-01
+ P 2 1.00
+     Exponent=  1.0270000000D-01 Coefficients=  1.1780000000D-01
+     Exponent=  3.2400000000D-02 Coefficients=  4.2000000000D-03
+ ****
+ Centers:       1
+ S 5 1.00
+     Exponent=  1.0662285000D+04 Coefficients=  7.9900000000D-04
+     Exponent=  1.5997097000D+03 Coefficients=  6.1530000000D-03
+     Exponent=  3.6472526000D+02 Coefficients=  3.1157000000D-02
+     Exponent=  1.0365179000D+02 Coefficients=  1.1559600000D-01
+     Exponent=  3.3905805000D+01 Coefficients=  3.0155200000D-01
+ S 2 1.00
+     Exponent=  1.2287469000D+01 Coefficients=  4.4487000000D-01
+     Exponent=  4.7568050000D+00 Coefficients=  2.4317200000D-01
+ S 1 1.00
+     Exponent=  1.0042710000D+00 Coefficients=  1.0000000000D+00
+ S 1 1.00
+     Exponent=  3.0068600000D-01 Coefficients=  1.0000000000D+00
+ S 1 1.00
+     Exponent=  9.0030000000D-02 Coefficients=  1.0000000000D+00
+ P 4 1.00
+     Exponent=  3.4856463000D+01 Coefficients=  1.5648000000D-02
+     Exponent=  7.8431310000D+00 Coefficients=  9.8197000000D-02
+     Exponent=  2.3062490000D+00 Coefficients=  3.0776800000D-01
+     Exponent=  7.2316400000D-01 Coefficients=  4.9247000000D-01
+ P 1 1.00
+     Exponent=  2.1488200000D-01 Coefficients=  1.0000000000D+00
+ P 1 1.00
+     Exponent=  6.3850000000D-02 Coefficients=  1.0000000000D+00
+ D 2 1.00
+     Exponent=  2.3062000000D+00 Coefficients=  2.0270000000D-01
+     Exponent=  7.2320000000D-01 Coefficients=  5.7910000000D-01
+ D 2 1.00
+     Exponent=  2.1490000000D-01 Coefficients=  7.8545000000D-01
+     Exponent=  6.3900000000D-02 Coefficients=  5.3387000000D-01
+ ****
+ Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
+    42 basis functions,    88 primitive gaussians,    44 cartesian basis functions
+     5 alpha electrons        5 beta electrons
+       nuclear repulsion energy         9.3109754138 Hartrees.
+ IExCor=    0 DFT=F Ex=HF Corr=None ExCW=0 ScaHFX=  1.000000
+ ScaDFX=  1.000000  1.000000  1.000000  1.000000 ScalE2=  1.000000  1.000000
+ IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0 IEmpDi=  4
+ NAtoms=    3 NActive=    3 NUniq=    3 SFac= 1.00D+00 NAtFMM=   60 NAOKFM=F Big=F
+ Integral buffers will be    131072 words long.
+ Raffenetti 1 integral format.
+ Two-electron integral symmetry is turned off.
+ Leave Link  301 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.2
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l302.exe)
+ NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
+         NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
+ One-electron integrals computed using PRISM.
+ NBasis=    42 RedAO= T EigKep=  5.92D-04  NBF=    42
+ NBsUse=    42 1.00D-06 EigRej= -1.00D+00 NBFU=    42
+ Leave Link  302 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.5
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l303.exe)
+ DipDrv:  MaxL=1.
+ Leave Link  303 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.1
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l401.exe)
+ ExpMin= 3.24D-02 ExpMax= 1.07D+04 ExpMxC= 1.60D+03 IAcc=3 IRadAn=         5 AccDes= 0.00D+00
+ Harris functional with IExCor=  205 and IRadAn=       5 diagonalized for initial guess.
+ HarFok:  IExCor=  205 AccDes= 0.00D+00 IRadAn=         5 IDoV= 1 UseB2=F ITyADJ=14
+ ICtDFT=  3500011 ScaDFX=  1.000000  1.000000  1.000000  1.000000
+ FoFCou: FMM=F IPFlag=           0 FMFlag=      100000 FMFlg1=           0
+         NFxFlg=           0 DoJE=T BraDBF=F KetDBF=T FulRan=T
+         wScrn=  0.000000 ICntrl=     500 IOpCl=  0 I1Cent=   200000004 NGrid=           0
+         NMat0=    1 NMatS0=      1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Symmetry not used in FoFCou.
+ Harris En= -76.1409514048781    
+ JPrj=0 DoOrth=F DoCkMO=F.
+ Leave Link  401 at Tue Mar 14 17:15:01 2017, MaxMem=   402653184 cpu:         0.7
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l502.exe)
+ Closed shell SCF:
+ Using DIIS extrapolation, IDIIS=  1040.
+ Two-electron integral symmetry not used.
+ Keep R1 ints in memory in canonical form, NReq=1616106.
+ IVT=      370868 IEndB=      370868 NGot=   402653184 MDV=   401874161
+ LenX=   401874161 LenY=   401871784
+ Requested convergence on RMS density matrix=1.00D-11 within 600 cycles.
+ Requested convergence on MAX density matrix=1.00D-09.
+ Requested convergence on             energy=1.00D-09.
+ Virtual orbitals will be shifted by   1.000 hartree.
+ No special actions if energy rises.
+ FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
+         NFxFlg=           0 DoJE=F BraDBF=F KetDBF=F FulRan=T
+         wScrn=  0.000000 ICntrl=     600 IOpCl=  0 I1Cent=           0 NGrid=           0
+         NMat0=    1 NMatS0=    903 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Symmetry not used in FoFCou.
+
+ Cycle   1  Pass 1  IDiag  1:
+ E= -75.9729728806550    
+ DIIS: error= 5.41D-02 at cycle   1 NSaved=   1.
+ NSaved= 1 IEnMin= 1 EnMin= -75.9729728806550     IErMin= 1 ErrMin= 5.41D-02
+ ErrMax= 5.41D-02  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.62D-01 BMatP= 1.62D-01
+ IDIUse=3 WtCom= 4.59D-01 WtEn= 5.41D-01
+ Coeff-Com:  0.100D+01
+ Coeff-En:   0.100D+01
+ Coeff:      0.100D+01
+ Gap=     0.459 Goal=   None    Shift=    1.000
+ GapD=    0.459 DampG=2.000 DampE=0.500 DampFc=1.0000 IDamp=-1.
+ RMSDP=8.20D-03 MaxDP=9.01D-02              OVMax= 6.84D-02
+
+ Cycle   2  Pass 1  IDiag  1:
+ E= -76.0512047575871     Delta-E=       -0.078231876932 Rises=F Damp=F
+ DIIS: error= 8.45D-03 at cycle   2 NSaved=   2.
+ NSaved= 2 IEnMin= 2 EnMin= -76.0512047575871     IErMin= 2 ErrMin= 8.45D-03
+ ErrMax= 8.45D-03  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.96D-03 BMatP= 1.62D-01
+ IDIUse=3 WtCom= 9.16D-01 WtEn= 8.45D-02
+ Coeff-Com: -0.359D-01 0.104D+01
+ Coeff-En:   0.000D+00 0.100D+01
+ Coeff:     -0.329D-01 0.103D+01
+ Gap=     0.547 Goal=   None    Shift=    1.000
+ RMSDP=1.05D-03 MaxDP=1.41D-02 DE=-7.82D-02 OVMax= 6.91D-03
+
+ Cycle   3  Pass 1  IDiag  1:
+ E= -76.0526021417659     Delta-E=       -0.001397384179 Rises=F Damp=F
+ DIIS: error= 3.14D-03 at cycle   3 NSaved=   3.
+ NSaved= 3 IEnMin= 3 EnMin= -76.0526021417659     IErMin= 3 ErrMin= 3.14D-03
+ ErrMax= 3.14D-03  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.30D-04 BMatP= 2.96D-03
+ IDIUse=3 WtCom= 9.69D-01 WtEn= 3.14D-02
+ Coeff-Com: -0.951D-03-0.175D+00 0.118D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.100D+01
+ Coeff:     -0.921D-03-0.169D+00 0.117D+01
+ Gap=     0.545 Goal=   None    Shift=    1.000
+ RMSDP=5.31D-04 MaxDP=6.60D-03 DE=-1.40D-03 OVMax= 5.18D-03
+
+ Cycle   4  Pass 1  IDiag  1:
+ E= -76.0530279793941     Delta-E=       -0.000425837628 Rises=F Damp=F
+ DIIS: error= 1.70D-03 at cycle   4 NSaved=   4.
+ NSaved= 4 IEnMin= 4 EnMin= -76.0530279793941     IErMin= 4 ErrMin= 1.70D-03
+ ErrMax= 1.70D-03  0.00D+00 EMaxC= 1.00D-01 BMatC= 9.80D-05 BMatP= 3.30D-04
+ IDIUse=3 WtCom= 9.83D-01 WtEn= 1.70D-02
+ Coeff-Com:  0.807D-02-0.253D-01-0.894D+00 0.191D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.000D+00 0.100D+01
+ Coeff:      0.793D-02-0.249D-01-0.878D+00 0.190D+01
+ Gap=     0.551 Goal=   None    Shift=    1.000
+ RMSDP=3.77D-04 MaxDP=4.30D-03 DE=-4.26D-04 OVMax= 3.94D-03
+
+ Cycle   5  Pass 1  IDiag  1:
+ E= -76.0531881575076     Delta-E=       -0.000160178113 Rises=F Damp=F
+ DIIS: error= 9.84D-04 at cycle   5 NSaved=   5.
+ NSaved= 5 IEnMin= 5 EnMin= -76.0531881575076     IErMin= 5 ErrMin= 9.84D-04
+ ErrMax= 9.84D-04  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.70D-05 BMatP= 9.80D-05
+ IDIUse=3 WtCom= 9.90D-01 WtEn= 9.84D-03
+ Coeff-Com: -0.100D-01 0.808D-01 0.138D+00-0.150D+01 0.229D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.100D+01
+ Coeff:     -0.993D-02 0.800D-01 0.136D+00-0.149D+01 0.228D+01
+ Gap=     0.551 Goal=   None    Shift=    1.000
+ RMSDP=1.59D-04 MaxDP=1.34D-03 DE=-1.60D-04 OVMax= 2.71D-03
+
+ Cycle   6  Pass 1  IDiag  1:
+ E= -76.0532423768124     Delta-E=       -0.000054219305 Rises=F Damp=F
+ DIIS: error= 6.16D-04 at cycle   6 NSaved=   6.
+ NSaved= 6 IEnMin= 6 EnMin= -76.0532423768124     IErMin= 6 ErrMin= 6.16D-04
+ ErrMax= 6.16D-04  0.00D+00 EMaxC= 1.00D-01 BMatC= 8.62D-06 BMatP= 2.70D-05
+ IDIUse=3 WtCom= 9.94D-01 WtEn= 6.16D-03
+ Coeff-Com:  0.403D-02-0.401D-01 0.871D-02 0.802D+00-0.308D+01 0.331D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.100D+01
+ Coeff:      0.401D-02-0.398D-01 0.866D-02 0.798D+00-0.306D+01 0.329D+01
+ Gap=     0.551 Goal=   None    Shift=    1.000
+ RMSDP=8.12D-05 MaxDP=8.89D-04 DE=-5.42D-05 OVMax= 1.89D-03
+
+ Cycle   7  Pass 1  IDiag  1:
+ E= -76.0532617893780     Delta-E=       -0.000019412566 Rises=F Damp=F
+ DIIS: error= 3.62D-04 at cycle   7 NSaved=   7.
+ NSaved= 7 IEnMin= 7 EnMin= -76.0532617893780     IErMin= 7 ErrMin= 3.62D-04
+ ErrMax= 3.62D-04  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.90D-06 BMatP= 8.62D-06
+ IDIUse=3 WtCom= 9.96D-01 WtEn= 3.62D-03
+ Coeff-Com: -0.218D-02 0.224D-01-0.117D+00-0.930D-01 0.183D+01-0.468D+01
+ Coeff-Com:  0.405D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00
+ Coeff-En:   0.100D+01
+ Coeff:     -0.217D-02 0.223D-01-0.117D+00-0.926D-01 0.182D+01-0.466D+01
+ Coeff:      0.403D+01
+ Gap=     0.551 Goal=   None    Shift=    1.000
+ RMSDP=5.07D-05 MaxDP=7.96D-04 DE=-1.94D-05 OVMax= 1.20D-03
+
+ Cycle   8  Pass 1  IDiag  1:
+ E= -76.0532684254749     Delta-E=       -0.000006636097 Rises=F Damp=F
+ DIIS: error= 2.13D-04 at cycle   8 NSaved=   8.
+ NSaved= 8 IEnMin= 8 EnMin= -76.0532684254749     IErMin= 8 ErrMin= 2.13D-04
+ ErrMax= 2.13D-04  0.00D+00 EMaxC= 1.00D-01 BMatC= 9.97D-07 BMatP= 2.90D-06
+ IDIUse=3 WtCom= 9.98D-01 WtEn= 2.13D-03
+ Coeff-Com:  0.466D-04-0.254D-03 0.466D-02-0.190D-01-0.181D-01 0.900D+00
+ Coeff-Com: -0.349D+01 0.362D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00
+ Coeff-En:   0.000D+00 0.100D+01
+ Coeff:      0.465D-04-0.253D-03 0.465D-02-0.189D-01-0.181D-01 0.899D+00
+ Coeff:     -0.348D+01 0.362D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=3.32D-05 MaxDP=5.89D-04 DE=-6.64D-06 OVMax= 7.47D-04
+
+ Cycle   9  Pass 1  IDiag  1:
+ E= -76.0532707265785     Delta-E=       -0.000002301104 Rises=F Damp=F
+ DIIS: error= 1.24D-04 at cycle   9 NSaved=   9.
+ NSaved= 9 IEnMin= 9 EnMin= -76.0532707265785     IErMin= 9 ErrMin= 1.24D-04
+ ErrMax= 1.24D-04  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.55D-07 BMatP= 9.97D-07
+ IDIUse=3 WtCom= 9.99D-01 WtEn= 1.24D-03
+ Coeff-Com:  0.225D-03-0.245D-02-0.496D-02 0.687D-01-0.230D+00 0.199D+00
+ Coeff-Com:  0.105D+01-0.389D+01 0.382D+01
+ Coeff-En:   0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00 0.000D+00
+ Coeff-En:   0.000D+00 0.000D+00 0.100D+01
+ Coeff:      0.225D-03-0.245D-02-0.495D-02 0.686D-01-0.230D+00 0.198D+00
+ Coeff:      0.104D+01-0.389D+01 0.381D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.97D-05 MaxDP=3.53D-04 DE=-2.30D-06 OVMax= 4.46D-04
+
+ Cycle  10  Pass 1  IDiag  1:
+ E= -76.0532715291900     Delta-E=       -0.000000802611 Rises=F Damp=F
+ DIIS: error= 7.30D-05 at cycle  10 NSaved=  10.
+ NSaved=10 IEnMin=10 EnMin= -76.0532715291900     IErMin=10 ErrMin= 7.30D-05
+ ErrMax= 7.30D-05  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.30D-07 BMatP= 3.55D-07
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com: -0.314D-03 0.338D-02-0.133D-01-0.218D-01 0.239D+00-0.514D+00
+ Coeff-Com:  0.335D+00 0.998D+00-0.381D+01 0.378D+01
+ Coeff:     -0.314D-03 0.338D-02-0.133D-01-0.218D-01 0.239D+00-0.514D+00
+ Coeff:      0.335D+00 0.998D+00-0.381D+01 0.378D+01
+ Gap=     0.551 Goal=   None    Shift=    1.000
+ RMSDP=1.29D-05 MaxDP=2.35D-04 DE=-8.03D-07 OVMax= 2.66D-04
+
+ Cycle  11  Pass 1  IDiag  1:
+ E= -76.0532718165141     Delta-E=       -0.000000287324 Rises=F Damp=F
+ DIIS: error= 4.23D-05 at cycle  11 NSaved=  11.
+ NSaved=11 IEnMin=11 EnMin= -76.0532718165141     IErMin=11 ErrMin= 4.23D-05
+ ErrMax= 4.23D-05  0.00D+00 EMaxC= 1.00D-01 BMatC= 4.61D-08 BMatP= 1.30D-07
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com:  0.166D-03-0.174D-02 0.806D-02 0.561D-02-0.119D+00 0.385D+00
+ Coeff-Com: -0.668D+00 0.333D+00 0.161D+01-0.476D+01 0.421D+01
+ Coeff:      0.166D-03-0.174D-02 0.806D-02 0.561D-02-0.119D+00 0.385D+00
+ Coeff:     -0.668D+00 0.333D+00 0.161D+01-0.476D+01 0.421D+01
+ Gap=     0.551 Goal=   None    Shift=    1.000
+ RMSDP=8.83D-06 MaxDP=1.60D-04 DE=-2.87D-07 OVMax= 1.56D-04
+
+ Cycle  12  Pass 1  IDiag  1:
+ E= -76.0532719176601     Delta-E=       -0.000000101146 Rises=F Damp=F
+ DIIS: error= 2.48D-05 at cycle  12 NSaved=  12.
+ NSaved=12 IEnMin=12 EnMin= -76.0532719176601     IErMin=12 ErrMin= 2.48D-05
+ ErrMax= 2.48D-05  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.65D-08 BMatP= 4.61D-08
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com: -0.201D-03 0.204D-02-0.107D-01-0.396D-02 0.139D+00-0.448D+00
+ Coeff-Com:  0.894D+00-0.770D+00-0.157D+01 0.586D+01-0.871D+01 0.562D+01
+ Coeff:     -0.201D-03 0.204D-02-0.107D-01-0.396D-02 0.139D+00-0.448D+00
+ Coeff:      0.894D+00-0.770D+00-0.157D+01 0.586D+01-0.871D+01 0.562D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=5.69D-06 MaxDP=1.02D-04 DE=-1.01D-07 OVMax= 9.51D-05
+
+ Cycle  13  Pass 1  IDiag  1:
+ E= -76.0532719545422     Delta-E=       -0.000000036882 Rises=F Damp=F
+ DIIS: error= 1.48D-05 at cycle  13 NSaved=  13.
+ NSaved=13 IEnMin=13 EnMin= -76.0532719545422     IErMin=13 ErrMin= 1.48D-05
+ ErrMax= 1.48D-05  0.00D+00 EMaxC= 1.00D-01 BMatC= 5.88D-09 BMatP= 1.65D-08
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com:  0.155D-03-0.155D-02 0.870D-02-0.105D-04-0.101D+00 0.350D+00
+ Coeff-Com: -0.701D+00 0.641D+00 0.115D+01-0.474D+01 0.761D+01-0.839D+01
+ Coeff-Com:  0.518D+01
+ Coeff:      0.155D-03-0.155D-02 0.870D-02-0.105D-04-0.101D+00 0.350D+00
+ Coeff:     -0.701D+00 0.641D+00 0.115D+01-0.474D+01 0.761D+01-0.839D+01
+ Coeff:      0.518D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=3.38D-06 MaxDP=5.91D-05 DE=-3.69D-08 OVMax= 5.77D-05
+
+ Cycle  14  Pass 1  IDiag  1:
+ E= -76.0532719679234     Delta-E=       -0.000000013381 Rises=F Damp=F
+ DIIS: error= 8.85D-06 at cycle  14 NSaved=  14.
+ NSaved=14 IEnMin=14 EnMin= -76.0532719679234     IErMin=14 ErrMin= 8.85D-06
+ ErrMax= 8.85D-06  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.11D-09 BMatP= 5.88D-09
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com: -0.134D-03 0.133D-02-0.680D-02-0.307D-02 0.912D-01-0.295D+00
+ Coeff-Com:  0.571D+00-0.463D+00-0.109D+01 0.412D+01-0.662D+01 0.764D+01
+ Coeff-Com: -0.836D+01 0.541D+01
+ Coeff:     -0.134D-03 0.133D-02-0.680D-02-0.307D-02 0.912D-01-0.295D+00
+ Coeff:      0.571D+00-0.463D+00-0.109D+01 0.412D+01-0.662D+01 0.764D+01
+ Coeff:     -0.836D+01 0.541D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.85D-06 MaxDP=3.08D-05 DE=-1.34D-08 OVMax= 3.52D-05
+
+ Cycle  15  Pass 1  IDiag  1:
+ E= -76.0532719728263     Delta-E=       -0.000000004903 Rises=F Damp=F
+ DIIS: error= 5.28D-06 at cycle  15 NSaved=  15.
+ NSaved=15 IEnMin=15 EnMin= -76.0532719728263     IErMin=15 ErrMin= 5.28D-06
+ ErrMax= 5.28D-06  0.00D+00 EMaxC= 1.00D-01 BMatC= 7.75D-10 BMatP= 2.11D-09
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com:  0.347D-04-0.325D-03 0.166D-02 0.143D-02-0.257D-01 0.766D-01
+ Coeff-Com: -0.140D+00 0.118D+00 0.277D+00-0.106D+01 0.178D+01-0.220D+01
+ Coeff-Com:  0.267D+01-0.438D+01 0.389D+01
+ Coeff:      0.347D-04-0.325D-03 0.166D-02 0.143D-02-0.257D-01 0.766D-01
+ Coeff:     -0.140D+00 0.118D+00 0.277D+00-0.106D+01 0.178D+01-0.220D+01
+ Coeff:      0.267D+01-0.438D+01 0.389D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=9.89D-07 MaxDP=1.54D-05 DE=-4.90D-09 OVMax= 2.12D-05
+
+ Cycle  16  Pass 1  IDiag  1:
+ E= -76.0532719746164     Delta-E=       -0.000000001790 Rises=F Damp=F
+ DIIS: error= 3.16D-06 at cycle  16 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719746164     IErMin=16 ErrMin= 3.16D-06
+ ErrMax= 3.16D-06  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.83D-10 BMatP= 7.75D-10
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com: -0.254D-04 0.226D-03-0.113D-02-0.128D-02 0.192D-01-0.578D-01
+ Coeff-Com:  0.105D+00-0.752D-01-0.236D+00 0.838D+00-0.135D+01 0.169D+01
+ Coeff-Com: -0.210D+01 0.332D+01-0.611D+01 0.495D+01
+ Coeff:     -0.254D-04 0.226D-03-0.113D-02-0.128D-02 0.192D-01-0.578D-01
+ Coeff:      0.105D+00-0.752D-01-0.236D+00 0.838D+00-0.135D+01 0.169D+01
+ Coeff:     -0.210D+01 0.332D+01-0.611D+01 0.495D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=5.13D-07 MaxDP=7.11D-06 DE=-1.79D-09 OVMax= 1.30D-05
+
+ Cycle  17  Pass 1  IDiag  1:
+ E= -76.0532719752801     Delta-E=       -0.000000000664 Rises=F Damp=F
+ DIIS: error= 1.89D-06 at cycle  17 NSaved=  17.
+ NSaved=17 IEnMin=17 EnMin= -76.0532719752801     IErMin=17 ErrMin= 1.89D-06
+ ErrMax= 1.89D-06  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.04D-10 BMatP= 2.83D-10
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 17 BigCof=    0.00 CofMax=   10.00 Det=-3.78D-15
+ Inversion failed.  Reducing to 16 matrices.
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-4.77D-15
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.639D-04-0.564D-04-0.491D-03 0.115D-02-0.198D-02 0.355D-02
+ Coeff-Com:  0.743D-02-0.268D-01 0.347D-01-0.223D-02-0.216D-01-0.124D+00
+ Coeff-Com:  0.769D+00-0.316D+01 0.353D+01
+ Coeff:      0.639D-04-0.564D-04-0.491D-03 0.115D-02-0.198D-02 0.355D-02
+ Coeff:      0.743D-02-0.268D-01 0.347D-01-0.223D-02-0.216D-01-0.124D+00
+ Coeff:      0.769D+00-0.316D+01 0.353D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=2.82D-07 MaxDP=3.37D-06 DE=-6.64D-10 OVMax= 7.90D-06
+
+ Cycle  18  Pass 1  IDiag  1:
+ E= -76.0532719755248     Delta-E=       -0.000000000245 Rises=F Damp=F
+ DIIS: error= 1.13D-06 at cycle  18 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719755248     IErMin=16 ErrMin= 1.13D-06
+ ErrMax= 1.13D-06  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.81D-11 BMatP= 1.04D-10
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-3.31D-15
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com: -0.409D-04 0.215D-03-0.645D-03 0.131D-02-0.221D-02 0.453D-02
+ Coeff-Com: -0.579D-02 0.968D-02-0.176D-01 0.740D-01-0.140D+00 0.173D-01
+ Coeff-Com:  0.979D+00-0.398D+01 0.406D+01
+ Coeff:     -0.409D-04 0.215D-03-0.645D-03 0.131D-02-0.221D-02 0.453D-02
+ Coeff:     -0.579D-02 0.968D-02-0.176D-01 0.740D-01-0.140D+00 0.173D-01
+ Coeff:      0.979D+00-0.398D+01 0.406D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.56D-07 MaxDP=1.53D-06 DE=-2.45D-10 OVMax= 4.82D-06
+
+ Cycle  19  Pass 1  IDiag  1:
+ E= -76.0532719756155     Delta-E=       -0.000000000091 Rises=F Damp=F
+ DIIS: error= 6.80D-07 at cycle  19 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756155     IErMin=16 ErrMin= 6.80D-07
+ ErrMax= 6.80D-07  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.40D-11 BMatP= 3.81D-11
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-2.90D-16
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.635D-04-0.407D-03 0.608D-03 0.107D-02-0.533D-02 0.115D-01
+ Coeff-Com: -0.149D-01 0.278D-01-0.430D-01 0.136D+00-0.254D+00-0.674D+00
+ Coeff-Com:  0.337D+01-0.640D+01 0.485D+01
+ Coeff:      0.635D-04-0.407D-03 0.608D-03 0.107D-02-0.533D-02 0.115D-01
+ Coeff:     -0.149D-01 0.278D-01-0.430D-01 0.136D+00-0.254D+00-0.674D+00
+ Coeff:      0.337D+01-0.640D+01 0.485D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=8.96D-08 MaxDP=9.89D-07 DE=-9.07D-11 OVMax= 2.94D-06
+
+ Cycle  20  Pass 1  IDiag  1:
+ E= -76.0532719756492     Delta-E=       -0.000000000034 Rises=F Damp=F
+ DIIS: error= 4.10D-07 at cycle  20 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756492     IErMin=16 ErrMin= 4.10D-07
+ ErrMax= 4.10D-07  0.00D+00 EMaxC= 1.00D-01 BMatC= 5.20D-12 BMatP= 1.40D-11
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-5.62D-17
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.627D-04-0.328D-03 0.549D-03-0.721D-03 0.118D-02-0.574D-03
+ Coeff-Com:  0.930D-03 0.125D-01-0.394D-01 0.527D-01 0.368D+00-0.185D+01
+ Coeff-Com:  0.380D+01-0.578D+01 0.444D+01
+ Coeff:      0.627D-04-0.328D-03 0.549D-03-0.721D-03 0.118D-02-0.574D-03
+ Coeff:      0.930D-03 0.125D-01-0.394D-01 0.527D-01 0.368D+00-0.185D+01
+ Coeff:      0.380D+01-0.578D+01 0.444D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=5.33D-08 MaxDP=6.34D-07 DE=-3.37D-11 OVMax= 1.80D-06
+
+ Cycle  21  Pass 1  IDiag  1:
+ E= -76.0532719756617     Delta-E=       -0.000000000013 Rises=F Damp=F
+ DIIS: error= 2.48D-07 at cycle  21 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756617     IErMin=16 ErrMin= 2.48D-07
+ ErrMax= 2.48D-07  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.92D-12 BMatP= 5.20D-12
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-2.12D-17
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.170D-04-0.209D-03 0.573D-03-0.853D-03 0.134D-02-0.215D-02
+ Coeff-Com:  0.133D-01-0.351D-01 0.578D-01 0.789D-01-0.528D+00 0.102D+01
+ Coeff-Com: -0.714D+00-0.221D+01 0.331D+01
+ Coeff:      0.170D-04-0.209D-03 0.573D-03-0.853D-03 0.134D-02-0.215D-02
+ Coeff:      0.133D-01-0.351D-01 0.578D-01 0.789D-01-0.528D+00 0.102D+01
+ Coeff:     -0.714D+00-0.221D+01 0.331D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=3.21D-08 MaxDP=4.05D-07 DE=-1.25D-11 OVMax= 1.10D-06
+
+ Cycle  22  Pass 1  IDiag  1:
+ E= -76.0532719756665     Delta-E=       -0.000000000005 Rises=F Damp=F
+ DIIS: error= 1.50D-07 at cycle  22 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756665     IErMin=16 ErrMin= 1.50D-07
+ ErrMax= 1.50D-07  0.00D+00 EMaxC= 1.00D-01 BMatC= 7.16D-13 BMatP= 1.92D-12
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-6.64D-18
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com: -0.555D-04 0.125D-03-0.145D-03 0.201D-03 0.531D-03-0.138D-02
+ Coeff-Com:  0.992D-02-0.265D-01 0.742D-01-0.202D+00 0.354D+00-0.620D+00
+ Coeff-Com:  0.205D+01-0.534D+01 0.469D+01
+ Coeff:     -0.555D-04 0.125D-03-0.145D-03 0.201D-03 0.531D-03-0.138D-02
+ Coeff:      0.992D-02-0.265D-01 0.742D-01-0.202D+00 0.354D+00-0.620D+00
+ Coeff:      0.205D+01-0.534D+01 0.469D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.98D-08 MaxDP=2.57D-07 DE=-4.76D-12 OVMax= 6.75D-07
+
+ Cycle  23  Pass 1  IDiag  1:
+ E= -76.0532719756683     Delta-E=       -0.000000000002 Rises=F Damp=F
+ DIIS: error= 9.10D-08 at cycle  23 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756683     IErMin=16 ErrMin= 9.10D-08
+ ErrMax= 9.10D-08  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.66D-13 BMatP= 7.16D-13
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-3.35D-19
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com: -0.119D-03 0.391D-03-0.438D-03 0.561D-03 0.153D-02-0.814D-02
+ Coeff-Com:  0.179D-01 0.193D-01-0.153D+00 0.396D+00-0.609D+00-0.240D-01
+ Coeff-Com:  0.187D+01-0.450D+01 0.399D+01
+ Coeff:     -0.119D-03 0.391D-03-0.438D-03 0.561D-03 0.153D-02-0.814D-02
+ Coeff:      0.179D-01 0.193D-01-0.153D+00 0.396D+00-0.609D+00-0.240D-01
+ Coeff:      0.187D+01-0.450D+01 0.399D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.23D-08 MaxDP=1.63D-07 DE=-1.76D-12 OVMax= 4.13D-07
+
+ Cycle  24  Pass 1  IDiag  1:
+ E= -76.0532719756690     Delta-E=       -0.000000000001 Rises=F Damp=F
+ DIIS: error= 5.52D-08 at cycle  24 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756690     IErMin=16 ErrMin= 5.52D-08
+ ErrMax= 5.52D-08  0.00D+00 EMaxC= 1.00D-01 BMatC= 9.95D-14 BMatP= 2.66D-13
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-2.28D-19
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com: -0.426D-04 0.968D-04-0.222D-04-0.195D-02 0.111D-01-0.233D-01
+ Coeff-Com: -0.374D-02 0.111D+00-0.305D+00 0.516D+00 0.187D+00-0.252D+01
+ Coeff-Com:  0.570D+01-0.871D+01 0.603D+01
+ Coeff:     -0.426D-04 0.968D-04-0.222D-04-0.195D-02 0.111D-01-0.233D-01
+ Coeff:     -0.374D-02 0.111D+00-0.305D+00 0.516D+00 0.187D+00-0.252D+01
+ Coeff:      0.570D+01-0.871D+01 0.603D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=7.76D-09 MaxDP=1.03D-07 DE=-6.96D-13 OVMax= 2.53D-07
+
+ Cycle  25  Pass 1  IDiag  1:
+ E= -76.0532719756693     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 3.36D-08 at cycle  25 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756693     IErMin=16 ErrMin= 3.36D-08
+ ErrMax= 3.36D-08  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.71D-14 BMatP= 9.95D-14
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-2.30D-20
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.713D-04-0.389D-03 0.173D-02-0.667D-02 0.151D-01 0.108D-01
+ Coeff-Com: -0.108D+00 0.271D+00-0.454D+00 0.275D+00 0.690D+00-0.268D+01
+ Coeff-Com:  0.573D+01-0.824D+01 0.550D+01
+ Coeff:      0.713D-04-0.389D-03 0.173D-02-0.667D-02 0.151D-01 0.108D-01
+ Coeff:     -0.108D+00 0.271D+00-0.454D+00 0.275D+00 0.690D+00-0.268D+01
+ Coeff:      0.573D+01-0.824D+01 0.550D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=4.94D-09 MaxDP=6.46D-08 DE=-3.41D-13 OVMax= 1.55D-07
+
+ Cycle  26  Pass 1  IDiag  1:
+ E= -76.0532719756693     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 2.04D-08 at cycle  26 NSaved=  16.
+ NSaved=16 IEnMin=15 EnMin= -76.0532719756693     IErMin=16 ErrMin= 2.04D-08
+ ErrMax= 2.04D-08  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.39D-14 BMatP= 3.71D-14
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-1.14D-20
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.848D-05-0.648D-03 0.312D-02-0.568D-02-0.123D-01 0.753D-01
+ Coeff-Com: -0.178D+00 0.308D+00-0.254D+00-0.239D+00 0.149D+01-0.346D+01
+ Coeff-Com:  0.525D+01-0.720D+01 0.522D+01
+ Coeff:      0.848D-05-0.648D-03 0.312D-02-0.568D-02-0.123D-01 0.753D-01
+ Coeff:     -0.178D+00 0.308D+00-0.254D+00-0.239D+00 0.149D+01-0.346D+01
+ Coeff:      0.525D+01-0.720D+01 0.522D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=3.18D-09 MaxDP=4.06D-08 DE= 0.00D+00 OVMax= 9.54D-08
+
+ Cycle  27  Pass 1  IDiag  1:
+ E= -76.0532719756695     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 1.24D-08 at cycle  27 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756695     IErMin=16 ErrMin= 1.24D-08
+ ErrMax= 1.24D-08  0.00D+00 EMaxC= 1.00D-01 BMatC= 5.22D-15 BMatP= 1.39D-14
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-3.68D-21
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.443D-03-0.240D-02 0.576D-02 0.397D-02-0.412D-01 0.112D+00
+ Coeff-Com: -0.210D+00 0.136D+00 0.348D+00-0.136D+01 0.285D+01-0.420D+01
+ Coeff-Com:  0.514D+01-0.625D+01 0.447D+01
+ Coeff:      0.443D-03-0.240D-02 0.576D-02 0.397D-02-0.412D-01 0.112D+00
+ Coeff:     -0.210D+00 0.136D+00 0.348D+00-0.136D+01 0.285D+01-0.420D+01
+ Coeff:      0.514D+01-0.625D+01 0.447D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=2.05D-09 MaxDP=2.54D-08 DE=-1.71D-13 OVMax= 5.86D-08
+
+ Cycle  28  Pass 1  IDiag  1:
+ E= -76.0532719756695     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 7.58D-09 at cycle  28 NSaved=  16.
+ NSaved=16 IEnMin=16 EnMin= -76.0532719756695     IErMin=16 ErrMin= 7.58D-09
+ ErrMax= 7.58D-09  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.96D-15 BMatP= 5.22D-15
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-1.69D-21
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.313D-04 0.609D-04-0.989D-03 0.446D-02-0.886D-02 0.148D-01
+ Coeff-Com: -0.217D-01 0.300D-01-0.654D-01 0.974D-01 0.967D-01-0.629D+00
+ Coeff-Com:  0.179D+01-0.450D+01 0.420D+01
+ Coeff:      0.313D-04 0.609D-04-0.989D-03 0.446D-02-0.886D-02 0.148D-01
+ Coeff:     -0.217D-01 0.300D-01-0.654D-01 0.974D-01 0.967D-01-0.629D+00
+ Coeff:      0.179D+01-0.450D+01 0.420D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.32D-09 MaxDP=1.59D-08 DE=-5.68D-14 OVMax= 3.60D-08
+
+ Cycle  29  Pass 1  IDiag  1:
+ E= -76.0532719756695     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 4.62D-09 at cycle  29 NSaved=  16.
+ NSaved=16 IEnMin=15 EnMin= -76.0532719756695     IErMin=16 ErrMin= 4.62D-09
+ ErrMax= 4.62D-09  0.00D+00 EMaxC= 1.00D-01 BMatC= 7.37D-16 BMatP= 1.96D-15
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-6.03D-22
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com:  0.109D-03 0.390D-04-0.977D-03 0.674D-02-0.236D-01 0.357D-01
+ Coeff-Com: -0.324D-02-0.823D-01 0.201D+00-0.394D+00 0.722D+00-0.159D+01
+ Coeff-Com:  0.424D+01-0.785D+01 0.574D+01
+ Coeff:      0.109D-03 0.390D-04-0.977D-03 0.674D-02-0.236D-01 0.357D-01
+ Coeff:     -0.324D-02-0.823D-01 0.201D+00-0.394D+00 0.722D+00-0.159D+01
+ Coeff:      0.424D+01-0.785D+01 0.574D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=8.50D-10 MaxDP=1.01D-08 DE= 5.68D-14 OVMax= 2.21D-08
+
+ Cycle  30  Pass 1  IDiag  1:
+ E= -76.0532719756695     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 2.82D-09 at cycle  30 NSaved=  16.
+ NSaved=16 IEnMin=14 EnMin= -76.0532719756695     IErMin=16 ErrMin= 2.82D-09
+ ErrMax= 2.82D-09  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.77D-16 BMatP= 7.37D-16
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-1.01D-22
+ Inversion failed.  Reducing to 15 matrices.
+ Coeff-Com: -0.226D-03 0.116D-02-0.336D-02 0.763D-02-0.110D-02-0.237D-01
+ Coeff-Com:  0.362D-01-0.281D-01-0.197D-02 0.493D-01 0.283D+00-0.138D+01
+ Coeff-Com:  0.291D+01-0.515D+01 0.429D+01
+ Coeff:     -0.226D-03 0.116D-02-0.336D-02 0.763D-02-0.110D-02-0.237D-01
+ Coeff:      0.362D-01-0.281D-01-0.197D-02 0.493D-01 0.283D+00-0.138D+01
+ Coeff:      0.291D+01-0.515D+01 0.429D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=5.42D-10 MaxDP=6.76D-09 DE= 1.42D-14 OVMax= 1.36D-08
+
+ Cycle  31  Pass 1  IDiag  1:
+ E= -76.0532719756693     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 1.72D-09 at cycle  31 NSaved=  16.
+ NSaved=16 IEnMin=13 EnMin= -76.0532719756695     IErMin=16 ErrMin= 1.72D-09
+ ErrMax= 1.72D-09  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.04D-16 BMatP= 2.77D-16
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 16 BigCof=    0.00 CofMax=   10.00 Det=-5.95D-23
+ Inversion failed.  Reducing to 15 matrices.
+ Large coefficients: NSaved= 15 BigCof=    0.00 CofMax=   10.00 Det=-6.58D-23
+ Inversion failed.  Reducing to 14 matrices.
+ Large coefficients: NSaved= 14 BigCof=    0.00 CofMax=   10.00 Det=-6.50D-23
+ Inversion failed.  Reducing to 13 matrices.
+ Coeff-Com: -0.271D-03 0.763D-03 0.140D-02-0.852D-02 0.206D-01-0.978D-02
+ Coeff-Com: -0.627D-01 0.280D+00-0.573D+00 0.613D+00 0.346D+00-0.359D+01
+ Coeff-Com:  0.398D+01
+ Coeff:     -0.271D-03 0.763D-03 0.140D-02-0.852D-02 0.206D-01-0.978D-02
+ Coeff:     -0.627D-01 0.280D+00-0.573D+00 0.613D+00 0.346D+00-0.359D+01
+ Coeff:      0.398D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=3.45D-10 MaxDP=4.48D-09 DE= 1.85D-13 OVMax= 8.34D-09
+
+ Cycle  32  Pass 1  IDiag  1:
+ E= -76.0532719756695     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 1.05D-09 at cycle  32 NSaved=  14.
+ NSaved=14 IEnMin=10 EnMin= -76.0532719756695     IErMin=14 ErrMin= 1.05D-09
+ ErrMax= 1.05D-09  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.92D-17 BMatP= 1.04D-16
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved= 14 BigCof=    0.00 CofMax=   10.00 Det=-1.79D-23
+ Inversion failed.  Reducing to 13 matrices.
+ Large coefficients: NSaved= 13 BigCof=    0.00 CofMax=   10.00 Det=-1.80D-23
+ Inversion failed.  Reducing to 12 matrices.
+ Large coefficients: NSaved= 12 BigCof=    0.00 CofMax=   10.00 Det=-2.40D-23
+ Inversion failed.  Reducing to 11 matrices.
+ Large coefficients: NSaved= 11 BigCof=    0.00 CofMax=   10.00 Det=-2.60D-23
+ Inversion failed.  Reducing to 10 matrices.
+ Large coefficients: NSaved= 10 BigCof=    0.00 CofMax=   10.00 Det=-2.86D-23
+ Inversion failed.  Reducing to  9 matrices.
+ Large coefficients: NSaved=  9 BigCof=    0.00 CofMax=   10.00 Det=-2.87D-23
+ Inversion failed.  Reducing to  8 matrices.
+ Large coefficients: NSaved=  8 BigCof=    0.00 CofMax=   10.00 Det=-3.26D-23
+ Inversion failed.  Reducing to  7 matrices.
+ Large coefficients: NSaved=  7 BigCof=    0.00 CofMax=   10.00 Det=-3.65D-23
+ Inversion failed.  Reducing to  6 matrices.
+ Large coefficients: NSaved=  6 BigCof=    0.00 CofMax=   10.00 Det=-5.07D-23
+ Inversion failed.  Reducing to  5 matrices.
+ Coeff-Com:  0.147D+00-0.414D+00 0.613D+00-0.331D+01 0.396D+01
+ Coeff:      0.147D+00-0.414D+00 0.613D+00-0.331D+01 0.396D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=2.19D-10 MaxDP=2.94D-09 DE=-2.27D-13 OVMax= 5.13D-09
+
+ Cycle  33  Pass 1  IDiag  1:
+ E= -76.0532719756695     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 6.41D-10 at cycle  33 NSaved=   6.
+ NSaved= 6 IEnMin= 2 EnMin= -76.0532719756695     IErMin= 6 ErrMin= 6.41D-10
+ ErrMax= 6.41D-10  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.47D-17 BMatP= 3.92D-17
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved=  6 BigCof=    0.00 CofMax=   10.00 Det=-9.28D-24
+ Inversion failed.  Reducing to  5 matrices.
+ Coeff-Com:  0.587D-01-0.126D+00 0.144D+00-0.252D+01 0.345D+01
+ Coeff:      0.587D-01-0.126D+00 0.144D+00-0.252D+01 0.345D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.39D-10 MaxDP=1.91D-09 DE=-2.84D-14 OVMax= 3.15D-09
+
+ Cycle  34  Pass 1  IDiag  1:
+ E= -76.0532719756692     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 3.92D-10 at cycle  34 NSaved=   6.
+ NSaved= 6 IEnMin= 2 EnMin= -76.0532719756695     IErMin= 6 ErrMin= 3.92D-10
+ ErrMax= 3.92D-10  0.00D+00 EMaxC= 1.00D-01 BMatC= 5.55D-18 BMatP= 1.47D-17
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved=  6 BigCof=    0.00 CofMax=   10.00 Det=-5.48D-24
+ Inversion failed.  Reducing to  5 matrices.
+ Large coefficients: NSaved=  5 BigCof=    0.00 CofMax=   10.00 Det=-5.68D-24
+ Inversion failed.  Reducing to  4 matrices.
+ Large coefficients: NSaved=  4 BigCof=    0.00 CofMax=   10.00 Det=-5.91D-24
+ Inversion failed.  Reducing to  3 matrices.
+ Coeff-Com:  0.279D-01-0.238D+01 0.335D+01
+ Coeff:      0.279D-01-0.238D+01 0.335D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=8.76D-11 MaxDP=1.23D-09 DE= 3.13D-13 OVMax= 1.94D-09
+
+ Cycle  35  Pass 1  IDiag  1:
+ E= -76.0532719756693     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 2.40D-10 at cycle  35 NSaved=   4.
+ NSaved= 4 IEnMin= 1 EnMin= -76.0532719756695     IErMin= 4 ErrMin= 2.40D-10
+ ErrMax= 2.40D-10  0.00D+00 EMaxC= 1.00D-01 BMatC= 2.09D-18 BMatP= 5.55D-18
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved=  4 BigCof=    0.00 CofMax=   10.00 Det=-2.39D-24
+ Inversion failed.  Reducing to  3 matrices.
+ Large coefficients: NSaved=  3 BigCof=    0.00 CofMax=   10.00 Det=-4.11D-23
+ Inversion failed.  Reducing to  2 matrices.
+ Coeff-Com: -0.159D+01 0.259D+01
+ Coeff:     -0.159D+01 0.259D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=5.48D-11 MaxDP=7.82D-10 DE=-8.53D-14 OVMax= 1.19D-09
+
+ Cycle  36  Pass 1  IDiag  1:
+ E= -76.0532719756694     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 1.46D-10 at cycle  36 NSaved=   3.
+ NSaved= 3 IEnMin= 3 EnMin= -76.0532719756694     IErMin= 3 ErrMin= 1.46D-10
+ ErrMax= 1.46D-10  0.00D+00 EMaxC= 1.00D-01 BMatC= 7.95D-19 BMatP= 2.09D-18
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Coeff-Com: -0.624D+00 0.418D-01 0.158D+01
+ Coeff:     -0.624D+00 0.418D-01 0.158D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=3.46D-11 MaxDP=5.02D-10 DE=-9.95D-14 OVMax= 7.33D-10
+
+ Cycle  37  Pass 1  IDiag  1:
+ E= -76.0532719756693     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 8.92D-11 at cycle  37 NSaved=   4.
+ NSaved= 4 IEnMin= 3 EnMin= -76.0532719756694     IErMin= 4 ErrMin= 8.92D-11
+ ErrMax= 8.92D-11  0.00D+00 EMaxC= 1.00D-01 BMatC= 3.00D-19 BMatP= 7.95D-19
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved=  4 BigCof=    0.00 CofMax=   10.00 Det=-8.05D-23
+ Inversion failed.  Reducing to  3 matrices.
+ Large coefficients: NSaved=  3 BigCof=    0.00 CofMax=   10.00 Det=-4.40D-23
+ Inversion failed.  Reducing to  2 matrices.
+ Coeff-Com: -0.159D+01 0.259D+01
+ Coeff:     -0.159D+01 0.259D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=2.21D-11 MaxDP=3.28D-10 DE= 7.11D-14 OVMax= 4.50D-10
+
+ Cycle  38  Pass 1  IDiag  1:
+ E= -76.0532719756694     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 5.43D-11 at cycle  38 NSaved=   3.
+ NSaved= 3 IEnMin= 1 EnMin= -76.0532719756694     IErMin= 3 ErrMin= 5.43D-11
+ ErrMax= 5.43D-11  0.00D+00 EMaxC= 1.00D-01 BMatC= 1.13D-19 BMatP= 3.00D-19
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved=  3 BigCof=    0.00 CofMax=   10.00 Det=-7.29D-24
+ Inversion failed.  Reducing to  2 matrices.
+ Coeff-Com: -0.160D+01 0.260D+01
+ Coeff:     -0.160D+01 0.260D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=1.41D-11 MaxDP=2.14D-10 DE=-2.84D-14 OVMax= 2.77D-10
+
+ Cycle  39  Pass 1  IDiag  1:
+ E= -76.0532719756692     Delta-E=        0.000000000000 Rises=F Damp=F
+ DIIS: error= 3.31D-11 at cycle  39 NSaved=   3.
+ NSaved= 3 IEnMin= 2 EnMin= -76.0532719756694     IErMin= 3 ErrMin= 3.31D-11
+ ErrMax= 3.31D-11  0.00D+00 EMaxC= 1.00D-01 BMatC= 4.26D-20 BMatP= 1.13D-19
+ IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
+ Large coefficients: NSaved=  3 BigCof=    0.00 CofMax=   10.00 Det=-3.79D-24
+ Inversion failed.  Reducing to  2 matrices.
+ Coeff-Com: -0.158D+01 0.258D+01
+ Coeff:     -0.158D+01 0.258D+01
+ Gap=     0.552 Goal=   None    Shift=    1.000
+ RMSDP=9.09D-12 MaxDP=1.42D-10 DE= 1.42D-13 OVMax= 1.69D-10
+
+ SCF Done:  E(RHF) =    -76.05327197566920000000 A.U. after   39 cycles
+            NFock= 39  Conv=0.91D-11     -V/T= 2.0003
+ KE= 7.602890872021D+01 PE=-1.992586028172D+02 EE= 3.786544670752D+01
+ Leave Link  502 at Tue Mar 14 17:15:02 2017, MaxMem=   402653184 cpu:         1.5
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l801.exe)
+ Range of M.O.s used for correlation:     1    42
+ NBasis=    42 NAE=     5 NBE=     5 NFC=     0 NFV=     0
+ NROrb=     42 NOA=     5 NOB=     5 NVA=    37 NVB=    37
+
+ **** Warning!!: The largest alpha MO coefficient is  0.18053326D+02
+
+ Leave Link  801 at Tue Mar 14 17:15:02 2017, MaxMem=   402653184 cpu:         0.1
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l1002.exe)
+ Minotr:  Closed shell wavefunction.
+          Direct CPHF calculation.
+          Differentiating once with respect to electric field.
+                with respect to dipole field.
+          Electric field/nuclear overlap derivatives assumed to be zero.
+          Requested convergence is 1.0D-11 RMS, and 1.0D-10 maximum.
+          NewPWx=F KeepS1=T KeepF1=T KeepIn=T MapXYZ=F SortEE=F KeepMc=T.
+          MDV=     402653114 using IRadAn=       2.
+ Keep R1 and R3 ints in memory in canonical form, NReq=1660485.
+ FoFCou: FMM=F IPFlag=           0 FMFlag=           0 FMFlg1=           0
+         NFxFlg=           0 DoJE=F BraDBF=F KetDBF=F FulRan=T
+         wScrn=  0.000000 ICntrl=     600 IOpCl=  0 I1Cent=           0 NGrid=           0
+         NMat0=    1 NMatS0=    903 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
+ Symmetry not used in FoFCou.
+          Solving linear equations separately, MaxMat=       0.
+          Doing perturbations at frequencies    0.000000    0.020000    0.040000    0.060000    0.080000
+          Doing perturbations at frequencies    0.100000    0.120000    0.160000    0.200000
+          There are    27 degrees of freedom in the 1st order CPHF.  IDoFFX=0 NUNeed=    27.
+ LinEq1:  Iter=  0 NonCon=    27 RMS=1.07D-01 Max=9.56D-01 NDo=    27
+ AX will form    27 AO Fock derivatives at one time.
+ LinEq1:  Iter=  1 NonCon=    27 RMS=3.05D-02 Max=2.92D-01 NDo=    27
+ LinEq1:  Iter=  2 NonCon=    27 RMS=1.35D-02 Max=1.15D-01 NDo=    27
+ LinEq1:  Iter=  3 NonCon=    27 RMS=3.55D-03 Max=1.93D-02 NDo=    27
+ LinEq1:  Iter=  4 NonCon=    27 RMS=5.97D-04 Max=3.71D-03 NDo=    27
+ LinEq1:  Iter=  5 NonCon=    27 RMS=7.74D-05 Max=5.97D-04 NDo=    27
+ LinEq1:  Iter=  6 NonCon=    27 RMS=9.42D-06 Max=6.26D-05 NDo=    27
+ LinEq1:  Iter=  7 NonCon=    27 RMS=1.04D-06 Max=8.24D-06 NDo=    27
+ LinEq1:  Iter=  8 NonCon=    27 RMS=1.29D-07 Max=9.97D-07 NDo=    27
+ LinEq1:  Iter=  9 NonCon=    27 RMS=1.82D-08 Max=1.12D-07 NDo=    27
+ LinEq1:  Iter= 10 NonCon=    27 RMS=2.25D-09 Max=9.91D-09 NDo=    27
+ LinEq1:  Iter= 11 NonCon=    18 RMS=2.99D-10 Max=1.73D-09 NDo=    27
+ LinEq1:  Iter= 12 NonCon=     2 RMS=2.87D-11 Max=1.57D-10 NDo=    18
+ LinEq1:  Iter= 13 NonCon=     0 RMS=2.88D-12 Max=1.52D-11 NDo=     2
+ Linear equations converged to 1.000D-11 1.000D-10 after    13 iterations.
+ FullF1:  Do perturbations    1 to    27.
+ SCF Polarizability for W=    0.000000:
+                1             2             3 
+      1  0.777020D+01
+      2  0.000000D+00  0.895381D+01
+      3  0.000000D+00  0.000000D+00  0.832281D+01
+ Isotropic polarizability for W=    0.000000        8.35 Bohr**3.
+ SCF Polarizability for W=    0.020000:
+                1             2             3 
+      1  0.778039D+01
+      2  0.000000D+00  0.896173D+01
+      3  0.000000D+00  0.000000D+00  0.833160D+01
+ Isotropic polarizability for W=    0.020000        8.36 Bohr**3.
+ SCF Polarizability for W=    0.040000:
+                1             2             3 
+      1  0.781126D+01
+      2  0.000000D+00  0.898561D+01
+      3  0.000000D+00  0.000000D+00  0.835811D+01
+ Isotropic polarizability for W=    0.040000        8.38 Bohr**3.
+ SCF Polarizability for W=    0.060000:
+                1             2             3 
+      1  0.786378D+01
+      2  0.000000D+00  0.902577D+01
+      3  0.000000D+00  0.000000D+00  0.840289D+01
+ Isotropic polarizability for W=    0.060000        8.43 Bohr**3.
+ SCF Polarizability for W=    0.080000:
+                1             2             3 
+      1  0.793969D+01
+      2  0.000000D+00  0.908277D+01
+      3  0.000000D+00  0.000000D+00  0.846687D+01
+ Isotropic polarizability for W=    0.080000        8.50 Bohr**3.
+ SCF Polarizability for W=    0.100000:
+                1             2             3 
+      1  0.804170D+01
+      2  0.000000D+00  0.915743D+01
+      3  0.000000D+00  0.000000D+00  0.855141D+01
+ Isotropic polarizability for W=    0.100000        8.58 Bohr**3.
+ SCF Polarizability for W=    0.120000:
+                1             2             3 
+      1  0.817384D+01
+      2  0.000000D+00  0.925084D+01
+      3  0.000000D+00  0.000000D+00  0.865846D+01
+ Isotropic polarizability for W=    0.120000        8.69 Bohr**3.
+ SCF Polarizability for W=    0.160000:
+                1             2             3 
+      1  0.855528D+01
+      2  0.000000D+00  0.950006D+01
+      3  0.000000D+00  0.000000D+00  0.895155D+01
+ Isotropic polarizability for W=    0.160000        9.00 Bohr**3.
+ SCF Polarizability for W=    0.200000:
+                1             2             3 
+      1  0.918136D+01
+      2  0.000000D+00  0.984732D+01
+      3  0.000000D+00  0.000000D+00  0.938070D+01
+ Isotropic polarizability for W=    0.200000        9.47 Bohr**3.
+ SCF Static Hyperpolarizability:
+ K=  1 block:
+                1 
+      1  0.000000D+00
+ K=  2 block:
+                1             2 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.489173D+00
+      2  0.000000D+00 -0.908057D+01
+      3  0.000000D+00  0.000000D+00 -0.427666D+01
+ SCF Beta(-W,W;0) for W=    0.020000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.488967D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.911340D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.465505D+00
+      2  0.000000D+00 -0.911322D+01
+      3  0.000000D+00  0.000000D+00 -0.430354D+01
+ SCF Beta(W,W;-2W) for W=    0.020000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.440712D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.917922D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.512293D+00
+      2  0.000000D+00 -0.917984D+01
+      3  0.000000D+00  0.000000D+00 -0.435800D+01
+ SCF Beta(-W,W;0) for W=    0.040000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.488243D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.921303D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.391569D+00
+      2  0.000000D+00 -0.921217D+01
+      3  0.000000D+00  0.000000D+00 -0.438557D+01
+ SCF Beta(W,W;-2W) for W=    0.040000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.277069D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.948479D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.587720D+00
+      2  0.000000D+00 -0.948889D+01
+      3  0.000000D+00  0.000000D+00 -0.461467D+01
+ SCF Beta(-W,W;0) for W=    0.060000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.486655D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.938303D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.257958D+00
+      2  0.000000D+00 -0.938046D+01
+      3  0.000000D+00  0.000000D+00 -0.452692D+01
+ SCF Beta(W,W;-2W) for W=    0.060000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3 -0.689466D-01  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.100284D+02  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.736421D+00
+      2  0.000000D+00 -0.100449D+02
+      3  0.000000D+00  0.000000D+00 -0.508923D+01
+ SCF Beta(-W,W;0) for W=    0.080000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.483544D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.962964D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.467635D-01
+      2  0.000000D+00 -0.962340D+01
+      3  0.000000D+00  0.000000D+00 -0.473515D+01
+ SCF Beta(W,W;-2W) for W=    0.080000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3 -0.766525D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.108702D+02  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.100472D+01
+      2  0.000000D+00 -0.109232D+02
+      3  0.000000D+00  0.000000D+00 -0.587119D+01
+ SCF Beta(-W,W;0) for W=    0.100000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.477785D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.996240D+01  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1 -0.272593D+00
+      2  0.000000D+00 -0.994895D+01
+      3  0.000000D+00  0.000000D+00 -0.502200D+01
+ SCF Beta(W,W;-2W) for W=    0.100000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3 -0.226585D+01  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.121165D+02  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1  0.149186D+01
+      2  0.000000D+00 -0.122674D+02
+      3  0.000000D+00  0.000000D+00 -0.714011D+01
+ SCF Beta(-W,W;0) for W=    0.120000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.467499D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.103950D+02  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1 -0.751302D+00
+      2  0.000000D+00 -0.103683D+02
+      3  0.000000D+00  0.000000D+00 -0.540495D+01
+ SCF Beta(-W,W;0) for W=    0.160000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.418445D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.116453D+02  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1 -0.260152D+01
+      2  0.000000D+00 -0.115545D+02
+      3  0.000000D+00  0.000000D+00 -0.657398D+01
+ SCF Beta(-W,W;0) for W=    0.200000:
+ K=  1 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.269447D+00  0.000000D+00  0.000000D+00
+ K=  2 block:
+                1             2             3 
+      1  0.000000D+00
+      2  0.000000D+00  0.000000D+00
+      3  0.000000D+00 -0.136549D+02  0.000000D+00
+ K=  3 block:
+                1             2             3 
+      1 -0.747843D+01
+      2  0.000000D+00 -0.133813D+02
+      3  0.000000D+00  0.000000D+00 -0.864004D+01
+ End of Minotr F.D. properties on file   721 Mask=      31 NFrqRd=     6 NDeriv=     1 ND12= 1 LenFil=     278:
+ Frequencies=    0.000000    0.020000    0.040000    0.060000    0.080000
+ Frequencies=    0.100000
+ Property number 1 -- Alpha(-w,w) frequency  1    0.000000:
+                 1             2             3 
+      1   0.777020D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.895381D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.832281D+01
+ Property number 1 -- Alpha(-w,w) frequency  2    0.020000:
+                 1             2             3 
+      1   0.778039D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.896173D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.833160D+01
+ Property number 1 -- Alpha(-w,w) frequency  3    0.040000:
+                 1             2             3 
+      1   0.781126D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.898561D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.835811D+01
+ Property number 1 -- Alpha(-w,w) frequency  4    0.060000:
+                 1             2             3 
+      1   0.786378D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.902577D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.840289D+01
+ Property number 1 -- Alpha(-w,w) frequency  5    0.080000:
+                 1             2             3 
+      1   0.793969D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.908277D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.846687D+01
+ Property number 1 -- Alpha(-w,w) frequency  6    0.100000:
+                 1             2             3 
+      1   0.804170D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.915743D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.855141D+01
+ Property number 5 -- Beta(-w,w,0) frequency  1    0.000000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.489173D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.908057D+01
+     12   0.000000D+00
+     13   0.489173D+00
+     14   0.000000D+00
+     15  -0.908057D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.427666D+01
+ Property number 5 -- Beta(-w,w,0) frequency  2    0.020000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.488967D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.911340D+01
+     12   0.000000D+00
+     13   0.465505D+00
+     14   0.000000D+00
+     15  -0.911322D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.430354D+01
+ Property number 5 -- Beta(-w,w,0) frequency  3    0.040000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.488243D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.921303D+01
+     12   0.000000D+00
+     13   0.391569D+00
+     14   0.000000D+00
+     15  -0.921217D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.438557D+01
+ Property number 5 -- Beta(-w,w,0) frequency  4    0.060000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.486655D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.938303D+01
+     12   0.000000D+00
+     13   0.257958D+00
+     14   0.000000D+00
+     15  -0.938046D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.452692D+01
+ Property number 5 -- Beta(-w,w,0) frequency  5    0.080000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.483544D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.962964D+01
+     12   0.000000D+00
+     13   0.467635D-01
+     14   0.000000D+00
+     15  -0.962340D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.473515D+01
+ Property number 5 -- Beta(-w,w,0) frequency  6    0.100000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.477785D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.996240D+01
+     12   0.000000D+00
+     13  -0.272593D+00
+     14   0.000000D+00
+     15  -0.994895D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.502200D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  1    0.000000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.489173D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.908057D+01
+     12   0.000000D+00
+     13   0.489173D+00
+     14   0.000000D+00
+     15  -0.908057D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.427666D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  2    0.020000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.440712D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.917922D+01
+     12   0.000000D+00
+     13   0.512293D+00
+     14   0.000000D+00
+     15  -0.917984D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.435800D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  3    0.040000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.277069D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.948479D+01
+     12   0.000000D+00
+     13   0.587720D+00
+     14   0.000000D+00
+     15  -0.948889D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.461467D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  4    0.060000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4  -0.689466D-01
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.100284D+02
+     12   0.000000D+00
+     13   0.736421D+00
+     14   0.000000D+00
+     15  -0.100449D+02
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.508923D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  5    0.080000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4  -0.766525D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.108702D+02
+     12   0.000000D+00
+     13   0.100472D+01
+     14   0.000000D+00
+     15  -0.109232D+02
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.587119D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  6    0.100000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4  -0.226585D+01
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.121165D+02
+     12   0.000000D+00
+     13   0.149186D+01
+     14   0.000000D+00
+     15  -0.122674D+02
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.714011D+01
+ End of Minotr F.D. properties file   722 does not exist.
+ End of Minotr F.D. properties file   788 does not exist.
+ Leave Link 1002 at Tue Mar 14 17:15:02 2017, MaxMem=   402653184 cpu:         2.0
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l601.exe)
+ Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
+
+ **********************************************************************
+
+            Population analysis using the SCF density.
+
+ **********************************************************************
+
+ Alpha  occ. eigenvalues --  -20.56496  -1.35863  -0.72912  -0.58589  -0.51080
+ Alpha virt. eigenvalues --    0.04070   0.05857   0.13802   0.17211   0.21250
+ Alpha virt. eigenvalues --    0.21883   0.24796   0.28222   0.29557   0.32846
+ Alpha virt. eigenvalues --    0.38716   0.40441   0.47959   0.52875   0.59981
+ Alpha virt. eigenvalues --    0.65334   0.69832   0.75906   0.83646   0.90910
+ Alpha virt. eigenvalues --    0.96174   1.13157   1.18099   1.23526   1.26588
+ Alpha virt. eigenvalues --    1.41683   1.48361   1.71371   2.01661   2.03446
+ Alpha virt. eigenvalues --    2.12756   2.77917   2.87667   2.93500   3.37921
+ Alpha virt. eigenvalues --    3.75846  43.78382
+          Condensed to atoms (all electrons):
+               1          2          3
+     1  O    7.127506   0.228553   0.228553
+     2  H    0.228553   1.188054  -0.208913
+     3  H    0.228553  -0.208913   1.188054
+ Mulliken charges:
+               1
+     1  O    0.415387
+     2  H   -0.207694
+     3  H   -0.207694
+ Sum of Mulliken charges =   0.00000
+ Mulliken charges with hydrogens summed into heavy atoms:
+               1
+     1  O    0.000000
+ Electronic spatial extent (au):  <R**2>=             19.3469
+ Charge=              0.0000 electrons
+ Dipole moment (field-independent basis, Debye):
+    X=              0.0000    Y=              0.0000    Z=             -1.9505  Tot=              1.9505
+ Quadrupole moment (field-independent basis, Debye-Ang):
+   XX=             -7.5442   YY=             -4.2361   ZZ=             -6.2875
+   XY=              0.0000   XZ=              0.0000   YZ=              0.0000
+ Traceless Quadrupole moment (field-independent basis, Debye-Ang):
+   XX=             -1.5216   YY=              1.7866   ZZ=             -0.2649
+   XY=              0.0000   XZ=              0.0000   YZ=              0.0000
+ Octapole moment (field-independent basis, Debye-Ang**2):
+  XXX=              0.0000  YYY=              0.0000  ZZZ=             -1.1690  XYY=              0.0000
+  XXY=              0.0000  XXZ=             -0.2975  XZZ=              0.0000  YZZ=              0.0000
+  YYZ=             -1.3586  XYZ=              0.0000
+ Hexadecapole moment (field-independent basis, Debye-Ang**3):
+ XXXX=             -6.7346 YYYY=             -5.9367 ZZZZ=             -7.2150 XXXY=              0.0000
+ XXXZ=              0.0000 YYYX=              0.0000 YYYZ=              0.0000 ZZZX=              0.0000
+ ZZZY=              0.0000 XXYY=             -2.4234 XXZZ=             -2.3651 YYZZ=             -1.8986
+ XXYZ=              0.0000 YYXZ=              0.0000 ZZXY=              0.0000
+ N-N= 9.310975413772D+00 E-N=-1.992586028169D+02  KE= 7.602890872021D+01
+  Exact polarizability:   7.770   0.000   8.954   0.000   0.000   8.323
+ Approx polarizability:   6.185   0.000   7.657   0.000   0.000   7.081
+ No NMR shielding tensors so no spin-rotation constants.
+ Leave Link  601 at Tue Mar 14 17:15:02 2017, MaxMem=   402653184 cpu:         0.5
+ (Enter /home/acad/unamur-ucpts/pbeaujea/gaussian/g09/l9999.exe)
+ AllDun F.D. properties on file 20721 Mask=      31 NFrqRd=     6 NDeriv=     1 ND12= 1 LenFil=     278:
+ Frequencies=    0.000000    0.020000    0.040000    0.060000    0.080000
+ Frequencies=    0.100000
+ Property number 1 -- Alpha(-w,w) frequency  1    0.000000:
+                 1             2             3 
+      1   0.777020D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.895381D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.832281D+01
+ Property number 1 -- Alpha(-w,w) frequency  2    0.020000:
+                 1             2             3 
+      1   0.778039D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.896173D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.833160D+01
+ Property number 1 -- Alpha(-w,w) frequency  3    0.040000:
+                 1             2             3 
+      1   0.781126D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.898561D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.835811D+01
+ Property number 1 -- Alpha(-w,w) frequency  4    0.060000:
+                 1             2             3 
+      1   0.786378D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.902577D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.840289D+01
+ Property number 1 -- Alpha(-w,w) frequency  5    0.080000:
+                 1             2             3 
+      1   0.793969D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.908277D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.846687D+01
+ Property number 1 -- Alpha(-w,w) frequency  6    0.100000:
+                 1             2             3 
+      1   0.804170D+01  0.000000D+00  0.000000D+00
+      2   0.000000D+00  0.915743D+01  0.000000D+00
+      3   0.000000D+00  0.000000D+00  0.855141D+01
+ Property number 5 -- Beta(-w,w,0) frequency  1    0.000000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.489173D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.908057D+01
+     12   0.000000D+00
+     13   0.489173D+00
+     14   0.000000D+00
+     15  -0.908057D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.427666D+01
+ Property number 5 -- Beta(-w,w,0) frequency  2    0.020000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.488967D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.911340D+01
+     12   0.000000D+00
+     13   0.465505D+00
+     14   0.000000D+00
+     15  -0.911322D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.430354D+01
+ Property number 5 -- Beta(-w,w,0) frequency  3    0.040000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.488243D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.921303D+01
+     12   0.000000D+00
+     13   0.391569D+00
+     14   0.000000D+00
+     15  -0.921217D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.438557D+01
+ Property number 5 -- Beta(-w,w,0) frequency  4    0.060000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.486655D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.938303D+01
+     12   0.000000D+00
+     13   0.257958D+00
+     14   0.000000D+00
+     15  -0.938046D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.452692D+01
+ Property number 5 -- Beta(-w,w,0) frequency  5    0.080000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.483544D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.962964D+01
+     12   0.000000D+00
+     13   0.467635D-01
+     14   0.000000D+00
+     15  -0.962340D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.473515D+01
+ Property number 5 -- Beta(-w,w,0) frequency  6    0.100000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.477785D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.996240D+01
+     12   0.000000D+00
+     13  -0.272593D+00
+     14   0.000000D+00
+     15  -0.994895D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.502200D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  1    0.000000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.489173D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.908057D+01
+     12   0.000000D+00
+     13   0.489173D+00
+     14   0.000000D+00
+     15  -0.908057D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.427666D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  2    0.020000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.440712D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.917922D+01
+     12   0.000000D+00
+     13   0.512293D+00
+     14   0.000000D+00
+     15  -0.917984D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.435800D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  3    0.040000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4   0.277069D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.948479D+01
+     12   0.000000D+00
+     13   0.587720D+00
+     14   0.000000D+00
+     15  -0.948889D+01
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.461467D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  4    0.060000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4  -0.689466D-01
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.100284D+02
+     12   0.000000D+00
+     13   0.736421D+00
+     14   0.000000D+00
+     15  -0.100449D+02
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.508923D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  5    0.080000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4  -0.766525D+00
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.108702D+02
+     12   0.000000D+00
+     13   0.100472D+01
+     14   0.000000D+00
+     15  -0.109232D+02
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.587119D+01
+ Property number 6 -- Beta(w,w,-2w) frequency  6    0.100000:
+                 1 
+      1   0.000000D+00
+      2   0.000000D+00
+      3   0.000000D+00
+      4  -0.226585D+01
+      5   0.000000D+00
+      6   0.000000D+00
+      7   0.000000D+00
+      8   0.000000D+00
+      9   0.000000D+00
+     10   0.000000D+00
+     11  -0.121165D+02
+     12   0.000000D+00
+     13   0.149186D+01
+     14   0.000000D+00
+     15  -0.122674D+02
+     16   0.000000D+00
+     17   0.000000D+00
+     18  -0.714011D+01
+
+ ----------------------------------------------------------------------
+
+ Electric dipole moment (input orientation):
+ (Debye = 10**-18 statcoulomb cm , SI units = C m)
+                  (au)            (Debye)         (10**-30 SI)
+   Tot        0.767392D+00      0.195052D+01      0.650622D+01
+   x          0.000000D+00      0.000000D+00      0.000000D+00
+   y          0.000000D+00      0.000000D+00      0.000000D+00
+   z         -0.767392D+00     -0.195052D+01     -0.650622D+01
+
+ Dipole polarizability, Alpha (input orientation).
+ (esu units = cm**3 , SI units = C**2 m**2 J**-1)
+ Alpha(0;0):
+               (au)            (10**-24 esu)      (10**-40 SI)
+   iso        0.834894D+01      0.123719D+01      0.137655D+01
+   aniso      0.102578D+01      0.152005D+00      0.169129D+00
+   xx         0.777020D+01      0.115143D+01      0.128113D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.895381D+01      0.132682D+01      0.147628D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.832281D+01      0.123331D+01      0.137225D+01
+ Alpha(-w;w) w= 2278.2nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.835791D+01      0.123851D+01      0.137803D+01
+   aniso      0.102384D+01      0.151717D+00      0.168808D+00
+   xx         0.778039D+01      0.115293D+01      0.128281D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.896173D+01      0.132799D+01      0.147759D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.833160D+01      0.123462D+01      0.137369D+01
+ Alpha(-w;w) w= 1139.1nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.838499D+01      0.124253D+01      0.138250D+01
+   aniso      0.101782D+01      0.150826D+00      0.167816D+00
+   xx         0.781126D+01      0.115751D+01      0.128790D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.898561D+01      0.133153D+01      0.148153D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.835811D+01      0.123854D+01      0.137807D+01
+ Alpha(-w;w) w=  759.4nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.843082D+01      0.124932D+01      0.139005D+01
+   aniso      0.100719D+01      0.149250D+00      0.166063D+00
+   xx         0.786378D+01      0.116529D+01      0.129656D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.902577D+01      0.133748D+01      0.148815D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.840289D+01      0.124518D+01      0.138545D+01
+ Alpha(-w;w) w=  569.5nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.849644D+01      0.125904D+01      0.140087D+01
+   aniso      0.990932D+00      0.146841D+00      0.163383D+00
+   xx         0.793969D+01      0.117654D+01      0.130908D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.908277D+01      0.134593D+01      0.149755D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.846687D+01      0.125466D+01      0.139600D+01
+ Alpha(-w;w) w=  455.6nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.858351D+01      0.127195D+01      0.141523D+01
+   aniso      0.967447D+00      0.143361D+00      0.159510D+00
+   xx         0.804170D+01      0.119166D+01      0.132590D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.915743D+01      0.135699D+01      0.150986D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.855141D+01      0.126719D+01      0.140994D+01
+
+ First dipole hyperpolarizability, Beta (input orientation).
+
+ Beta(0;0,0):
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.489173
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.489173         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.080568
+   yz.         0.000000         9.080568         0.000000
+   zx.        -0.489173         0.000000         0.000000
+   zy.         0.000000         9.080568         0.000000
+   zz.         0.000000         0.000000         4.276656
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          7.7208
+  Para :         -7.7208  Para=B(i)*MU(i)/|MU|
+  Perp :         -2.5736
+  Kerr :         -7.7208  3/2*(Para-Perp)
+
+  <B2zzz> :        29.4147 <Bzzz> :         5.4235
+  <B2zxx> :         8.5707 <Bzxx> :         2.9276
+  beta2HR :        37.9854 betaHR :         6.1632
+  rhoHR   :         3.4320
+
+  |Bj=1|^2 :        99.3520 |Bj=1| :         9.9675
+  |Bj=3|^2 :       167.0257 |Bj=3| :        12.9238
+  rho=|Bj=3|/|Bj=1| :         1.2966
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         12.8681
+  VEC :         12.8681  norm of Beta VEC
+
+ Beta(0;w,-w) w= 2278.2nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.465505
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.488967         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.113219
+   yz.         0.000000         9.113396         0.000000
+   zx.        -0.488967         0.000000         0.000000
+   zy.         0.000000         9.113396         0.000000
+   zz.         0.000000         0.000000         4.303545
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          7.7614
+  Para :         -7.7614  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         12.9357
+  VEC :         12.9357  norm of Beta VEC
+
+ Beta(0;w,-w) w= 1139.1nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.391569
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.488243         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.212166
+   yz.         0.000000         9.213033         0.000000
+   zx.        -0.488243         0.000000         0.000000
+   zy.         0.000000         9.213033         0.000000
+   zz.         0.000000         0.000000         4.385565
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          7.8854
+  Para :         -7.8854  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         13.1423
+  VEC :         13.1423  norm of Beta VEC
+
+ Beta(0;w,-w) w=  759.4nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.257958
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.486655         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.380458
+   yz.         0.000000         9.383029         0.000000
+   zx.        -0.486655         0.000000         0.000000
+   zy.         0.000000         9.383029         0.000000
+   zz.         0.000000         0.000000         4.526923
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          8.0992
+  Para :         -8.0992  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         13.4987
+  VEC :         13.4987  norm of Beta VEC
+
+ Beta(0;w,-w) w=  569.5nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.046763
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.483544         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.623405
+   yz.         0.000000         9.629642         0.000000
+   zx.        -0.483544         0.000000         0.000000
+   zy.         0.000000         9.629642         0.000000
+   zz.         0.000000         0.000000         4.735150
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          8.4149
+  Para :         -8.4149  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         14.0248
+  VEC :         14.0248  norm of Beta VEC
+
+ Beta(0;w,-w) w=  455.6nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.272593
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.477785         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.948949
+   yz.         0.000000         9.962403         0.000000
+   zx.        -0.477785         0.000000         0.000000
+   zy.         0.000000         9.962403         0.000000
+   zz.         0.000000         0.000000         5.022001
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          8.8514
+  Para :         -8.8514  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         14.7523
+  VEC :         14.7523  norm of Beta VEC
+
+ Beta(-2w;w,w) w= 2278.2nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.440712
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.440712         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.179218
+   yz.         0.000000         9.179218         0.000000
+   zx.        -0.512293         0.000000         0.000000
+   zy.         0.000000         9.179836         0.000000
+   zz.         0.000000         0.000000         4.357998
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          7.8437
+  Para :         -7.8437  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        30.2157 <Bzzz> :         5.4969
+  <B2zxx> :         8.7096 <Bzxx> :         2.9512
+  beta2HR :        38.9252 betaHR :         6.2390
+  rhoHR   :         3.4693
+
+  |Bj=1|^2 :       102.9080 |Bj=1| :        10.1444
+  |Bj=3|^2 :       168.5962 |Bj=3| :        12.9845
+  rho=|Bj=3|/|Bj=1| :         1.2800
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         13.0728
+  VEC :         13.0728  norm of Beta VEC
+
+ Beta(-2w;w,w) w= 1139.1nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.277069
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.277069         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000         9.484789
+   yz.         0.000000         9.484789         0.000000
+   zx.        -0.587720         0.000000         0.000000
+   zy.         0.000000         9.488893         0.000000
+   zz.         0.000000         0.000000         4.614671
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          8.2321
+  Para :         -8.2321  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        32.8033 <Bzzz> :         5.7274
+  <B2zxx> :         9.1380 <Bzxx> :         3.0229
+  beta2HR :        41.9413 betaHR :         6.4762
+  rhoHR   :         3.5898
+
+  |Bj=1|^2 :       114.5777 |Bj=1| :        10.7041
+  |Bj=3|^2 :       173.0356 |Bj=3| :        13.1543
+  rho=|Bj=3|/|Bj=1| :         1.2289
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         13.7202
+  VEC :         13.7202  norm of Beta VEC
+
+ Beta(-2w;w,w) w=  759.4nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.068947
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.068947         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        10.028370
+   yz.         0.000000        10.028370         0.000000
+   zx.        -0.736421         0.000000         0.000000
+   zy.         0.000000        10.044891         0.000000
+   zz.         0.000000         0.000000         5.089231
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :          8.9542
+  Para :         -8.9542  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        37.8358 <Bzzz> :         6.1511
+  <B2zxx> :         9.8911 <Bzxx> :         3.1450
+  beta2HR :        47.7269 betaHR :         6.9085
+  rhoHR   :         3.8252
+
+  |Bj=1|^2 :       137.9947 |Bj=1| :        11.7471
+  |Bj=3|^2 :       179.1449 |Bj=3| :        13.3845
+  rho=|Bj=3|/|Bj=1| :         1.1394
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         14.9236
+  VEC :         14.9236  norm of Beta VEC
+
+ Beta(-2w;w,w) w=  569.5nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.766525
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.766525         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        10.870187
+   yz.         0.000000        10.870187         0.000000
+   zx.        -1.004720         0.000000         0.000000
+   zy.         0.000000        10.923187         0.000000
+   zz.         0.000000         0.000000         5.871195
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         10.1611
+  Para :        -10.1611  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        46.8800 <Bzzz> :         6.8469
+  <B2zxx> :        11.0234 <Bzxx> :         3.3201
+  beta2HR :        57.9033 betaHR :         7.6094
+  rhoHR   :         4.2528
+
+  |Bj=1|^2 :       182.0696 |Bj=1| :        13.4933
+  |Bj=3|^2 :       183.1560 |Bj=3| :        13.5335
+  rho=|Bj=3|/|Bj=1| :         1.0030
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         16.9352
+  VEC :         16.9352  norm of Beta VEC
+
+ Beta(-2w;w,w) w=  455.6nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         2.265854
+   xy.         0.000000         0.000000         0.000000
+   xz.         2.265854         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        12.116490
+   yz.         0.000000        12.116490         0.000000
+   zx.        -1.491859         0.000000         0.000000
+   zy.         0.000000        12.267368         0.000000
+   zz.         0.000000         0.000000         7.140111
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         12.1921
+  Para :        -12.1921  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        63.8581 <Bzzz> :         7.9911
+  <B2zxx> :        12.6087 <Bzxx> :         3.5509
+  beta2HR :        76.4669 betaHR :         8.7445
+  rhoHR   :         5.0646
+
+  |Bj=1|^2 :       269.6705 |Bj=1| :        16.4216
+  |Bj=3|^2 :       173.6708 |Bj=3| :        13.1784
+  rho=|Bj=3|/|Bj=1| :         0.8025
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :         20.3202
+  VEC :         20.3202  norm of Beta VEC
+
+ ----------------------------------------------------------------------
+
+ Dipole orientation:
+     8          0.00000000          0.00000000         -0.21529994
+     1          0.00000000          1.42474515          0.86119973
+     1          0.00000000         -1.42474515          0.86119973
+
+ Electric dipole moment (dipole orientation):
+ (Debye = 10**-18 statcoulomb cm , SI units = C m)
+                  (au)            (Debye)         (10**-30 SI)
+   Tot        0.767392D+00      0.195052D+01      0.650622D+01
+   x          0.000000D+00      0.000000D+00      0.000000D+00
+   y          0.000000D+00      0.000000D+00      0.000000D+00
+   z          0.767392D+00      0.195052D+01      0.650622D+01
+
+ Dipole polarizability, Alpha (dipole orientation).
+ (esu units = cm**3 , SI units = C**2 m**2 J**-1)
+ Alpha(0;0):
+               (au)            (10**-24 esu)      (10**-40 SI)
+   iso        0.834894D+01      0.123719D+01      0.137655D+01
+   aniso      0.102578D+01      0.152005D+00      0.169129D+00
+   xx         0.777020D+01      0.115143D+01      0.128113D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.895381D+01      0.132682D+01      0.147628D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.832281D+01      0.123331D+01      0.137225D+01
+ Alpha(-w;w) w= 2278.2nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.835791D+01      0.123851D+01      0.137803D+01
+   aniso      0.102384D+01      0.151717D+00      0.168808D+00
+   xx         0.778039D+01      0.115293D+01      0.128281D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.896173D+01      0.132799D+01      0.147759D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.833160D+01      0.123462D+01      0.137369D+01
+ Alpha(-w;w) w= 1139.1nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.838499D+01      0.124253D+01      0.138250D+01
+   aniso      0.101782D+01      0.150826D+00      0.167816D+00
+   xx         0.781126D+01      0.115751D+01      0.128790D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.898561D+01      0.133153D+01      0.148153D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.835811D+01      0.123854D+01      0.137807D+01
+ Alpha(-w;w) w=  759.4nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.843082D+01      0.124932D+01      0.139005D+01
+   aniso      0.100719D+01      0.149250D+00      0.166063D+00
+   xx         0.786378D+01      0.116529D+01      0.129656D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.902577D+01      0.133748D+01      0.148815D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.840289D+01      0.124518D+01      0.138545D+01
+ Alpha(-w;w) w=  569.5nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.849644D+01      0.125904D+01      0.140087D+01
+   aniso      0.990932D+00      0.146841D+00      0.163383D+00
+   xx         0.793969D+01      0.117654D+01      0.130908D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.908277D+01      0.134593D+01      0.149755D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.846687D+01      0.125466D+01      0.139600D+01
+ Alpha(-w;w) w=  455.6nm:
+                  (au)         (10**-24 esu)      (10**-40 SI)
+   iso        0.858351D+01      0.127195D+01      0.141523D+01
+   aniso      0.967447D+00      0.143361D+00      0.159510D+00
+   xx         0.804170D+01      0.119166D+01      0.132590D+01
+   yx         0.000000D+00      0.000000D+00      0.000000D+00
+   yy         0.915743D+01      0.135699D+01      0.150986D+01
+   zx         0.000000D+00      0.000000D+00      0.000000D+00
+   zy         0.000000D+00      0.000000D+00      0.000000D+00
+   zz         0.855141D+01      0.126719D+01      0.140994D+01
+
+ First dipole hyperpolarizability, Beta (dipole orientation).
+
+ Beta(0;0,0):
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.489173
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.489173         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.080568
+   yz.         0.000000        -9.080568         0.000000
+   zx.         0.489173         0.000000         0.000000
+   zy.         0.000000        -9.080568         0.000000
+   zz.         0.000000         0.000000        -4.276656
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -7.7208
+  Para :         -7.7208  Para=B(i)*MU(i)/|MU|
+  Perp :         -2.5736
+  Kerr :         -7.7208  3/2*(Para-Perp)
+
+  <B2zzz> :        29.4147 <Bzzz> :         5.4235
+  <B2zxx> :         8.5707 <Bzxx> :         2.9276
+  beta2HR :        37.9854 betaHR :         6.1632
+  rhoHR   :         3.4320
+
+  |Bj=1|^2 :        99.3520 |Bj=1| :         9.9675
+  |Bj=3|^2 :       167.0257 |Bj=3| :        12.9238
+  rho=|Bj=3|/|Bj=1| :         1.2966
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -12.8681
+  VEC :         12.8681  norm of Beta VEC
+
+ Beta(0;w,-w) w= 2278.2nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.465505
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.488967         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.113219
+   yz.         0.000000        -9.113396         0.000000
+   zx.         0.488967         0.000000         0.000000
+   zy.         0.000000        -9.113396         0.000000
+   zz.         0.000000         0.000000        -4.303545
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -7.7614
+  Para :         -7.7614  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -12.9357
+  VEC :         12.9357  norm of Beta VEC
+
+ Beta(0;w,-w) w= 1139.1nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.391569
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.488243         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.212166
+   yz.         0.000000        -9.213033         0.000000
+   zx.         0.488243         0.000000         0.000000
+   zy.         0.000000        -9.213033         0.000000
+   zz.         0.000000         0.000000        -4.385565
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -7.8854
+  Para :         -7.8854  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -13.1423
+  VEC :         13.1423  norm of Beta VEC
+
+ Beta(0;w,-w) w=  759.4nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.257958
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.486655         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.380458
+   yz.         0.000000        -9.383029         0.000000
+   zx.         0.486655         0.000000         0.000000
+   zy.         0.000000        -9.383029         0.000000
+   zz.         0.000000         0.000000        -4.526923
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -8.0992
+  Para :         -8.0992  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -13.4987
+  VEC :         13.4987  norm of Beta VEC
+
+ Beta(0;w,-w) w=  569.5nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.046763
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.483544         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.623405
+   yz.         0.000000        -9.629642         0.000000
+   zx.         0.483544         0.000000         0.000000
+   zy.         0.000000        -9.629642         0.000000
+   zz.         0.000000         0.000000        -4.735150
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -8.4149
+  Para :         -8.4149  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -14.0248
+  VEC :         14.0248  norm of Beta VEC
+
+ Beta(0;w,-w) w=  455.6nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.272593
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.477785         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.948949
+   yz.         0.000000        -9.962403         0.000000
+   zx.         0.477785         0.000000         0.000000
+   zy.         0.000000        -9.962403         0.000000
+   zz.         0.000000         0.000000        -5.022001
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -8.8514
+  Para :         -8.8514  Para=B(i)*MU(i)/|MU|
+
+  Anisotropy :        0.000000  =(Bxyz-Bxzy+Byzx-Byxz+Bzxy-Bzyx)/6
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -14.7523
+  VEC :         14.7523  norm of Beta VEC
+
+ Beta(-2w;w,w) w= 2278.2nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.440712
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.440712         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.179218
+   yz.         0.000000        -9.179218         0.000000
+   zx.         0.512293         0.000000         0.000000
+   zy.         0.000000        -9.179836         0.000000
+   zz.         0.000000         0.000000        -4.357998
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -7.8437
+  Para :         -7.8437  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        30.2157 <Bzzz> :         5.4969
+  <B2zxx> :         8.7096 <Bzxx> :         2.9512
+  beta2HR :        38.9252 betaHR :         6.2390
+  rhoHR   :         3.4693
+
+  |Bj=1|^2 :       102.9080 |Bj=1| :        10.1444
+  |Bj=3|^2 :       168.5962 |Bj=3| :        12.9845
+  rho=|Bj=3|/|Bj=1| :         1.2800
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -13.0728
+  VEC :         13.0728  norm of Beta VEC
+
+ Beta(-2w;w,w) w= 1139.1nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000         0.277069
+   xy.         0.000000         0.000000         0.000000
+   xz.         0.277069         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000        -9.484789
+   yz.         0.000000        -9.484789         0.000000
+   zx.         0.587720         0.000000         0.000000
+   zy.         0.000000        -9.488893         0.000000
+   zz.         0.000000         0.000000        -4.614671
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -8.2321
+  Para :         -8.2321  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        32.8033 <Bzzz> :         5.7274
+  <B2zxx> :         9.1380 <Bzxx> :         3.0229
+  beta2HR :        41.9413 betaHR :         6.4762
+  rhoHR   :         3.5898
+
+  |Bj=1|^2 :       114.5777 |Bj=1| :        10.7041
+  |Bj=3|^2 :       173.0356 |Bj=3| :        13.1543
+  rho=|Bj=3|/|Bj=1| :         1.2289
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -13.7202
+  VEC :         13.7202  norm of Beta VEC
+
+ Beta(-2w;w,w) w=  759.4nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.068947
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.068947         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000       -10.028370
+   yz.         0.000000       -10.028370         0.000000
+   zx.         0.736421         0.000000         0.000000
+   zy.         0.000000       -10.044891         0.000000
+   zz.         0.000000         0.000000        -5.089231
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :         -8.9542
+  Para :         -8.9542  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        37.8358 <Bzzz> :         6.1511
+  <B2zxx> :         9.8911 <Bzxx> :         3.1450
+  beta2HR :        47.7269 betaHR :         6.9085
+  rhoHR   :         3.8252
+
+  |Bj=1|^2 :       137.9947 |Bj=1| :        11.7471
+  |Bj=3|^2 :       179.1449 |Bj=3| :        13.3845
+  rho=|Bj=3|/|Bj=1| :         1.1394
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -14.9236
+  VEC :         14.9236  norm of Beta VEC
+
+ Beta(-2w;w,w) w=  569.5nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -0.766525
+   xy.         0.000000         0.000000         0.000000
+   xz.        -0.766525         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000       -10.870187
+   yz.         0.000000       -10.870187         0.000000
+   zx.         1.004720         0.000000         0.000000
+   zy.         0.000000       -10.923187         0.000000
+   zz.         0.000000         0.000000        -5.871195
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :        -10.1611
+  Para :        -10.1611  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        46.8800 <Bzzz> :         6.8469
+  <B2zxx> :        11.0234 <Bzxx> :         3.3201
+  beta2HR :        57.9033 betaHR :         7.6094
+  rhoHR   :         4.2528
+
+  |Bj=1|^2 :       182.0696 |Bj=1| :        13.4933
+  |Bj=3|^2 :       183.1560 |Bj=3| :        13.5335
+  rho=|Bj=3|/|Bj=1| :         1.0030
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -16.9352
+  VEC :         16.9352  norm of Beta VEC
+
+ Beta(-2w;w,w) w=  455.6nm:
+
+    The sign has been corrected!
+               x                y                z
+   xx.         0.000000         0.000000        -2.265854
+   xy.         0.000000         0.000000         0.000000
+   xz.        -2.265854         0.000000         0.000000
+   yx.         0.000000         0.000000         0.000000
+   yy.         0.000000         0.000000       -12.116490
+   yz.         0.000000       -12.116490         0.000000
+   zx.         1.491859         0.000000         0.000000
+   zy.         0.000000       -12.267368         0.000000
+   zz.         0.000000         0.000000        -7.140111
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/5
+  y   :          0.0000
+  z   :        -12.1921
+  Para :        -12.1921  Para=B(i)*MU(i)/|MU|
+
+  <B2zzz> :        63.8581 <Bzzz> :         7.9911
+  <B2zxx> :        12.6087 <Bzxx> :         3.5509
+  beta2HR :        76.4669 betaHR :         8.7445
+  rhoHR   :         5.0646
+
+  |Bj=1|^2 :       269.6705 |Bj=1| :        16.4216
+  |Bj=3|^2 :       173.6708 |Bj=3| :        13.1784
+  rho=|Bj=3|/|Bj=1| :         0.8025
+
+  x   :          0.0000  B(i)=(B(i,j,j)+B(j,i,j)+B(j,j,i))/3
+  y   :          0.0000
+  z   :        -20.3202
+  VEC :         20.3202  norm of Beta VEC
+
+ ----------------------------------------------------------------------
+
+ Test job not archived.
+ 1\1\GINC-NODE0839\SP\RHF\Gen\H2O1\PBEAUJEA\14-Mar-2017\0\\#p HF gen no
+ sym scf=(Conver=11,NoVarAcc,MaxCyc=600,vshift=1000) IOP(9/6=600,9/9=11
+ ) polar=dcshg cphf=(conver=11,rdfreq)\\no-field\\0,1\O,0,0.,0.,0.11393
+ 182\H,0,0.,-0.75394266,-0.45572727\H,0,0.,0.75394266,-0.45572727\\Vers
+ ion=AM64L-G09RevD.01\HF=-76.053272\RMSD=9.086e-12\Dipole=0.,0.,-0.7673
+ 925\Polar=7.7702046,0.,8.9538112,0.,0.,8.3228149\HyperPolar=0.,0.,0.,0
+ .,0.4891728,0.,-9.0805677,0.,0.,-4.2766557\Quadrupole=-1.1312813,1.328
+ 2565,-0.1969752,0.,0.,0.\PG=C02V [C2(O1),SGV(H2)]\\@
+
+
+ MAN IS A SINGULAR CREATURE.  HE HAS A SET OF GIFTS
+ WHICH MAKE HIM UNIQUE AMONG THE ANIMALS: SO THAT, 
+ UNLIKE THEM, HE IS NOT A FIGURE IN THE LANDSCAPE --
+ HE IS A SHAPER OF THE LANDSCAPE.
+
+                       -- JACOB BRONOWSKI
+ Job cpu time:       0 days  0 hours  0 minutes  6.6 seconds.
+ File lengths (MBytes):  RWF=    138 Int=      0 D2E=      0 Chk=      2 Scr=      2
+ Normal termination of Gaussian 09 at Tue Mar 14 17:15:02 2017.
