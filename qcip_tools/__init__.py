@@ -6,7 +6,7 @@ from pint import UnitRegistry
 from scipy import constants
 
 __name__ = 'qcip_tools'
-__version__ = '0.3a'
+__version__ = '0.3'
 __author__ = 'Pierre Beaujean'
 __maintainer__ = 'Pierre Beaujean'
 __email__ = 'pierre.beaujean@unamur.be'

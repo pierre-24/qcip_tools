@@ -25,7 +25,7 @@ UNAMUR_REMOTE = 'gitlab.unamur.be:pierre.beaujean/'
 STABLE_VERSION = 'Stable version: '
 RELEASE_TAG = 'release-v{version}'
 URL_VERSION = 'https://git.pierrebeaujean.net/pierre/qcip_tools/tree/{}'.format(RELEASE_TAG)
-RELEASE_COMMIT = '[{}] release the new version'
+RELEASE_COMMIT = '[{}] Upgrade the README for the release'
 
 
 class ValidationError(ValueError):
@@ -163,9 +163,21 @@ def main():
         print('[NOK]: cannot find remote for {}'.format(GIT_REMOTE))
         return False
 
-    print('[OK]: "{}" and "{}" (UNamur\'s gitlab)'.format(remote_git, remote_unamur))
+    print('[OK]: "{}" and "{}" (= UNamur\'s gitlab)'.format(remote_git, remote_unamur))
 
     # check track on target branch
+    print('- check that source ({}) branch tracks {} '.format(args.source, remote_git), end='')
+    try:
+        target_remote = get_git_config('branch.{}.remote'.format(args.source))
+    except Exception as e:
+        print('[NOK]: {}'.format(e))
+        return False
+
+    if target_remote.strip() != remote_git:
+        print('[NOK]: it tracks {}'.format(target_remote))
+    else:
+        print('[OK]')
+
     print('- check that target ({}) branch tracks {} '.format(args.target, remote_git), end='')
     try:
         target_remote = get_git_config('branch.{}.remote'.format(args.target))
@@ -186,24 +198,15 @@ def main():
     # checkout to target
     current_branch = run_git_command(['rev-parse', '--abbrev-ref', 'HEAD']).strip()
 
-    if current_branch != args.target:
-        print('- checkout target ', end='')
+    if current_branch != args.source:
+        print('- checkout source ', end='')
         try:
-            run_git_command(['checkout', args.target])
+            run_git_command(['checkout', args.source])
         except Exception as e:
             if 'Switched' not in str(e):
                 print('[NOK]: {}'.format(e))
                 return False
         print('[OK]')
-
-    # merging
-    print('- merging source ({}) into target ({}) '.format(args.source, args.target), end='')
-    try:
-        run_git_command(['merge', '--no-ff', '{}/{}'.format(remote_git, args.source)])
-    except Exception as e:
-        print('[NOK]: {}'.format(e))
-        return False
-    print('[OK]')
 
     # README.md
     print('- upgrading README.md ', end='')
@@ -221,7 +224,7 @@ def main():
         if '<!-- STABLE: -->' in l:
             previous_release = readme_content[index + 1].replace(STABLE_VERSION, '')
             now = datetime.now()
-            readme_content[index + 1] = '{}[{}]({}) ({})\n'.format(
+            readme_content[index + 1] = '{}[`{}`]({}) ({})\n'.format(
                 STABLE_VERSION,
                 tag,
                 URL_VERSION.format(version=args.release),
@@ -250,6 +253,24 @@ def main():
         return False
     print('[OK]')
 
+    # checkout target and merge
+    print('- checkout target ', end='')
+    try:
+        run_git_command(['checkout', args.target])
+    except Exception as e:
+        if 'Switched' not in str(e):
+            print('[NOK]: {}'.format(e))
+            return False
+    print('[OK]')
+
+    print('- merging source ({}) into target ({}) '.format(args.source, args.target), end='')
+    try:
+        run_git_command(['merge', '--no-ff', args.source])
+    except Exception as e:
+        print('[NOK]: {}'.format(e))
+        return False
+    print('[OK]')
+
     # tagging and pushing!
     print('- tagging ', end='')
     try:
@@ -261,13 +282,22 @@ def main():
     print('[OK]: tagging {} on {}'.format(tag, last_commit[:8]))
 
     print('- pushing ', end='')
+    run_git_command(['push', remote_git, args.source], forget_exception=True)
+    print('source, ', end='')
     run_git_command(['push', remote_git, args.target], forget_exception=True)
+    print('target, ', end='')
     run_git_command(['push', remote_git, tag], forget_exception=True)
+    print('tag, ', end='')
     run_git_command(['push', remote_unamur, args.target], forget_exception=True)
+    print('target on {}, '.format(remote_unamur), end='')
     run_git_command(['push', remote_unamur, tag], forget_exception=True)
+    print('tag on {} '.format(remote_unamur), end='')
     print('[OK]')
 
     print('\nOK, version {} was released!'.format(args.release))
+
+    # go back to first branch:
+    run_git_command(['checkout', current_branch], forget_exception=True)
 
 if __name__ == '__main__':
     main()
