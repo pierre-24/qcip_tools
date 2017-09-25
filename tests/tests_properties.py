@@ -2,7 +2,7 @@ import math
 
 from tests import QcipToolsTestCase
 from qcip_tools import derivatives_g
-from qcip_tools.chemistry_files import gaussian
+from qcip_tools.chemistry_files import gaussian, dalton
 
 
 class PropertiesTestCase(QcipToolsTestCase):
@@ -23,10 +23,9 @@ class PropertiesTestCase(QcipToolsTestCase):
         copied_path = self.copy_to_temporary_directory(path)
         fx = klass()
 
-        with open(copied_path) as f:
+        with open(copied_path, 'r' if not klass.requires_binary_mode else 'rb') as f:
             fx.read(f)
-
-        p = fx.property(property)
+            p = fx.property(property)
 
         return fx, copied_path, p
 
@@ -44,7 +43,7 @@ class PropertiesTestCase(QcipToolsTestCase):
     def test_electrical_derivatives(self):
         """Test electrical properties"""
 
-        # 1. in FCHK:
+        # 1. In FCHK:
         fchk_file, path, electrical_derivatives = self.get_property(
             gaussian.FCHK, 'electrical_derivatives/gaussian_output.fchk', 'electrical_derivatives')
 
@@ -64,10 +63,125 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(electrical_derivatives['FD'][0.02].isotropic_value(), 0.835791e1, places=5)
         self.assertAlmostEqual(electrical_derivatives['FDD'][0.02].beta_hrs(), 6.2390, places=3)
 
+        # 2. In dalton archive:
+        f = 0.0428226504
+
+        # Coupled Cluster
+        archive_file, path, electrical_derivatives = self.get_property(
+            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_CC.tar.gz', 'electrical_derivatives')
+
+        self.assertIn('F', electrical_derivatives)
+        self.assertIn('FF', electrical_derivatives)
+        self.assertIn('FD', electrical_derivatives)
+        self.assertIn('FDF', electrical_derivatives)
+        self.assertIn('FFF', electrical_derivatives)
+        self.assertIn('FDD', electrical_derivatives)
+        self.assertIn('FFFF', electrical_derivatives)
+        self.assertIn('FDFF', electrical_derivatives)
+        self.assertIn('FDDF', electrical_derivatives)
+        self.assertIn('FDDD', electrical_derivatives)
+        self.assertIn('FDDd', electrical_derivatives)
+
+        self.assertIn(f, electrical_derivatives['FD'])
+
+        tests_in_tensor = [
+            ('F', 'static', (2,), 0.64738),
+            ('FF', 'static', (0, 0), 0.04757),
+            ('FD', f, (0, 0), 0.047968),
+            ('FFF', 'static', (0, 0, 2), 0.073362),
+            ('FDF', f, (0, 0, 2), 0.072835),
+            ('FDD', f, (0, 0, 2), 0.073591),
+            ('FFFF', 'static', (0, 0, 0, 0), -0.351403),
+            ('FDFF', f, (0, 0, 0, 0), -0.35619),
+            ('FDDF', f, (0, 0, 0, 0), -0.36612),
+            ('FDDd', f, (0, 0, 0, 0), -0.36104),
+            ('FDDD', f, (0, 0, 0, 0), -0.382162)
+        ]
+
+        for(tensor, freq, coo, value) in tests_in_tensor:
+            self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4)
+
+        # Response alpha:
+        archive_file, path, electrical_derivatives = self.get_property(
+            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_RSP_alpha.tar.gz', 'electrical_derivatives')
+
+        self.assertIn('F', electrical_derivatives)
+        self.assertIn('FF', electrical_derivatives)
+        self.assertIn('FD', electrical_derivatives)
+
+        self.assertNotIn('FFF', electrical_derivatives)
+        self.assertNotIn('FFFF', electrical_derivatives)
+
+        self.assertIn(f, electrical_derivatives['FD'])
+
+        tests_in_tensor = [
+            ('F', 'static', (2,), 0.67340),
+            ('FF', 'static', (2, 2), 2.0408),
+            ('FD', f, (2, 2), 2.0459)
+        ]
+
+        for(tensor, freq, coo, value) in tests_in_tensor:
+            self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
+
+        # Response beta:
+        archive_file, path, electrical_derivatives = self.get_property(
+            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_RSP_beta.tar.gz', 'electrical_derivatives')
+
+        self.assertIn('F', electrical_derivatives)
+        self.assertIn('FFF', electrical_derivatives)
+        self.assertIn('FDF', electrical_derivatives)
+        self.assertIn('FDD', electrical_derivatives)
+
+        self.assertNotIn('FF', electrical_derivatives)
+        self.assertNotIn('FFFF', electrical_derivatives)
+
+        old_f = f
+        f = 0.042823
+        self.assertIn(f, electrical_derivatives['FDD'])
+
+        tests_in_tensor = [
+            ('F', 'static', (2,), 0.67340),
+            ('FFF', 'static', (2, 2, 2), -3.28102875),
+            ('FDF', f, (2, 2, 2), -3.30365796),
+            ('FDD', f, (2, 2, 2), -3.34979625)
+        ]
+
+        for(tensor, freq, coo, value) in tests_in_tensor:
+            self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
+
+        # Response gamma:
+        archive_file, path, electrical_derivatives = self.get_property(
+            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_RSP_gamma.tar.gz', 'electrical_derivatives')
+
+        self.assertIn('F', electrical_derivatives)
+        self.assertIn('FFFF', electrical_derivatives)
+        self.assertIn('FDFF', electrical_derivatives)
+        self.assertIn('FDDF', electrical_derivatives)
+        self.assertIn('FDDd', electrical_derivatives)
+        self.assertIn('FDDD', electrical_derivatives)
+
+        self.assertNotIn('FF', electrical_derivatives)
+        self.assertNotIn('FFF', electrical_derivatives)
+
+        f = old_f
+        self.assertIn(f, electrical_derivatives['FDDD'])
+
+        tests_in_tensor = [
+            ('F', 'static', (2,), 0.67340),
+            ('FFFF', 'static', (0, 0, 0, 0), 0.29143),
+            ('FDFF', f, (0, 0, 0, 0), 0.29499),
+            ('FDDF', f, (0, 0, 0, 0), 0.30305),
+            ('FDDd', f, (0, 0, 0, 0), 0.29926),
+            ('FDDD', f, (0, 0, 0, 0), 0.31637),
+        ]
+
+        for(tensor, freq, coo, value) in tests_in_tensor:
+            self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
+
     def test_geometrical_derivatives(self):
         """Test geometrical properties"""
 
-        # 1. in FCHK:
+        # 1. In FCHK:
         fchk_file, path, geometrical_derivatives = self.get_property(
             gaussian.FCHK, 'geometrical_derivatives/gaussian_output.fchk', 'geometrical_derivatives')
 

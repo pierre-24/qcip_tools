@@ -11,6 +11,7 @@ from qcip_tools import derivatives, quantities
 field_to_out = {-1: '-w', 0: '0', 1: 'w'}
 in_to_field = dict((b, a) for (a, b) in field_to_out.items())
 field_to_representation = {-1: 'd', 0: 'F', 1: 'D'}
+representation_to_field = dict((b, a) for (a, b) in field_to_representation.items())
 
 #: Correspondence between a name and a representation
 REPRESENTATIONS = {
