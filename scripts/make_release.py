@@ -209,6 +209,10 @@ def main():
         print('[OK]')
 
     # README.md
+    print('- pulling on {} '.format(args.source), end='')
+    run_git_command(['pull'], forget_exception=True)
+    print('[OK]')
+
     print('- upgrading README.md ', end='')
 
     readme_content = ''
