@@ -1,4 +1,5 @@
 import math
+import os
 
 from tests import QcipToolsTestCase
 from qcip_tools import derivatives_g
@@ -20,12 +21,12 @@ class PropertiesTestCase(QcipToolsTestCase):
         :rtype: str|dict
         """
 
-        copied_path = self.copy_to_temporary_directory(path)
+        copied_path = self.copy_to_temporary_directory(os.path.join('properties', path))
         fx = klass()
 
         with open(copied_path, 'r' if not klass.requires_binary_mode else 'rb') as f:
             fx.read(f)
-            p = fx.property(property)
+        p = fx.property(property)
 
         return fx, copied_path, p
 
@@ -39,6 +40,46 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertEqual(fchk_file.molecule, geometry)
 
         # ... And one is enough (as long as it derives from WithMoleculeMixin)
+
+    def test_energies(self):
+        """Test energy"""
+
+        # 1. In FCHK:
+        fchk_file, path, energies = self.get_property(
+            gaussian.FCHK, 'computed_energies/gaussian_output.fchk', 'computed_energies')
+
+        found_energies = ['SCF/DFT', 'total', 'HF', 'CCSD', 'CCSD(T)', 'MP2', 'MP3', 'MP4D', 'MP4DQ', 'MP4SDQ']
+        for e in found_energies:
+            self.assertIn(e, energies)
+
+        fchk_file, path, energies = self.get_property(
+            gaussian.FCHK, 'computed_energies/gaussian_output_BLYP.fchk', 'computed_energies')
+
+        found_energies = ['SCF/DFT', 'total', 'BLYP']
+        for e in found_energies:
+            self.assertIn(e, energies)
+
+        # 2. In dalton archive
+        archive_file, path, energies = self.get_property(
+            dalton.ArchiveOutput, 'computed_energies/dalton_output.tar.gz', 'computed_energies')
+
+        found_energies = ['total', 'SCF/DFT']
+        for e in found_energies:
+            self.assertIn(e, energies)
+        archive_file, path, energies = self.get_property(
+            dalton.ArchiveOutput, 'computed_energies/dalton_output_CC.tar.gz', 'computed_energies')
+
+        found_energies = ['total', 'CCSD']
+        for e in found_energies:
+            self.assertIn(e, energies)
+
+        # 3. In dalton output
+        archive_file, path, energies = self.get_property(
+            dalton.Output, 'computed_energies/dalton_output_CC.out', 'computed_energies')
+
+        found_energies = ['total', 'SCF/DFT', 'MP2', 'CCSD']
+        for e in found_energies:
+            self.assertIn(e, energies)
 
     def test_electrical_derivatives(self):
         """Test electrical properties"""
@@ -68,7 +109,9 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         # Coupled Cluster
         archive_file, path, electrical_derivatives = self.get_property(
-            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_CC.tar.gz', 'electrical_derivatives')
+            dalton.ArchiveOutput,
+            'electrical_derivatives/dalton_output_CC.tar.gz',
+            'electrical_derivatives')
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FF', electrical_derivatives)
@@ -103,7 +146,9 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         # Response alpha:
         archive_file, path, electrical_derivatives = self.get_property(
-            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_RSP_alpha.tar.gz', 'electrical_derivatives')
+            dalton.ArchiveOutput,
+            'electrical_derivatives/dalton_output_RSP_alpha.tar.gz',
+            'electrical_derivatives')
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FF', electrical_derivatives)
@@ -125,7 +170,9 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         # Response beta:
         archive_file, path, electrical_derivatives = self.get_property(
-            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_RSP_beta.tar.gz', 'electrical_derivatives')
+            dalton.ArchiveOutput,
+            'electrical_derivatives/dalton_output_RSP_beta.tar.gz',
+            'electrical_derivatives')
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
@@ -151,7 +198,9 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         # Response gamma:
         archive_file, path, electrical_derivatives = self.get_property(
-            dalton.ArchiveOutput, 'electrical_derivatives/dalton_output_RSP_gamma.tar.gz', 'electrical_derivatives')
+            dalton.ArchiveOutput,
+            'electrical_derivatives/dalton_output_RSP_gamma.tar.gz',
+            'electrical_derivatives')
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FFFF', electrical_derivatives)

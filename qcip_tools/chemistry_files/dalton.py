@@ -240,7 +240,7 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
             raise IOError('file {} must be open in binary mode!'.format(f.name))
 
         self.from_read = True
-        self.tar_file = tarfile.open(fileobj=f)
+        self.tar_file = tarfile.open(f.name)
 
         # read molecule:
         mol_file = self.get_file('DALTON.MOL')
@@ -276,6 +276,30 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
 class WrongNumberOfData(ValueError):
     def __init__(self, n, p):
         super().__init__('wrong number of data ({}) for {}'.format(n, p))
+
+
+@ArchiveOutput.define_property('computed_energies')
+def dalton__archive_output__property__computed_energies(obj, *args, **kwargs):
+    """Get the energies. Returns only the energy found on top of ``DALTON.PROP`` as the total energy (+labeled)
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput
+    :rtype: dict
+    """
+
+    try:
+        f = obj.get_file('DALTON.PROP')
+    except FileNotFoundError:
+        raise PropertyNotPresent('computed_energies')
+
+    energy_line = f.readline().decode()
+    if 'ENERGY' not in energy_line:
+        raise PropertyNotPresent('computed_energies')
+
+    label = energy_line[13:23].strip()
+    value = float(energy_line[23:46])
+
+    return {'total': value, label: value}
 
 
 @ArchiveOutput.define_property('electrical_derivatives')
@@ -729,6 +753,41 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         mol_file.read(io.StringIO(''.join(self.lines[line_mol + 3:line_end - 3])))
 
         return dal_file, mol_file
+
+
+@Output.define_property('computed_energies')
+def dalton__output__computed_energies(obj, *args, **kwargs):
+    """Get the energies. Find the SCF/DFT energy, as well as the CCx one (which is given with MP2).
+
+    .. note::
+
+        + Not (yet?) CI, CASCI or MCSCF
+        + Probably wrong on geometry optimization.
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.Output
+    :rtype: dict
+    """
+
+    line_scf = obj.search('@    Final HF energy:', into='SIRIUS')
+    if line_scf < 0:
+        raise PropertyNotPresent('computed_energies')
+
+    value = float(obj.lines[line_scf][-40:])
+    energies = {'SCF/DFT': value, 'total': value}
+
+    if obj.chunk_exists('CC'):
+        line_ens = obj.search('Final results from the Coupled Cluster energy program', into='CC')
+
+        if line_ens < 0:
+            return energies
+
+        energies['MP2'] = float(obj.lines[line_ens + 7][-25:])
+        label = obj.lines[line_ens + 9][18:24].strip()
+        energies[label] = float(obj.lines[line_ens + 9][-25:])
+        energies['total'] = label
+
+    return energies
 
 
 #: Name of the allowed modules in dalton (according to documentation)

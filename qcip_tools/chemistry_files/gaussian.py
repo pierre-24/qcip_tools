@@ -364,10 +364,10 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
 
         # extract the first information :
         self.title = self.lines[0].strip()
-        second_line = self.lines[1].split()
-        self.calculation_type = second_line[0]
-        self.calculation_method = second_line[1]
-        self.basis_set = second_line[2]
+        second_line = self.lines[1]
+        self.calculation_type = second_line[0:10].strip()
+        self.calculation_method = second_line[10:40].strip()
+        self.basis_set = second_line[40:].strip()
 
         # now, crawl trough information
         current_line_index = 2
@@ -434,6 +434,51 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         Implement test with ``in`` keyword
         """
         return item in self.chunks_information
+
+
+@FCHK.define_property('computed_energies')
+def gaussian__fchk__property__computed_energies(obj, *args, **kwargs):
+    """Get the energies. Returns a dictionary of the energies at different level of approximation.
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK
+    :rtype: dict
+    """
+
+    possible_energies = [
+        # either HF or DFT:
+        ('SCF Energy', 'SCF/DFT'),
+        # MPx:
+        ('MP2 Energy', 'MP2'),
+        ('MP3 Energy', 'MP3'),
+        ('MP4D Energy', 'MP4D'),
+        ('MP4DQ Energy', 'MP4DQ'),
+        ('MP4SDQ Energy', 'MP4SDQ'),
+        ('Cluster Energy', 'CCSD'),
+        ('Cluster Energy with triples', 'CCSD(T)'),
+        # CIx:
+        ('CIS Energy', 'CIS'),
+        ('CIS-MP2 Energy', 'CIS(D)'),
+        # Total energy:
+        ('Total Energy', 'total')
+    ]
+
+    found_energies = {}
+
+    for (key, method) in possible_energies:
+        if key in obj:
+            found_energies[method] = obj.get(key)
+
+    # try to determine wheter it is HF or DFT
+    if 'SCF/DFT' not in found_energies:
+        raise PropertyNotPresent('computed_energies')
+
+    if len(found_energies) == 2:
+        found_energies[obj.calculation_method[1:]] = found_energies['SCF/DFT']
+    else:
+        found_energies['HF'] = found_energies['SCF/DFT']
+
+    return found_energies
 
 
 def beta_SHG_from_fchk(compressed_tensor, offset=0):
