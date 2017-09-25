@@ -111,6 +111,20 @@ The computation takes place in the  ``MassWeightedHessian`` class.
 
     The normal modes (``normal_modes``) and cartesian displacements (``displacements``) are stored in the form :math:`p,i\alpha`.
 
+
+Computation of thermochemistry data
+===================================
+
+See `this excellent white paper from Gaussian <http://gaussian.com/thermo/>`_ on thermochemistry, which explains step by step how the thermochemistry quantities are computed.
+
+Since the vibrational frequencies are needed, the ``MassWeightedHessian`` object also provide the methods for thermochemistry.
+Note that currently, the heat capacity is not implemented.
+
+.. note::
+
+    The ZPVA contribution can be computed separately with ``compute_zpva()``.
+    Therefore it is not included in the computation of internal energy, enthalpy of free Gibbs energy.
+
 API documentation
 -----------------
 

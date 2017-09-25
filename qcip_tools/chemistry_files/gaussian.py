@@ -4,9 +4,9 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom, quantities, basis_set
+from qcip_tools import molecule, atom, quantities, basis_set, derivatives_e, derivatives_g, derivatives
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
-    FormatError, WithIdentificationMixin
+    FormatError, WithIdentificationMixin, PropertyNotPresent
 
 
 class InputFormatError(FormatError):
@@ -364,10 +364,10 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
 
         # extract the first information :
         self.title = self.lines[0].strip()
-        second_line = self.lines[1].split()
-        self.calculation_type = second_line[0]
-        self.calculation_method = second_line[1]
-        self.basis_set = second_line[2]
+        second_line = self.lines[1]
+        self.calculation_type = second_line[0:10].strip()
+        self.calculation_method = second_line[10:40].strip()
+        self.basis_set = second_line[40:].strip()
 
         # now, crawl trough information
         current_line_index = 2
@@ -434,6 +434,283 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         Implement test with ``in`` keyword
         """
         return item in self.chunks_information
+
+
+@FCHK.define_property('computed_energies')
+def gaussian__fchk__property__computed_energies(obj, *args, **kwargs):
+    """Get the energies. Returns a dictionary of the energies at different level of approximation.
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK
+    :rtype: dict
+    """
+
+    possible_energies = [
+        # either HF or DFT:
+        ('SCF Energy', 'SCF/DFT'),
+        # MPx:
+        ('MP2 Energy', 'MP2'),
+        ('MP3 Energy', 'MP3'),
+        ('MP4D Energy', 'MP4D'),
+        ('MP4DQ Energy', 'MP4DQ'),
+        ('MP4SDQ Energy', 'MP4SDQ'),
+        ('Cluster Energy', 'CCSD'),
+        ('Cluster Energy with triples', 'CCSD(T)'),
+        # CIx:
+        ('CIS Energy', 'CIS'),
+        ('CIS-MP2 Energy', 'CIS(D)'),
+        # Total energy:
+        ('Total Energy', 'total')
+    ]
+
+    found_energies = {}
+
+    for (key, method) in possible_energies:
+        if key in obj:
+            found_energies[method] = obj.get(key)
+
+    # try to determine wheter it is HF or DFT
+    if 'SCF/DFT' not in found_energies:
+        raise PropertyNotPresent('computed_energies')
+
+    if len(found_energies) == 2:
+        found_energies[obj.calculation_method[1:]] = found_energies['SCF/DFT']
+    else:
+        found_energies['HF'] = found_energies['SCF/DFT']
+
+    return found_energies
+
+
+def beta_SHG_from_fchk(compressed_tensor, offset=0):
+    """SHG beta tensor in FCHK is a bit messed up
+
+    :param offset: frequency offset
+    :type offset: int
+    :rtype: numpy.ndarray
+    """
+    tensor = numpy.zeros((3, 3, 3))
+    for i in range(0, 3):
+        for j in range(0, 3):
+            for k in range(0, j + 1):
+                n = j + k
+                if j > 1:
+                    n += 1
+                tensor[i, j, k] = -1 * compressed_tensor[offset * 18 + i * 6 + n]
+                if j != k:
+                    tensor[i, k, j] = tensor[i, j, k]
+
+    return tensor
+
+
+def beta_EOP_from_fchk(compressed_tensor, offset=0):
+    """EOP beta tensor in FCHK is a bit messed up
+
+    :param offset: frequency offset
+    :type offset: int
+    :rtype: numpy.ndarray
+    """
+
+    to_consider = [
+        (0, 0, 0), (0, 1, 0), (1, 1, 0), (2, 0, 0), (2, 1, 0), (2, 2, 0),
+        (0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 0, 1), (2, 1, 1), (2, 2, 1),
+        (0, 0, 2), (0, 1, 2), (1, 1, 2), (2, 0, 2), (2, 1, 2), (2, 2, 2),
+    ]
+
+    tensor = numpy.zeros((3, 3, 3))
+
+    o = derivatives.Derivative(from_representation='FFD')
+
+    for index, components in enumerate(to_consider):
+        for uniques in o.inverse_smart_iterator(components):
+            tensor[uniques] = - compressed_tensor[offset * 18 + index]
+
+    return tensor
+
+
+@FCHK.define_property('electrical_derivatives')
+def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
+    """Get electrical derivatives in FCHK. Returns a dictionary of dictionary:
+
+    .. code-block:: text
+
+        + "F"
+            + static : ElectricDipole
+        + "FF":
+            + static : PolarizabilityTensor
+        + "FD":
+            + 0.042 : PolarizabilityTensor
+            + ...
+        + "FDD":
+            + static : FirstHyperpolarizabilityTensor
+            + ...
+        + ...
+
+    Note that the dipole moment is present in more or less every cases.
+
+    Does not fetch (yet?) the second hyperpolarizability, stored as ``Derivative Beta(-w,w,0)``
+    and ``Derivative Beta(w,w,-2w)`` (that will be fun for reorganisation).
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK
+    :rtype: dict
+    """
+
+    electrical_derivatives = {}
+
+    if 'Dipole Moment' in obj:
+        electrical_derivatives['F'] = {'static': derivatives_e.ElectricDipole(dipole=obj.get('Dipole Moment'))}
+
+    # statics ones
+    if 'Polarizability' in obj:
+        compressed_tensor = obj.get('Polarizability')
+        o = derivatives_e.PolarisabilityTensor(input_fields=(0,))
+        to_consider = [(0, 0), (1, 0), (1, 1), (2, 0), (2, 1), (2, 2)]
+
+        for index, components in enumerate(to_consider):
+            for uniques in o.representation.inverse_smart_iterator(components):
+                o.components[uniques] = compressed_tensor[index]
+
+        electrical_derivatives['FF'] = {'static': o}
+
+    if 'HyperPolarizability' in obj:
+        compressed_tensor = obj.get('HyperPolarizability')
+        o = derivatives_e.FirstHyperpolarisabilityTensor(input_fields=(0, 0))
+        to_consider = [
+            (0, 0, 0), (0, 0, 1), (0, 1, 1), (1, 1, 1), (2, 0, 0), (2, 0, 1), (2, 1, 1), (2, 2, 0), (2, 2, 1),
+            (2, 2, 2)]
+
+        for index, components in enumerate(to_consider):
+            for uniques in o.representation.inverse_smart_iterator(components):
+                o.components[uniques] = - compressed_tensor[index]
+
+        electrical_derivatives['FFF'] = {'static': o}
+
+    # dynamic ones
+    frequencies = []
+    if 'Frequencies for FD properties' in obj:
+        frequencies = obj.get('Frequencies for FD properties')
+
+    if frequencies and len(frequencies) > 1:
+        if 'Alpha(-w,w)' in obj:
+            compressed_tensor = obj.get('Alpha(-w,w)')
+            num_of_frequencies = int(len(compressed_tensor) / 9)
+
+            if num_of_frequencies != len(frequencies):
+                raise Exception('not the right number of frequencies for alpha(-w;w)')
+
+            data = {}
+
+            for i in range(1, num_of_frequencies):
+                o = derivatives_e.PolarisabilityTensor(frequency=frequencies[i], input_fields=(1,))
+                o.components = numpy.array(compressed_tensor[9 * i:9 * (i + 1)]).reshape(o.representation.shape())
+                data[frequencies[i]] = o
+
+            electrical_derivatives['FD'] = data
+
+        if 'Beta(w,w,-2w)' in obj:
+            compressed_tensor = obj.get('Beta(w,w,-2w)')
+            num_of_frequencies = int(len(compressed_tensor) / 18)
+
+            if num_of_frequencies != len(frequencies):
+                raise Exception('not the right number of frequencies for beta(-2w;w,w)')
+
+            data = {}
+
+            for i in range(1, num_of_frequencies):
+                o = derivatives_e.FirstHyperpolarisabilityTensor(frequency=frequencies[i], input_fields=(1, 1))
+                o.components = beta_SHG_from_fchk(compressed_tensor, i)
+                data[frequencies[i]] = o
+
+            electrical_derivatives['FDD'] = data
+
+        if 'Beta(-w,w,0)' in obj:
+            compressed_tensor = obj.get('Beta(-w,w,0)')
+            num_of_frequencies = int(len(compressed_tensor) / 18)
+
+            if num_of_frequencies != len(frequencies):
+                raise Exception('not the right number of frequencies for beta(-w;w,0)')
+
+            data = {}
+
+            for i in range(1, num_of_frequencies):
+                o = derivatives_e.FirstHyperpolarisabilityTensor(frequency=frequencies[i], input_fields=(1, 0))
+                o.components = beta_EOP_from_fchk(compressed_tensor, i)
+                data[frequencies[i]] = o
+
+            electrical_derivatives['FDF'] = data
+
+    if not electrical_derivatives:
+        raise PropertyNotPresent('qs:electrical_derivatives')
+
+    return electrical_derivatives
+
+
+def make_cartesian_hessian_from_fchk(half_cartesian_hessian, spacial_dof):
+    """Half the hessian is stored in fchk, get full hessian back
+
+    :param half_cartesian_hessian: the half of the hessian, as retrieved from FCHK
+    :type half_cartesian_hessian: list
+    :param spacial_dof: spacial degree of freedom (DOF)
+    :type spacial_dof: int
+    :return:
+    """
+
+    if spacial_dof % 3 != 0:
+        raise ValueError('DOF should be a multiple of 3 ?!?')
+
+    full_cartesian_hessian = numpy.zeros((spacial_dof, spacial_dof))
+
+    for i in range(spacial_dof):
+        for j in range(0, i + 1):
+            pos = int((i * (i + 1)) / 2 + j)
+            full_cartesian_hessian[i, j] = half_cartesian_hessian[pos]
+            if i != j:
+                full_cartesian_hessian[j, i] = full_cartesian_hessian[i, j]
+
+    return full_cartesian_hessian
+
+
+@FCHK.define_property('geometrical_derivatives')
+def gaussian__fchk__property__geometrical_derivatives(obj, *args, **kwargs):
+    """Get geometrical derivatives in FCHK. Returns a dictionary of dictionary:
+
+    .. code-block:: text
+
+        + "G": BaseGeometricalDerivativeTensor
+        + "GG": BaseGeometricalDerivativeTensor
+
+    Does not fetch (yet?) the cubic force constants.
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK
+    :rtype: dict
+    """
+
+    geometrical_derivatives = {}
+    spacial_dof = 3 * len(obj.molecule)
+    trans_plus_rot_dof = 5 if obj.molecule.linear() else 6
+
+    if 'Cartesian Gradient' in obj:
+        gradient = obj.get('Cartesian Gradient')
+
+        if len(gradient) != 3 * len(obj.molecule):
+            raise Exception('Wrong number of DOF in gradient')
+
+        geometrical_derivatives['G'] = derivatives_g.BaseGeometricalDerivativeTensor(
+            spacial_dof=spacial_dof, trans_plus_rot=trans_plus_rot_dof, representation='G', components=gradient)
+
+    if 'Cartesian Force Constants' in obj:
+        half_hessian = obj.get('Cartesian Force Constants')
+        geometrical_derivatives['GG'] = derivatives_g.BaseGeometricalDerivativeTensor(
+            spacial_dof=spacial_dof,
+            trans_plus_rot=trans_plus_rot_dof,
+            representation='GG',
+            components=make_cartesian_hessian_from_fchk(half_hessian, spacial_dof))
+
+    if not geometrical_derivatives:
+        raise PropertyNotPresent('qs:geometrical_derivatives')
+
+    return geometrical_derivatives
 
 
 class LinkCalled:

@@ -6,7 +6,7 @@ from pint import UnitRegistry
 from scipy import constants
 
 __name__ = 'qcip_tools'
-__version__ = '0.3a'
+__version__ = '0.3'
 __author__ = 'Pierre Beaujean'
 __maintainer__ = 'Pierre Beaujean'
 __email__ = 'pierre.beaujean@unamur.be'
@@ -24,6 +24,7 @@ ureg = UnitRegistry()
 # -
 ureg.define('bohr_radius = {} m = bohr'.format(constants.value('Bohr radius')))
 ureg.define('wavenumber = 100 * planck_constant * speed_of_light / meter = cm-1')
+ureg.define('atomic_unit_of_time = {} s'.format(constants.value('atomic unit of time')))
 
 #: Shortcut for quantities
 Q_ = ureg.Quantity

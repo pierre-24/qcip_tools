@@ -63,10 +63,11 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
             f.seek(0, 0)
 
             try:
-                if obj_.attempt_identification(f if not obj_.use_binary else f.buffer.raw):
-                    f.seek(0, 0)
+                f_in_good_mode = f if not obj_.requires_binary_mode else f.buffer.raw
+                if obj_.attempt_identification(f_in_good_mode):
+                    f_in_good_mode.seek(0, 0)
                     o = obj_()
-                    o.read(f if not obj_.use_binary else f.buffer.raw)
+                    o.read(f_in_good_mode)
                     return o
             except NotImplementedError:
                 continue
