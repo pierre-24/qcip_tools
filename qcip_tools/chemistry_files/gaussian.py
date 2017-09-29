@@ -245,14 +245,17 @@ class FCHKChunkInformation:
     :type line_start: int|object
     :param line_end: end in the source file
     :type line_end: int|object
+    :param is_matrix: is it a matrix ?
+    :type is_matrix: bool
     """
 
-    def __init__(self, keyword, data_type, data_length, line_start, line_end):
+    def __init__(self, keyword, data_type, data_length, line_start, line_end, is_matrix=True):
         self.keyword = keyword
         self.data_type = data_type
         self.data_length = data_length
         self.line_start = line_start
         self.line_end = line_end
+        self.is_matrix = is_matrix
 
 
 class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
@@ -331,7 +334,7 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         if key not in self.chunks_parsed:
             chunk = self.chunks_information[key]
 
-            if chunk.data_length != 1:
+            if chunk.is_matrix:
                 if chunk.data_type in ['R', 'I']:
                     matrix = self.lines[chunk.line_start:chunk.line_end]
                     matrix = (''.join(matrix)).split()
@@ -399,7 +402,8 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
                 line_start = line_end = current_line_index
                 current_line_index += 1
 
-            self.chunks_information[keyword] = FCHKChunkInformation(keyword, data_type, size, line_start, line_end)
+            self.chunks_information[keyword] = FCHKChunkInformation(
+                keyword, data_type, size, line_start, line_end, is_matrix)
 
             if current_line_index >= len(self.lines):
                 break
