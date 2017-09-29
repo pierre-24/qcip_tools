@@ -6,7 +6,7 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set_esml
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -116,6 +116,7 @@ class GaussianTestCase(QcipToolsTestCase):
         self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
         self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
         self.fchk_file_v3 = self.copy_to_temporary_directory('gaussian_fchk_v3.fchk')
+        self.fchk_one_atom = self.copy_to_temporary_directory('oneatom.fchk')
         self.log_file = self.copy_to_temporary_directory('gaussian_output.log')
 
         self.cube_file = self.copy_to_temporary_directory('gaussian_cube.cub')
@@ -250,6 +251,11 @@ class GaussianTestCase(QcipToolsTestCase):
         # test molecule (conversion from a.u. to angstrom):
         self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
         self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)
+
+        # one atom fchk (fix #35)
+        fi = gaussian.FCHK()
+        with open(self.fchk_one_atom) as f:
+            fi.read(f)
 
     def test_fchk_file_v3(self):
         """FCHK file with v3 are a bit different, because it includes characters"""
@@ -544,7 +550,7 @@ class GaussianTestCase(QcipToolsTestCase):
 
         # test basis set from ESML
         fsio = io.StringIO(
-            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'], basis_set_format='Gaussian94'))
+            basis_set_esml.get_atomic_basis_set('STO-3G', ['C', 'H'], basis_set_format='Gaussian94'))
 
         esml_gb = gaussian.BasisSet()
         esml_gb.read(fsio)
