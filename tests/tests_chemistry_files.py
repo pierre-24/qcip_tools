@@ -116,6 +116,7 @@ class GaussianTestCase(QcipToolsTestCase):
         self.input_file = self.copy_to_temporary_directory('gaussian_input.com')
         self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
         self.fchk_file_v3 = self.copy_to_temporary_directory('gaussian_fchk_v3.fchk')
+        self.fchk_one_atom = self.copy_to_temporary_directory('oneatom.fchk')
         self.log_file = self.copy_to_temporary_directory('gaussian_output.log')
 
         self.cube_file = self.copy_to_temporary_directory('gaussian_cube.cub')
@@ -250,6 +251,11 @@ class GaussianTestCase(QcipToolsTestCase):
         # test molecule (conversion from a.u. to angstrom):
         self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
         self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)
+
+        # one atom fchk (fix #35)
+        fi = gaussian.FCHK()
+        with open(self.fchk_one_atom) as f:
+            fi.read(f)
 
     def test_fchk_file_v3(self):
         """FCHK file with v3 are a bit different, because it includes characters"""
