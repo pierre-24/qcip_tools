@@ -1,8 +1,6 @@
 import math
-import requests
-from bs4 import BeautifulSoup
 
-from qcip_tools import atom as qcip_atom, assert_in_domain, ValueOutsideDomain, basis_set_esml
+from qcip_tools import atom as qcip_atom, assert_in_domain, ValueOutsideDomain
 
 #: Shell to total angular momentum
 SHELL_TO_TAM = {
@@ -264,76 +262,3 @@ class BasisSet:
             raise Exception('atomic basis set for atom {} already defined'.format(atomic_basis_set.atom.symbol))
 
         self[e_key] = atomic_basis_set
-
-
-class ESMLBasisSetError(Exception):
-    pass
-
-
-def get_atomic_basis_set_from_ESML(
-        basis_set_name, atoms, basis_set_format='Gaussian94', minimise=True, js_peid=basis_set_esml.JS_PEID):
-    """Get basis set from ESML
-
-    :param basis_set_name: name of the basis set
-    :type basis_set_name: str
-    :param atoms: atoms requested
-    :type atoms: list
-    :param basis_set_format: the format of the basis set
-    :type basis_set_format: str
-    :param minimise: optimized general contractions
-    :type minimise: bool
-    :param js_peid: the JS PEID
-    :type js_peid: int
-    :rtype: str
-    """
-
-    if basis_set_format not in basis_set_esml.AUTHORIZED_TYPES:
-        raise ESMLBasisSetError('type {} is unknown'.format(basis_set_format))
-
-    if basis_set_name not in basis_set_esml.AVAILABLE_BS:
-        raise ESMLBasisSetError('Basis {} is not available in the ESML'.format(basis_set_name))
-
-    info = basis_set_esml.AVAILABLE_BS[basis_set_name]
-
-    url = 'https://bse.pnl.gov:443/bse/portal/user/anon/js_peid/{}/action/' \
-          'portlets.BasisSetAction/template/courier_content/panel/Main/eventSubmit_doDownload/true'.format(js_peid)
-
-    atoms_symbol = []
-    for a in atoms:
-        s = ''
-        if type(a) is str:
-            if a not in qcip_atom.SymbolToAtomicNumber:
-                raise ESMLBasisSetError('{} is not an atomic symbol'.format(a))
-            s = a
-        elif type(a) is int:
-            if a not in qcip_atom.AtomicNumberToSymbol:
-                raise ESMLBasisSetError('{} is not a valid atomic number'.format(a))
-            s = qcip_atom.AtomicNumberToSymbol[a]
-
-        if s not in atoms_symbol:
-            if s not in info.atoms:
-                raise Exception('Basis set {} does not contains {}'.format(basis_set_name, s))
-            atoms_symbol.append(s)
-
-    if not atoms_symbol:
-        raise ESMLBasisSetError('empty list of atom')
-
-    params = {
-        'bsurl': info.path,
-        'bsname': info.name,
-        'elts': ' '.join(atoms_symbol),
-        'format': basis_set_format,
-        'minimize': 'true' if minimise else 'false'
-    }
-
-    r = requests.get(url, params=params)
-    if r.status_code != 200:
-        raise ESMLBasisSetError('Status code is not 200')
-
-    soup = BeautifulSoup(r.content, 'html.parser')
-    r = soup.find('pre').string
-
-    if 'EMSL  Basis Set Exchange Library' not in r:
-        raise ESMLBasisSetError('Something wrong probably happen:\n {}'.format(r))
-
-    return r

@@ -6,7 +6,7 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set_esml
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -544,7 +544,7 @@ class GaussianTestCase(QcipToolsTestCase):
 
         # test basis set from ESML
         fsio = io.StringIO(
-            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'], basis_set_format='Gaussian94'))
+            basis_set_esml.get_atomic_basis_set('STO-3G', ['C', 'H'], basis_set_format='Gaussian94'))
 
         esml_gb = gaussian.BasisSet()
         esml_gb.read(fsio)
