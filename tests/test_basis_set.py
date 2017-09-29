@@ -1,5 +1,5 @@
 from tests import QcipToolsTestCase
-from qcip_tools import basis_set
+from qcip_tools import basis_set, basis_set_esml
 
 
 class BasisSetTestCase(QcipToolsTestCase):
@@ -163,17 +163,17 @@ class BasisSetTestCase(QcipToolsTestCase):
     def test_ESML(self):
         """Test scrapping data from ESML basis set exchange"""
 
-        with self.assertRaises(basis_set.ESMLBasisSetError):
-            basis_set.get_atomic_basis_set_from_ESML('xxx', ['C', 'H'])  # basis set does not exists
-        with self.assertRaises(basis_set.ESMLBasisSetError):
-            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H', 'D'])  # unknown atom
-        with self.assertRaises(basis_set.ESMLBasisSetError):
-            basis_set.get_atomic_basis_set_from_ESML('STO-3G', [1, 162])  # unknown atom
-        with self.assertRaises(basis_set.ESMLBasisSetError):
-            basis_set.get_atomic_basis_set_from_ESML('STO-3G', [])  # empty list of atom
-        with self.assertRaises(basis_set.ESMLBasisSetError):
-            basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'], basis_set_format='x')  # unknown format
+        with self.assertRaises(basis_set_esml.ESMLBasisSetError):
+            basis_set_esml.get_atomic_basis_set('xxx', ['C', 'H'])  # basis set does not exists
+        with self.assertRaises(basis_set_esml.ESMLBasisSetError):
+            basis_set_esml.get_atomic_basis_set('STO-3G', ['C', 'H', 'D'])  # unknown atom
+        with self.assertRaises(basis_set_esml.ESMLBasisSetError):
+            basis_set_esml.get_atomic_basis_set('STO-3G', [1, 162])  # unknown atom
+        with self.assertRaises(basis_set_esml.ESMLBasisSetError):
+            basis_set_esml.get_atomic_basis_set('STO-3G', [])  # empty list of atom
+        with self.assertRaises(basis_set_esml.ESMLBasisSetError):
+            basis_set_esml.get_atomic_basis_set('STO-3G', ['C', 'H'], basis_set_format='x')  # unknown format
 
-        b = basis_set.get_atomic_basis_set_from_ESML('STO-3G', ['C', 'H'])
+        b = basis_set_esml.get_atomic_basis_set('STO-3G', ['C', 'H'])
         self.assertIn('C', b)
         self.assertIn('H', b)

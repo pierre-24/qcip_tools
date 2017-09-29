@@ -139,3 +139,6 @@ API documentation
 
 .. automodule:: qcip_tools.basis_set
     :members:
+
+.. automodule:: qcip_tools.basis_set_esml
+    :members:
