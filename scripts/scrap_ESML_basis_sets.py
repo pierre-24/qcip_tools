@@ -93,11 +93,18 @@ def main():
                     raise Exception('cannot find end of list of atoms')
 
                 definition = s[found_bs + len(DEFINITION_BS):found_end]
-                x = definition[:found_lst_end-found_bs-len(DEFINITION_BS)].split('"')
+                relative_lst_end = found_lst_end-found_bs-len(DEFINITION_BS)
+                x = definition[:relative_lst_end].split('"')
+                y = definition[relative_lst_end:].split(',')
                 path, name, bs_type, atoms = x[1], x[3], x[5], x[7][1:]
 
-                if bs_type == 'orbital':
-                    basis_sets[name] = [path, atoms]
+                status = y[1][2:-1]
+
+                if bs_type == 'orbital' and status == 'published':
+                    if name not in basis_sets:
+                        basis_sets[name] = [path, atoms]
+                    else:
+                        print('!! duplicate {}'.format(name))
 
                 found_bs = s.find(DEFINITION_BS, found_bs + 1)
             break
@@ -162,8 +169,8 @@ def main():
                     authorized_formats='    \'' + ('\',\n    \''.join(authorized_formats)) + '\'\n'
                 ))
 
-            print('\nDone: {} orbital basis sets were retrieved (excluding ECP, polarization, diffuse ...)'.format(
-                len(basis_sets)))
+            print('\nDone: {} published (!) orbital basis sets were retrieved '
+                  '(excluding ECP, polarization, diffuse ...)'.format(len(basis_sets)))
     except IOError as e:
         print(e)
         return False
