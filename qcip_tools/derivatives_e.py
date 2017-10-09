@@ -291,6 +291,37 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
+    def polarization_angle_dependant_intensity(self, angle):
+        """Compute the angle (:math:`\\Psi`) dependant intensity in the SHS setup.
+
+        :param angle: angle (in degree)
+        :type angle: float
+        :rtype: float
+        """
+
+        ang = math.radians(angle)
+
+        if self.input_fields != (1, 1) and self.input_fields != (0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotSHG(self.input_fields)
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        tmp += self.components[i, j, k] ** 2 * (2 + 8 * math.cos(ang) ** 2 - 4 * math.cos(ang) ** 4)
+                        tmp += self.components[i, i, j] * self.components[j, k, k] * \
+                            (4 - 26 * math.cos(ang) ** 2 + 20 * math.cos(ang) ** 4)
+                        tmp += self.components[i, i, j] * self.components[k, j, k] * \
+                            (4 + 2 * math.cos(ang) ** 2 - 8 * math.cos(ang) ** 4)
+                        tmp += self.components[i, j, j] * self.components[i, k, k] * \
+                            (1 - 10 * math.cos(ang) ** 2 + 12 * math.cos(ang) ** 4)
+                        tmp += self.components[i, j, k] * self.components[j, i, k] * \
+                            (4 + 2 * math.cos(ang) ** 2 - 8 * math.cos(ang) ** 4)
+
+        return 1 / 105 * tmp
+
     def beta_squared_zxx(self):
         """Compute :math:`\\langle\\beta^2_{ZXX}\\rangle`:
 
@@ -841,6 +872,43 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
         return 3 / 2 * (self.gamma_parallel() - self.gamma_perpendicular())
+
+    def polarization_angle_dependant_intensity(self, angle):
+        """Compute the angle (:math:`\\Psi`) dependant intensity in the THS setup.
+
+        :param angle: angle (in degree)
+        :type angle: float
+        :rtype: float
+        """
+
+        ang = math.radians(angle)
+
+        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotTHG(self.input_fields)
+
+        tmp = 0
+
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += self.components[i, j, k, l] ** 2 * \
+                                (4 + 36 * math.cos(ang) ** 2 - 12 * math.cos(ang) ** 4 - 12 * math.cos(ang) ** 6)
+                            tmp += self.components[i, i, j, j] * self.components[k, l, l, k] * \
+                                (6 - 81 * math.cos(ang) ** 2 + 198 * math.cos(ang) ** 4 - 126 * math.cos(ang) ** 6)
+                            tmp += self.components[i, i, j, k] * self.components[j, l, l, k] * \
+                                (24 - 108 * math.cos(ang) ** 2 - 72 * math.cos(ang) ** 4 + 144 * math.cos(ang) ** 6)
+                            tmp += self.components[i, i, j, k] * self.components[l, j, l, k] * \
+                                (12 + 54 * math.cos(ang) ** 2 - 90 * math.cos(ang) ** 4 + 18 * math.cos(ang) ** 6)
+                            tmp += self.components[i, j, j, k] * self.components[i, k, l, l] * \
+                                (6 - 54 * math.cos(ang) ** 2 + 36 * math.cos(ang) ** 4 + 36 * math.cos(ang) ** 6)
+                            tmp += self.components[i, j, j, k] * self.components[k, i, l, l] * \
+                                (6 - 81 * math.cos(ang) ** 2 + 198 * math.cos(ang) ** 4 - 126 * math.cos(ang) ** 6)
+                            tmp += self.components[i, j, k, l] * self.components[j, i, k, l] * \
+                                (12 + 54 * math.cos(ang) ** 2 - 90 * math.cos(ang) ** 4 + 18 * math.cos(ang) ** 6)
+
+        return 1 / 630 * tmp
 
     def gamma_squared_zzzz(self):
         """Compute :math:`\\langle\\gamma^2_{ZZZZ}\\rangle`.
