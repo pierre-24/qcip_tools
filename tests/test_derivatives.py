@@ -284,8 +284,8 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx())
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz())
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
         dipole = derivatives_e.ElectricDipole(dipole=[.0, .0, 0.625899])
@@ -338,8 +338,8 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.3799, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx())
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz())
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
 
         # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
         alpha = numpy.array(
@@ -379,8 +379,8 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx())
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz())
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
 
         # ... since CH4 has no dipole moment, the rest of the properties failed ;)
 
@@ -411,8 +411,8 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.beta_hrs(), 17.659, places=3)
             self.assertAlmostEqual(nb.depolarization_ratio(), 8.962, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx())
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz())
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
+            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
 
         # static CH2Cl2, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array(
@@ -476,8 +476,8 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(
                 ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
 
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx())
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz())
+            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx(), places=4)
+            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz(), places=4)
 
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
@@ -541,8 +541,8 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(
                 ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
 
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx())
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz())
+            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx(), places=4)
+            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz(), places=4)
 
         # test conversion
         self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)

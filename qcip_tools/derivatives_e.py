@@ -308,14 +308,24 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         ang_2 = ang ** 2
         ang_4 = ang ** 4
 
+        mat_angs = numpy.dot(numpy.array([
+            [2, 8, -4],
+            [4, -26, 20],
+            [4, 2, -8],
+            [1, -10, 12],
+            [4, 2, -8]
+        ]), numpy.array([1, ang_2, ang_4]).transpose())
+
         for i in derivatives.COORDINATES_LIST:
             for j in derivatives.COORDINATES_LIST:
                     for k in derivatives.COORDINATES_LIST:
-                        tmp += self.components[i, j, k] ** 2 * (2 + 8 * ang_2 - 4 * ang_4)
-                        tmp += self.components[i, i, j] * self.components[j, k, k] * (4 - 26 * ang_2 + 20 * ang_4)
-                        tmp += self.components[i, i, j] * self.components[k, j, k] * (4 + 2 * ang_2 - 8 * ang_4)
-                        tmp += self.components[i, j, j] * self.components[i, k, k] * (1 - 10 * ang_2 + 12 * ang_4)
-                        tmp += self.components[i, j, k] * self.components[j, i, k] * (4 + 2 * ang_2 - 8 * ang_4)
+                        tmp += numpy.dot([
+                            self.components[i, j, k] ** 2,
+                            self.components[i, i, j] * self.components[j, k, k],
+                            self.components[i, i, j] * self.components[k, j, k],
+                            self.components[i, j, j] * self.components[i, k, k],
+                            self.components[i, j, k] * self.components[j, i, k]
+                        ], mat_angs)
 
         return 1 / 105 * tmp
 
@@ -848,35 +858,40 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
+        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
+                and self.frequency != 'static' and self.frequency != .0:
+            raise NotTHG(self.input_fields)
+
+        tmp = 0.
+
         ang = math.cos(math.radians(angle))
         ang_2 = ang ** 2
         ang_4 = ang ** 4
         ang_6 = ang ** 6
 
-        if self.input_fields != (1, 1, 1) and self.input_fields != (0, 0, 0) \
-                and self.frequency != 'static' and self.frequency != .0:
-            raise NotTHG(self.input_fields)
-
-        tmp = 0
+        mat_angs = numpy.dot(numpy.array([
+            [4, 36, -12, -12],
+            [6, -81, 198, -126],
+            [24, -108, -72, 144],
+            [12, 54, -90, 18],
+            [6, -54, 36, 36],
+            [6, -81, 198, -126],
+            [12, 54, -90, 18]
+        ]), numpy.array([1, ang_2, ang_4, ang_6]))
 
         for i in derivatives.COORDINATES_LIST:
             for j in derivatives.COORDINATES_LIST:
                     for k in derivatives.COORDINATES_LIST:
                         for l in derivatives.COORDINATES_LIST:
-                            tmp += self.components[i, j, k, l] ** 2 * \
-                                (4 + 36 * ang_2 - 12 * ang_4 - 12 * ang_6)
-                            tmp += self.components[i, i, j, j] * self.components[k, l, l, k] * \
-                                (6 - 81 * ang_2 + 198 * ang_4 - 126 * ang_6)
-                            tmp += self.components[i, i, j, k] * self.components[j, l, l, k] * \
-                                (24 - 108 * ang_2 - 72 * ang_4 + 144 * ang_6)
-                            tmp += self.components[i, i, j, k] * self.components[l, j, l, k] * \
-                                (12 + 54 * ang_2 - 90 * ang_4 + 18 * ang_6)
-                            tmp += self.components[i, j, j, k] * self.components[i, k, l, l] * \
-                                (6 - 54 * ang_2 + 36 * ang_4 + 36 * ang_6)
-                            tmp += self.components[i, j, j, k] * self.components[k, i, l, l] * \
-                                (6 - 81 * ang_2 + 198 * ang_4 - 126 * ang_6)
-                            tmp += self.components[i, j, k, l] * self.components[j, i, k, l] * \
-                                (12 + 54 * ang_2 - 90 * ang_4 + 18 * ang_6)
+                            tmp += numpy.dot([
+                                self.components[i, j, k, l] ** 2,
+                                self.components[i, i, j, j] * self.components[k, l, l, k],
+                                self.components[i, i, j, k] * self.components[j, l, l, k],
+                                self.components[i, i, j, k] * self.components[l, j, l, k],
+                                self.components[i, j, j, k] * self.components[i, k, l, l],
+                                self.components[i, j, j, k] * self.components[k, i, l, l],
+                                self.components[i, j, k, l] * self.components[j, i, k, l]
+                            ], mat_angs)
 
         return 1 / 630 * tmp
 
