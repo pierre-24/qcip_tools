@@ -264,7 +264,7 @@ class RombergTriangle:
                 if with_decoration:
                     r += '  '
                 if m < (self.side - k):
-                    r += '{: 11.5f} '.format(self.romberg_triangle[k, m])
+                    r += '{: 11.5e} '.format(self.romberg_triangle[k, m])
                 elif with_decoration:
                     r += '{:12}'.format(' ')
             r += '\n'
@@ -337,7 +337,7 @@ class RombergTriangle:
 
             prev_region_error = stability_region[2]
 
-            if stability_region[1] - stability_region[0] == 1:
+            if stability_region[1] - stability_region[0] < 2:
                 if verbose:
                     if len(stability_regions) == 1:
                         print('→ only one value in the remaining stability region, stopping')
@@ -346,7 +346,7 @@ class RombergTriangle:
 
                 return (stability_region[0], m + 1), \
                     self.romberg_triangle[stability_region[0], m + 1], \
-                    self.iteration_error(k=stability_region[0], m=m + 1)
+                    self.iteration_error(k=stability_region[0], m=m)
 
             m += 1
             current_region = (stability_region[0], stability_region[1])
