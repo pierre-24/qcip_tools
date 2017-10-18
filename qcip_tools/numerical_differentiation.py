@@ -67,8 +67,8 @@ class Coefficients:
         self.i_min = 0
 
         if method == 'C':
-            if p % 2 != 0:
-                raise Exception('p should be even for centered derivatives')
+            if (d + p) % 2 != 1:
+                raise Exception('d+p should be odd for centered derivative')
 
             self.i_min = -(d + p - 1) / 2.
         if method == 'B':
@@ -92,6 +92,20 @@ class Coefficients:
                 mat_res[n] = 1
 
         self.mat_coefs = numpy.dot(numpy.linalg.inv(mat_solve), mat_res.transpose())
+
+    @staticmethod
+    def choose_p_for_centered(d, shift=0):
+        """Choose the precision so that :math:`d+p-1` is even (for centered derivatives)
+
+        :param d: order of the derivative
+        :type d: int
+        :param shift: increase the precision
+        :type shift: int
+        """
+        if d % 2 == 0:
+            return 1 + shift * 2
+        else:
+            return 2 + shift * 2
 
     def prefactor(self, k, h0):
         """return the :math:`\\frac{d!}{h^d}` prefactor, with :math:`h=a^kh_0`.

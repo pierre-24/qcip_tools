@@ -81,7 +81,7 @@ In order to get a unique solution, :math:`q_{max}-q_{min}+1\geqslant d` and ther
 | Centered (``C``) | :math:`-\left\lfloor\frac{d+p-1}{2}\right\rfloor`  | :math:`\left\lfloor\frac{d+p-1}{2}\right\rfloor` |
 +------------------+----------------------------------------------------+--------------------------------------------------+
 
-Note that :math:`p` is always even in the case of a centered derivative approximation.
+Note that :math:`p+d-1` should therefore always be even in the case of centered derivatives.
 
 The system of linear equation given by Eq. :eq:`sys` is solved. Once the :math:`C_q`'s are determined, :math:`A_d(h)` is obtained with a precision :math:`\mathcal{O}(h^{d+p})` by computing
 
