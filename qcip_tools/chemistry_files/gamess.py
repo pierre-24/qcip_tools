@@ -127,7 +127,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificatio
             num_dollar += l.count('$')
             num_end += l.lower().count('$end')
 
-        return num_dollar > 4 and num_end > 2
+        return num_dollar > 4 and num_end > 1
 
     @classmethod
     def from_molecule(cls, molecule, title='', modules=None, *args, **kwargs):
@@ -214,7 +214,7 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificatio
         if len(data) < 3:
             raise InputFormatError('$DATA is too small')
         if len(data[1]) != 1 or data[1][0].lower() != 'c1':
-            raise NotImplementedError('Symmetry != c1')
+            raise InputFormatError('not implemented: symmetry != c1')
 
         self.title = ' '.join(data[0])
         for atom_def in data[2:]:
