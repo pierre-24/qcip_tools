@@ -278,3 +278,13 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_internal_energy()), 0.045152, places=5)
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_enthalpy()), 0.046096, places=5)
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_gibbs_free_energy(1)), 0.013912, places=5)
+
+        # test with an atom alone
+        fchk_file, path, geometrical_derivatives = self.get_property(
+            gaussian.FCHK, 'geometrical_derivatives/gaussian_atom_alone.fchk', 'geometrical_derivatives')
+
+        mwh = derivatives_g.MassWeightedHessian(fchk_file.molecule, geometrical_derivatives['GG'])
+        self.assertEqual(mwh.compute_zpva(), .0)
+        self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_internal_energy()), 0.001416, places=5)
+        self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_enthalpy()), 0.002360, places=5)
+        self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_gibbs_free_energy(1)), -0.015023, places=5)
