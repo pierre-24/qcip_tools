@@ -350,7 +350,9 @@ class MassWeightedHessian:
 
         U_t = 3 / 2 * constants.R * temperature * self.ENERGY_IN_AU_CONVERSION
 
-        if self.linear:
+        if len(self.molecule) == 1:
+            U_r = .0
+        elif self.linear:
             U_r = constants.R * temperature * self.ENERGY_IN_AU_CONVERSION
         else:
             U_r = 3 / 2 * constants.R * temperature * self.ENERGY_IN_AU_CONVERSION
@@ -407,7 +409,11 @@ class MassWeightedHessian:
         omega_e, omega_t, omega_r, omega_v = self.compute_partition_functions(symmetry_number, temperature, pressure)
 
         S_t = constants.R * (math.log(omega_t) + 5 / 2) * self.ENERGY_IN_AU_CONVERSION
-        S_r = constants.R * (math.log(omega_r) + (1 if self.linear else 3 / 2)) * self.ENERGY_IN_AU_CONVERSION
+
+        if len(self.molecule) != 1:
+            S_r = constants.R * (math.log(omega_r) + (1 if self.linear else 3 / 2)) * self.ENERGY_IN_AU_CONVERSION
+        else:
+            S_r = .0
 
         S_v = .0
 
