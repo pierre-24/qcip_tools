@@ -810,6 +810,17 @@ class DaltonTestCase(QcipToolsTestCase):
         with open(os.path.join(self.tests_files_directory, 'dalton_input_2.dal'), 'r') as fx:
             self.assertEqual(str(fix), fx.read())
 
+        # test update
+        file_before = fix.to_string()
+        self.assertFalse('SCF INPUT' in fix['WAVE F'])
+
+        fix.update('**WAVE FUNC\n*SCF INPUT\n.THRESH\n1.0D-6')
+        file_after = fix.to_string()
+        self.assertNotEqual(file_before, file_after)
+        self.assertTrue('SCF INPUT' in fix['WAVE F'])
+        self.assertTrue('.THRESH' in fix['WAVE F']['SCF INPUT'])
+        self.assertEqual(fix['WAVE F']['SCF INPUT']['.THRESH'].parameters[0], '1.0D-6')
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
