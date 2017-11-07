@@ -6,7 +6,7 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, datafile, basis_set_esml
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -1033,7 +1033,7 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
 
     def setUp(self):
         self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
-        self.chemistry_datafile = self.copy_to_temporary_directory('chemistry_datafile.chdf')
+        self.chemistry_data_file = self.copy_to_temporary_directory('chemistry_data_file.hdf5')
 
     def test_datafile(self):
         """Test the behavior of the datafile"""
@@ -1049,36 +1049,16 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         fd.molecule = fx.molecule
         fd.spacial_dof = 3 * len(fx.molecule)
         fd.trans_plus_rot_dof = 5
-        fd.derivatives['F'] = numpy.array(fx['Dipole Moment'])
+        fd.derivatives['F'] = {'static': numpy.zeros((3,))}
+        fd.derivatives['FD'] = {'1064nm': numpy.zeros((3, 3)), 0.04: numpy.zeros((3, 3))}
+        fd.derivatives['FFF'] = {'static': numpy.zeros((3, 3, 3))}
+        fd.derivatives['G'] = numpy.zeros((3 * len(fx.molecule),))
 
         # test writing
-        other_input = os.path.join(self.temporary_directory, 'u.chdf')
+        other_input = os.path.join(self.temporary_directory, 'u.hdf5')
 
         with open(other_input, 'wb') as f:
             fd.write(f)
-
-        # test that everything is there
-        fb = datafile.BinaryDataFile()
-
-        with self.assertRaises(datafile.InvalidDataFile):  # need to change the default magic number
-            with open(other_input, 'rb') as f:
-                fb.read(f)
-
-        fb.magic_number = fd.magic_number
-
-        with open(other_input, 'rb') as f:
-            fb.read(f)
-
-        must_be = [
-            'version', 'title', 'molecule_charge_and_multiplicity', 'molecule_atoms', 'derivatives_available', 'd:F']
-
-        for a in must_be:
-            self.assertIn(a, fb, msg=a)
-
-        self.assertEqual(fb['title'], fd.title)
-        self.assertEqual(fb['molecule_charge_and_multiplicity'], [fx['Charge'], fx['Multiplicity']])
-        self.assertEqual(fb['derivatives_available'], 'F')
-        self.assertArrayAlmostEqual(fb['d:F'], numpy.array(fx['Dipole Moment']))
 
         # test reading
         fde = chemistry_datafile.ChemistryDataFile()
@@ -1098,10 +1078,14 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
             self.assertEqual(a.symbol, fd.molecule[i].symbol)
             self.assertArrayAlmostEqual(a.position, fd.molecule[i].position)
 
-        self.assertArrayAlmostEqual(fde.derivatives['F'], fd.derivatives['F'])
+        self.assertArrayAlmostEqual(fde.derivatives['F']['static'], fd.derivatives['F']['static'])
+        self.assertArrayAlmostEqual(fde.derivatives['FD']['1064nm'], fd.derivatives['FD']['1064nm'])
+        self.assertArrayAlmostEqual(fde.derivatives['FD'][0.04], fd.derivatives['FD'][0.04])
+        self.assertArrayAlmostEqual(fde.derivatives['FFF']['static'], fd.derivatives['FFF']['static'])
+        self.assertArrayAlmostEqual(fde.derivatives['G'], fd.derivatives['G'])
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 
-        with open(self.chemistry_datafile) as f:
+        with open(self.chemistry_data_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), chemistry_datafile.ChemistryDataFile)

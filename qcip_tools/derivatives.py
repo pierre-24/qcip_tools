@@ -17,6 +17,39 @@ ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd')
 GEOMETRICAL_DERIVATIVES = ('G', 'N')
 ELECTRICAL_DERIVATIVES = ('F', 'D', 'd')
 
+
+def __is_derivative(derivative, typ):
+    if type(derivative) is str:
+        for i in typ:
+            if i in derivative:
+                return True
+        return False
+    elif type(derivative) is Derivative:
+        for i in typ:
+            if i in derivative.representation():
+                return True
+        return False
+    else:
+        raise TypeError(derivative)
+
+
+def is_electrical(derivative):
+    """Return if the derivatives contains an electrical one
+
+    :type derivative: str|qcip_tools.derivatives.Derivative
+    :rtype: bool
+    """
+    return __is_derivative(derivative, ELECTRICAL_DERIVATIVES)
+
+
+def is_geometricall(derivative):
+    """Return if the derivatives contains a geometrical one
+
+    :type derivative: str|qcip_tools.derivatives.Derivative
+    :rtype: bool
+    """
+    return __is_derivative(derivative, GEOMETRICAL_DERIVATIVES)
+
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
 ORDERS = {1: 'first', 2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth'}  #: number to x*th*.
