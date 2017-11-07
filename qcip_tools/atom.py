@@ -407,9 +407,11 @@ class Atom:
     :type symbol: str
     :param position: atom position
     :type position: list|numpy.ndarray
+    :param mass: define the mass (for an isotope, for example)
+    :type mass: float
     """
 
-    def __init__(self, atomic_number=None, symbol=None, position=None):
+    def __init__(self, atomic_number=None, symbol=None, position=None, mass=None):
 
         if symbol is not None:
 
@@ -432,7 +434,7 @@ class Atom:
 
         self.num_of_electrons = self.atomic_number
         self.mass_number = Definition[self.symbol][1]
-        self.mass = Definition[self.symbol][2]
+        self.mass = Definition[self.symbol][2] if mass is None else mass
 
         if position is not None:
             if len(position) != 3:
