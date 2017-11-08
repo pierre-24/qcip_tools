@@ -6,6 +6,10 @@ class PropertyNotPresent(Exception):
     pass
 
 
+class PropertyNotDefined(Exception):
+    pass
+
+
 class ChemistryFile(Dispatcher):
     """Purely abstract class that implement some basic methods that any child should implement if possible.
 
@@ -44,7 +48,7 @@ class ChemistryFile(Dispatcher):
         callback = self.dispatch(property_)
 
         if callback is None:
-            raise Exception('property {} not defined for {}'.format(property_, type(self)))
+            raise PropertyNotDefined('{} for {}'.format(property_, type(self)))
 
         return callback(self, **kwargs)
 
