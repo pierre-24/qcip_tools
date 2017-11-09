@@ -694,6 +694,9 @@ def gaussian__fchk__property__geometrical_derivatives(obj, *args, **kwargs):
     spacial_dof = 3 * len(obj.molecule)
     trans_plus_rot_dof = 5 if obj.molecule.linear() else 6
 
+    if obj.calculation_type.lower() not in ['freq', 'force']:
+        raise PropertyNotPresent('geometrical_derivatives')
+
     if 'Cartesian Gradient' in obj:
         gradient = obj.get('Cartesian Gradient')
 
@@ -712,7 +715,7 @@ def gaussian__fchk__property__geometrical_derivatives(obj, *args, **kwargs):
             components=make_cartesian_hessian_from_fchk(half_hessian, spacial_dof))
 
     if not geometrical_derivatives:
-        raise PropertyNotPresent('qs:geometrical_derivatives')
+        raise PropertyNotPresent('geometrical_derivatives')
 
     return geometrical_derivatives
 
