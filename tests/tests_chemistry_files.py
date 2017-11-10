@@ -1053,6 +1053,7 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         fd.derivatives['FD'] = {'1064nm': numpy.zeros((3, 3)), 0.04: numpy.zeros((3, 3))}
         fd.derivatives['FFF'] = {'static': numpy.zeros((3, 3, 3))}
         fd.derivatives['G'] = numpy.zeros((3 * len(fx.molecule),))
+        fd.derivatives[''] = 1.05
 
         # test writing
         other_input = os.path.join(self.temporary_directory, 'u.hdf5')
@@ -1083,6 +1084,7 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         self.assertArrayAlmostEqual(fde.derivatives['FD'][0.04], fd.derivatives['FD'][0.04])
         self.assertArrayAlmostEqual(fde.derivatives['FFF']['static'], fd.derivatives['FFF']['static'])
         self.assertArrayAlmostEqual(fde.derivatives['G'], fd.derivatives['G'])
+        self.assertArrayAlmostEqual(fde.derivatives[''], fd.derivatives[''])  # yeah, we can store energy as well
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""

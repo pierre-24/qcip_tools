@@ -114,7 +114,7 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
                 raise BadChemistryDataFile('version > 1 (={})'.format(fx['version'][0]))
 
             if 'type' not in fx['version'].attrs or fx['version'].attrs['type'] != self.file_type:
-                raise BadChemistryDataFile('type is incorect')
+                raise BadChemistryDataFile('type is incorrect')
 
             atoms_shape = fx['/molecule/atoms'].shape
             if len(atoms_shape) != 2 or atoms_shape[1] != 5:
@@ -137,53 +137,12 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
 
             # derivatives
             derivatives_group = fx['/derivatives']
-
-            if 'derivatives_available' not in derivatives_group.attrs:
-                raise BadChemistryDataFile('no list of derivatives available ?!?')
-
-            derivatives_available = derivatives_group.attrs['derivatives_available'].split(',')
-            for derivative in derivatives_available:
-                path = '/derivatives/{}'.format(derivative)
-                try:
-                    d = derivatives.Derivative(derivative, spacial_dof=self.spacial_dof)
-                except derivatives.RepresentationError as e:
-                    raise BadChemistryDataFile(e)
-
-                if path not in fx:
-                    raise BadChemistryDataFile('could not find {}'.format(path))
-
-                mat = fx[path]
-                self.derivatives[derivative] = {}
-
-                if derivatives.is_electrical(d):
-                    if 'frequencies' not in fx[path].attrs:
-                        raise BadChemistryDataFile('no frequencies for {}'.format(path))
-                    frequencies = fx[path].attrs['frequencies'].split(',')
-                    shape = d.shape()
-                    shape.insert(0, len(frequencies))
-                    if mat.shape != tuple(shape):
-                        raise BadChemistryDataFile('matrix shape ({}) is not right ({})'.format(mat.shape, shape))
-                    for index, frequency in enumerate(frequencies):
-                        f = None
-                        if frequency[0] == 's':
-                            f = frequency[2:]
-                        elif frequency[0] == 'f':
-                            f = float(frequency[2:])
-                        else:
-                            raise BadChemistryDataFile('frequency {} is not formated correctly for {}'.format(
-                                frequency, derivative))
-
-                        self.derivatives[derivative][f] = mat[index][:]
-                else:
-                    if mat.shape != tuple(d.shape()):
-                        raise BadChemistryDataFile('matrix shape ({}) is not right ({})'.format(mat.shape, d.shape()))
-                    self.derivatives[derivative] = mat[:]
+            self.derivatives = ChemistryDataFile.read_derivatives_from_group(derivatives_group, self.spacial_dof)
 
     def to_string(self):
         raise NotImplementedError('to_string()')
 
     def write(self, f):
-
         with h5py.File(f.name, 'w') as fx:
             dset = fx.create_dataset('version', (1,), dtype='i', data=self.version)
             dset.attrs['type'] = self.file_type
@@ -206,34 +165,142 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
 
             fx.create_dataset('/molecule/atoms', atoms_data_shape, data=atoms_data)
 
+            # derivatives
             derivatives_group = fx.create_group('derivatives')
-            derivatives_available = ''
-            first_derivative = True
+            ChemistryDataFile.write_derivatives_in_group(derivatives_group, self.derivatives, self.spacial_dof)
 
-            for key in self.derivatives:
-                d = derivatives.Derivative(key, spacial_dof=self.spacial_dof)
+    @staticmethod
+    def write_derivatives_in_group(group, derivatives_, spacial_dof):
+        """Write all the derivatives in a given group
 
-                derivatives_available += '{}{}'.format(',' if not first_derivative else '', key)
-                first_derivative = False
+        :param group: the group
+        :type group: h5py.Group
+        :param derivatives_: the derivatives to write
+        :type derivatives_: dict
+        :param spacial_dof: the DOF
+        :type spacial_dof: int
+        """
+        derivatives_available = []
 
-                shape = list(d.shape())
-                if derivatives.is_electrical(key):
-                    num_freqs = len(self.derivatives[key])
-                    freqs = ''
-                    first_freq = True
-                    shape.insert(0, num_freqs)
-                    super_array = numpy.zeros(shape)
-                    f = 0
-                    for freq in self.derivatives[key]:
-                        freqs += '{}{}:{}'.format(
-                            ',' if not first_freq else '', 'f' if type(freq) is float else 's', freq)
-                        first_freq = False
-                        super_array[f] = self.derivatives[key][freq]
-                        f += 1
+        for key in derivatives_:
+            d = derivatives.Derivative(key, spacial_dof=spacial_dof)
 
-                    dset = derivatives_group.create_dataset(key, shape, data=super_array)
-                    dset.attrs['frequencies'] = freqs
+            dataset_name = key
+            if key == '':
+                dataset_name = 'energy'
+
+            derivatives_available.append(dataset_name)
+            ChemistryDataFile.write_derivative_in_dataset(group, dataset_name, d, derivatives_[key])
+
+        group.attrs['derivatives_available'] = ','.join(derivatives_available)
+
+    @staticmethod
+    def write_derivative_in_dataset(group, dataset_name, derivative, value):
+        """Write a given derivative in a dataset (sadly, a dataset cannot be simply resized when created, so the
+        dataset name is given)
+
+        :param group: the group
+        :type group: h5py.Group
+        :param dataset_name: dataset name
+        :type dataset_name: str
+        :param derivative: the derivative
+        :type derivative: derivatives.Derivative
+        :param value: tensor
+        :type: numpy.ndarray
+        """
+
+        shape = list(derivative.shape())
+
+        if derivatives.is_electrical(derivative):
+            num_freqs = len(value)
+            freqs = ''
+            first_freq = True
+            shape.insert(0, num_freqs)
+            super_array = numpy.zeros(shape)
+            f = 0
+            for freq in value:
+                freqs += '{}{}:{}'.format(
+                    ',' if not first_freq else '', 'f' if type(freq) is float else 's', freq)
+                first_freq = False
+                super_array[f] = value[freq]
+                f += 1
+
+            dset = group.create_dataset(dataset_name, shape, data=super_array)
+            dset.attrs['frequencies'] = freqs
+        else:
+            group.create_dataset(dataset_name, shape, data=value)
+
+    @staticmethod
+    def read_derivatives_from_group(group, spacial_dof):
+        """Read all the derivatives from a given group
+
+        :param group: the group
+        :type group: h5py.Group
+        :param spacial_dof: the DOF
+        :type spacial_dof: int
+        :rtype: dict
+        """
+        if 'derivatives_available' not in group.attrs:
+            raise BadChemistryDataFile('no list of derivatives available ?!?')
+
+        derivatives_available = group.attrs['derivatives_available'].split(',')
+        derivatives_ = {}
+
+        for derivative in derivatives_available:
+            dataset_name = derivative
+
+            if derivative == 'energy':
+                derivative = ''
+
+            try:
+                d = derivatives.Derivative(derivative, spacial_dof=spacial_dof)
+            except derivatives.RepresentationError as e:
+                raise BadChemistryDataFile(e)
+
+            if dataset_name not in group:
+                raise BadChemistryDataFile('could not find {} in {}'.format(dataset_name, group))
+
+            derivatives_[derivative] = ChemistryDataFile.read_derivative_from_dataset(group[dataset_name], d)
+
+        return derivatives_
+
+    @staticmethod
+    def read_derivative_from_dataset(dataset, derivative):
+        """Read a derivative from a dataset
+
+        :param dataset: the dataset
+        :type dataset: h5py.Dataset
+        :param derivative: the derivative
+        :type derivative: derivatives.Derivative
+        :rtype: numpy.ndarray
+        """
+
+        mat = dataset[:]
+
+        if derivatives.is_electrical(derivative):
+            if 'frequencies' not in dataset.attrs:
+                raise BadChemistryDataFile('no frequencies for {}'.format(str(dataset)))
+            frequencies = dataset.attrs['frequencies'].split(',')
+            shape = derivative.shape()
+            shape.insert(0, len(frequencies))
+            if mat.shape != tuple(shape):
+                raise BadChemistryDataFile('matrix shape ({}) is not right ({})'.format(mat.shape, shape))
+
+            freqd_derivative = {}
+
+            for index, frequency in enumerate(frequencies):
+                if frequency[0] == 's':
+                    f = frequency[2:]
+                elif frequency[0] == 'f':
+                    f = float(frequency[2:])
                 else:
-                    derivatives_group.create_dataset(key, shape, data=self.derivatives[key])
+                    raise BadChemistryDataFile('frequency {} is not formated correctly for {}'.format(
+                        frequency, derivative))
 
-            derivatives_group.attrs['derivatives_available'] = derivatives_available
+                freqd_derivative[f] = mat[index][:]
+
+            return freqd_derivative
+        else:
+            if mat.shape != tuple(derivative.shape()):
+                raise BadChemistryDataFile('matrix shape ({}) is not right ({})'.format(mat.shape, derivative.shape()))
+            return mat
