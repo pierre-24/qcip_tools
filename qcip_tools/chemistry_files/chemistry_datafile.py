@@ -225,10 +225,10 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
                 super_array[f] = value[freq]
                 f += 1
 
-            dset = group.create_dataset(dataset_name, shape, data=super_array)
+            dset = group.create_dataset(dataset_name, shape, dtype='float64', data=super_array)
             dset.attrs['frequencies'] = freqs
         else:
-            group.create_dataset(dataset_name, shape, data=value)
+            group.create_dataset(dataset_name, shape, dtype='float64', data=value)
 
     @staticmethod
     def read_derivatives_from_group(group, spacial_dof):
