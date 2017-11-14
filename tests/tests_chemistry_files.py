@@ -5,7 +5,7 @@ import argparse
 import numpy
 from unittest.mock import MagicMock, patch
 
-from tests import QcipToolsTestCase
+from tests import QcipToolsTestCase, factories
 from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
@@ -1049,9 +1049,13 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         fd.molecule = fx.molecule
         fd.spacial_dof = 3 * len(fx.molecule)
         fd.trans_plus_rot_dof = 5
-        fd.derivatives['F'] = {'static': numpy.zeros((3,))}
-        fd.derivatives['FD'] = {'1064nm': numpy.zeros((3, 3)), 0.04: numpy.zeros((3, 3))}
-        fd.derivatives['FFF'] = {'static': numpy.zeros((3, 3, 3))}
+        fd.derivatives['F'] = {'static': factories.FakeElectricDipole().components}
+        fd.derivatives['FD'] = {
+            '1064nm': factories.FakePolarizabilityTensor(isotropy_factor=2).components,
+            0.04: factories.FakePolarizabilityTensor(isotropy_factor=1.5).components,
+        }
+        fd.derivatives['FFF'] = {
+            'static': factories.FakeFirstHyperpolarizabilityTensor().components}
         fd.derivatives['G'] = numpy.zeros((3 * len(fx.molecule),))
         fd.derivatives[''] = 1.05
 
