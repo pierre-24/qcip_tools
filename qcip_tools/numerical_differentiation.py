@@ -1,5 +1,6 @@
 import math
 import numpy
+import sys
 
 from qcip_tools import assert_in_domain
 
@@ -248,13 +249,18 @@ class RombergTriangle:
         r = ''
 
         if with_decoration:
+            r += '-' * 6
+            for m in range(self.side):
+                r += '-' * 15
+            r += '\n'
+
             r += ' ' * 6
             for m in range(self.side):
-                r += '{:>14}'.format('m={}'.format(m))
+                r += '{:^15}'.format('m={}'.format(m))
             r += '\n'
             r += '-' * 6
             for m in range(self.side):
-                r += '-' * 14
+                r += '-' * 15
             r += '\n'
 
         for k in range(0, self.side):
@@ -269,9 +275,15 @@ class RombergTriangle:
                     r += '{:12}'.format(' ')
             r += '\n'
 
+        if with_decoration:
+            r += '-' * 6
+            for m in range(self.side):
+                r += '-' * 15
+            r += '\n'
+
         return r
 
-    def find_best_value(self, threshold=1e-5, verbose=False):
+    def find_best_value(self, threshold=1e-5, verbose=False, out=sys.stdout):
         """Find the "best value" in the Romberg triangle
 
         :param threshold: threshold for maximum iteration error
@@ -290,7 +302,7 @@ class RombergTriangle:
         prev_region_error = .0
 
         if verbose:
-            print('- starting with m=0')
+            print('- starting with m=0', file=out)
 
         while True:
             stability_regions = [
@@ -304,7 +316,8 @@ class RombergTriangle:
                 amplitude_error = self.amplitude_error(k=k, m=m)
                 if math.fabs(amplitude_error) < threshold:
                     if verbose:
-                        print('→ value in ({}, {}) have an iteration error lower than threshold, stopping'.format(k, m))
+                        print('→ value in ({}, {}) have an iteration error lower than threshold, stopping'.format(
+                            k, m), file=out)
 
                     return (k, m), self.romberg_triangle[k, m], 0.0 if m < 1 else self.iteration_error(k=k, m=m)
 
@@ -322,14 +335,16 @@ class RombergTriangle:
 
             if verbose:
                 print('- stability region(s): {}'.format(
-                    ', '.join(['[k={} to k={}, error={:.3e}]'.format(r[0], r[1], r[2]) for r in stability_regions])))
+                    ', '.join(['[k={} to k={}, error={:.3e}]'.format(
+                        r[0], r[1], r[2]) for r in stability_regions])), file=out)
 
-                print('- select region between k={} and k={} as stability region'.format(*stability_region[:-1]))
+                print('- select region between k={} and k={} as stability region'.format(
+                    *stability_region[:-1]), file=out)
 
             if m > 0:
                 if math.fabs(prev_region_error) < math.fabs(stability_region[2]):
                     if verbose:
-                        print('→ amplitude error did not decrease, stopping')
+                        print('→ amplitude error did not decrease, stopping', file=out)
 
                     return (stability_region[0], m), \
                         self.romberg_triangle[stability_region[0], m], \
@@ -340,9 +355,9 @@ class RombergTriangle:
             if stability_region[1] - stability_region[0] < 2:
                 if verbose:
                     if len(stability_regions) == 1:
-                        print('→ only one value in the remaining stability region, stopping')
+                        print('→ only one value in the remaining stability region, stopping', file=out)
                     else:
-                        print('→ column with amplitude errors of alternating sign, stopping')
+                        print('→ column with amplitude errors of alternating sign, stopping', file=out)
 
                 return (stability_region[0], m + 1), \
                     self.romberg_triangle[stability_region[0], m + 1], \
@@ -352,4 +367,4 @@ class RombergTriangle:
             current_region = (stability_region[0], stability_region[1])
 
             if verbose:
-                print('- set m={} and continue analysis on this column'.format(m))
+                print('- set m={} and continue analysis on this column'.format(m), file=out)

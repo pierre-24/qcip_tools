@@ -42,7 +42,7 @@ def is_electrical(derivative):
     return __is_derivative(derivative, ELECTRICAL_DERIVATIVES)
 
 
-def is_geometricall(derivative):
+def is_geometrical(derivative):
     """Return if the derivatives contains a geometrical one
 
     :type derivative: str|qcip_tools.derivatives.Derivative
@@ -105,6 +105,14 @@ class Derivative:
             return self.representation() == other.representation()
         else:
             raise TypeError(other)
+
+    def __repr__(self):
+        """Get representation
+
+        :rtype: str
+        """
+
+        return self.representation()
 
     def representation(self):
         """Get the full representation (mix basis and current)
