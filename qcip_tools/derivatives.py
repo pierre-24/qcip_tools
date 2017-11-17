@@ -112,7 +112,8 @@ class Derivative:
         :rtype: str
         """
 
-        return self.representation()
+        s = self.representation()
+        return s if len(s) != 0 else 'energy'
 
     def representation(self):
         """Get the full representation (mix basis and current)
