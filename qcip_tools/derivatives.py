@@ -493,6 +493,47 @@ class Tensor:
         self.name = name
         self.components = numpy.zeros(self.representation.shape()) if components is None else components
 
+    def project_over_normal_modes(self, mwh):
+        """Project the tensor over normal modes (get its normal mode equivalent)
+
+        :param mwh: mass weighted hessian
+        :type mwh: qcip_tools.derivatives_g.MassWeightedHessian
+        :rtype: qcip_tools.derivatives.Tensor
+        """
+
+        b_repr = self.representation.representation()
+
+        if 'N' in b_repr:
+            raise ValueError('Tensor already projected ?')
+
+        num_g = b_repr.count('G')
+
+        if num_g == 0:
+            raise ValueError('No geometrical derivative to project in {}'.format(self.representation.representation()))
+
+        if self.spacial_dof != mwh.dof:
+            raise ValueError('DOF does not matches ({} != {})'.format(self.spacial_dof, mwh.dof))
+
+        if is_electrical(self.representation):
+            nshape = [self.spacial_dof] * num_g + [3 ** (self.representation.order() - num_g)]
+            projected_tensor = self.components.reshape(nshape)  # reshape
+        else:
+            projected_tensor = numpy.dot(self.components, mwh.displacements.transpose())
+            num_g -= 1
+
+        # project
+        for i in range(num_g):
+            projected_tensor = numpy.dot(mwh.displacements, projected_tensor)
+
+        if is_electrical(self.representation):
+            projected_tensor = projected_tensor.reshape(self.representation.shape())
+
+        return Tensor(
+            spacial_dof=self.spacial_dof,
+            representation=b_repr.replace('G', 'N'),
+            frequency=self.frequency,
+            components=projected_tensor)
+
     def to_string(self, threshold=1e-5, columns_per_line=6, molecule=None, **kwargs):
         """Print the tensor in a more or less textual version.
 

@@ -50,40 +50,6 @@ class BaseGeometricalDerivativeTensor(derivatives.Tensor):
 
         raise KeyError(r)
 
-    def project_over_normal_modes(self, displacements):
-        """Project over normal modes.
-
-        .. note::
-
-            In the absence of a general formula, this is only valid for gradient, hessian and cubic force field
-            projections.
-
-        :param displacements: carthesian displacements (eigenvectors of mass-weighted hessian)
-        :type displacements: numpy.ndarray
-        :rtype: BaseGeometricalDerivativeTensor
-        """
-        if 'N' is self.representation:
-            raise Exception('already projected ?!?')
-
-        if displacements.shape != (self.spacial_dof, self.spacial_dof):
-            raise ValueError('displacements shape does not match')
-
-        if self.representation == 'G':
-            projected_tensor = numpy.dot(displacements, self.components)
-        elif self.representation == 'GG':
-            projected_tensor = numpy.dot(numpy.dot(displacements, self.components), displacements.transpose())
-        elif self.representation == 'GGG':
-            projected_tensor = numpy.dot(
-                displacements, numpy.dot(numpy.dot(displacements, self.components), displacements.transpose()))
-        else:
-            raise Exception('no projection defined for {}'.format(self.representation.representation()))
-
-        return BaseGeometricalDerivativeTensor(
-            self.spacial_dof,
-            self.trans_plus_rot,
-            self.representation.representation().replace('G', 'N'),
-            components=projected_tensor)
-
 
 class MassWeightedHessian:
     """To be exact, this is not a derivatives of the energy. So it is not a child of ``derivatives.Tensor`` !

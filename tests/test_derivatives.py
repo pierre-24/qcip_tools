@@ -578,21 +578,21 @@ class DerivativesTestCase(QcipToolsTestCase):
         h = derivatives_g.BaseGeometricalDerivativeTensor(
             3 * len(water_molecule), 5 if water_molecule.linear() else 6, 'GG', components=hessian)
 
-        mh = derivatives_g.MassWeightedHessian(water_molecule, hessian)
-        self.assertEqual(mh.vibrational_dof, 3)
-        self.assertFalse(mh.linear)
+        mwh = derivatives_g.MassWeightedHessian(water_molecule, hessian)
+        self.assertEqual(mwh.vibrational_dof, 3)
+        self.assertFalse(mwh.linear)
 
-        self.assertEqual(len(mh.frequencies), 9)
+        self.assertEqual(len(mwh.frequencies), 9)
 
         self.assertArrayAlmostEqual(
             [-38.44, -3.8, -0.03, 0.0, 18.1, 36.2, 1760.4, 4136.5, 4244.3],
-            [a * 219474.63 for a in mh.frequencies],
+            [a * 219474.63 for a in mwh.frequencies],
             places=1)
 
         # projected hessian must contain square of frequency on the diagonal
-        projected_h = h.project_over_normal_modes(mh.displacements)
+        projected_h = h.project_over_normal_modes(mwh)
         self.assertEqual(projected_h.representation.representation(), 'NN')  # change type
 
         for i in range(h.spacial_dof):
             self.assertAlmostEqual(
-                math.fabs(projected_h.components[i, i]), mh.frequencies[i] ** 2, places=10)
+                math.fabs(projected_h.components[i, i]), mwh.frequencies[i] ** 2, places=10)
