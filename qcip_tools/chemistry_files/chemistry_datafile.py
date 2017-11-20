@@ -222,13 +222,13 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
                 freqs += '{}{}:{}'.format(
                     ',' if not first_freq else '', 'f' if type(freq) is float else 's', freq)
                 first_freq = False
-                super_array[f] = value[freq]
+                super_array[f] = value[freq].components
                 f += 1
 
             dset = group.create_dataset(dataset_name, shape, dtype='float64', data=super_array)
             dset.attrs['frequencies'] = freqs
         else:
-            group.create_dataset(dataset_name, shape, dtype='float64', data=value)
+            group.create_dataset(dataset_name, shape, dtype='float64', data=value.components)
 
     @staticmethod
     def read_derivatives_from_group(group, spacial_dof):
@@ -297,10 +297,11 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
                     raise BadChemistryDataFile('frequency {} is not formated correctly for {}'.format(
                         frequency, derivative))
 
-                freqd_derivative[f] = mat[index][:]
+                freqd_derivative[f] = derivatives.Tensor(
+                    derivative, components=mat[index][:], frequency=frequency, spacial_dof=derivative.spacial_dof)
 
             return freqd_derivative
         else:
             if mat.shape != tuple(derivative.shape()):
                 raise BadChemistryDataFile('matrix shape ({}) is not right ({})'.format(mat.shape, derivative.shape()))
-            return mat
+            return derivatives.Tensor(derivative, components=mat, spacial_dof=derivative.spacial_dof)

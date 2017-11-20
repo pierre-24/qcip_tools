@@ -6,7 +6,7 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase, factories
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml, derivatives
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -1049,15 +1049,16 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         fd.molecule = fx.molecule
         fd.spacial_dof = 3 * len(fx.molecule)
         fd.trans_plus_rot_dof = 5
-        fd.derivatives['F'] = {'static': factories.FakeElectricDipole().components}
+        fd.derivatives['F'] = {'static': factories.FakeElectricDipole()}
         fd.derivatives['FD'] = {
-            '1064nm': factories.FakePolarizabilityTensor(isotropy_factor=2).components,
-            0.04: factories.FakePolarizabilityTensor(isotropy_factor=1.5).components,
+            '1064nm': factories.FakePolarizabilityTensor(isotropy_factor=2),
+            0.04: factories.FakePolarizabilityTensor(isotropy_factor=1.5),
         }
         fd.derivatives['FFF'] = {
-            'static': factories.FakeFirstHyperpolarizabilityTensor().components}
-        fd.derivatives['G'] = numpy.zeros((3 * len(fx.molecule),))
-        fd.derivatives[''] = 1.05
+            'static': factories.FakeFirstHyperpolarizabilityTensor()}
+        fd.derivatives['G'] = derivatives.Tensor(
+            'G', components=numpy.zeros((3 * len(fx.molecule),)), spacial_dof=3 * len(fx.molecule))
+        fd.derivatives[''] = derivatives.Tensor('', components=numpy.array((1.05,)))
 
         # test writing
         other_input = os.path.join(self.temporary_directory, 'u.hdf5')
@@ -1083,12 +1084,18 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
             self.assertEqual(a.symbol, fd.molecule[i].symbol)
             self.assertArrayAlmostEqual(a.position, fd.molecule[i].position)
 
-        self.assertArrayAlmostEqual(fde.derivatives['F']['static'], fd.derivatives['F']['static'])
-        self.assertArrayAlmostEqual(fde.derivatives['FD']['1064nm'], fd.derivatives['FD']['1064nm'])
-        self.assertArrayAlmostEqual(fde.derivatives['FD'][0.04], fd.derivatives['FD'][0.04])
-        self.assertArrayAlmostEqual(fde.derivatives['FFF']['static'], fd.derivatives['FFF']['static'])
-        self.assertArrayAlmostEqual(fde.derivatives['G'], fd.derivatives['G'])
-        self.assertArrayAlmostEqual(fde.derivatives[''], fd.derivatives[''])  # yeah, we can store energy as well
+        self.assertArrayAlmostEqual(
+            fde.derivatives['F']['static'].components, fd.derivatives['F']['static'].components)
+        self.assertArrayAlmostEqual(
+            fde.derivatives['FD']['1064nm'].components, fd.derivatives['FD']['1064nm'].components)
+        self.assertArrayAlmostEqual(
+            fde.derivatives['FD'][0.04].components, fd.derivatives['FD'][0.04].components)
+        self.assertArrayAlmostEqual(
+            fde.derivatives['FFF']['static'].components, fd.derivatives['FFF']['static'].components)
+        self.assertArrayAlmostEqual(
+            fde.derivatives['G'].components, fd.derivatives['G'].components)
+        self.assertArrayAlmostEqual(
+            fde.derivatives[''].components, fd.derivatives[''].components)  # yeah, we can store energy as well
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
