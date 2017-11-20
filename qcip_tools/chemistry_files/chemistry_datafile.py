@@ -299,7 +299,7 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
                         frequency, derivative))
 
                 freqd_derivative[f] = derivatives.Tensor(
-                    derivative, components=mat[index][:], frequency=frequency, spacial_dof=derivative.spacial_dof)
+                    derivative, components=mat[index][:], frequency=f, spacial_dof=derivative.spacial_dof)
 
             return freqd_derivative
         else:
