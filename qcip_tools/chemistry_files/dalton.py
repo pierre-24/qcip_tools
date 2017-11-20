@@ -609,7 +609,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         electrical_derivatives.update(data)
 
     if not electrical_derivatives:
-        raise PropertyNotPresent('qs:electrical_derivatives')
+        raise PropertyNotPresent('electrical_derivatives')
 
     return electrical_derivatives
 

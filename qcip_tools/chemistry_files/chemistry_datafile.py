@@ -1,8 +1,9 @@
 import numpy
 import h5py
 
-from qcip_tools import molecule as qcip_molecule, derivatives, atom as qcip_atom
-from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin
+from qcip_tools import molecule as qcip_molecule, derivatives, atom as qcip_atom, derivatives_e, derivatives_g
+from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificationMixin, \
+    PropertyNotPresent
 
 
 class BadChemistryDataFile(Exception):
@@ -305,3 +306,85 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
             if mat.shape != tuple(derivative.shape()):
                 raise BadChemistryDataFile('matrix shape ({}) is not right ({})'.format(mat.shape, derivative.shape()))
             return derivatives.Tensor(derivative, components=mat, spacial_dof=derivative.spacial_dof)
+
+
+@ChemistryDataFile.define_property('electrical_derivatives')
+def chemistry_datafile__property__electrical_derivatives(obj, *args, **kwargs):
+    """Get electrical derivatives. Returns a dictionary of dictionaries:
+
+    .. code-block:: text
+
+        + "F"
+            + static : ElectricDipole
+        + "FF":
+            + static : PolarizabilityTensor
+        + "FD":
+            + 0.042 : PolarizabilityTensor
+            + ...
+        + "FDD":
+            + static : FirstHyperpolarizabilityTensor
+            + ...
+        + ...
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile
+    :rtype: dict
+    """
+
+    electrical_derivatives = {}
+
+    tensor_per_order = {
+        2: derivatives_e.PolarisabilityTensor,
+        3: derivatives_e.FirstHyperpolarisabilityTensor,
+        4: derivatives_e.SecondHyperpolarizabilityTensor
+    }
+
+    for k in obj.derivatives:
+        if k in derivatives_e.DERIVATIVES:
+            order = len(k)
+            if order == 1:
+                electrical_derivatives['F'] = {
+                    'static': derivatives_e.ElectricDipole(dipole=obj.derivatives[k]['static'].components)}
+            elif order in [2, 3, 4]:
+                electrical_derivatives[k] = {}
+                for f in obj.derivatives[k]:
+                    electrical_derivatives[k][f] = tensor_per_order[order](
+                        tensor=obj.derivatives[k][f].components,
+                        frequency=f,
+                        input_fields=tuple(derivatives_e.representation_to_field[x] for x in k[1:]))
+
+    if not electrical_derivatives:
+        raise PropertyNotPresent('electrical_derivatives')
+
+    return electrical_derivatives
+
+
+@ChemistryDataFile.define_property('geometrical_derivatives')
+def chemistry_datafile__property__geometrical_derivatives(obj, *args, **kwargs):
+    """Get geometrical derivatives. Returns a dictionary of dictionaries:
+
+    .. code-block:: text
+
+        + "G": BaseGeometricalDerivativeTensor
+        + "GG": BaseGeometricalDerivativeTensor
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile
+    :rtype: dict
+    """
+
+    geometrical_derivatives = {}
+    trans_plus_rot_dof = 5 if obj.molecule.linear() else 6
+
+    for k in obj.derivatives:
+        if k in derivatives_g.DERIVATIVES:
+            geometrical_derivatives[k] = derivatives_g.BaseGeometricalDerivativeTensor(
+                representation=k,
+                trans_plus_rot=trans_plus_rot_dof,
+                components=obj.derivatives[k].components,
+                spacial_dof=obj.derivatives[k].spacial_dof)
+
+    if not geometrical_derivatives:
+        raise PropertyNotPresent('geometrical_derivatives')
+
+    return geometrical_derivatives
