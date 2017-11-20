@@ -267,7 +267,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(b.beta_parallel(dipole), -7.7208, places=3)
         self.assertAlmostEqual(b.beta_perpendicular(dipole), -2.5736, places=3)
         self.assertAlmostEqual(b.beta_kerr(dipole), -7.7208, places=3)
-        self.assertArrayAlmostEqual(b.beta_vector(), [.0, .0, 12.8681])
+        self.assertArraysAlmostEqual(b.beta_vector(), [.0, .0, 12.8681])
 
         # NOTE: above properties are also invariant to rotation, but in a less funny way.
 
@@ -320,7 +320,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(b.beta_parallel(dipole), -11.2074, places=3)
         self.assertAlmostEqual(b.beta_perpendicular(dipole), -3.7358, places=3)
         self.assertAlmostEqual(b.beta_kerr(dipole), -11.2074, places=3)
-        self.assertArrayAlmostEqual(b.beta_vector(), [.0, .0, -18.6790])
+        self.assertArraysAlmostEqual(b.beta_vector(), [.0, .0, -18.6790])
 
         for angles in angles_set:
             new_beta = qcip_math.tensor_rotate(beta, *angles)
@@ -584,7 +584,7 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         self.assertEqual(len(mwh.frequencies), 9)
 
-        self.assertArrayAlmostEqual(
+        self.assertArraysAlmostEqual(
             [-38.44, -3.8, -0.03, 0.0, 18.1, 36.2, 1760.4, 4136.5, 4244.3],
             [a * 219474.63 for a in mwh.frequencies],
             places=1)

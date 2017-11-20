@@ -17,8 +17,8 @@ class MathTestCase(QcipToolsTestCase):
         """Test the behavior of vector manipularion functions"""
 
         # test basic stuffs:
-        self.assertArrayAlmostEqual(qcip_math.rodrigues_rotation([1, 0, 0], [0, 0, 1], 90), [0, 1, 0])
-        self.assertArrayAlmostEqual(qcip_math.rodrigues_rotation([1, 0, 0], [0, 1, 0], 90), [0, 0, -1])
+        self.assertArraysAlmostEqual(qcip_math.rodrigues_rotation([1, 0, 0], [0, 0, 1], 90), [0, 1, 0])
+        self.assertArraysAlmostEqual(qcip_math.rodrigues_rotation([1, 0, 0], [0, 1, 0], 90), [0, 0, -1])
 
         self.assertTrue(numpy.array_equal(qcip_math.normalize([-3, 0, 0]), [-1, 0, 0.]))
         self.assertEqual(qcip_math.distance([-1, 0, 0], [.5, 0, 0]), 1.5)
@@ -28,22 +28,22 @@ class MathTestCase(QcipToolsTestCase):
         # test euler angles
         rot = qcip_math.euler_rotation_matrix(0, 0, 0)  # identity matrix
         self.assertTrue(numpy.all(rot == numpy.identity(3)))
-        self.assertArrayAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
-        self.assertArrayAlmostEqual(rot.dot([1, 1, 0]), [1, 1, 0])
-        self.assertArrayAlmostEqual(rot.dot([1, 2, 1]), [1, 2, 1])
+        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 1, 0]), [1, 1, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 2, 1]), [1, 2, 1])
 
         rot = qcip_math.euler_rotation_matrix(360, 360, 360)  # identity matrix as well
-        self.assertArrayAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
-        self.assertArrayAlmostEqual(rot.dot([1, 1, 0]), [1, 1, 0])
-        self.assertArrayAlmostEqual(rot.dot([1, 2, 1]), [1, 2, 1])
+        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 1, 0]), [1, 1, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 2, 1]), [1, 2, 1])
 
         rot = qcip_math.euler_rotation_matrix(180, 0, 0)  # rotation around z axis
-        self.assertArrayAlmostEqual(rot.dot([1, 0, 0]), [-1, 0, 0])
-        self.assertArrayAlmostEqual(rot.dot([1, 1, 0]), [-1, -1, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [-1, 0, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 1, 0]), [-1, -1, 0])
 
         rot = qcip_math.euler_rotation_matrix(180, 180, 0)  # rotation around z axis, followed by y'
-        self.assertArrayAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
-        self.assertArrayAlmostEqual(rot.dot([1, 1, 1]), [1, -1, -1])
+        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
+        self.assertArraysAlmostEqual(rot.dot([1, 1, 1]), [1, -1, -1])
 
     def test_bla(self):
         """Test the BLA definition"""
@@ -187,8 +187,8 @@ class MathTestCase(QcipToolsTestCase):
         self.assertTrue(point_originally_out in b)
 
         self.assertAlmostEqual(b.radius, 2.1, places=1)
-        self.assertArrayAlmostEqual(b.origin, [0, .5, 0])  # origin has not changed !
-        self.assertArrayAlmostEqual(b.local_coordinates(point_originally_out), [2.1, 0, 0], places=1)
+        self.assertArraysAlmostEqual(b.origin, [0, .5, 0])  # origin has not changed !
+        self.assertArraysAlmostEqual(b.local_coordinates(point_originally_out), [2.1, 0, 0], places=1)
 
     def test_bounding_set(self):
         """Test the set of bounding objects"""
