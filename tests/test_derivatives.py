@@ -596,3 +596,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         for i in range(h.spacial_dof):
             self.assertAlmostEqual(
                 math.fabs(projected_h.components[i, i]), mwh.frequencies[i] ** 2, places=10)
+
+        # check output
+        self.assertIn('dQ(1)', projected_h.to_string())
+        self.assertNotIn('dQ(1)', projected_h.to_string(skip_trans_plus_rot_dof=6))

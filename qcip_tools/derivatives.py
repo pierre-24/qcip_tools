@@ -534,15 +534,17 @@ class Tensor:
             frequency=self.frequency,
             components=projected_tensor)
 
-    def to_string(self, threshold=1e-5, columns_per_line=6, molecule=None, **kwargs):
+    def to_string(self, threshold=1e-5, columns_per_line=6, molecule=None, skip_trans_plus_rot_dof=0, **kwargs):
         """Print the tensor in a more or less textual version.
 
         :param threshold: show 0 instead of the value if lower than threshold
         :type threshold: float
         :param columns_per_line: number of columns per "line" of the tensor
         :type columns_per_line: int
-        :param molecule: use molecule to gives the atom insteaad of Gxx
+        :param molecule: use molecule to gives the atom instead of Gxx
         :type molecule: qcip_tools.molecule.Molecule
+        :param skip_trans_plus_rot_dof: skip the *n* first N (normal) modes
+        :type skip_trans_plus_rot_dof: int
         :return: representation
         :rtype: str
         """
@@ -555,12 +557,13 @@ class Tensor:
         if self.name:
             s += self.name + '\n'
 
-        for offset in range(0, shape[-1], columns_per_line):
+        for offset in range(skip_trans_plus_rot_dof if representation[-1] == 'N' else 0, shape[-1], columns_per_line):
             if offset != 0:
                 s += '\n'
 
             s += (' ' * 8) * (order - 1) + ' ' * 2
 
+            # columns title
             for index in range(0, columns_per_line):
                 if (offset + index) >= shape[-1]:
                     break
@@ -568,26 +571,41 @@ class Tensor:
 
             s += '\n'
 
+            # rows
             for idx in range(int(dimension / shape[-1])):
-
                 components = []
                 rest = idx
-                for i, _ in enumerate(representation[:-1]):
+                can_be_skipped = False
+
+                # row title
+                for i, c in enumerate(representation[:-1]):
                     current = int(math.floor(rest / qcip_math.prod(shape[i + 1:-1])))
+
+                    if c == 'N' and current < skip_trans_plus_rot_dof:
+                        can_be_skipped = True
+
                     components.append(current)
                     rest -= current * qcip_math.prod(shape[i + 1:-1])
 
+                if can_be_skipped:
+                    continue
+
                 for index, c in enumerate(components):
                     if index < len(components) - 1:
-                        if numpy.all(numpy.array(components[index + 1:]) == 0):
+                        z = [
+                            skip_trans_plus_rot_dof if representation[a] == 'N' else 0
+                            for a in range(index + 1, order - 1)
+                        ]
+                        if components[index + 1:] == z:
                             s += '{:8}'.format(representation_to_operator(representation[index], c, molecule))
                         else:
-                            s += '        '
+                            s += ' ' * 8
                     else:
                         s += '{:8}'.format(representation_to_operator(representation[index], c, molecule))
 
                 s += ' ' * 1
 
+                # columns
                 for k in range(offset, offset + 6):
                     if k >= shape[-1]:
                         break
