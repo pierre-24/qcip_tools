@@ -108,6 +108,8 @@ class MassWeightedHessian:
         if cartesian_hessian is not None:
             if issubclass(type(cartesian_hessian), BaseGeometricalDerivativeTensor):
                 self.from_cartesian_hessian(cartesian_hessian.components)
+            if issubclass(type(cartesian_hessian), derivatives.Tensor) and cartesian_hessian.representation == 'GG':
+                self.from_cartesian_hessian(cartesian_hessian.components)
             elif type(cartesian_hessian) is numpy.ndarray:
                 self.from_cartesian_hessian(cartesian_hessian)
             else:
