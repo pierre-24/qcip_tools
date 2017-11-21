@@ -93,6 +93,8 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
     def from_molecule(cls, molecule, title='', *args, **kwargs):
         obj = super().from_molecule(molecule, *args, **kwargs)
         obj.title = title
+        obj.spacial_dof = 3 * len(molecule)
+        obj.trans_plus_rot_dof = 5 if molecule.linear() else 6
 
         return obj
 
