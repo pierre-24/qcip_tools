@@ -123,9 +123,9 @@ class MoleculeTestCase(QcipToolsTestCase):
         b1 = m3.bounding_box()
 
         angle_HOH = qcip_math.angle(m3.atom(2).position, m3.atom(1).position, m3.atom(3).position)
-        self.assertArrayAlmostEqual(b1.origin, [0, -.767, -.115])
+        self.assertArraysAlmostEqual(b1.origin, [0, -.767, -.115])
         # size of the box should be the projection of O-H on Y and H to H distance for X.
-        self.assertArrayAlmostEqual(b1.size, [
+        self.assertArraysAlmostEqual(b1.size, [
             0,
             qcip_math.distance(m3.atom(2).position, m3.atom(3).position),
             qcip_math.distance(m3.atom(1).position, m3.atom(2).position) * math.cos(numpy.radians(angle_HOH / 2))
@@ -133,9 +133,9 @@ class MoleculeTestCase(QcipToolsTestCase):
 
         extra_space = .5
         b2 = m3.bounding_box(extra_space=extra_space)  # additional space
-        self.assertArrayAlmostEqual(b2.origin, [i - extra_space for i in b1.origin])
-        self.assertArrayAlmostEqual(b2.size, [i + 2 * extra_space for i in b1.size])
-        self.assertArrayAlmostEqual(b2.maximum(), [i + extra_space for i in b1.maximum()])
+        self.assertArraysAlmostEqual(b2.origin, [i - extra_space for i in b1.origin])
+        self.assertArraysAlmostEqual(b2.size, [i + 2 * extra_space for i in b1.size])
+        self.assertArraysAlmostEqual(b2.maximum(), [i + extra_space for i in b1.maximum()])
 
     def test_molecule_modifications(self):
         """Test the manipulation of the atoms"""
@@ -176,7 +176,7 @@ class MoleculeTestCase(QcipToolsTestCase):
 
         for u in zip(m2, m2_copy):
             good_position = u[1].position[1], u[1].position[2], u[1].position[0]
-            self.assertArrayAlmostEqual(u[0].position, good_position)
+            self.assertArraysAlmostEqual(u[0].position, good_position)
 
         # reorient
         m2_copy = copy.deepcopy(m2)
@@ -184,7 +184,7 @@ class MoleculeTestCase(QcipToolsTestCase):
 
         for i in range(3):  # X and -Y where exchanged
             good_position = -m2_copy[i].position[1], m2_copy[i].position[0], m2_copy[i].position[2]
-            self.assertArrayAlmostEqual(m2[i].position, good_position)
+            self.assertArraysAlmostEqual(m2[i].position, good_position)
 
     def test_list_of_atoms(self):
         """Test the molecule.list_of_atoms() function"""

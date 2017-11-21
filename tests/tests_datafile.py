@@ -274,7 +274,7 @@ class DataFileTestCase(QcipToolsTestCase):
 
         self.assertEqual(ft.chunks_information['array'].data_length, 9)
         self.assertEqual(ft.chunks_information['array'].shape, (3, 3))
-        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+        self.assertArraysAlmostEqual(g['array'], array)  # ok.
 
         g = datafile.TextDataFile()  # open-read-close, then reopen
         with open(self.temporary_file) as fx:
@@ -290,11 +290,11 @@ class DataFileTestCase(QcipToolsTestCase):
             g.read(fx)
 
         self.assertEqual(len(g.chunks_information), 2)
-        self.assertArrayAlmostEqual(g['test'], [1, 2])
+        self.assertArraysAlmostEqual(g['test'], [1, 2])
 
         self.assertEqual(ft.chunks_information['array'].data_length, 9)
         self.assertEqual(ft.chunks_information['array'].shape, (3, 3))
-        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+        self.assertArraysAlmostEqual(g['array'], array)  # ok.
 
         # BinaryDataFile:
         fb = datafile.BinaryDataFile()
@@ -314,7 +314,7 @@ class DataFileTestCase(QcipToolsTestCase):
 
         self.assertEqual(g.chunks_information['array'].data_length, 9)
         self.assertEqual(g.chunks_information['array'].shape, (3, 3))
-        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+        self.assertArraysAlmostEqual(g['array'], array)  # ok.
 
         g = datafile.BinaryDataFile()  # open-read-close, then reopen
         with open(self.temporary_file, 'rb') as fx:
@@ -330,8 +330,8 @@ class DataFileTestCase(QcipToolsTestCase):
             g.read(fx)
 
         self.assertEqual(len(g.chunks_information), 2)
-        self.assertArrayAlmostEqual(g['test'], [1, 2])
+        self.assertArraysAlmostEqual(g['test'], [1, 2])
 
         self.assertEqual(g.chunks_information['array'].data_length, 9)
         self.assertEqual(g.chunks_information['array'].shape, (3, 3))
-        self.assertArrayAlmostEqual(g['array'], array)  # ok.
+        self.assertArraysAlmostEqual(g['array'], array)  # ok.

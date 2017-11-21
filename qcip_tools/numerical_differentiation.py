@@ -1,5 +1,6 @@
 import math
 import numpy
+import sys
 
 from qcip_tools import assert_in_domain
 
@@ -67,8 +68,8 @@ class Coefficients:
         self.i_min = 0
 
         if method == 'C':
-            if p % 2 != 0:
-                raise Exception('p should be even for centered derivatives')
+            if (d + p) % 2 != 1:
+                raise Exception('d+p should be odd for centered derivative')
 
             self.i_min = -(d + p - 1) / 2.
         if method == 'B':
@@ -92,6 +93,20 @@ class Coefficients:
                 mat_res[n] = 1
 
         self.mat_coefs = numpy.dot(numpy.linalg.inv(mat_solve), mat_res.transpose())
+
+    @staticmethod
+    def choose_p_for_centered(d, shift=0):
+        """Choose the precision so that :math:`d+p-1` is even (for centered derivatives)
+
+        :param d: order of the derivative
+        :type d: int
+        :param shift: increase the precision
+        :type shift: int
+        """
+        if d % 2 == 0:
+            return 1 + shift * 2
+        else:
+            return 2 + shift * 2
 
     def prefactor(self, k, h0):
         """return the :math:`\\frac{d!}{h^d}` prefactor, with :math:`h=a^kh_0`.
@@ -165,6 +180,21 @@ def compute_derivative_of_function(c, scalar_function, k, h0, input_space_dimens
     return accum
 
 
+def real_fields(fields, min_field, ratio):
+    """Return the "real value" of the field applied
+
+    :param fields: input field (in term of ak)
+    :type fields: list
+    :param min_field: minimal field
+    :type min_field: float
+    :param ratio: ratio
+    :type ratio: float
+    :rtype: list
+    """
+
+    return [min_field * ak_shifted(ratio, _) for _ in fields]
+
+
 class RombergTriangle:
     """
     Do a Romberg triangle to lower (remove) the influence of higher-order derivatives.
@@ -234,13 +264,18 @@ class RombergTriangle:
         r = ''
 
         if with_decoration:
+            r += '-' * 6
+            for m in range(self.side):
+                r += '-' * 15
+            r += '\n'
+
             r += ' ' * 6
             for m in range(self.side):
-                r += '{:>14}'.format('m={}'.format(m))
+                r += '{:^15}'.format('m={}'.format(m))
             r += '\n'
             r += '-' * 6
             for m in range(self.side):
-                r += '-' * 14
+                r += '-' * 15
             r += '\n'
 
         for k in range(0, self.side):
@@ -250,14 +285,20 @@ class RombergTriangle:
                 if with_decoration:
                     r += '  '
                 if m < (self.side - k):
-                    r += '{: 11.5f} '.format(self.romberg_triangle[k, m])
+                    r += '{: 11.5e} '.format(self.romberg_triangle[k, m])
                 elif with_decoration:
                     r += '{:12}'.format(' ')
             r += '\n'
 
+        if with_decoration:
+            r += '-' * 6
+            for m in range(self.side):
+                r += '-' * 15
+            r += '\n'
+
         return r
 
-    def find_best_value(self, threshold=1e-5, verbose=False):
+    def find_best_value(self, threshold=1e-5, verbose=False, out=sys.stdout):
         """Find the "best value" in the Romberg triangle
 
         :param threshold: threshold for maximum iteration error
@@ -276,7 +317,7 @@ class RombergTriangle:
         prev_region_error = .0
 
         if verbose:
-            print('- starting with m=0')
+            print('- starting with m=0', file=out)
 
         while True:
             stability_regions = [
@@ -290,7 +331,8 @@ class RombergTriangle:
                 amplitude_error = self.amplitude_error(k=k, m=m)
                 if math.fabs(amplitude_error) < threshold:
                     if verbose:
-                        print('→ value in ({}, {}) have an iteration error lower than threshold, stopping'.format(k, m))
+                        print('→ value in ({}, {}) have an iteration error lower than threshold, stopping'.format(
+                            k, m), file=out)
 
                     return (k, m), self.romberg_triangle[k, m], 0.0 if m < 1 else self.iteration_error(k=k, m=m)
 
@@ -308,14 +350,16 @@ class RombergTriangle:
 
             if verbose:
                 print('- stability region(s): {}'.format(
-                    ', '.join(['[k={} to k={}, error={:.3e}]'.format(r[0], r[1], r[2]) for r in stability_regions])))
+                    ', '.join(['[k={} to k={}, error={:.3e}]'.format(
+                        r[0], r[1], r[2]) for r in stability_regions])), file=out)
 
-                print('- select region between k={} and k={} as stability region'.format(*stability_region[:-1]))
+                print('- select region between k={} and k={} as stability region'.format(
+                    *stability_region[:-1]), file=out)
 
             if m > 0:
                 if math.fabs(prev_region_error) < math.fabs(stability_region[2]):
                     if verbose:
-                        print('→ amplitude error did not decrease, stopping')
+                        print('→ amplitude error did not decrease, stopping', file=out)
 
                     return (stability_region[0], m), \
                         self.romberg_triangle[stability_region[0], m], \
@@ -323,19 +367,19 @@ class RombergTriangle:
 
             prev_region_error = stability_region[2]
 
-            if stability_region[1] - stability_region[0] == 1:
+            if stability_region[1] - stability_region[0] < 2:
                 if verbose:
                     if len(stability_regions) == 1:
-                        print('→ only one value in the remaining stability region, stopping')
+                        print('→ only one value in the remaining stability region, stopping', file=out)
                     else:
-                        print('→ column with amplitude errors of alternating sign, stopping')
+                        print('→ column with amplitude errors of alternating sign, stopping', file=out)
 
                 return (stability_region[0], m + 1), \
                     self.romberg_triangle[stability_region[0], m + 1], \
-                    self.iteration_error(k=stability_region[0], m=m + 1)
+                    self.iteration_error(k=stability_region[0], m=m)
 
             m += 1
             current_region = (stability_region[0], stability_region[1])
 
             if verbose:
-                print('- set m={} and continue analysis on this column'.format(m))
+                print('- set m={} and continue analysis on this column'.format(m), file=out)

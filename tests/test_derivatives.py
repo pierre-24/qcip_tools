@@ -3,8 +3,8 @@ import math
 
 import numpy
 from qcip_tools import derivatives, derivatives_e, math as qcip_math, derivatives_g, atom as qcip_atom, \
-    molecule as qcip_molecule
-from tests import QcipToolsTestCase
+    molecule as qcip_molecule, numerical_differentiation
+from tests import QcipToolsTestCase, factories
 
 
 class DerivativesTestCase(QcipToolsTestCase):
@@ -267,7 +267,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(b.beta_parallel(dipole), -7.7208, places=3)
         self.assertAlmostEqual(b.beta_perpendicular(dipole), -2.5736, places=3)
         self.assertAlmostEqual(b.beta_kerr(dipole), -7.7208, places=3)
-        self.assertArrayAlmostEqual(b.beta_vector(), [.0, .0, 12.8681])
+        self.assertArraysAlmostEqual(b.beta_vector(), [.0, .0, 12.8681])
 
         # NOTE: above properties are also invariant to rotation, but in a less funny way.
 
@@ -320,7 +320,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(b.beta_parallel(dipole), -11.2074, places=3)
         self.assertAlmostEqual(b.beta_perpendicular(dipole), -3.7358, places=3)
         self.assertAlmostEqual(b.beta_kerr(dipole), -11.2074, places=3)
-        self.assertArrayAlmostEqual(b.beta_vector(), [.0, .0, -18.6790])
+        self.assertArraysAlmostEqual(b.beta_vector(), [.0, .0, -18.6790])
 
         for angles in angles_set:
             new_beta = qcip_math.tensor_rotate(beta, *angles)
@@ -578,21 +578,92 @@ class DerivativesTestCase(QcipToolsTestCase):
         h = derivatives_g.BaseGeometricalDerivativeTensor(
             3 * len(water_molecule), 5 if water_molecule.linear() else 6, 'GG', components=hessian)
 
-        mh = derivatives_g.MassWeightedHessian(water_molecule, hessian)
-        self.assertEqual(mh.vibrational_dof, 3)
-        self.assertFalse(mh.linear)
+        mwh = derivatives_g.MassWeightedHessian(water_molecule, hessian)
+        self.assertEqual(mwh.vibrational_dof, 3)
+        self.assertFalse(mwh.linear)
 
-        self.assertEqual(len(mh.frequencies), 9)
+        self.assertEqual(len(mwh.frequencies), 9)
 
-        self.assertArrayAlmostEqual(
+        self.assertArraysAlmostEqual(
             [-38.44, -3.8, -0.03, 0.0, 18.1, 36.2, 1760.4, 4136.5, 4244.3],
-            [a * 219474.63 for a in mh.frequencies],
+            [a * 219474.63 for a in mwh.frequencies],
             places=1)
 
         # projected hessian must contain square of frequency on the diagonal
-        projected_h = h.project_over_normal_modes(mh.displacements)
+        projected_h = h.project_over_normal_modes(mwh)
         self.assertEqual(projected_h.representation.representation(), 'NN')  # change type
 
         for i in range(h.spacial_dof):
             self.assertAlmostEqual(
-                math.fabs(projected_h.components[i, i]), mh.frequencies[i] ** 2, places=10)
+                math.fabs(projected_h.components[i, i]), mwh.frequencies[i] ** 2, places=10)
+
+        # check output
+        self.assertIn('dQ(1)', projected_h.to_string())
+        self.assertNotIn('dQ(1)', projected_h.to_string(skip_trans_plus_rot_dof=6))
+
+
+class TensorNumDiff(QcipToolsTestCase):
+
+    def test_numerical_differentiation(self):
+        energy = 150.
+        mu = factories.FakeElectricDipole()
+        alpha = factories.FakePolarizabilityTensor(input_fields=(0,))
+        beta = factories.FakeFirstHyperpolarizabilityTensor(input_fields=(0, 0))
+
+        min_field = 0.004
+        k_max = 5
+        ratio = 2.
+
+        def energy_exp(fields, h0, basis, inverse, component, **kwargs):
+            """Taylor series of the energy"""
+
+            r_field = numerical_differentiation.real_fields(fields, h0, ratio)
+
+            x = energy
+            x += numpy.tensordot(mu.components, r_field, axes=1)
+            x += 1 / 2 * numpy.tensordot(numpy.tensordot(alpha.components, r_field, axes=1), r_field, axes=1)
+            x += 1 / 6 * numpy.tensordot(
+                numpy.tensordot(numpy.tensordot(beta.components, r_field, axes=1), r_field, axes=1), r_field, axes=1)
+
+            return x
+
+        def dipole_exp(fields, h0, basis, inverse, component, **kwargs):
+            """Taylor series of the dipole moment"""
+
+            r_field = numerical_differentiation.real_fields(fields, h0, ratio)
+
+            x = mu.components.copy()
+            x += numpy.tensordot(alpha.components, r_field, axes=1)
+            x += 1 / 2 * numpy.tensordot(numpy.tensordot(beta.components, r_field, axes=1), r_field, axes=1)
+
+            return x[component]
+
+        # compute polarizability
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation='F'),
+            derivatives.Derivative('F'),
+            dipole_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(alpha.components, t.components, places=3)
+
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation=''),
+            derivatives.Derivative('FF'),
+            energy_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(alpha.components, t.components, places=3)
+
+        # compute first polarizability
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation='F'),
+            derivatives.Derivative('FF'),
+            dipole_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(beta.components, t.components, delta=.001)
+
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation=''),
+            derivatives.Derivative('FFF'),
+            energy_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(beta.components, t.components, delta=.01)

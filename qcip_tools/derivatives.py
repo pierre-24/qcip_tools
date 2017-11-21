@@ -3,7 +3,7 @@ import collections
 import itertools
 import numpy
 
-from qcip_tools import math as qcip_math
+from qcip_tools import math as qcip_math, numerical_differentiation
 
 #: In term of derivative of the energy
 #: ``G`` = geometrical derivative,
@@ -16,6 +16,39 @@ ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd')
 
 GEOMETRICAL_DERIVATIVES = ('G', 'N')
 ELECTRICAL_DERIVATIVES = ('F', 'D', 'd')
+
+
+def __is_derivative(derivative, typ):
+    if type(derivative) is str:
+        for i in typ:
+            if i in derivative:
+                return True
+        return False
+    elif type(derivative) is Derivative:
+        for i in typ:
+            if i in derivative.representation():
+                return True
+        return False
+    else:
+        raise TypeError(derivative)
+
+
+def is_electrical(derivative):
+    """Return if the derivatives contains an electrical one
+
+    :type derivative: str|qcip_tools.derivatives.Derivative
+    :rtype: bool
+    """
+    return __is_derivative(derivative, ELECTRICAL_DERIVATIVES)
+
+
+def is_geometrical(derivative):
+    """Return if the derivatives contains a geometrical one
+
+    :type derivative: str|qcip_tools.derivatives.Derivative
+    :rtype: bool
+    """
+    return __is_derivative(derivative, GEOMETRICAL_DERIVATIVES)
 
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
@@ -72,6 +105,15 @@ class Derivative:
             return self.representation() == other.representation()
         else:
             raise TypeError(other)
+
+    def __repr__(self):
+        """Get representation
+
+        :rtype: str
+        """
+
+        s = self.representation()
+        return s if len(s) != 0 else 'energy'
 
     def representation(self):
         """Get the full representation (mix basis and current)
@@ -451,15 +493,58 @@ class Tensor:
         self.name = name
         self.components = numpy.zeros(self.representation.shape()) if components is None else components
 
-    def to_string(self, threshold=1e-5, columns_per_line=6, molecule=None, **kwargs):
+    def project_over_normal_modes(self, mwh):
+        """Project the tensor over normal modes (get its normal mode equivalent)
+
+        :param mwh: mass weighted hessian
+        :type mwh: qcip_tools.derivatives_g.MassWeightedHessian
+        :rtype: qcip_tools.derivatives.Tensor
+        """
+
+        b_repr = self.representation.representation()
+
+        if 'N' in b_repr:
+            raise ValueError('Tensor already projected ?')
+
+        num_g = b_repr.count('G')
+
+        if num_g == 0:
+            raise ValueError('No geometrical derivative to project in {}'.format(self.representation.representation()))
+
+        if self.spacial_dof != mwh.dof:
+            raise ValueError('DOF does not matches ({} != {})'.format(self.spacial_dof, mwh.dof))
+
+        if is_electrical(self.representation):
+            nshape = [self.spacial_dof] * num_g + [3 ** (self.representation.order() - num_g)]
+            projected_tensor = self.components.reshape(nshape)  # reshape
+        else:
+            projected_tensor = numpy.dot(self.components, mwh.displacements.transpose())
+            num_g -= 1
+
+        # project
+        for i in range(num_g):
+            projected_tensor = numpy.dot(mwh.displacements, projected_tensor)
+
+        if is_electrical(self.representation):
+            projected_tensor = projected_tensor.reshape(self.representation.shape())
+
+        return Tensor(
+            spacial_dof=self.spacial_dof,
+            representation=b_repr.replace('G', 'N'),
+            frequency=self.frequency,
+            components=projected_tensor)
+
+    def to_string(self, threshold=1e-5, columns_per_line=6, molecule=None, skip_trans_plus_rot_dof=0, **kwargs):
         """Print the tensor in a more or less textual version.
 
         :param threshold: show 0 instead of the value if lower than threshold
         :type threshold: float
         :param columns_per_line: number of columns per "line" of the tensor
         :type columns_per_line: int
-        :param molecule: use molecule to gives the atom insteaad of Gxx
+        :param molecule: use molecule to gives the atom instead of Gxx
         :type molecule: qcip_tools.molecule.Molecule
+        :param skip_trans_plus_rot_dof: skip the *n* first N (normal) modes
+        :type skip_trans_plus_rot_dof: int
         :return: representation
         :rtype: str
         """
@@ -472,12 +557,13 @@ class Tensor:
         if self.name:
             s += self.name + '\n'
 
-        for offset in range(0, shape[-1], columns_per_line):
+        for offset in range(skip_trans_plus_rot_dof if representation[-1] == 'N' else 0, shape[-1], columns_per_line):
             if offset != 0:
                 s += '\n'
 
             s += (' ' * 8) * (order - 1) + ' ' * 2
 
+            # columns title
             for index in range(0, columns_per_line):
                 if (offset + index) >= shape[-1]:
                     break
@@ -485,26 +571,41 @@ class Tensor:
 
             s += '\n'
 
+            # rows
             for idx in range(int(dimension / shape[-1])):
-
                 components = []
                 rest = idx
-                for i, _ in enumerate(representation[:-1]):
+                can_be_skipped = False
+
+                # row title
+                for i, c in enumerate(representation[:-1]):
                     current = int(math.floor(rest / qcip_math.prod(shape[i + 1:-1])))
+
+                    if c == 'N' and current < skip_trans_plus_rot_dof:
+                        can_be_skipped = True
+
                     components.append(current)
                     rest -= current * qcip_math.prod(shape[i + 1:-1])
 
+                if can_be_skipped:
+                    continue
+
                 for index, c in enumerate(components):
                     if index < len(components) - 1:
-                        if numpy.all(numpy.array(components[index + 1:]) == 0):
+                        z = [
+                            skip_trans_plus_rot_dof if representation[a] == 'N' else 0
+                            for a in range(index + 1, order - 1)
+                        ]
+                        if components[index + 1:] == z:
                             s += '{:8}'.format(representation_to_operator(representation[index], c, molecule))
                         else:
-                            s += '        '
+                            s += ' ' * 8
                     else:
                         s += '{:8}'.format(representation_to_operator(representation[index], c, molecule))
 
                 s += ' ' * 1
 
+                # columns
                 for k in range(offset, offset + 6):
                     if k >= shape[-1]:
                         break
@@ -517,3 +618,125 @@ class Tensor:
 
     def __repr__(self):
         return self.to_string()
+
+
+def compute_numerical_derivative_of_tensor(
+        basis, derivative_repr, tensor_func, k_max, min_field, ratio, frequency=None, dry_run=False, accuracy_level=1,
+        **kwargs):
+    """
+    Compute numerical derivative of tensor (taking advantage of the so-called *smart iterator*).
+
+    .. note::
+
+        The parameter ``accuracy_level`` is provided for retro-compatibility, but should remain to "1".
+
+    :param basis: basis of differentiation (representation for the base tensors)
+    :type basis: qcip_tools.derivatives.Derivative
+    :param derivative_repr: representation of the further derivatives of the tensor
+    :type derivative_repr: qcip_tools.derivatives.Derivative
+    :param tensor_func: function to access to the tensor
+    :param dry_run: do not fill the tensor or perform romberg analysis
+    :type dry_run: bool
+    :param k_max: Romberg triangle k maximum
+    :type k_max: int
+    :param min_field: minimal value
+    :type min_field: float
+    :param ratio: ratio (a)
+    :type ratio: float
+    :param frequency: frequency if electrical derivative
+    :type frequency: float|str
+    :param accuracy_level: level of accuracy. Default value (1) does not change the behavior,
+      but "0" and lower use forward derivatives for order of differentiation == 3 (retro-compatibility behavior)
+    :param kwargs: args passed to tensor_func
+    :type kwargs: dict
+    :return: tensor and romberg triangles
+    :rtype: qcip_tools.derivatives.Tensor, collection.OrderedDict
+    """
+
+    b_repr = basis.representation()
+    d_repr = derivative_repr.representation()
+
+    if 'D' in d_repr:
+        raise Exception('derivation with respect to D is impossible')
+    if 'N' in d_repr:
+        raise Exception('derivation with respect to N is impossible (but projection is!)')
+    if 'F' in d_repr and 'G' in d_repr:
+        raise Exception('no mixed F and G derivatives')
+    if 'D' in basis.representation() and not frequency:
+        raise Exception('dynamic electric field require frequency')
+
+    derivative_order = derivative_repr.order()
+
+    if basis.spacial_dof is None:
+        basis.spacial_dof = derivative_repr.spacial_dof
+
+    final_derivative = basis.differentiate(derivative_repr.representation())
+    tensor = Tensor(final_derivative, spacial_dof=basis.spacial_dof, frequency=frequency)
+    romberg_triangles = collections.OrderedDict()
+
+    for derivative_coo in derivative_repr.smart_iterator():
+        romberg_triangles[derivative_coo] = collections.OrderedDict()
+        inv_derivative_coos = list(derivative_repr.inverse_smart_iterator(derivative_coo))
+        each = collections.Counter(derivative_coo)
+        deriv_coefs = []
+
+        for ce in each:
+            order = each[ce]
+            deriv_coefs.append((numerical_differentiation.Coefficients(
+                order,
+                numerical_differentiation.Coefficients.choose_p_for_centered(order),
+                ratio=ratio, method='C'), ce))
+
+        if accuracy_level < 1:
+            if derivative_order == 3 and derivative_coo == (0, 1, 2):
+                # lower the accuracy for the ijk tensor component
+                c1f = numerical_differentiation.Coefficients(1, 1, ratio=ratio, method='F')
+                c1 = numerical_differentiation.Coefficients(1, 2, ratio=ratio, method='C')
+
+                if accuracy_level == 0:
+                    deriv_coefs = [(c1, 0), (c1f, 1), (c1f, 2)]
+                else:  # T-REX
+                    deriv_coefs = [(c1f, 0), (c1f, 1), (c1f, 2)]
+
+            if derivative_order == 3 and len(each) == 1:  # lower the accuracy for iii tensor components
+                k_max -= 1
+
+        inverse = False
+        if d_repr[0] == 'F':
+            # because E(-F) = E0 - µ.F + 1/2*a.F² + ..
+            #         µ(-F) = µ0 - a.F + 1/2*b.F² + ...
+            if basis.order() == 0:
+                inverse = True if derivative_order % 2 == 0 else False
+            else:
+                inverse = True if derivative_order % 2 == 1 else False
+
+        for basis_coo in basis.smart_iterator():
+            values_per_k = [
+                numerical_differentiation.compute_derivative_of_function(
+                    deriv_coefs,
+                    tensor_func,
+                    k,
+                    min_field,
+                    derivative_repr.shape()[0],
+                    # kwargs:
+                    basis=basis, inverse=inverse, component=basis_coo, frequency=frequency, **kwargs)
+                for k in range(k_max)
+            ]
+
+            if not dry_run:
+                trig = numerical_differentiation.RombergTriangle(values_per_k, ratio=ratio, r=2)
+                romberg_triangles[derivative_coo][basis_coo] = trig
+                val = trig.find_best_value()
+
+                for inv_derivative_coo in inv_derivative_coos:
+                    for inv_basis_coo in basis.inverse_smart_iterator(basis_coo):
+                        if b_repr != '':
+                            if 'F' in d_repr:
+                                tensor.components[inv_basis_coo][inv_derivative_coo] = val[1]
+                            else:
+                                tensor.components[inv_derivative_coo][inv_basis_coo] = val[1]
+                        else:
+                            tensor.components[inv_derivative_coo] = val[1]
+
+    if not dry_run:
+        return tensor, romberg_triangles

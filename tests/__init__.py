@@ -27,7 +27,7 @@ class QcipToolsTestCase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.temporary_directory)
 
-    def assertArrayAlmostEqual(self, a, b, places=3, delta=None, msg=''):
+    def assertArraysAlmostEqual(self, a, b, places=3, delta=None, msg=''):
         return array_almost_equals(a, b, places=places, delta=delta, msg=msg)
 
     def copy_to_temporary_directory(self, path, new_name=''):

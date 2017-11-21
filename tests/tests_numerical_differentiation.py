@@ -8,6 +8,12 @@ from qcip_tools import numerical_differentiation
 
 class NumericalDifferentiationTestCase(QcipToolsTestCase):
 
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
     coefficients_of_univariate_polynom = [3, 15, -250, 1240, -10450]  # one order of magnitude between each coef.
 
     @staticmethod
@@ -17,35 +23,6 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
             accum += 1 / math.factorial(i) * coefficients[i] * x ** i
 
         return accum
-
-    coefficients_of_bivariate_polynom = [
-        5,
-        numpy.array([12, -6]),
-        numpy.array([[120, -14], [-14, -175]]),  # symmetric tensor
-        numpy.array([[[1420, 6400], [6400, -475]], [[6400, -475], [-475, -4320]]])
-    ]
-
-    @staticmethod
-    def bivariate_polynom(x, coefficients=coefficients_of_bivariate_polynom):
-        accum = .0
-        for i in range(len(coefficients)):
-            if i == 0:
-                accum = coefficients[0]
-                continue
-
-            accum2 = 1 / math.factorial(i) * numpy.tensordot(coefficients[i], x, axes=1)
-            for j in range(i - 1):
-                accum2 = numpy.tensordot(accum2, x, axes=1)
-
-            accum += accum2
-
-        return accum
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
 
     def test_coefficients(self):
         """Ensure the right coeficients are found"""
@@ -83,7 +60,10 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
                     for method in ['F', 'B', 'C']:
 
                         c = numerical_differentiation.Coefficients(
-                            d, 2 if method == 'C' else 3, ratio=a, method=method)
+                            d,
+                            numerical_differentiation.Coefficients.choose_p_for_centered(d) if method == 'C' else 3,
+                            ratio=a,
+                            method=method)
 
                         derivative = \
                             c.prefactor(0, h0) * sum(
@@ -108,7 +88,11 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
             for h0 in [0.01, 0.001]:
                 for d in [1, 2, 3]:
                     for method in ['F', 'B', 'C']:
-                        c = numerical_differentiation.Coefficients(d, 2 if method == 'C' else 3, ratio=a, method=method)
+                        c = numerical_differentiation.Coefficients(
+                            d,
+                            numerical_differentiation.Coefficients.choose_p_for_centered(d) if method == 'C' else 3,
+                            ratio=a,
+                            method=method)
 
                         for k in [0, 1]:
 
@@ -145,6 +129,29 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
                                 other_coefficients[d],
                                 delta=5)
 
+    coefficients_of_bivariate_polynom = [
+        5,
+        numpy.array([12, -6]),
+        numpy.array([[120, -14], [-14, -175]]),  # symmetric tensor
+        numpy.array([[[1420, 6400], [6400, -475]], [[6400, -475], [-475, -4320]]])
+    ]
+
+    @staticmethod
+    def bivariate_polynom(x, coefficients=coefficients_of_bivariate_polynom):
+        accum = .0
+        for i in range(len(coefficients)):
+            if i == 0:
+                accum = coefficients[0]
+                continue
+
+            accum2 = 1 / math.factorial(i) * numpy.tensordot(coefficients[i], x, axes=1)
+            for j in range(i - 1):
+                accum2 = numpy.tensordot(accum2, x, axes=1)
+
+            accum += accum2
+
+        return accum
+
     def test_numerical_differentiation_of_bivariate_function(self):
         """Test for bivariate function (a bit simpler than the one for univariate function)"""
 
@@ -154,7 +161,7 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
 
         coefficients = [
             numerical_differentiation.Coefficients(1, 2, ratio=2, method='C'),
-            numerical_differentiation.Coefficients(2, 2, ratio=2, method='C'),
+            numerical_differentiation.Coefficients(2, 1, ratio=2, method='C'),
             numerical_differentiation.Coefficients(3, 2, ratio=2, method='C')
         ]
 

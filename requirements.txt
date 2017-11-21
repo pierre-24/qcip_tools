@@ -4,3 +4,4 @@ matplotlib>=2.0.0,<2.1.0
 pint>=0.8,<0.9
 requests==2.18.4
 beautifulsoup4 == 4.6.0
+h5py==2.7.1

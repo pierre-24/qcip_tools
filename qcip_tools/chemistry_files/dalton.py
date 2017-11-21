@@ -5,6 +5,7 @@ import collections
 import io
 import numpy
 import re
+import copy
 
 from qcip_tools import molecule, atom, quantities, derivatives, derivatives_e
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
@@ -608,7 +609,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         electrical_derivatives.update(data)
 
     if not electrical_derivatives:
-        raise PropertyNotPresent('qs:electrical_derivatives')
+        raise PropertyNotPresent('electrical_derivatives')
 
     return electrical_derivatives
 
@@ -947,6 +948,27 @@ class InputModule:
 
         return r
 
+    def update(self, r):
+        """Update a module with respect to another
+
+        :param r: source module
+        :type r: InputModule
+        """
+
+        # update submodule
+        if self.level == 0:
+            for k in r.submodules:
+                if k in self.submodules:
+                    self.submodules[k].update(r.submodules[k])
+                else:
+                    self.submodules[k] = copy.deepcopy(r.submodules[k])
+        # update input card
+        for k in r.input_cards:
+            if k in self.input_cards:
+                self.input_cards[k].parameters = r.input_cards[k].parameters.copy()
+            else:
+                self.input_cards[k] = r.input_cards[k]
+
 
 class InputCard:
     """Dalton input card
@@ -1100,6 +1122,30 @@ class Input(ChemistryFile, WithOutputMixin, WithIdentificationMixin):
 
         value.level = 0
         self.modules[key[:5]] = value
+
+    def update(self, r):
+        """Update the content from a given piece of string
+
+        :param r: string
+        :type r: str|Input
+        """
+
+        if type(r) is str:
+            d = Input()
+            try:
+                d.read(io.StringIO(r))
+            except (InputModuleError, InputFormatError) as e:
+                raise e
+        elif type(r) is Input:
+            d = r
+        else:
+            raise TypeError('r should be either string or Input')
+
+        for k in d.modules:
+            if k in self.modules:
+                self.modules[k].update(d.modules[k])
+            else:
+                self.modules[k] = copy.deepcopy(d.modules[k])
 
     def to_string(self):
         r = ''
