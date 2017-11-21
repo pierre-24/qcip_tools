@@ -9,6 +9,8 @@ REPRESENTATIONS = {
     'gradient': 'G',
     'hessian': 'GG',
     'cubic_FF': 'GGG',
+    'projected gradient': 'N',
+    'projected hessian': 'NN'
 }
 
 DERIVATIVES = list(REPRESENTATIONS.values())
@@ -21,6 +23,8 @@ SIMPLIFIED_NAMES = {
     'gradient': 'Fi',
     'hessian': 'Hij',
     'cubic_FF': 'Fijk',
+    'projected gradient': 'Fi(N)',
+    'projected hessian': 'Hij(N)'
 }
 
 
