@@ -16,13 +16,13 @@ representation_to_field = dict((b, a) for (a, b) in field_to_representation.item
 #: Correspondence between a name and a representation
 REPRESENTATIONS = {
     'mu': 'F',
-    'alpha': 'FF',
-    'beta': 'FFF',
+    'alpha(0;0)': 'FF',
+    'beta(0;0,0)': 'FFF',
     'alpha(-w;w)': 'FD',
     'beta(-2w;w,w)': 'FDD',
     'beta(-w;w,0)': 'FDF',
     'beta(0;w,-w)': 'FDd',
-    'gamma': 'FFFF',
+    'gamma(0;0,0,0)': 'FFFF',
     'gamma(-w;w,0,0)': 'FDFF',
     'gamma(-2w;w,w,0)': 'FDDF',
     'gamma(-w;w,w,-w)': 'FDDd',

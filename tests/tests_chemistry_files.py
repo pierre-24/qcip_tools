@@ -5,8 +5,8 @@ import argparse
 import numpy
 from unittest.mock import MagicMock, patch
 
-from tests import QcipToolsTestCase
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml
+from tests import QcipToolsTestCase, factories
+from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml, derivatives
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -353,7 +353,7 @@ class GaussianTestCase(QcipToolsTestCase):
         with open(self.cube_file2) as f:
             fc2.read(f)
 
-        self.assertArrayAlmostEqual(square_subtract.records, fc2.records, places=5)
+        self.assertArraysAlmostEqual(square_subtract.records, fc2.records, places=5)
 
         square_subtract.title = fc2.title
         square_subtract.subtitle = fc2.subtitle
@@ -379,9 +379,9 @@ class GaussianTestCase(QcipToolsTestCase):
         ct = diff_of_square.compute_charge_transfer()
 
         # those results are checked against the original implementation of D. Jacquemin.
-        self.assertArrayAlmostEqual(ct.charge, 0.8836, places=4)
+        self.assertArraysAlmostEqual(ct.charge, 0.8836, places=4)
         self.assertAlmostEqual(ct.distance, 2.4217, places=4)
-        self.assertArrayAlmostEqual(ct.vector, [.0, .0, -2.4217], places=4)
+        self.assertArraysAlmostEqual(ct.vector, [.0, .0, -2.4217], places=4)
 
     def test_sum_density(self):
         """Test the sum of density.
@@ -725,14 +725,14 @@ class DaltonTestCase(QcipToolsTestCase):
             fa.read(f)
 
             for index, a in enumerate(fa.molecule):
-                self.assertArrayAlmostEqual(a.position, fl.molecule[index].position)
+                self.assertArraysAlmostEqual(a.position, fl.molecule[index].position)
 
         # test get inputs
         dal, mol = fl.get_inputs()
 
         for index, a in enumerate(mol.molecule):
             self.assertEqual(a.symbol, symbols[index])
-            self.assertArrayAlmostEqual(a.position, fl.molecule[index].position)  # it is the same molecule
+            self.assertArraysAlmostEqual(a.position, fl.molecule[index].position)  # it is the same molecule
 
         self.assertTrue('.STATIC' in dal['WAVE FUNCTION']['CCQR'])  # it is probably the good dal as well
 
@@ -875,7 +875,7 @@ class XYZTestCase(QcipToolsTestCase):
 
             for index, a in enumerate(fx2.molecule):
                 self.assertEqual(a.symbol, fx.molecule[index].symbol)
-                self.assertArrayAlmostEqual(a.position, fx.molecule[index].position)
+                self.assertArraysAlmostEqual(a.position, fx.molecule[index].position)
 
         # test creation:
         atom_list = [
@@ -952,7 +952,7 @@ class GAMESSTestCase(QcipToolsTestCase):
 
             for index, a in enumerate(fi2.molecule):
                 self.assertEqual(a.symbol, fi.molecule[index].symbol)
-                self.assertArrayAlmostEqual(a.position, fi.molecule[index].position)
+                self.assertArraysAlmostEqual(a.position, fi.molecule[index].position)
 
         # test with a more tricky input (comment and too long line)
         fi2 = gamess.Input()
@@ -1049,10 +1049,16 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         fd.molecule = fx.molecule
         fd.spacial_dof = 3 * len(fx.molecule)
         fd.trans_plus_rot_dof = 5
-        fd.derivatives['F'] = {'static': numpy.zeros((3,))}
-        fd.derivatives['FD'] = {'1064nm': numpy.zeros((3, 3)), 0.04: numpy.zeros((3, 3))}
-        fd.derivatives['FFF'] = {'static': numpy.zeros((3, 3, 3))}
-        fd.derivatives['G'] = numpy.zeros((3 * len(fx.molecule),))
+        fd.derivatives['F'] = {'static': factories.FakeElectricDipole()}
+        fd.derivatives['FD'] = {
+            '1064nm': factories.FakePolarizabilityTensor(isotropy_factor=2),
+            0.04: factories.FakePolarizabilityTensor(isotropy_factor=1.5),
+        }
+        fd.derivatives['FFF'] = {
+            'static': factories.FakeFirstHyperpolarizabilityTensor()}
+        fd.derivatives['G'] = derivatives.Tensor(
+            'G', components=numpy.zeros((3 * len(fx.molecule),)), spacial_dof=3 * len(fx.molecule))
+        fd.derivatives[''] = derivatives.Tensor('', components=numpy.array((1.05,)))
 
         # test writing
         other_input = os.path.join(self.temporary_directory, 'u.hdf5')
@@ -1076,13 +1082,20 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
 
         for i, a in enumerate(fde.molecule):
             self.assertEqual(a.symbol, fd.molecule[i].symbol)
-            self.assertArrayAlmostEqual(a.position, fd.molecule[i].position)
+            self.assertArraysAlmostEqual(a.position, fd.molecule[i].position)
 
-        self.assertArrayAlmostEqual(fde.derivatives['F']['static'], fd.derivatives['F']['static'])
-        self.assertArrayAlmostEqual(fde.derivatives['FD']['1064nm'], fd.derivatives['FD']['1064nm'])
-        self.assertArrayAlmostEqual(fde.derivatives['FD'][0.04], fd.derivatives['FD'][0.04])
-        self.assertArrayAlmostEqual(fde.derivatives['FFF']['static'], fd.derivatives['FFF']['static'])
-        self.assertArrayAlmostEqual(fde.derivatives['G'], fd.derivatives['G'])
+        self.assertArraysAlmostEqual(
+            fde.derivatives['F']['static'].components, fd.derivatives['F']['static'].components)
+        self.assertArraysAlmostEqual(
+            fde.derivatives['FD']['1064nm'].components, fd.derivatives['FD']['1064nm'].components)
+        self.assertArraysAlmostEqual(
+            fde.derivatives['FD'][0.04].components, fd.derivatives['FD'][0.04].components)
+        self.assertArraysAlmostEqual(
+            fde.derivatives['FFF']['static'].components, fd.derivatives['FFF']['static'].components)
+        self.assertArraysAlmostEqual(
+            fde.derivatives['G'].components, fd.derivatives['G'].components)
+        self.assertArraysAlmostEqual(
+            fde.derivatives[''].components, fd.derivatives[''].components)  # yeah, we can store energy as well
 
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""

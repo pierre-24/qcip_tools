@@ -9,6 +9,8 @@ REPRESENTATIONS = {
     'gradient': 'G',
     'hessian': 'GG',
     'cubic_FF': 'GGG',
+    'projected gradient': 'N',
+    'projected hessian': 'NN'
 }
 
 DERIVATIVES = list(REPRESENTATIONS.values())
@@ -21,6 +23,8 @@ SIMPLIFIED_NAMES = {
     'gradient': 'Fi',
     'hessian': 'Hij',
     'cubic_FF': 'Fijk',
+    'projected gradient': 'Fi(N)',
+    'projected hessian': 'Hij(N)'
 }
 
 
@@ -49,40 +53,6 @@ class BaseGeometricalDerivativeTensor(derivatives.Tensor):
                 return i
 
         raise KeyError(r)
-
-    def project_over_normal_modes(self, displacements):
-        """Project over normal modes.
-
-        .. note::
-
-            In the absence of a general formula, this is only valid for gradient, hessian and cubic force field
-            projections.
-
-        :param displacements: carthesian displacements (eigenvectors of mass-weighted hessian)
-        :type displacements: numpy.ndarray
-        :rtype: BaseGeometricalDerivativeTensor
-        """
-        if 'N' is self.representation:
-            raise Exception('already projected ?!?')
-
-        if displacements.shape != (self.spacial_dof, self.spacial_dof):
-            raise ValueError('displacements shape does not match')
-
-        if self.representation == 'G':
-            projected_tensor = numpy.dot(displacements, self.components)
-        elif self.representation == 'GG':
-            projected_tensor = numpy.dot(numpy.dot(displacements, self.components), displacements.transpose())
-        elif self.representation == 'GGG':
-            projected_tensor = numpy.dot(
-                displacements, numpy.dot(numpy.dot(displacements, self.components), displacements.transpose()))
-        else:
-            raise Exception('no projection defined for {}'.format(self.representation.representation()))
-
-        return BaseGeometricalDerivativeTensor(
-            self.spacial_dof,
-            self.trans_plus_rot,
-            self.representation.representation().replace('G', 'N'),
-            components=projected_tensor)
 
 
 class MassWeightedHessian:
@@ -141,6 +111,8 @@ class MassWeightedHessian:
 
         if cartesian_hessian is not None:
             if issubclass(type(cartesian_hessian), BaseGeometricalDerivativeTensor):
+                self.from_cartesian_hessian(cartesian_hessian.components)
+            if issubclass(type(cartesian_hessian), derivatives.Tensor) and cartesian_hessian.representation == 'GG':
                 self.from_cartesian_hessian(cartesian_hessian.components)
             elif type(cartesian_hessian) is numpy.ndarray:
                 self.from_cartesian_hessian(cartesian_hessian)

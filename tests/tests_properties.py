@@ -1,9 +1,10 @@
 import math
 import os
+import numpy
 
 from tests import QcipToolsTestCase
 from qcip_tools import derivatives_g
-from qcip_tools.chemistry_files import gaussian, dalton
+from qcip_tools.chemistry_files import gaussian, dalton, PropertyNotPresent
 
 
 class PropertiesTestCase(QcipToolsTestCase):
@@ -288,3 +289,21 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_internal_energy()), 0.001416, places=5)
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_enthalpy()), 0.002360, places=5)
         self.assertAlmostEqual(mwh.compute_zpva() + sum(mwh.compute_gibbs_free_energy(1)), -0.015023, places=5)
+
+        # test force
+        fchk_file, path, geometrical_derivatives = self.get_property(
+            gaussian.FCHK, 'geometrical_derivatives/gaussian_output_force.fchk', 'geometrical_derivatives')
+
+        self.assertIn('G', geometrical_derivatives)
+        self.assertNotEqual(numpy.linalg.norm(geometrical_derivatives['G'].components), .0)
+
+        # test with a single point (cartesian gradient is given, but null)
+        fchk_file = gaussian.FCHK()
+        with open(os.path.join(self.tests_files_directory, 'properties/computed_energies/gaussian_output.fchk')) as f:
+            fchk_file.read(f)
+
+        with self.assertRaises(PropertyNotPresent):
+            fchk_file.property('geometrical_derivatives')
+
+        gradient = fchk_file.get('Cartesian Gradient')
+        self.assertEqual(numpy.linalg.norm(gradient), .0)
