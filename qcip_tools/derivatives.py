@@ -3,7 +3,7 @@ import collections
 import itertools
 import numpy
 
-from qcip_tools import math as qcip_math
+from qcip_tools import math as qcip_math, numerical_differentiation
 
 #: In term of derivative of the energy
 #: ``G`` = geometrical derivative,
@@ -618,3 +618,125 @@ class Tensor:
 
     def __repr__(self):
         return self.to_string()
+
+
+def compute_numerical_derivative_of_tensor(
+        basis, derivative_repr, tensor_func, k_max, min_field, ratio, frequency=None, dry_run=False, accuracy_level=1,
+        **kwargs):
+    """
+    Compute numerical derivative of tensor (taking advantage of the so-called *smart iterator*).
+
+    .. note::
+
+        The parameter ``accuracy_level`` is provided for retro-compatibility, but should remain to "1".
+
+    :param basis: basis of differentiation (representation for the base tensors)
+    :type basis: qcip_tools.derivatives.Derivative
+    :param derivative_repr: representation of the further derivatives of the tensor
+    :type derivative_repr: qcip_tools.derivatives.Derivative
+    :param tensor_func: function to access to the tensor
+    :param dry_run: do not fill the tensor or perform romberg analysis
+    :type dry_run: bool
+    :param k_max: Romberg triangle k maximum
+    :type k_max: int
+    :param min_field: minimal value
+    :type min_field: float
+    :param ratio: ratio (a)
+    :type ratio: float
+    :param frequency: frequency if electrical derivative
+    :type frequency: float|str
+    :param accuracy_level: level of accuracy. Default value (1) does not change the behavior,
+      but "0" and lower use forward derivatives for order of differentiation == 3 (retro-compatibility behavior)
+    :param kwargs: args passed to tensor_func
+    :type kwargs: dict
+    :return: tensor and romberg triangles
+    :rtype: qcip_tools.derivatives.Tensor, collection.OrderedDict
+    """
+
+    b_repr = basis.representation()
+    d_repr = derivative_repr.representation()
+
+    if 'D' in d_repr:
+        raise Exception('derivation with respect to D is impossible')
+    if 'N' in d_repr:
+        raise Exception('derivation with respect to N is impossible (but projection is!)')
+    if 'F' in d_repr and 'G' in d_repr:
+        raise Exception('no mixed F and G derivatives')
+    if 'D' in basis.representation() and not frequency:
+        raise Exception('dynamic electric field require frequency')
+
+    derivative_order = derivative_repr.order()
+
+    if basis.spacial_dof is None:
+        basis.spacial_dof = derivative_repr.spacial_dof
+
+    final_derivative = basis.differentiate(derivative_repr.representation())
+    tensor = Tensor(final_derivative, spacial_dof=basis.spacial_dof, frequency=frequency)
+    romberg_triangles = collections.OrderedDict()
+
+    for derivative_coo in derivative_repr.smart_iterator():
+        romberg_triangles[derivative_coo] = collections.OrderedDict()
+        inv_derivative_coos = list(derivative_repr.inverse_smart_iterator(derivative_coo))
+        each = collections.Counter(derivative_coo)
+        deriv_coefs = []
+
+        for ce in each:
+            order = each[ce]
+            deriv_coefs.append((numerical_differentiation.Coefficients(
+                order,
+                numerical_differentiation.Coefficients.choose_p_for_centered(order),
+                ratio=ratio, method='C'), ce))
+
+        if accuracy_level < 1:
+            if derivative_order == 3 and derivative_coo == (0, 1, 2):
+                # lower the accuracy for the ijk tensor component
+                c1f = numerical_differentiation.Coefficients(1, 1, ratio=ratio, method='F')
+                c1 = numerical_differentiation.Coefficients(1, 2, ratio=ratio, method='C')
+
+                if accuracy_level == 0:
+                    deriv_coefs = [(c1, 0), (c1f, 1), (c1f, 2)]
+                else:  # T-REX
+                    deriv_coefs = [(c1f, 0), (c1f, 1), (c1f, 2)]
+
+            if derivative_order == 3 and len(each) == 1:  # lower the accuracy for iii tensor components
+                k_max -= 1
+
+        inverse = False
+        if d_repr[0] == 'F':
+            # because E(-F) = E0 - µ.F + 1/2*a.F² + ..
+            #         µ(-F) = µ0 - a.F + 1/2*b.F² + ...
+            if basis.order() == 0:
+                inverse = True if derivative_order % 2 == 0 else False
+            else:
+                inverse = True if derivative_order % 2 == 1 else False
+
+        for basis_coo in basis.smart_iterator():
+            values_per_k = [
+                numerical_differentiation.compute_derivative_of_function(
+                    deriv_coefs,
+                    tensor_func,
+                    k,
+                    min_field,
+                    derivative_repr.shape()[0],
+                    # kwargs:
+                    basis=basis, inverse=inverse, component=basis_coo, **kwargs)
+                for k in range(k_max)
+            ]
+
+            if not dry_run:
+                trig = numerical_differentiation.RombergTriangle(values_per_k, ratio=ratio, r=2)
+                romberg_triangles[derivative_coo][basis_coo] = trig
+                val = trig.find_best_value()
+
+                for inv_derivative_coo in inv_derivative_coos:
+                    for inv_basis_coo in basis.inverse_smart_iterator(basis_coo):
+                        if b_repr != '':
+                            if 'F' in d_repr:
+                                tensor.components[inv_basis_coo][inv_derivative_coo] = val[1]
+                            else:
+                                tensor.components[inv_derivative_coo][inv_basis_coo] = val[1]
+                        else:
+                            tensor.components[inv_derivative_coo] = val[1]
+
+    if not dry_run:
+        return tensor, romberg_triangles

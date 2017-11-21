@@ -180,6 +180,21 @@ def compute_derivative_of_function(c, scalar_function, k, h0, input_space_dimens
     return accum
 
 
+def real_fields(fields, min_field, ratio):
+    """Return the "real value" of the field applied
+
+    :param fields: input field (in term of ak)
+    :type fields: list
+    :param min_field: minimal field
+    :type min_field: float
+    :param ratio: ratio
+    :type ratio: float
+    :rtype: list
+    """
+
+    return [min_field * ak_shifted(ratio, _) for _ in fields]
+
+
 class RombergTriangle:
     """
     Do a Romberg triangle to lower (remove) the influence of higher-order derivatives.

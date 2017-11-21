@@ -3,8 +3,8 @@ import math
 
 import numpy
 from qcip_tools import derivatives, derivatives_e, math as qcip_math, derivatives_g, atom as qcip_atom, \
-    molecule as qcip_molecule
-from tests import QcipToolsTestCase
+    molecule as qcip_molecule, numerical_differentiation
+from tests import QcipToolsTestCase, factories
 
 
 class DerivativesTestCase(QcipToolsTestCase):
@@ -600,3 +600,70 @@ class DerivativesTestCase(QcipToolsTestCase):
         # check output
         self.assertIn('dQ(1)', projected_h.to_string())
         self.assertNotIn('dQ(1)', projected_h.to_string(skip_trans_plus_rot_dof=6))
+
+
+class TensorNumDiff(QcipToolsTestCase):
+
+    def test_numerical_differentiation(self):
+        energy = 150.
+        mu = factories.FakeElectricDipole()
+        alpha = factories.FakePolarizabilityTensor(input_fields=(0,))
+        beta = factories.FakeFirstHyperpolarizabilityTensor(input_fields=(0, 0))
+
+        min_field = 0.004
+        k_max = 5
+        ratio = 2.
+
+        def energy_exp(fields, h0, basis, inverse, component, **kwargs):
+            """Taylor series of the energy"""
+
+            r_field = numerical_differentiation.real_fields(fields, h0, ratio)
+
+            x = energy
+            x += numpy.tensordot(mu.components, r_field, axes=1)
+            x += 1 / 2 * numpy.tensordot(numpy.tensordot(alpha.components, r_field, axes=1), r_field, axes=1)
+            x += 1 / 6 * numpy.tensordot(
+                numpy.tensordot(numpy.tensordot(beta.components, r_field, axes=1), r_field, axes=1), r_field, axes=1)
+
+            return x
+
+        def dipole_exp(fields, h0, basis, inverse, component, **kwargs):
+            """Taylor series of the dipole moment"""
+
+            r_field = numerical_differentiation.real_fields(fields, h0, ratio)
+
+            x = mu.components.copy()
+            x += numpy.tensordot(alpha.components, r_field, axes=1)
+            x += 1 / 2 * numpy.tensordot(numpy.tensordot(beta.components, r_field, axes=1), r_field, axes=1)
+
+            return x[component]
+
+        # compute polarizability
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation='F'),
+            derivatives.Derivative('F'),
+            dipole_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(alpha.components, t.components, places=3)
+
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation=''),
+            derivatives.Derivative('FF'),
+            energy_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(alpha.components, t.components, places=3)
+
+        # compute first polarizability
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation='F'),
+            derivatives.Derivative('FF'),
+            dipole_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(beta.components, t.components, delta=.001)
+
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation=''),
+            derivatives.Derivative('FFF'),
+            energy_exp, k_max, min_field, ratio)
+
+        self.assertArraysAlmostEqual(beta.components, t.components, delta=.01)
