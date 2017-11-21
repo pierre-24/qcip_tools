@@ -719,7 +719,7 @@ def compute_numerical_derivative_of_tensor(
                     min_field,
                     derivative_repr.shape()[0],
                     # kwargs:
-                    basis=basis, inverse=inverse, component=basis_coo, **kwargs)
+                    basis=basis, inverse=inverse, component=basis_coo, frequency=frequency, **kwargs)
                 for k in range(k_max)
             ]
 
