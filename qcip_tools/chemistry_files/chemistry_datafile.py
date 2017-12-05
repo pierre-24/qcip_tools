@@ -183,7 +183,8 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
         :param spacial_dof: the DOF
         :type spacial_dof: int
         """
-        derivatives_available = []
+        derivatives_available = \
+            group.attrs['derivatives_available'].split(',') if 'derivatives_available' in group.attrs else []
 
         for key in derivatives_:
             d = derivatives.Derivative(key, spacial_dof=spacial_dof)
@@ -216,20 +217,20 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
 
         if derivatives.is_electrical(derivative):
             num_freqs = len(value)
-            freqs = ''
-            first_freq = True
+            freqs = []
             shape.insert(0, num_freqs)
             super_array = numpy.zeros(shape)
             f = 0
             for freq in value:
-                freqs += '{}{}:{}'.format(
-                    ',' if not first_freq else '', 'f' if type(freq) is float else 's', freq)
-                first_freq = False
+                freqs.append('{}:{}'.format('f' if type(freq) is float else 's', freq))
                 super_array[f] = value[freq].components
                 f += 1
 
+            if dataset_name in group:
+                del group[dataset_name]  # remove previous dataset with the same name!
+
             dset = group.create_dataset(dataset_name, shape, dtype='float64', data=super_array)
-            dset.attrs['frequencies'] = freqs
+            dset.attrs['frequencies'] = ','.join(freqs)
         else:
             group.create_dataset(dataset_name, shape, dtype='float64', data=value.components)
 
