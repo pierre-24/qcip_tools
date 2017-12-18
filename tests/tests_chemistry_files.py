@@ -117,6 +117,7 @@ class GaussianTestCase(QcipToolsTestCase):
         self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
         self.fchk_file_v3 = self.copy_to_temporary_directory('gaussian_fchk_v3.fchk')
         self.fchk_one_atom = self.copy_to_temporary_directory('oneatom.fchk')
+        self.fchk_ECP = self.copy_to_temporary_directory('gaussian_ECP.fchk')
         self.log_file = self.copy_to_temporary_directory('gaussian_output.log')
 
         self.cube_file = self.copy_to_temporary_directory('gaussian_cube.cub')
@@ -256,6 +257,14 @@ class GaussianTestCase(QcipToolsTestCase):
         fi = gaussian.FCHK()
         with open(self.fchk_one_atom) as f:
             fi.read(f)
+
+        # ECP fchk (fix #36)
+        fi = gaussian.FCHK()
+        with open(self.fchk_ECP) as f:
+            fi.read(f)
+
+        self.assertNotEqual(fi.frozen_electrons, 0)
+        self.assertEqual(fi.molecule.number_of_electrons(), fi.get('Number of electrons') + fi.frozen_electrons)
 
     def test_fchk_file_v3(self):
         """FCHK file with v3 are a bit different, because it includes characters"""
