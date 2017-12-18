@@ -123,7 +123,7 @@ More precisely,
       - Yes
       - **No**
     * - `chemistry_datafile.ChemistryDataFile <./chemistry-files/chemistry_datafile.html#qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile>`_
-      - QCIP chemistry data file (.chdf)
+      - QCIP chemistry data file (.h5)
       - ``QCIP_CDF``
       - Yes
       - Yes

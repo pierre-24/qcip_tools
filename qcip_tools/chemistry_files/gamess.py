@@ -40,9 +40,9 @@ class InputModule(object):
 
         if len(lines[0].split()) != 1:
             full_module = ' '.join(x for x in lines if x.strip()[0] != '!')
-            l = full_module.split()
-            title = l[0][1:].lower()
-            rest_of_module = [a.split('=') for a in l[1:-1]]
+            line = full_module.split()
+            title = line[0][1:].lower()
+            rest_of_module = [a.split('=') for a in line[1:-1]]
             return InputModule(title, rest_of_module)
         else:
             return InputModule(
@@ -123,9 +123,9 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificatio
         num_end = 0
 
         for i in range(10):
-            l = f.readline()
-            num_dollar += l.count('$')
-            num_end += l.lower().count('$end')
+            line = f.readline()
+            num_dollar += line.count('$')
+            num_end += line.lower().count('$end')
 
         return num_dollar > 4 and num_end > 1
 

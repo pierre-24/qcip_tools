@@ -1,4 +1,8 @@
 before_script:
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo "$SSH_SERVER_HOSTKEYS" > ~/.ssh/known_hosts'
   - pip3 install --upgrade -r requirements.txt -r requirements-dev.txt
 
 test_package:

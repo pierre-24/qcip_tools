@@ -39,3 +39,17 @@ class FakeFirstHyperpolarizabilityTensor(derivatives_e.FirstHyperpolarisabilityT
 
             for j in self.representation.inverse_smart_iterator(i):
                 self.components[j] = val
+
+
+class FakeSecondHyperpolarizabilityTensor(derivatives_e.SecondHyperpolarizabilityTensor):
+    def __init__(self, factor=1., **kwargs):
+        super().__init__(**kwargs)
+
+        dummy = .0
+
+        for i in self.representation.smart_iterator():
+            dummy += 1
+            val = dummy * factor
+
+            for j in self.representation.inverse_smart_iterator(i):
+                self.components[j] = val
