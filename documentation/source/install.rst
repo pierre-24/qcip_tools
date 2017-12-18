@@ -6,10 +6,9 @@ Installing qcip_tools
 
   .. code-block:: bash
 
-    pip install git+ssh://git@gitlab.unamur.be/pierre.beaujean/qcip_tools.git@master
+    pip install git+ssh://git@gitlab.unamur.be/pierre.beaujean/qcip_tools.git@release-vXX
 
-  You will get the latest available version.
-  Change ``@tag`` at the end of the line to fetch a given version (tags are of the form ``release-vXX``, and listed `in the README <https://gitlab.unamur.be/pierre.beaujean/qcip_tools/blob/master/README.md>`_).
+  Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://gitlab.unamur.be/pierre.beaujean/qcip_tools/blob/master/README.md>`_).
 
 + To contribute to the project, you need to clone the repository:
 

@@ -2,3 +2,4 @@ flake8==2.5.4
 flake8_quotes==0.8.1
 autopep8==1.2.2
 Sphinx==1.6.3
+git+ssh://git@git.pierrebeaujean.net/pierre/make-release.git@release-v0.3
