@@ -17,6 +17,7 @@ DEFINITION_BS = 'new basisSet('
 FILE_CONTENT = """{file_beginning}# DO NOT EDIT BELOW THIS POINT!
 # generated on {date}
 
+
 #: current JS PEID
 JS_PEID = {jspeid}
 
@@ -174,6 +175,7 @@ def main():
     except IOError as e:
         print(e)
         return False
+
 
 if __name__ == '__main__':
     main()

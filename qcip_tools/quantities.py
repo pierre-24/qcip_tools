@@ -32,6 +32,7 @@ def convert(from_, to_, value=1.0):
 
     return (value * from_).to(to_).magnitude
 
+
 # widely used conversion factors
 #: Convert bohr to angstrom
 AuToAngstrom = convert(ureg.bohr, ureg.angstrom)

@@ -83,7 +83,7 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
     # first try is based on file extension:
     try:
         file_extension = f.name.split('.')[-1].lower()
-    except:
+    except KeyError:
         pass
 
     if file_extension:

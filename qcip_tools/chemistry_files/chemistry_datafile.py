@@ -9,6 +9,7 @@ from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMolec
 class BadChemistryDataFile(Exception):
     pass
 
+
 TYPE_UNICODE = h5py.special_dtype(vlen=bytes)
 
 
@@ -84,7 +85,7 @@ class ChemistryDataFile(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithI
 
                 if 'type' not in fx['version'].attrs or fx['version'].attrs['type'] != ChemistryDataFile.file_type:
                     return False
-        except:
+        except:  # noqa
             return False
 
         return True
