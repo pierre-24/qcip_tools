@@ -291,6 +291,8 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         self.chunks_information = {}
         self.chunks_parsed = {}
         self.lines = []
+        self.contains_ECP = False
+        self.frozen_electrons = 0
 
     @classmethod
     def possible_file_extensions(cls):
@@ -423,7 +425,13 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         self.molecule.charge = self.get('Charge')
         self.molecule.multiplicity = self.get('Multiplicity')
 
-        if self.get('Number of electrons') != self.molecule.number_of_electrons():
+        num_elec = self.get('Number of electrons')
+        if 'ECP-RNFroz' in self.chunks_information:
+            self.contains_ECP = True
+            self.frozen_electrons = sum(self.get('ECP-RNFroz'))
+            num_elec += self.frozen_electrons
+
+        if num_elec != self.molecule.number_of_electrons():
             raise ValueError('Number of electron does not match: {} != {}'.format(
                 self.get('Number of electrons'), self.molecule.number_of_electrons()))
 
