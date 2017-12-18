@@ -402,9 +402,9 @@ class DerivativesTestCase(QcipToolsTestCase):
             nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
 
             # Values obtained directly from the contribution matrices
-            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 123.3727, places=3)
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(old_version=False), 123.3727, places=3)
             # self.assertAlmostEqual(nb.dipolar_contribution_squared(), 1367.5055 + 1.2128, places=3)
-            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), 1.9108, places=3)
+            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(old_version=False), 1.9108, places=3)
 
             self.assertAlmostEqual(nb.beta_squared_zzz(), 280.551, places=3)
             self.assertAlmostEqual(nb.beta_squared_zxx(), 31.304, places=3)
@@ -460,7 +460,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
 
-            GJ4 = ng.hexacadecapolar_contribution_squared(first_version=True)
+            GJ4 = ng.hexadecapolar_contribution_squared(first_version=True)
             GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
             GJ0 = ng.isotropic_contribution_squared()
 
@@ -525,7 +525,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
 
-            GJ4 = ng.hexacadecapolar_contribution_squared(first_version=True)
+            GJ4 = ng.hexadecapolar_contribution_squared(first_version=True)
             GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
             GJ0 = ng.isotropic_contribution_squared()
 
