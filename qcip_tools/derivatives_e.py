@@ -476,7 +476,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         # print(tmp)
         return tmp
 
-    def dipolar_contribution_squared(self, old_version=False):
+    def dipolar_contribution_squared(self, old_version=True):
         """Calculate the square of the dipolar contribution
 
         :param old_version: Use the previous (with Kleinman's conditions) version
@@ -513,7 +513,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return tmp
 
-    def octupolar_contribution_squared(self, old_version=False):
+    def octupolar_contribution_squared(self, old_version=True):
         """Calculate the square of the octupolar contribution
 
         :param old_version: Use the previous (with Kleinman's conditions) version
@@ -557,7 +557,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                         tmp += 10 / 15 * self.components[i, j, k] * self.components[j, i, k]
         return tmp
 
-    def quadrupolar_contribution_squared(self, old_version=False):
+    def quadrupolar_contribution_squared(self, old_version=True):
         """Calculate the square of the quadrupolar contribution
 
         :param old_version: Use the previous (with Kleinman's conditions) version
@@ -594,7 +594,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                     tmp -= 2 / 3 * self.components[i, j, k] * self.components[j, i, k]
         return tmp
 
-    def dipolar_contribution(self, old_version=False):
+    def dipolar_contribution(self, old_version=True):
         """
 
         :param old_version: Use the previous (with Kleinman's conditions) version
@@ -608,7 +608,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return math.sqrt(self.dipolar_contribution_squared(old_version=old_version))
 
-    def quadrupolar_contribution(self, old_version=False):
+    def quadrupolar_contribution(self, old_version=True):
         """
 
         :param old_version: Use the previous (with Kleinman's conditions) version
@@ -622,7 +622,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return math.sqrt(self.quadrupolar_contribution_squared(old_version=old_version))
 
-    def octupolar_contribution(self, old_version=False):
+    def octupolar_contribution(self, old_version=True):
         """
 
         :param old_version: Use the previous (with Kleinman's conditions) version
@@ -636,7 +636,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return math.sqrt(self.octupolar_contribution_squared(old_version=old_version))
 
-    def nonlinear_anisotropy(self, old_version=False):
+    def nonlinear_anisotropy(self, old_version=True):
         """Compute the nonlinear anisotropy:
 
         .. math::
