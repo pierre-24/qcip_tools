@@ -9,6 +9,9 @@ help:
 	@echo "  help                        to get this help"
 
 install-dependencies:
+	pip install --upgrade -r requirements.txt
+
+install-dependencies-dev:
 	pip install --upgrade -r requirements.txt -r requirements-dev.txt
 
 lint:

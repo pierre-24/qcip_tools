@@ -1039,9 +1039,9 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
 
         for line in lines[start_line:]:
             raw = [float(a) for a in line.strip().split()]
-            l = len(raw)
-            self.records[actual_num_of_data:actual_num_of_data + l] = raw
-            actual_num_of_data += l
+            l_size = len(raw)
+            self.records[actual_num_of_data:actual_num_of_data + l_size] = raw
+            actual_num_of_data += l_size
 
         reshape = self.records_per_direction.copy()
         reshape.append(self.data_per_record)

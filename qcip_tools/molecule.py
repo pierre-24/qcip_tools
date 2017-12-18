@@ -153,7 +153,7 @@ class Molecule:
     def atoms(self, **kwargs):
         """Get a list of atom (index) based on some criterion"""
 
-        l = []
+        atoms = []
 
         symbols_in = kwargs.get('symbol_in', None)
         symbols_not_in = kwargs.get('symbol_not_in', None)
@@ -170,9 +170,9 @@ class Molecule:
             if atomic_number_not_in and a.atomic_number in atomic_number_not_in:
                 continue
 
-            l.append(index)
+            atoms.append(index)
 
-        return l
+        return atoms
 
     def list_of_atoms(self, shifted_index, exclude_atoms=None):
         """Make a list of atoms following the connectivity and excluding some if any.

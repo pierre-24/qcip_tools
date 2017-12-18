@@ -258,7 +258,7 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
                 tmp += 3 * self.components[i, j] ** 2 - self.components[i, i] * self.components[j, j]
         try:
             return math.sqrt(.5 * tmp)
-        except:
+        except ValueError:
             return 0.0
 
     def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
