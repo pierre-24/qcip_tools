@@ -8,7 +8,7 @@ Current version: [release-v0.4.2](https://gitlab.unamur.be/pierre.beaujean/qcip_
 Previous releases:
 
 <!-- PREVIOUS: -->
-+ Stable version: [`release-v0.4.1`](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4.1) (December 05, 2017)
++ [`release-v0.4.1`](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4.1) (December 05, 2017)
 + [`release-v0.4`](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4) (November 21, 2017)
 + [`release-v0.3.2`](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.3.2) (September 29, 2017)
 + [`release-v0.3.1`](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.3.1) (September 26, 2017)
