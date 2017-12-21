@@ -622,7 +622,7 @@ class DerivativesTestCase(QcipToolsTestCase):
 
 class TensorNumDiff(QcipToolsTestCase):
 
-    def test_numerical_differentiation(self):
+    def test_numerical_differentiation_F(self):
         energy = 150.
         mu = factories.FakeElectricDipole()
         alpha = factories.FakePolarizabilityTensor(input_fields=(0,))
@@ -685,3 +685,41 @@ class TensorNumDiff(QcipToolsTestCase):
             energy_exp, k_max, min_field, ratio)
 
         self.assertArraysAlmostEqual(beta.components, t.components, delta=.01)
+
+    def test_numerical_differentiation_G(self):
+        input_fields = (1, 0)
+        d = 'F' + ''.join('D' if a == 1 else 'F' for a in input_fields)
+
+        t_fdf = factories.FakeFirstHyperpolarizabilityTensor(input_fields=input_fields, frequency=.1)
+        t_nfdf = factories.FakeTensor(derivatives.Derivative('N' + d, spacial_dof=6), frequency=.1, factor=10.)
+        t_nnfdf = factories.FakeTensor(derivatives.Derivative('NN' + d, spacial_dof=6), frequency=.1, factor=100.)
+        t_nnnfdf = factories.FakeTensor(derivatives.Derivative('NNN' + d, spacial_dof=6), frequency=.1, factor=1000.)
+
+        min_field = 0.01
+        k_max = 5
+        ratio = 2.
+
+        def hp_exp(fields, h0, basis, inverse, component, **kwargs):
+            r_field = numerical_differentiation.real_fields(fields, h0, ratio)
+
+            x = t_fdf.components.copy()
+            x += numpy.tensordot(r_field, t_nfdf.components, axes=1)
+            x += 1 / 2 * numpy.tensordot(r_field, numpy.tensordot(r_field, t_nnfdf.components, axes=1), axes=1)
+            x += 1 / 6 * numpy.tensordot(r_field, numpy.tensordot(
+                r_field, numpy.tensordot(r_field, t_nnnfdf.components, axes=1), axes=1), axes=1)
+
+            return x[component]
+
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation=d),
+            derivatives.Derivative('G', spacial_dof=6),
+            hp_exp, k_max, min_field, ratio, frequency=.1)
+
+        self.assertArraysAlmostEqual(t_nfdf.components, t.components, places=3)
+
+        t, triangles = derivatives.compute_numerical_derivative_of_tensor(
+            derivatives.Derivative(from_representation=d),
+            derivatives.Derivative('GG', spacial_dof=6),
+            hp_exp, k_max, min_field, ratio, frequency=.1)
+
+        self.assertArraysAlmostEqual(t_nnfdf.components, t.components, places=3)
