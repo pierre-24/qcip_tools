@@ -307,3 +307,37 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         gradient = fchk_file.get('Cartesian Gradient')
         self.assertEqual(numpy.linalg.norm(gradient), .0)
+
+        # 2. test dalton
+        out_file, path, geometrical_derivatives = self.get_property(
+            dalton.Output, 'geometrical_derivatives/dalton_output_CC.out', 'geometrical_derivatives')
+
+        self.assertIn('G', geometrical_derivatives)
+
+        tar_file, path, geometrical_derivatives = self.get_property(
+            dalton.ArchiveOutput, 'geometrical_derivatives/dalton_output.tar.gz', 'geometrical_derivatives')
+
+        self.assertIn('GG', geometrical_derivatives)
+
+        out_file, path, geometrical_derivatives_2 = self.get_property(
+            dalton.Output, 'geometrical_derivatives/dalton_output.out', 'geometrical_derivatives')
+
+        self.assertIn('G', geometrical_derivatives_2)
+        self.assertIn('GG', geometrical_derivatives_2)
+
+        self.assertArraysAlmostEqual(
+            geometrical_derivatives_2['GG'].components, geometrical_derivatives['GG'].components, places=4)
+
+        tar_file, path, geometrical_derivatives = self.get_property(
+            dalton.ArchiveOutput, 'geometrical_derivatives/dalton_output_2.tar.gz', 'geometrical_derivatives')
+
+        self.assertIn('GG', geometrical_derivatives)
+
+        out_file, path, geometrical_derivatives_2 = self.get_property(
+            dalton.Output, 'geometrical_derivatives/dalton_output_2.out', 'geometrical_derivatives')
+
+        self.assertIn('G', geometrical_derivatives_2)
+        self.assertIn('GG', geometrical_derivatives_2)
+
+        self.assertArraysAlmostEqual(
+            geometrical_derivatives_2['GG'].components, geometrical_derivatives['GG'].components, places=4)
