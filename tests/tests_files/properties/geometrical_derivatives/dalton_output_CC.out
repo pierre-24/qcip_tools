@@ -1,0 +1,2156 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2016.1 (2016)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a Molecular Electronic Structure Program,
+       Release Dalton2016.1 (2016), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Wed Nov  8 11:54:30 2017 
+     Host name              : lmWn044.cism.ucl.ac.be                  
+
+ * Work memory size             :   262144000 =  1.953 gigabytes.
+
+ * Directories for basis set searches:
+   1) /home/unamur/ucpts/pbeaujea/workdir/tmp6fcf1wdh
+   2) /home/users/p/b/pbeaujea/DALTON/dalton/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | pbeaujea
+ Host                     | lmWn023.cism.ucl.ac.be
+ System                   | Linux-2.6.32-358.11.1.el6.x86_64
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | ON
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/gfortran
+ Fortran compiler version | GNU Fortran (GCC) 4.4.7 20120313 (Red Hat 4.4.7-4)
+ C compiler               | /usr/bin/gcc
+ C compiler version       | gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-4)
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (GCC) 4.4.7 20120313 (Red Hat 4.4.7-4)
+ BLAS                     | /usr/local/intel/ics_2013.0.028/composer_xe_2013.1
+                          | .117/mkl/lib/intel64/libmkl_gf_ilp64.so;/usr/local
+                          | /intel/ics_2013.0.028/composer_xe_2013.1.117/mkl/l
+                          | ib/intel64/libmkl_sequential.so;/usr/local/intel/i
+                          | cs_2013.0.028/composer_xe_2013.1.117/mkl/lib/intel
+                          | 64/libmkl_core.so;/usr/lib64/libpthread.so;/usr/li
+                          | b64/libm.so
+ LAPACK                   | /usr/local/intel/ics_2013.0.028/composer_xe_2013.1
+                          | .117/mkl/lib/intel64/libmkl_lapack95_ilp64.a;/usr/
+                          | local/intel/ics_2013.0.028/composer_xe_2013.1.117/
+                          | mkl/lib/intel64/libmkl_gf_ilp64.so
+ Static linking           | OFF
+ Last Git revision        | a10ef0cf7cc62686ecfeaafb7364c9b014fdc003
+ Configuration time       | 2017-06-23 20:15:05.948110
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+**DALTON INPUT                                    
+.RUN WAVE FUNCTIONS                               
+.DIRECT                                           
+**WAVE FUNCTIONS                                  
+.CC                                               
+*SCF INPUT                                        
+.THRESH                                           
+1.0D-06                                           
+*CC INPUT                                         
+.CCS                                              
+.MAX IT                                           
+2500                                              
+.MAXRED                                           
+2500                                              
+.MXLRV                                            
+2500                                              
+.THRENR                                           
+1.0D-11                                           
+.THRLEQ                                           
+1.0D-06                                           
+*CCFOP                                            
+.DIPMOM                                           
+*DERIVATIVES                                      
+*CCLR                                             
+.DIPOLE                                           
+.STATIC                                           
+.FREQUE                                           
+1                                                 
+0.04282271                                        
+*CCQR                                             
+.DIPOLE                                           
+.STATIC                                           
+.EOPEFR                                           
+1                                                 
+0.04282271                                        
+.SHGFRE                                           
+1                                                 
+0.04282271                                        
+*CCCR                                             
+.DIPOLE                                           
+.STATIC                                           
+.DCKERR                                           
+1                                                 
+0.04282271                                        
+.ESHGFR                                           
+1                                                 
+0.04282271                                        
+.DFWMFR                                           
+1                                                 
+0.04282271                                        
+.THGFRE                                           
+1                                                 
+0.04282271                                        
+**INTEGRAL                                        
+.DIPLEN                                           
+.DEROVL                                           
+.DERHAM                                           
+*END OF                                           
+
+
+   Content of the .mol file
+ ----------------------------
+
+BASIS                                                                          
+STO-3G                                                                         
+base                                                                           
+                                                                               
+Atomtypes=3 Angstrom Nosymmetry                                                
+Charge=8.0 Atoms=1                                                             
+O        0.000000000      0.000000000      0.115905819                         
+Charge=1.0 Atoms=1                                                             
+H        0.000000000      0.768526167     -0.463623266                         
+Charge=1.0 Atoms=1                                                             
+H        0.000000000     -0.768526167     -0.463623266                         
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    AO-direct calculation (in sections where implemented)
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1: base                                                                    
+ 2:                                                                         
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   8.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   8 :
+     "/home/users/p/b/pbeaujea/DALTON/dalton/basis/STO-3G"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/users/p/b/pbeaujea/DALTON/dalton/basis/STO-3G"
+
+  Atomic type no.    3
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/users/p/b/pbeaujea/DALTON/dalton/basis/STO-3G"
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Point group: C1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           O          15.994915
+                           H           1.007825
+                           H           1.007825
+
+                       Total mass:    18.010565 amu
+                       Natural abundance:  99.730 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.096467
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    3
+  Total number of atoms:    3
+
+  Basis set used is "STO-3G" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  O           1    8.0000    15     5      [6s3p|2s1p]                                        
+  H           1    1.0000     3     1      [3s|1s]                                            
+  H           1    1.0000     3     1      [3s|1s]                                            
+  ----------------------------------------------------------------------
+  total:      3   10.0000    21     7
+  ----------------------------------------------------------------------
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    9
+  O       :     1  x   0.0000000000    2  y   0.0000000000    3  z   0.2190302542
+  H       :     4  x   0.0000000000    5  y   1.4523039755    6  z  -0.8761209979
+  H       :     7  x   0.0000000000    8  y  -1.4523039755    9  z  -0.8761209979
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            O           H           H     
+            ------      ------      ------
+ O     :    0.000000
+ H     :    0.962542    0.000000
+ H     :    0.962542    1.537052    0.000000
+
+
+  Max    interatomic separation is    1.5371 Angstrom (    2.9046 Bohr)
+  between atoms    3 and    2, "H     " and "H     ".
+
+  Min HX interatomic separation is    0.9625 Angstrom (    1.8189 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H          O            0.962542
+  bond distance:  H          O            0.962542
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     H          O          H            105.962
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.601202          0.000000    1.000000    0.000000
+   IB       1.190508          0.000000    0.000000    1.000000
+   IC       1.791710          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+         840614.7396         424506.9021         282065.1764 MHz
+           28.039890           14.160026            9.408682 cm-1
+
+
+@  Nuclear repulsion energy :    9.140611968235 Hartree
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+
+    *************************************************************************
+    ****************** Output from HERMIT input processing ******************
+    *************************************************************************
+
+
+ Default print level:        1
+
+ * Nuclear model: Point charge
+
+ Calculation of one-electron Hamiltonian integrals.
+
+ The following one-electron property integrals are calculated as requested:
+          - overlap integrals
+          - dipole length integrals
+          - Geometrical derivatives of overlap integrals
+          - Geometrical derivatives of one-electron Hamiltonian integrals
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.096466546661
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+  Total CPU  time used in HERMIT:   0.03 seconds
+  Total wall time used in HERMIT:   0.04 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:    7
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+          -20.684882      -1.606910      -0.781207      -0.686491      -0.616200
+           -0.234633      -0.169576
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Wed Nov  8 11:54:30 2017 
+     Host name              : lmWn044.cism.ucl.ac.be                  
+
+ Title lines from ".mol" input file:
+     base                                                                    
+                                                                             
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    (Integral direct) CC calculation.
+
+@    This is a combination run starting with
+@              a restricted, closed shell Hartree-Fock calculation
+
+ Fock matrices are calculated directly without use of integrals on disk.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+     Wave function specification
+     ============================
+
+     For the specification of the Coupled Cluster: see later.
+
+@    Wave function type        --- CC ---
+@    Number of closed shell electrons          10
+@    Number of electrons in active shells       0
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1
+@                                          |  A  
+                                       --- |  ---
+@    Occupied SCF orbitals               5 |    5
+@    Secondary orbitals                  2 |    2
+@    Total number of orbitals            7 |    7
+@    Number of basis functions           7 |    7
+
+     Optimization information
+     ========================
+@    Number of configurations                 1
+@    Number of orbital rotations             10
+     ------------------------------------------
+@    Total number of variables               11
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-06
+
+
+ Changes of defaults for CC:
+ ---------------------------
+
+
+ -This is a direct atomic orbital integral based
+  calculation for coupled cluster wave function
+ -Linear response properties calculated
+ -Quadratic response properties calculated
+ -Cubic response properties calculated
+ -Dipole moment calculated
+  
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Iter      Total energy        Error norm    Delta(E)  DIIS dim.
+ -----------------------------------------------------------------------------
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    T  4.00D-03  5.00D-03
+@  1    -74.9125624677        7.51150D-01   -7.49D+01    1
+      Virial theorem: -V/T =      2.004285
+@      MULPOP O      -0.45; H       0.23; H       0.23; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
+ -----------------------------------------------------------------------------
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    2    T  4.00D-03  4.00D-03
+@  2    -74.9579044994        2.25660D-01   -4.53D-02    2
+      Virial theorem: -V/T =      2.006143
+@      MULPOP O      -0.37; H       0.19; H       0.19; 
+   2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
+ -----------------------------------------------------------------------------
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  3.00D-03  4.00D-03
+@  3    -74.9629469891        3.49930D-02   -5.04D-03    3
+      Virial theorem: -V/T =      2.005369
+@      MULPOP O      -0.37; H       0.18; H       0.18; 
+   3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    4    F  4.00D-03  4.00D-03
+@  4    -74.9630687264        1.55935D-03   -1.22D-04    4
+      Virial theorem: -V/T =      2.005193
+@      MULPOP O      -0.36; H       0.18; H       0.18; 
+ -----------------------------------------------------------------------------
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    5    T  4.00D-03  4.00D-03
+@  5    -74.9630691621        3.08517D-04   -4.36D-07    5
+      Virial theorem: -V/T =      2.005183
+@      MULPOP O      -0.36; H       0.18; H       0.18; 
+ -----------------------------------------------------------------------------
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    6    T  4.00D-03  4.00D-03
+@  6    -74.9630691811        5.83257D-06   -1.90D-08    6
+      Virial theorem: -V/T =      2.005183
+@      MULPOP O      -0.36; H       0.18; H       0.18; 
+ -----------------------------------------------------------------------------
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    T  3.00D-03  4.00D-03
+@  7    -74.9630691811        7.76834D-08   -5.17D-12    7
+
+@ *** DIIS converged in   7 iterations !
+@     Converged SCF energy, gradient:    -74.963069181099    7.77D-08
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Number of electrons :   10
+ Orbital occupations :    5
+
+ Sym       Hartree-Fock orbital energies
+
+1 A     -20.24030624    -1.26393015    -0.61739510    -0.44885073    -0.38976338
+          0.59764637     0.74031713
+
+    E(LUMO) :     0.59764637 au (symmetry 1)
+  - E(HOMO) :    -0.38976338 au (symmetry 1)
+  ------------------------------------------
+    gap     :     0.98740976 au
+
+ --- Writing SIRIFC interface file
+
+ CPU and wall time for SCF :       0.069       0.083
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
+@    Total charge of molecule:    0
+
+@    Final HF energy:             -74.963069181099                 
+@    Nuclear repulsion:             9.140611968235
+@    Electronic energy:           -84.103681149334
+
+@    Final gradient norm:           0.000000077683
+
+ 
+     Date and time (Linux)  : Wed Nov  8 11:54:30 2017 
+     Host name              : lmWn044.cism.ucl.ac.be                  
+
+File label for MO orbitals:   8Nov17   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :1s    -0.9941   0.2331   0.0000   0.1020   0.0000   0.1323  -0.0000
+   2 O   :1s    -0.0265  -0.8357  -0.0000  -0.5308  -0.0000  -0.8787   0.0000
+   3 O   :2px   -0.0000   0.0000   0.0000  -0.0000   1.0000   0.0000   0.0000
+   4 O   :2py   -0.0000  -0.0000  -0.6042   0.0000   0.0000  -0.0000  -0.9917
+   5 O   :2pz    0.0042   0.1262  -0.0000  -0.7801  -0.0000   0.7340  -0.0000
+   6 H   :1s     0.0059  -0.1586  -0.4445   0.2783   0.0000   0.7948   0.8328
+   7 H   :1s     0.0059  -0.1586   0.4445   0.2783   0.0000   0.7948  -0.8328
+
+  Total CPU  time used in SIRIUS :   0.09 seconds
+  Total wall time used in SIRIUS :   0.12 seconds
+
+ 
+     Date and time (Linux)  : Wed Nov  8 11:54:30 2017 
+     Host name              : lmWn044.cism.ucl.ac.be                  
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+                    .------------------------------------------.
+                    | Starting in Coupled Cluster Section (CC) |
+                    `------------------------------------------'
+
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                    START OF COUPLED CLUSTER CALCULATION                     *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+
+
+ CCR12 ANSATZ =   0
+
+ CCR12 APPROX =   0
+
+   
+
+ *******************************************************************
+ *                                                                 *
+ *----------                                             >---------*
+ *---------- OUTPUT FROM COUPLED CLUSTER ENERGY PROGRAM  >---------*
+ *----------                                             >---------*
+ *                                                                 *
+ *******************************************************************
+
+
+             The Direct Coupled Cluster Energy Program
+             -----------------------------------------
+
+
+          Number of t1 amplitudes                 :            10
+          Number of t2 amplitudes                 :            55
+          Total number of amplitudes in ccsd      :            65
+
+
+
+          CCS CALC. - NO WAVEFUNCTION OPTIMIZATION
+   
+
+ *******************************************************************
+ *                                                                 *
+ *---- OUTPUT FROM COUPLED CLUSTER RESPONSE  -------------*
+ *                                                                 *
+ *----------    CALCULATION OF FIRST ORDER PROPERTIES    >---------*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                         +-------------------------------+
+                         ! Coupled Cluster model is: CCS !
+                         +-------------------------------+
+
+  
+
+
+             +--------------------------------------------------------+
+             !   Relaxed  CCS    First-order one-electron properties: !
+             +--------------------------------------------------------+
+
+
+
+                            +-------------------------+
+                            !  Electric Dipole Moment !
+                            +-------------------------+
+
+
+
+                          Total Molecular Dipole Moment
+                          -----------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x     -0.00000000        -0.00000000        -0.00000000
+      y      0.00000000         0.00000000         0.00000000
+      z     -0.67255205        -1.70945668        -5.70213372
+
+
+
+ *******************************************************************
+ *                                                                 *
+ *--------  OUTPUT FROM COUPLED CLUSTER GRADIENT SECTION  ---------*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                                Molecular gradient
+                                ------------------
+
+ O         -0.0000000000           -0.0000000000           -0.0585041808
+ H          0.0000000000           -0.0154261534            0.0292520904
+ H          0.0000000000            0.0154261534            0.0292520904
+
+
+
+
+                   Molecular gradient norm:  5.61E-03
+
+ Total time used in gradient section:        0.11 seconds.
+     
+
+   *******************************************************************
+   *                                                                 *
+   *--------   OUTPUT FROM PROPERTY AND SYMMETRY ANALYSIS   ---------*
+   *                                                                 *
+   *******************************************************************
+
+
+  PUT TRIPLE: XDIPLEN  XDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  XDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  XDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  YDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  YDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  YDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  ZDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  ZDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: XDIPLEN  ZDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  XDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  XDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  XDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  YDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  YDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  YDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  ZDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  ZDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: YDIPLEN  ZDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  XDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  XDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  XDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  YDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  YDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  YDIPLEN  ZDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  ZDIPLEN  XDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  ZDIPLEN  YDIPLEN  ON THE LIST.
+
+  PUT TRIPLE: ZDIPLEN  ZDIPLEN  ZDIPLEN  ON THE LIST.
+
+
+                         +-------------------------------+
+                         ! REQUESTED PROPERTY OPERATORS: !
+                         +-------------------------------+
+
+             Index   Oper. Label  Symmetry  Transp.  PDBS  Atom
+             --------------------------------------------------
+                1     HAM0            1        1      T      0
+                2     XDIPLEN         1        1      F      0
+                3     YDIPLEN         1        1      F      0
+                4     ZDIPLEN         1        1      F      0
+             --------------------------------------------------
+
+
+
+
+                         +-------------------------------+
+                         ! REQUESTED EXPECTATION VALUES: !
+                         +-------------------------------+
+
+                       Index   Oper. Label  Symmetry
+                       -----------------------------
+                       -----------------------------
+
+
+
+
+                       +------------------------------------+
+                       ! REQUESTED EFFECTIVE FOCK MATRICES: !
+                       +------------------------------------+
+
+                       Index   Oper. Label  Symmetry
+                       -----------------------------
+                       -----------------------------
+
+
+
+
+                       +-----------------------------------+
+                       ! REQUESTED FIRST ORDER XI VECTORS: !
+                       +-----------------------------------+
+
+             Index   Oper. Label  relaxed  Sym.     Frequency
+             --------------------------------------------------
+                1      XDIPLEN        F     1      0.000000D+00
+                2      YDIPLEN        F     1      0.000000D+00
+                3      ZDIPLEN        F     1      0.000000D+00
+             --------------------------------------------------
+
+
+
+
+                        +----------------------------------+
+                        ! REQUESTED FIRST ORDER T VECTORS: !
+                        +----------------------------------+
+
+             Index   Oper. Label  relaxed  Sym.     Frequency
+             --------------------------------------------------
+                1      XDIPLEN        F     1     -1.284681D-01
+                2      XDIPLEN        F     1     -8.564542D-02
+                3      XDIPLEN        F     1     -4.282271D-02
+                4      XDIPLEN        F     1      0.000000D+00
+                5      XDIPLEN        F     1      4.282271D-02
+                6      XDIPLEN        F     1      8.564542D-02
+                7      XDIPLEN        F     1      1.284681D-01
+                8      YDIPLEN        F     1     -1.284681D-01
+                9      YDIPLEN        F     1     -8.564542D-02
+               10      YDIPLEN        F     1     -4.282271D-02
+               11      YDIPLEN        F     1      0.000000D+00
+               12      YDIPLEN        F     1      4.282271D-02
+               13      YDIPLEN        F     1      8.564542D-02
+               14      YDIPLEN        F     1      1.284681D-01
+               15      ZDIPLEN        F     1     -1.284681D-01
+               16      ZDIPLEN        F     1     -8.564542D-02
+               17      ZDIPLEN        F     1     -4.282271D-02
+               18      ZDIPLEN        F     1      0.000000D+00
+               19      ZDIPLEN        F     1      4.282271D-02
+               20      ZDIPLEN        F     1      8.564542D-02
+               21      ZDIPLEN        F     1      1.284681D-01
+             --------------------------------------------------
+
+
+
+
+                       +------------------------------------+
+                       ! REQUESTED FIRST ORDER ETA VECTORS: !
+                       +------------------------------------+
+
+             Index   Oper. Label  relaxed  Sym.     Frequency
+             --------------------------------------------------
+                1      XDIPLEN        F     1      0.000000D+00
+                2      YDIPLEN        F     1      0.000000D+00
+                3      ZDIPLEN        F     1      0.000000D+00
+             --------------------------------------------------
+
+
+
+
+                      +-------------------------------------+
+                      ! REQUESTED FIRST ORDER ZETA VECTORS: !
+                      +-------------------------------------+
+
+             Index   Oper. Label  relaxed  Sym.     Frequency
+             --------------------------------------------------
+                1      XDIPLEN        F     1     -1.284681D-01
+                2      XDIPLEN        F     1     -8.564542D-02
+                3      XDIPLEN        F     1     -4.282271D-02
+                4      XDIPLEN        F     1     -0.000000D+00
+                5      XDIPLEN        F     1      4.282271D-02
+                6      XDIPLEN        F     1      8.564542D-02
+                7      XDIPLEN        F     1      1.284681D-01
+                8      YDIPLEN        F     1     -1.284681D-01
+                9      YDIPLEN        F     1     -8.564542D-02
+               10      YDIPLEN        F     1     -4.282271D-02
+               11      YDIPLEN        F     1      0.000000D+00
+               12      YDIPLEN        F     1      4.282271D-02
+               13      YDIPLEN        F     1      8.564542D-02
+               14      YDIPLEN        F     1      1.284681D-01
+               15      ZDIPLEN        F     1     -1.284681D-01
+               16      ZDIPLEN        F     1     -8.564542D-02
+               17      ZDIPLEN        F     1     -4.282271D-02
+               18      ZDIPLEN        F     1      0.000000D+00
+               19      ZDIPLEN        F     1      4.282271D-02
+               20      ZDIPLEN        F     1      8.564542D-02
+               21      ZDIPLEN        F     1      1.284681D-01
+             --------------------------------------------------
+
+
+
+
+                      +--------------------------------------+
+                      ! REQUESTED SECOND-ORDER XKSI VECTORS: !
+                      +--------------------------------------+
+
+     Index    Oper. Label  Symmetry  Frequency   Oper. Label  Symmetry  Frequency  Symmetry
+     ----------------------------------------------------------------------
+    1   XDIPLEN   1    -1.284681D-01   XDIPLEN   1     4.282271D-02  1
+    2   XDIPLEN   1    -8.564542D-02   XDIPLEN   1     0.000000D+00  1
+    3   XDIPLEN   1    -8.564542D-02   XDIPLEN   1     4.282271D-02  1
+    4   XDIPLEN   1    -4.282271D-02   XDIPLEN   1    -4.282271D-02  1
+    5   XDIPLEN   1    -4.282271D-02   XDIPLEN   1     0.000000D+00  1
+    6   XDIPLEN   1    -4.282271D-02   XDIPLEN   1     4.282271D-02  1
+    7   XDIPLEN   1    -0.000000D+00   XDIPLEN   1     0.000000D+00  1
+    8   XDIPLEN   1     4.282271D-02   XDIPLEN   1    -0.000000D+00  1
+    9   XDIPLEN   1     4.282271D-02   XDIPLEN   1     4.282271D-02  1
+   10   XDIPLEN   1     8.564542D-02   XDIPLEN   1    -4.282271D-02  1
+   11   XDIPLEN   1     8.564542D-02   XDIPLEN   1    -0.000000D+00  1
+   12   XDIPLEN   1     1.284681D-01   XDIPLEN   1    -4.282271D-02  1
+   13   XDIPLEN   1    -1.284681D-01   YDIPLEN   1     4.282271D-02  1
+   14   XDIPLEN   1    -8.564542D-02   YDIPLEN   1     0.000000D+00  1
+   15   XDIPLEN   1    -8.564542D-02   YDIPLEN   1     4.282271D-02  1
+   16   XDIPLEN   1    -4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   17   XDIPLEN   1    -4.282271D-02   YDIPLEN   1    -0.000000D+00  1
+   18   XDIPLEN   1    -4.282271D-02   YDIPLEN   1     4.282271D-02  1
+   19   XDIPLEN   1    -0.000000D+00   YDIPLEN   1    -4.282271D-02  1
+   20   XDIPLEN   1    -0.000000D+00   YDIPLEN   1     0.000000D+00  1
+   21   XDIPLEN   1     0.000000D+00   YDIPLEN   1     4.282271D-02  1
+   22   XDIPLEN   1     4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   23   XDIPLEN   1     4.282271D-02   YDIPLEN   1     0.000000D+00  1
+   24   XDIPLEN   1     4.282271D-02   YDIPLEN   1     4.282271D-02  1
+   25   XDIPLEN   1     8.564542D-02   YDIPLEN   1    -4.282271D-02  1
+   26   XDIPLEN   1     8.564542D-02   YDIPLEN   1    -0.000000D+00  1
+   27   XDIPLEN   1     1.284681D-01   YDIPLEN   1    -4.282271D-02  1
+   28   XDIPLEN   1    -1.284681D-01   ZDIPLEN   1     4.282271D-02  1
+   29   XDIPLEN   1    -8.564542D-02   ZDIPLEN   1     0.000000D+00  1
+   30   XDIPLEN   1    -8.564542D-02   ZDIPLEN   1     4.282271D-02  1
+   31   XDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   32   XDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -0.000000D+00  1
+   33   XDIPLEN   1    -4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   34   XDIPLEN   1    -0.000000D+00   ZDIPLEN   1    -4.282271D-02  1
+   35   XDIPLEN   1    -0.000000D+00   ZDIPLEN   1     0.000000D+00  1
+   36   XDIPLEN   1     0.000000D+00   ZDIPLEN   1     4.282271D-02  1
+   37   XDIPLEN   1     4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   38   XDIPLEN   1     4.282271D-02   ZDIPLEN   1     0.000000D+00  1
+   39   XDIPLEN   1     4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   40   XDIPLEN   1     8.564542D-02   ZDIPLEN   1    -4.282271D-02  1
+   41   XDIPLEN   1     8.564542D-02   ZDIPLEN   1    -0.000000D+00  1
+   42   XDIPLEN   1     1.284681D-01   ZDIPLEN   1    -4.282271D-02  1
+   43   YDIPLEN   1    -1.284681D-01   XDIPLEN   1     4.282271D-02  1
+   44   YDIPLEN   1    -8.564542D-02   XDIPLEN   1     0.000000D+00  1
+   45   YDIPLEN   1    -8.564542D-02   XDIPLEN   1     4.282271D-02  1
+   46   YDIPLEN   1     8.564542D-02   XDIPLEN   1    -4.282271D-02  1
+   47   YDIPLEN   1     8.564542D-02   XDIPLEN   1    -0.000000D+00  1
+   48   YDIPLEN   1     1.284681D-01   XDIPLEN   1    -4.282271D-02  1
+   49   YDIPLEN   1    -1.284681D-01   YDIPLEN   1     4.282271D-02  1
+   50   YDIPLEN   1    -8.564542D-02   YDIPLEN   1     0.000000D+00  1
+   51   YDIPLEN   1    -8.564542D-02   YDIPLEN   1     4.282271D-02  1
+   52   YDIPLEN   1    -4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   53   YDIPLEN   1    -0.000000D+00   YDIPLEN   1    -4.282271D-02  1
+   54   YDIPLEN   1     0.000000D+00   YDIPLEN   1     0.000000D+00  1
+   55   YDIPLEN   1     0.000000D+00   YDIPLEN   1     4.282271D-02  1
+   56   YDIPLEN   1     4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   57   YDIPLEN   1     4.282271D-02   YDIPLEN   1     4.282271D-02  1
+   58   YDIPLEN   1     8.564542D-02   YDIPLEN   1    -4.282271D-02  1
+   59   YDIPLEN   1     8.564542D-02   YDIPLEN   1    -0.000000D+00  1
+   60   YDIPLEN   1     1.284681D-01   YDIPLEN   1    -4.282271D-02  1
+   61   YDIPLEN   1    -1.284681D-01   ZDIPLEN   1     4.282271D-02  1
+   62   YDIPLEN   1    -8.564542D-02   ZDIPLEN   1     0.000000D+00  1
+   63   YDIPLEN   1    -8.564542D-02   ZDIPLEN   1     4.282271D-02  1
+   64   YDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   65   YDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -0.000000D+00  1
+   66   YDIPLEN   1    -4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   67   YDIPLEN   1    -0.000000D+00   ZDIPLEN   1    -4.282271D-02  1
+   68   YDIPLEN   1     0.000000D+00   ZDIPLEN   1     0.000000D+00  1
+   69   YDIPLEN   1     0.000000D+00   ZDIPLEN   1     4.282271D-02  1
+   70   YDIPLEN   1     4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   71   YDIPLEN   1     4.282271D-02   ZDIPLEN   1     0.000000D+00  1
+   72   YDIPLEN   1     4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   73   YDIPLEN   1     8.564542D-02   ZDIPLEN   1    -4.282271D-02  1
+   74   YDIPLEN   1     8.564542D-02   ZDIPLEN   1    -0.000000D+00  1
+   75   YDIPLEN   1     1.284681D-01   ZDIPLEN   1    -4.282271D-02  1
+   76   ZDIPLEN   1    -1.284681D-01   XDIPLEN   1     4.282271D-02  1
+   77   ZDIPLEN   1    -8.564542D-02   XDIPLEN   1     0.000000D+00  1
+   78   ZDIPLEN   1    -8.564542D-02   XDIPLEN   1     4.282271D-02  1
+   79   ZDIPLEN   1     8.564542D-02   XDIPLEN   1    -4.282271D-02  1
+   80   ZDIPLEN   1     8.564542D-02   XDIPLEN   1    -0.000000D+00  1
+   81   ZDIPLEN   1     1.284681D-01   XDIPLEN   1    -4.282271D-02  1
+   82   ZDIPLEN   1    -1.284681D-01   YDIPLEN   1     4.282271D-02  1
+   83   ZDIPLEN   1    -8.564542D-02   YDIPLEN   1     0.000000D+00  1
+   84   ZDIPLEN   1    -8.564542D-02   YDIPLEN   1     4.282271D-02  1
+   85   ZDIPLEN   1     8.564542D-02   YDIPLEN   1    -4.282271D-02  1
+   86   ZDIPLEN   1     8.564542D-02   YDIPLEN   1    -0.000000D+00  1
+   87   ZDIPLEN   1     1.284681D-01   YDIPLEN   1    -4.282271D-02  1
+   88   ZDIPLEN   1    -1.284681D-01   ZDIPLEN   1     4.282271D-02  1
+   89   ZDIPLEN   1    -8.564542D-02   ZDIPLEN   1     0.000000D+00  1
+   90   ZDIPLEN   1    -8.564542D-02   ZDIPLEN   1     4.282271D-02  1
+   91   ZDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   92   ZDIPLEN   1    -0.000000D+00   ZDIPLEN   1    -4.282271D-02  1
+   93   ZDIPLEN   1     0.000000D+00   ZDIPLEN   1     0.000000D+00  1
+   94   ZDIPLEN   1     0.000000D+00   ZDIPLEN   1     4.282271D-02  1
+   95   ZDIPLEN   1     4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   96   ZDIPLEN   1     4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   97   ZDIPLEN   1     8.564542D-02   ZDIPLEN   1    -4.282271D-02  1
+   98   ZDIPLEN   1     8.564542D-02   ZDIPLEN   1    -0.000000D+00  1
+   99   ZDIPLEN   1     1.284681D-01   ZDIPLEN   1    -4.282271D-02  1
+     ----------------------------------------------------------------------
+
+
+
+
+                       +-----------------------------------+
+                       ! REQUESTED SECOND-ORDER T VECTORS: !
+                       +-----------------------------------+
+
+     Index    Oper. Label  Symmetry  Frequency   Oper. Label  Symmetry  Frequency  Symmetry
+     ----------------------------------------------------------------------
+    1   XDIPLEN   1    -1.284681D-01   XDIPLEN   1     4.282271D-02  1
+    2   XDIPLEN   1    -8.564542D-02   XDIPLEN   1     0.000000D+00  1
+    3   XDIPLEN   1    -8.564542D-02   XDIPLEN   1     4.282271D-02  1
+    4   XDIPLEN   1    -4.282271D-02   XDIPLEN   1    -4.282271D-02  1
+    5   XDIPLEN   1    -4.282271D-02   XDIPLEN   1     0.000000D+00  1
+    6   XDIPLEN   1    -4.282271D-02   XDIPLEN   1     4.282271D-02  1
+    7   XDIPLEN   1    -0.000000D+00   XDIPLEN   1     0.000000D+00  1
+    8   XDIPLEN   1     4.282271D-02   XDIPLEN   1    -0.000000D+00  1
+    9   XDIPLEN   1     4.282271D-02   XDIPLEN   1     4.282271D-02  1
+   10   XDIPLEN   1     8.564542D-02   XDIPLEN   1    -4.282271D-02  1
+   11   XDIPLEN   1     8.564542D-02   XDIPLEN   1    -0.000000D+00  1
+   12   XDIPLEN   1     1.284681D-01   XDIPLEN   1    -4.282271D-02  1
+   13   XDIPLEN   1    -1.284681D-01   YDIPLEN   1     4.282271D-02  1
+   14   XDIPLEN   1    -8.564542D-02   YDIPLEN   1     0.000000D+00  1
+   15   XDIPLEN   1    -8.564542D-02   YDIPLEN   1     4.282271D-02  1
+   16   XDIPLEN   1    -4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   17   XDIPLEN   1    -4.282271D-02   YDIPLEN   1    -0.000000D+00  1
+   18   XDIPLEN   1    -4.282271D-02   YDIPLEN   1     4.282271D-02  1
+   19   XDIPLEN   1    -0.000000D+00   YDIPLEN   1    -4.282271D-02  1
+   20   XDIPLEN   1    -0.000000D+00   YDIPLEN   1     0.000000D+00  1
+   21   XDIPLEN   1     0.000000D+00   YDIPLEN   1     4.282271D-02  1
+   22   XDIPLEN   1     4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   23   XDIPLEN   1     4.282271D-02   YDIPLEN   1     0.000000D+00  1
+   24   XDIPLEN   1     4.282271D-02   YDIPLEN   1     4.282271D-02  1
+   25   XDIPLEN   1     8.564542D-02   YDIPLEN   1    -4.282271D-02  1
+   26   XDIPLEN   1     8.564542D-02   YDIPLEN   1    -0.000000D+00  1
+   27   XDIPLEN   1     1.284681D-01   YDIPLEN   1    -4.282271D-02  1
+   28   XDIPLEN   1    -1.284681D-01   ZDIPLEN   1     4.282271D-02  1
+   29   XDIPLEN   1    -8.564542D-02   ZDIPLEN   1     0.000000D+00  1
+   30   XDIPLEN   1    -8.564542D-02   ZDIPLEN   1     4.282271D-02  1
+   31   XDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   32   XDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -0.000000D+00  1
+   33   XDIPLEN   1    -4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   34   XDIPLEN   1    -0.000000D+00   ZDIPLEN   1    -4.282271D-02  1
+   35   XDIPLEN   1    -0.000000D+00   ZDIPLEN   1     0.000000D+00  1
+   36   XDIPLEN   1     0.000000D+00   ZDIPLEN   1     4.282271D-02  1
+   37   XDIPLEN   1     4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   38   XDIPLEN   1     4.282271D-02   ZDIPLEN   1     0.000000D+00  1
+   39   XDIPLEN   1     4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   40   XDIPLEN   1     8.564542D-02   ZDIPLEN   1    -4.282271D-02  1
+   41   XDIPLEN   1     8.564542D-02   ZDIPLEN   1    -0.000000D+00  1
+   42   XDIPLEN   1     1.284681D-01   ZDIPLEN   1    -4.282271D-02  1
+   43   YDIPLEN   1    -1.284681D-01   XDIPLEN   1     4.282271D-02  1
+   44   YDIPLEN   1    -8.564542D-02   XDIPLEN   1     0.000000D+00  1
+   45   YDIPLEN   1    -8.564542D-02   XDIPLEN   1     4.282271D-02  1
+   46   YDIPLEN   1     8.564542D-02   XDIPLEN   1    -4.282271D-02  1
+   47   YDIPLEN   1     8.564542D-02   XDIPLEN   1    -0.000000D+00  1
+   48   YDIPLEN   1     1.284681D-01   XDIPLEN   1    -4.282271D-02  1
+   49   YDIPLEN   1    -1.284681D-01   YDIPLEN   1     4.282271D-02  1
+   50   YDIPLEN   1    -8.564542D-02   YDIPLEN   1     0.000000D+00  1
+   51   YDIPLEN   1    -8.564542D-02   YDIPLEN   1     4.282271D-02  1
+   52   YDIPLEN   1    -4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   53   YDIPLEN   1    -0.000000D+00   YDIPLEN   1    -4.282271D-02  1
+   54   YDIPLEN   1     0.000000D+00   YDIPLEN   1     0.000000D+00  1
+   55   YDIPLEN   1     0.000000D+00   YDIPLEN   1     4.282271D-02  1
+   56   YDIPLEN   1     4.282271D-02   YDIPLEN   1    -4.282271D-02  1
+   57   YDIPLEN   1     4.282271D-02   YDIPLEN   1     4.282271D-02  1
+   58   YDIPLEN   1     8.564542D-02   YDIPLEN   1    -4.282271D-02  1
+   59   YDIPLEN   1     8.564542D-02   YDIPLEN   1    -0.000000D+00  1
+   60   YDIPLEN   1     1.284681D-01   YDIPLEN   1    -4.282271D-02  1
+   61   YDIPLEN   1    -1.284681D-01   ZDIPLEN   1     4.282271D-02  1
+   62   YDIPLEN   1    -8.564542D-02   ZDIPLEN   1     0.000000D+00  1
+   63   YDIPLEN   1    -8.564542D-02   ZDIPLEN   1     4.282271D-02  1
+   64   YDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   65   YDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -0.000000D+00  1
+   66   YDIPLEN   1    -4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   67   YDIPLEN   1    -0.000000D+00   ZDIPLEN   1    -4.282271D-02  1
+   68   YDIPLEN   1     0.000000D+00   ZDIPLEN   1     0.000000D+00  1
+   69   YDIPLEN   1     0.000000D+00   ZDIPLEN   1     4.282271D-02  1
+   70   YDIPLEN   1     4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   71   YDIPLEN   1     4.282271D-02   ZDIPLEN   1     0.000000D+00  1
+   72   YDIPLEN   1     4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   73   YDIPLEN   1     8.564542D-02   ZDIPLEN   1    -4.282271D-02  1
+   74   YDIPLEN   1     8.564542D-02   ZDIPLEN   1    -0.000000D+00  1
+   75   YDIPLEN   1     1.284681D-01   ZDIPLEN   1    -4.282271D-02  1
+   76   ZDIPLEN   1    -1.284681D-01   XDIPLEN   1     4.282271D-02  1
+   77   ZDIPLEN   1    -8.564542D-02   XDIPLEN   1     0.000000D+00  1
+   78   ZDIPLEN   1    -8.564542D-02   XDIPLEN   1     4.282271D-02  1
+   79   ZDIPLEN   1     8.564542D-02   XDIPLEN   1    -4.282271D-02  1
+   80   ZDIPLEN   1     8.564542D-02   XDIPLEN   1    -0.000000D+00  1
+   81   ZDIPLEN   1     1.284681D-01   XDIPLEN   1    -4.282271D-02  1
+   82   ZDIPLEN   1    -1.284681D-01   YDIPLEN   1     4.282271D-02  1
+   83   ZDIPLEN   1    -8.564542D-02   YDIPLEN   1     0.000000D+00  1
+   84   ZDIPLEN   1    -8.564542D-02   YDIPLEN   1     4.282271D-02  1
+   85   ZDIPLEN   1     8.564542D-02   YDIPLEN   1    -4.282271D-02  1
+   86   ZDIPLEN   1     8.564542D-02   YDIPLEN   1    -0.000000D+00  1
+   87   ZDIPLEN   1     1.284681D-01   YDIPLEN   1    -4.282271D-02  1
+   88   ZDIPLEN   1    -1.284681D-01   ZDIPLEN   1     4.282271D-02  1
+   89   ZDIPLEN   1    -8.564542D-02   ZDIPLEN   1     0.000000D+00  1
+   90   ZDIPLEN   1    -8.564542D-02   ZDIPLEN   1     4.282271D-02  1
+   91   ZDIPLEN   1    -4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   92   ZDIPLEN   1    -0.000000D+00   ZDIPLEN   1    -4.282271D-02  1
+   93   ZDIPLEN   1     0.000000D+00   ZDIPLEN   1     0.000000D+00  1
+   94   ZDIPLEN   1     0.000000D+00   ZDIPLEN   1     4.282271D-02  1
+   95   ZDIPLEN   1     4.282271D-02   ZDIPLEN   1    -4.282271D-02  1
+   96   ZDIPLEN   1     4.282271D-02   ZDIPLEN   1     4.282271D-02  1
+   97   ZDIPLEN   1     8.564542D-02   ZDIPLEN   1    -4.282271D-02  1
+   98   ZDIPLEN   1     8.564542D-02   ZDIPLEN   1    -0.000000D+00  1
+   99   ZDIPLEN   1     1.284681D-01   ZDIPLEN   1    -4.282271D-02  1
+     ----------------------------------------------------------------------
+
+
+      
+
+    *******************************************************************
+    *          SOLVING COUPLED CLUSTER RESPONSE EQUATIONS             *
+    *******************************************************************
+
+
+
+ 
+ +======================================================================+
+ !                     RHS & ETA VECTORS TO COMPUTE:                    !
+ +======================================================================+
+ | TYPE | # VEC. |  NEEDED FOR:                                         |
+ +----------------------------------------------------------------------+
+ |  O1  |    3   |  first-order amplitude equations                     |
+ |  X1  |    3   |  first-order multipliers equations                   |
+ |  O2  |   99   |  second-order amplitude equations                    |
+ +======================================================================+
+
+
+
+ +======================================================================+
+ !                       LINEAR EQUATIONS TO SOLVE:                     !
+ +======================================================================+
+ | TYPE | # VEC. |  EQUATION:                                           |
+ +----------------------------------------------------------------------+
+ |  R1  |   21   |  first-order amplitude response                      |
+ |  L1  |   21   |  first-order multiplier response                     |
+ |  R2  |   99   |  second-order amplitude response                     |
+ +======================================================================+
+
+
+
+ +======================================================================+
+ !                F MATRIX TRANSFORMATIONS TO COMPUTE:                  !
+ +======================================================================+
+ | TYPE | # VEC. |  TRANSFORMED:                                        |
+ +----------------------------------------------------------------------+
+ |  F1  |   21   |  first-order amplitude response (R1) vector          |
+ +======================================================================+
+
+
+
+
+ -------------------------------------------------------------------
+ |          OUTPUT FROM AMPLITUDE RHS VECTOR SECTION               |
+ -------------------------------------------------------------------
+
+
+
+   For the requested  3 1th.-order amplitude rhs vectors "O1 ".
+         -   0 D matrix transformations 
+         -   0 C matrix transformations 
+         -   0 B matrix transformations 
+         -   0 C{O} matrix transformations 
+         -   0 B{O} matrix transformations 
+         -   0 A{O} matrix transformations 
+         -   3Xi{O} vector calculations    
+   will be performed.
+
+
+ RPA: call cceq_str
+ RPA: exit cceq_str
+ RPA: call cceq_str
+ RPA: exit cceq_str
+
+ -------------------------------------------------------------------
+ |          OUTPUT FROM AMPLITUDE RHS VECTOR SECTION               |
+ -------------------------------------------------------------------
+
+
+
+   For the requested 99 2th.-order amplitude rhs vectors "O2 ".
+         -   0 D matrix transformations 
+         -   0 C matrix transformations 
+         -  99 B matrix transformations 
+         -   0 C{O} matrix transformations 
+         -   0 B{O} matrix transformations 
+         - 198 A{O} matrix transformations 
+         -   0Xi{O} vector calculations    
+              (A{O} matrix included in B matrix)
+   will be performed.
+
+
+ +--------------------------------------------------+
+ | total time for  99 B transforms.:      1.50 secs.|
+ +--------------------------------------------------+
+ |  % of time used in start up org.:     19.59      |
+ |  % of time used in Fock interm. :      0.00      |
+ |  % of time used in ERI          :      2.20      |
+ |  % of time used in CCRDAO       :      0.47      |
+ |  % of time used in (**|k del)   :      0.00      |
+ |  % of time used in singles part :      0.00      |
+ |  % of time used in A term       :      0.00      |
+ |  % of time used in BF term      :      0.00      |
+ |  % of time used in F term       :      0.00      |
+ |  % of time used in E term       :      0.00      |
+ |  % of time used in C term       :      0.00      |
+ |  % of time used in D term       :      0.00      |
+ |  % of time used in I/O          :     19.85      |
+ +==================================================+
+
+
+ RPA: call cceq_str
+ RPA: exit cceq_str
+
+ Solution of CC response equations completed.
+
+
+ *******************************************************************
+ *                                                                 *
+ *--------  OUTPUT FROM COUPLED CLUSTER LINEAR RESPONSE   ---------*
+ *                                                                 *
+ *--------     CALCULATION OF SECOND ORDER PROPERTIES     ---------*
+ *                                                                 *
+ *******************************************************************
+
+ 
+
+
+   For the requested 18 second-order properties
+         -   8 F matrix transformations with R1 vectors
+         -   0 J matrix transformations with L1 vectors
+         -   3 ETA and XKSI vector calculations 
+         -   0 X intermediate calculations 
+         -   0 2. order reortho./relax. contributions
+   will be performed.
+
+
+
+ Time used for    8 F matrix transformations:        0.09 seconds.
+
+ Time used for    3 O1/X1 vector calculation:        0.04 seconds.
+
+ Total time for  18 linear response function:        0.13 seconds.
+
+
+             +--------------------------------------------------------+
+             !      FINAL CCS RESULTS FOR THE SECOND-ORDER PROPERTIES !
+             +--------------------------------------------------------+
+
+
+  A operator                  B operator                     property 
+------------------------------------------------------------------------
+
+ XDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000     0.45439902E-01
+                   -0.0428                      0.0428     0.45808838E-01
+
+ XDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000     0.29292941E-16
+                   -0.0428                      0.0428     0.29556682E-16
+
+ XDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000    -0.56603165E-17
+                   -0.0428                      0.0428    -0.57939541E-17
+
+ YDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000     0.29292941E-16
+                   -0.0428                      0.0428     0.29556682E-16
+
+ YDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000      5.5929092    
+                   -0.0428                      0.0428      5.6089911    
+
+ YDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000     0.92702205E-15
+                   -0.0428                      0.0428     0.91760460E-15
+
+ ZDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000    -0.56603165E-17
+                   -0.0428                      0.0428    -0.57939541E-17
+
+ ZDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000     0.92702205E-15
+                   -0.0428                      0.0428     0.91760460E-15
+
+ ZDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000      2.2523547    
+                   -0.0428                      0.0428      2.2576968    
+------------------------------------------------------------------------
+
+
+
+ *******************************************************************
+ *                                                                 *
+ *-------- OUTPUT FROM COUPLED CLUSTER QUADRATIC RESPONSE ---------*
+ *                                                                 *
+ *--------     CALCULATION OF CC HYPERPOLARIZABILITIES    ---------*
+ *                                                                 *
+ *******************************************************************
+
+
+
+   For the requested 81 quadratic response functions 
+         -  33 G matrix transformations 
+         -  63 B matrix transformations 
+         -   0 K matrix transformations 
+         -   0 F matrix transformations 
+         -  31 F{O} matrix transformations 
+         -  45 ETA{O} vector calculations 
+         -   0 Xksi{O2} x L1 and Eta{O2} x R1 dot products
+         -   0 X1 x R2 dot products 
+   will be performed.
+
+
+ +--------------------------------------------------+
+ | total time for  33 G transforms.:      0.09 secs.|
+ +==================================================+
+
+
+
+ Time used for   33 G matrix transformations:        0.09 seconds.
+ +--------------------------------------------------+
+ | total time for  63 B transforms.:      0.62 secs.|
+ +==================================================+
+
+
+
+ Time used for   63 B matrix transformations:        0.62 seconds.
+
+ Time used for   31 F{O} matrix transform.:          0.23 seconds.
+
+ Time used for   45 ETA{O} vector calculat.:         0.61 seconds.
+
+ Time used for    0 Xksi{O} and Eta{O2} vector calculat.:         0.00 seconds.
+
+ Total time for  81 quadratic response func.:        1.55 seconds.
+
+
+                  +--------------------------------------------------------------------------------------+
+                  !                FINAL CCS RESULTS FOR THE FIRST HYPERPOLARIZABILITIES                 !
+                  +--------------------------------------------------------------------------------------+
+
+
+  A operator                  B operator                  C operator                     property 
+------------------------------------------------------------------------------------------------------
+
+ XDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000    -0.13099519E-15
+                   -0.0428                      0.0428                      0.0000    -0.13192116E-15
+                   -0.0856                      0.0428                      0.0428    -0.13381692E-15
+
+ XDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000     0.14326594E-15
+                   -0.0428                      0.0428                      0.0000     0.15509162E-15
+                   -0.0856                      0.0428                      0.0428     0.12865758E-15
+
+ XDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000    -0.48407655E-01
+                   -0.0428                      0.0428                      0.0000    -0.47568007E-01
+                   -0.0856                      0.0428                      0.0428    -0.47709260E-01
+
+ XDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000     0.14326594E-15
+                   -0.0428                      0.0428                      0.0000     0.11564716E-15
+                   -0.0856                      0.0428                      0.0428     0.12865758E-15
+
+ XDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000     0.11662088E-14
+                   -0.0428                      0.0428                      0.0000     0.11846685E-14
+                   -0.0856                      0.0428                      0.0428     0.12413641E-14
+
+ XDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000    -0.25011240E-15
+                   -0.0428                      0.0428                      0.0000    -0.25028572E-15
+                   -0.0856                      0.0428                      0.0428    -0.25360338E-15
+
+ XDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000    -0.48407655E-01
+                   -0.0428                      0.0428                      0.0000    -0.49407425E-01
+                   -0.0856                      0.0428                      0.0428    -0.47709260E-01
+
+ XDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000    -0.25011240E-15
+                   -0.0428                      0.0428                      0.0000    -0.25240382E-15
+                   -0.0856                      0.0428                      0.0428    -0.25360338E-15
+
+ XDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000     0.33869606E-15
+                   -0.0428                      0.0428                      0.0000     0.33945087E-15
+                   -0.0856                      0.0428                      0.0428     0.33833546E-15
+
+ YDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000     0.14326594E-15
+                   -0.0428                      0.0428                      0.0000     0.11564716E-15
+                   -0.0856                      0.0428                      0.0428     0.19135326E-15
+
+ YDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000     0.11662088E-14
+                   -0.0428                      0.0428                      0.0000     0.11846685E-14
+                   -0.0856                      0.0428                      0.0428     0.11856964E-14
+
+ YDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000    -0.25011240E-15
+                   -0.0428                      0.0428                      0.0000    -0.25028572E-15
+                   -0.0856                      0.0428                      0.0428    -0.25111600E-15
+
+ YDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000     0.11662088E-14
+                   -0.0428                      0.0428                      0.0000     0.11665510E-14
+                   -0.0856                      0.0428                      0.0428     0.11856964E-14
+
+ YDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000    -0.54279722E-13
+                   -0.0428                      0.0428                      0.0000    -0.57285357E-13
+                   -0.0856                      0.0428                      0.0428    -0.57418082E-13
+
+ YDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000      7.7862542    
+                   -0.0428                      0.0428                      0.0000      7.8268366    
+                   -0.0856                      0.0428                      0.0428      7.9048387    
+
+ YDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000    -0.25011240E-15
+                   -0.0428                      0.0428                      0.0000    -0.25158682E-15
+                   -0.0856                      0.0428                      0.0428    -0.25111600E-15
+
+ YDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000      7.7862542    
+                   -0.0428                      0.0428                      0.0000      7.8226695    
+                   -0.0856                      0.0428                      0.0428      7.9048387    
+
+ YDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000    -0.19494725E-13
+                   -0.0428                      0.0428                      0.0000    -0.19708719E-13
+                   -0.0856                      0.0428                      0.0428    -0.19158727E-13
+
+ ZDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000    -0.48407655E-01
+                   -0.0428                      0.0428                      0.0000    -0.49407425E-01
+                   -0.0856                      0.0428                      0.0428    -0.53310227E-01
+
+ ZDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000    -0.25011240E-15
+                   -0.0428                      0.0428                      0.0000    -0.25240382E-15
+                   -0.0856                      0.0428                      0.0428    -0.25757450E-15
+
+ ZDIPLEN  (unrel.) -0.0000   XDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000     0.33869606E-15
+                   -0.0428                      0.0428                      0.0000     0.33945087E-15
+                   -0.0856                      0.0428                      0.0428     0.34607166E-15
+
+ ZDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000    -0.25011240E-15
+                   -0.0428                      0.0428                      0.0000    -0.25158682E-15
+                   -0.0856                      0.0428                      0.0428    -0.25757450E-15
+
+ ZDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000      7.7862542    
+                   -0.0428                      0.0428                      0.0000      7.8226695    
+                   -0.0856                      0.0428                      0.0428      7.8923501    
+
+ ZDIPLEN  (unrel.) -0.0000   YDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000    -0.19494725E-13
+                   -0.0428                      0.0428                      0.0000    -0.19708719E-13
+                   -0.0856                      0.0428                      0.0428    -0.19643503E-13
+
+ ZDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   XDIPLEN  (unrel.)  0.0000     0.33869606E-15
+                   -0.0428                      0.0428                      0.0000     0.34196574E-15
+                   -0.0856                      0.0428                      0.0428     0.34607166E-15
+
+ ZDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   YDIPLEN  (unrel.)  0.0000    -0.19494725E-13
+                   -0.0428                      0.0428                      0.0000    -0.19015976E-13
+                   -0.0856                      0.0428                      0.0428    -0.19643503E-13
+
+ ZDIPLEN  (unrel.) -0.0000   ZDIPLEN  (unrel.)  0.0000   ZDIPLEN  (unrel.)  0.0000      4.0252752    
+                   -0.0428                      0.0428                      0.0000      4.0523493    
+                   -0.0856                      0.0428                      0.0428      4.1075314    
+
+
+------------------------------------------------------------------------------------------------------
+
+
+
+
+ *******************************************************************
+ *                                                                 *
+ *----------  OUTPUT FROM COUPLED CLUSTER CUBIC RESPONSE   ---------*
+ *                                                                 *
+ *--------     CALCULATION OF CC HYPERPOLARIZABILITIES    ---------*
+ *                                                                 *
+ *******************************************************************
+
+
+
+   For the requested 405 cubic response functions 
+         - 129 H^0 matrix transformations 
+         -  99 G^0 matrix transformations 
+         - 368 G^A matrix transformations 
+         -  91 F^0 matrix transformations 
+         - 189 F^A matrix transformations 
+         -  63 F^0{O} matrix transformations 
+         - 447 F^A{O} matrix transformations 
+         -  63 ETA^A{O} vector calculations 
+   will be performed.
+
+
+
+ Time used for  129 H matrix transformations:           0.32 seconds.
+ +--------------------------------------------------+
+ | total time for  99 G transforms.:      1.69 secs.|
+ +--------------------------------------------------+
+ |  % of time used in ERI          :      0.00      |
+ |  % of time used in CCRDAO       :      0.00      |
+ |  % of time used in CCTRBT       :      0.00      |
+ |  % of time used in CCG_21CD     :      0.00      |
+ |  % of time used in Fock interm. :      0.00      |
+ |  % of time used in CCS part     :      0.00      |
+ |  % of time used in 21 CCSD part :      0.00      |
+ |  % of time used in doubles part :      0.00      |
+ |  % of time used in triples part :      0.00      |
+ |  % of time used in I/O          :      0.00      |
+ +==================================================+
+
+
+ +--------------------------------------------------+
+ | total time for 100 G transforms.:      0.68 secs.|
+ +==================================================+
+
+
+ +--------------------------------------------------+
+ | total time for 100 G transforms.:      0.75 secs.|
+ +==================================================+
+
+
+ +--------------------------------------------------+
+ | total time for 100 G transforms.:      0.70 secs.|
+ +==================================================+
+
+
+ +--------------------------------------------------+
+ | total time for  68 G transforms.:      0.45 secs.|
+ +==================================================+
+
+
+
+ Time used for  467 G matrix transformations:           4.26 seconds.
+
+ Time used for  280 F matrix transformations:           5.30 seconds.
+
+ Time used for  510 F{O} matrix transformations:        7.68 seconds.
+
+ Time used for   63 ETA{O} vector calculations :        3.10 seconds.
+
+ Total time for 405 cubic response functions:          20.74 seconds.
+
+
+        +------------------------------------------------------------------+
+        !           FINAL CCS RESULTS FOR THE SECOND HYPERPOLARIZABILITIES !
+        +------------------------------------------------------------------+
+
+
+  A operator        B operator        C operator        D operator           gamma
+--------------------------------------------------------------------------------------
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000    -0.32713633    
+         -0.0428            0.0000            0.0000            0.0428    -0.33145930    
+         -0.0856            0.0428            0.0428            0.0000    -0.34041306    
+         -0.0428            0.0428            0.0428           -0.0428    -0.33583391    
+         -0.1285            0.0428            0.0428            0.0428    -0.35483565    
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000    -0.33827874E-15
+         -0.0428            0.0000            0.0000            0.0428    -0.34203752E-15
+         -0.0856            0.0428            0.0428            0.0000    -0.35185250E-15
+         -0.0428            0.0428            0.0428           -0.0428    -0.34652907E-15
+         -0.1285            0.0428            0.0428            0.0428    -0.36575731E-15
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.40570934E-15
+         -0.0428            0.0000            0.0000            0.0428     0.40958739E-15
+         -0.0856            0.0428            0.0428            0.0000     0.42566707E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.41616460E-15
+         -0.1285            0.0428            0.0428            0.0428     0.44445163E-15
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000    -0.33827874E-15
+         -0.0428            0.0000            0.0000            0.0428    -0.34270256E-15
+         -0.0856            0.0428            0.0428            0.0000    -0.35117022E-15
+         -0.0428            0.0428            0.0428           -0.0428    -0.34652907E-15
+         -0.1285            0.0428            0.0428            0.0428    -0.36575731E-15
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000      1.1617750    
+         -0.0428            0.0000            0.0000            0.0428      1.1756701    
+         -0.0856            0.0428            0.0428            0.0000      1.1832701    
+         -0.0428            0.0428            0.0428           -0.0428      1.1699716    
+         -0.1285            0.0428            0.0428            0.0428      1.2275155    
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.49376754E-15
+         -0.0856            0.0428            0.0428            0.0000     0.46635030E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.40049400E-15
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.40570934E-15
+         -0.0428            0.0000            0.0000            0.0428     0.41220079E-15
+         -0.0856            0.0428            0.0428            0.0000     0.42297249E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.41616460E-15
+         -0.1285            0.0428            0.0428            0.0428     0.44445163E-15
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.46504786E-15
+         -0.0856            0.0428            0.0428            0.0000     0.48862875E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.40049400E-15
+
+ XDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     0.82153050    
+         -0.0428            0.0000            0.0000            0.0428     0.83418698    
+         -0.0856            0.0428            0.0428            0.0000     0.84241916    
+         -0.0428            0.0428            0.0428           -0.0428     0.82898595    
+         -0.1285            0.0428            0.0428            0.0428     0.88432071    
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000    -0.33827874E-15
+         -0.0428            0.0000            0.0000            0.0428    -0.34270256E-15
+         -0.0856            0.0428            0.0428            0.0000    -0.35117022E-15
+         -0.0428            0.0428            0.0428           -0.0428    -0.34652907E-15
+         -0.1285            0.0428            0.0428            0.0428    -0.36575731E-15
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000      1.1617750    
+         -0.0428            0.0000            0.0000            0.0428      1.1756701    
+         -0.0856            0.0428            0.0428            0.0000      1.1832701    
+         -0.0428            0.0428            0.0428           -0.0428      1.1699716    
+         -0.1285            0.0428            0.0428            0.0428      1.2275155    
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.49376754E-15
+         -0.0856            0.0428            0.0428            0.0000     0.46635030E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.40049400E-15
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000      1.1617750    
+         -0.0428            0.0000            0.0000            0.0428      1.1654280    
+         -0.0856            0.0428            0.0428            0.0000      1.2141699    
+         -0.0428            0.0428            0.0428           -0.0428      1.2094298    
+         -0.1285            0.0428            0.0428            0.0428      1.2275155    
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     0.28221180E-14
+         -0.0428            0.0000            0.0000            0.0428     0.28321787E-14
+         -0.0856            0.0428            0.0428            0.0000     0.28321659E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.28619529E-14
+         -0.1285            0.0428            0.0428            0.0428     0.28197055E-14
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.17568086E-14
+         -0.0856            0.0428            0.0428            0.0000     0.15066480E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.17119390E-14
+         -0.1285            0.0428            0.0428            0.0428     0.12589912E-14
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.41803905E-15
+         -0.0856            0.0428            0.0428            0.0000     0.40775220E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.43415387E-15
+         -0.1285            0.0428            0.0428            0.0428     0.40049400E-15
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.17234559E-14
+         -0.0856            0.0428            0.0428            0.0000     0.16049998E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.12589912E-14
+
+ XDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70362222E-15
+         -0.0856            0.0428            0.0428            0.0000     0.71679475E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.76338954E-15
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000     0.40570934E-15
+         -0.0428            0.0000            0.0000            0.0428     0.41220079E-15
+         -0.0856            0.0428            0.0428            0.0000     0.42297249E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.41616460E-15
+         -0.1285            0.0428            0.0428            0.0428     0.44445163E-15
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.46504786E-15
+         -0.0856            0.0428            0.0428            0.0000     0.48862875E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.40049400E-15
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.82153050    
+         -0.0428            0.0000            0.0000            0.0428     0.83418698    
+         -0.0856            0.0428            0.0428            0.0000     0.84241916    
+         -0.0428            0.0428            0.0428           -0.0428     0.82898595    
+         -0.1285            0.0428            0.0428            0.0428     0.88432071    
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.41803905E-15
+         -0.0856            0.0428            0.0428            0.0000     0.40775220E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.43415387E-15
+         -0.1285            0.0428            0.0428            0.0428     0.40049400E-15
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.17234559E-14
+         -0.0856            0.0428            0.0428            0.0000     0.16049998E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.12589912E-14
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70362222E-15
+         -0.0856            0.0428            0.0428            0.0000     0.71679475E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.76338954E-15
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.82153050    
+         -0.0428            0.0000            0.0000            0.0428     0.82544983    
+         -0.0856            0.0428            0.0428            0.0000     0.87000569    
+         -0.0428            0.0428            0.0428           -0.0428     0.86504560    
+         -0.1285            0.0428            0.0428            0.0428     0.88432071    
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.69835041E-15
+         -0.0856            0.0428            0.0428            0.0000     0.74051633E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.72960989E-15
+         -0.1285            0.0428            0.0428            0.0428     0.76338954E-15
+
+ XDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000    -0.31208268E-14
+         -0.0428            0.0000            0.0000            0.0428    -0.31415365E-14
+         -0.0856            0.0428            0.0428            0.0000    -0.31615645E-14
+         -0.0428            0.0428            0.0428           -0.0428    -0.31837774E-14
+         -0.1285            0.0428            0.0428            0.0428    -0.31778415E-14
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000    -0.33827874E-15
+         -0.0428            0.0000            0.0000            0.0428    -0.34203752E-15
+         -0.0856            0.0428            0.0428            0.0000    -0.34914741E-15
+         -0.0428            0.0428            0.0428           -0.0428    -0.34652907E-15
+         -0.1285            0.0428            0.0428            0.0428    -0.36023845E-15
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000      1.1617750    
+         -0.0428            0.0000            0.0000            0.0428      1.1663053    
+         -0.0856            0.0428            0.0428            0.0000      1.2143541    
+         -0.0428            0.0428            0.0428           -0.0428      1.2094298    
+         -0.1285            0.0428            0.0428            0.0428      1.2293238    
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.45749277E-15
+         -0.0856            0.0428            0.0428            0.0000     0.41905775E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.43415387E-15
+         -0.1285            0.0428            0.0428            0.0428     0.28276088E-15
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000      1.1617750    
+         -0.0428            0.0000            0.0000            0.0428      1.1756701    
+         -0.0856            0.0428            0.0428            0.0000      1.1849764    
+         -0.0428            0.0428            0.0428           -0.0428      1.1699716    
+         -0.1285            0.0428            0.0428            0.0428      1.2293238    
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     0.28221180E-14
+         -0.0428            0.0000            0.0000            0.0428     0.28517391E-14
+         -0.0856            0.0428            0.0428            0.0000     0.28922515E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.28619529E-14
+         -0.1285            0.0428            0.0428            0.0428     0.29868481E-14
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.18154520E-14
+         -0.0856            0.0428            0.0428            0.0000     0.18698693E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20149027E-14
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.46504786E-15
+         -0.0856            0.0428            0.0428            0.0000     0.49232209E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.28276088E-15
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.18404849E-14
+         -0.0856            0.0428            0.0428            0.0000     0.17853008E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.17119390E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20149027E-14
+
+ YDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70122349E-15
+         -0.0856            0.0428            0.0428            0.0000     0.70952509E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.74369594E-15
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000      1.1617750    
+         -0.0428            0.0000            0.0000            0.0428      1.1756701    
+         -0.0856            0.0428            0.0428            0.0000      1.1849764    
+         -0.0428            0.0428            0.0428           -0.0428      1.1699716    
+         -0.1285            0.0428            0.0428            0.0428      1.2293238    
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000     0.28221180E-14
+         -0.0428            0.0000            0.0000            0.0428     0.28517391E-14
+         -0.0856            0.0428            0.0428            0.0000     0.28922515E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.28619529E-14
+         -0.1285            0.0428            0.0428            0.0428     0.29868481E-14
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.18154520E-14
+         -0.0856            0.0428            0.0428            0.0000     0.18698693E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20149027E-14
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000     0.28221180E-14
+         -0.0428            0.0000            0.0000            0.0428     0.28321787E-14
+         -0.0856            0.0428            0.0428            0.0000     0.29127406E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.28619529E-14
+         -0.1285            0.0428            0.0428            0.0428     0.29868481E-14
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000      9.9721108    
+         -0.0428            0.0000            0.0000            0.0428      9.9239365    
+         -0.0856            0.0428            0.0428            0.0000      9.8229396    
+         -0.0428            0.0428            0.0428           -0.0428      9.8721207    
+         -0.1285            0.0428            0.0428            0.0428      9.6658601    
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.13516497E-12
+         -0.0428            0.0000            0.0000            0.0428     0.13690912E-12
+         -0.0856            0.0428            0.0428            0.0000     0.14056779E-12
+         -0.0428            0.0428            0.0428           -0.0428     0.14129691E-12
+         -0.1285            0.0428            0.0428            0.0428     0.14680016E-12
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.17234559E-14
+         -0.0856            0.0428            0.0428            0.0000     0.19654883E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20149027E-14
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.13516497E-12
+         -0.0428            0.0000            0.0000            0.0428     0.14159109E-12
+         -0.0856            0.0428            0.0428            0.0000     0.13654799E-12
+         -0.0428            0.0428            0.0428           -0.0428     0.14129691E-12
+         -0.1285            0.0428            0.0428            0.0428     0.14680016E-12
+
+ YDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     -5.2660346    
+         -0.0428            0.0000            0.0000            0.0428     -5.3753263    
+         -0.0856            0.0428            0.0428            0.0000     -5.5359180    
+         -0.0428            0.0428            0.0428           -0.0428     -5.4222715    
+         -0.1285            0.0428            0.0428            0.0428     -5.8837967    
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.46504786E-15
+         -0.0856            0.0428            0.0428            0.0000     0.49232209E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.28276088E-15
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.18404849E-14
+         -0.0856            0.0428            0.0428            0.0000     0.17853008E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.17119390E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20149027E-14
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70122349E-15
+         -0.0856            0.0428            0.0428            0.0000     0.70952509E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.74369594E-15
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.17234559E-14
+         -0.0856            0.0428            0.0428            0.0000     0.19654883E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20149027E-14
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     0.13516497E-12
+         -0.0428            0.0000            0.0000            0.0428     0.14159109E-12
+         -0.0856            0.0428            0.0428            0.0000     0.13654799E-12
+         -0.0428            0.0428            0.0428           -0.0428     0.14129691E-12
+         -0.1285            0.0428            0.0428            0.0428     0.14680016E-12
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     -5.2660346    
+         -0.0428            0.0000            0.0000            0.0428     -5.3753263    
+         -0.0856            0.0428            0.0428            0.0000     -5.5359180    
+         -0.0428            0.0428            0.0428           -0.0428     -5.4222715    
+         -0.1285            0.0428            0.0428            0.0428     -5.8837967    
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.69835041E-15
+         -0.0856            0.0428            0.0428            0.0000     0.73081098E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.72960989E-15
+         -0.1285            0.0428            0.0428            0.0428     0.74369594E-15
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     -5.2660346    
+         -0.0428            0.0000            0.0000            0.0428     -5.3444163    
+         -0.0856            0.0428            0.0428            0.0000     -5.6340514    
+         -0.0428            0.0428            0.0428           -0.0428     -5.5532131    
+         -0.1285            0.0428            0.0428            0.0428     -5.8837967    
+
+ YDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     0.92869496E-13
+         -0.0428            0.0000            0.0000            0.0428     0.93726863E-13
+         -0.0856            0.0428            0.0428            0.0000     0.92187211E-13
+         -0.0428            0.0428            0.0428           -0.0428     0.93157983E-13
+         -0.1285            0.0428            0.0428            0.0428     0.10041318E-12
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000     0.40570934E-15
+         -0.0428            0.0000            0.0000            0.0428     0.40958739E-15
+         -0.0856            0.0428            0.0428            0.0000     0.41492379E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.41616460E-15
+         -0.1285            0.0428            0.0428            0.0428     0.42209635E-15
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.45749277E-15
+         -0.0856            0.0428            0.0428            0.0000     0.50830704E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.43415387E-15
+         -0.1285            0.0428            0.0428            0.0428     0.57033943E-15
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.82153050    
+         -0.0428            0.0000            0.0000            0.0428     0.82496231    
+         -0.0856            0.0428            0.0428            0.0000     0.86904547    
+         -0.0428            0.0428            0.0428           -0.0428     0.86504560    
+         -0.1285            0.0428            0.0428            0.0428     0.88100482    
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.49376754E-15
+         -0.0856            0.0428            0.0428            0.0000     0.48151013E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.57033943E-15
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.18154520E-14
+         -0.0856            0.0428            0.0428            0.0000     0.18870373E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20519662E-14
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.68878395E-15
+         -0.0856            0.0428            0.0428            0.0000     0.72562398E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.72960989E-15
+         -0.1285            0.0428            0.0428            0.0428     0.71233883E-15
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.82153050    
+         -0.0428            0.0000            0.0000            0.0428     0.83418698    
+         -0.0856            0.0428            0.0428            0.0000     0.84136337    
+         -0.0428            0.0428            0.0428           -0.0428     0.82898595    
+         -0.1285            0.0428            0.0428            0.0428     0.88100482    
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70122349E-15
+         -0.0856            0.0428            0.0428            0.0000     0.69494429E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.71233883E-15
+
+ ZDIPLEN -0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000    -0.31208268E-14
+         -0.0428            0.0000            0.0000            0.0428    -0.31625351E-14
+         -0.0856            0.0428            0.0428            0.0000    -0.32267286E-14
+         -0.0428            0.0428            0.0428           -0.0428    -0.31837774E-14
+         -0.1285            0.0428            0.0428            0.0428    -0.33616460E-14
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000     0.45694141E-15
+         -0.0428            0.0000            0.0000            0.0428     0.49376754E-15
+         -0.0856            0.0428            0.0428            0.0000     0.48151013E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.42177636E-15
+         -0.1285            0.0428            0.0428            0.0428     0.57033943E-15
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.18154520E-14
+         -0.0856            0.0428            0.0428            0.0000     0.18870373E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.18294848E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20519662E-14
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.68878395E-15
+         -0.0856            0.0428            0.0428            0.0000     0.72562398E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.72960989E-15
+         -0.1285            0.0428            0.0428            0.0428     0.71233883E-15
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000     0.17675949E-14
+         -0.0428            0.0000            0.0000            0.0428     0.17568086E-14
+         -0.0856            0.0428            0.0428            0.0000     0.18900818E-14
+         -0.0428            0.0428            0.0428           -0.0428     0.17119390E-14
+         -0.1285            0.0428            0.0428            0.0428     0.20519662E-14
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     0.13516497E-12
+         -0.0428            0.0000            0.0000            0.0428     0.13690912E-12
+         -0.0856            0.0428            0.0428            0.0000     0.14028193E-12
+         -0.0428            0.0428            0.0428           -0.0428     0.14129691E-12
+         -0.1285            0.0428            0.0428            0.0428     0.13998087E-12
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     -5.2660346    
+         -0.0428            0.0000            0.0000            0.0428     -5.3421460    
+         -0.0856            0.0428            0.0428            0.0000     -5.6326680    
+         -0.0428            0.0428            0.0428           -0.0428     -5.5532131    
+         -0.1285            0.0428            0.0428            0.0428     -5.8790230    
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70362222E-15
+         -0.0856            0.0428            0.0428            0.0000     0.69217582E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.71233883E-15
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     -5.2660346    
+         -0.0428            0.0000            0.0000            0.0428     -5.3753263    
+         -0.0856            0.0428            0.0428            0.0000     -5.5319566    
+         -0.0428            0.0428            0.0428           -0.0428     -5.4222715    
+         -0.1285            0.0428            0.0428            0.0428     -5.8790230    
+
+ ZDIPLEN -0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     0.92869496E-13
+         -0.0428            0.0000            0.0000            0.0428     0.91615480E-13
+         -0.0856            0.0428            0.0428            0.0000     0.94788303E-13
+         -0.0428            0.0428            0.0428           -0.0428     0.93157983E-13
+         -0.1285            0.0428            0.0428            0.0428     0.93969512E-13
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   XDIPLEN  0.0000     0.82153050    
+         -0.0428            0.0000            0.0000            0.0428     0.83418698    
+         -0.0856            0.0428            0.0428            0.0000     0.84136337    
+         -0.0428            0.0428            0.0428           -0.0428     0.82898595    
+         -0.1285            0.0428            0.0428            0.0428     0.88100482    
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   YDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70122349E-15
+         -0.0856            0.0428            0.0428            0.0000     0.69494429E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.71233883E-15
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000   ZDIPLEN  0.0000    -0.31208268E-14
+         -0.0428            0.0000            0.0000            0.0428    -0.31625351E-14
+         -0.0856            0.0428            0.0428            0.0000    -0.32267286E-14
+         -0.0428            0.0428            0.0428           -0.0428    -0.31837774E-14
+         -0.1285            0.0428            0.0428            0.0428    -0.33616460E-14
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   XDIPLEN  0.0000     0.69318964E-15
+         -0.0428            0.0000            0.0000            0.0428     0.70362222E-15
+         -0.0856            0.0428            0.0428            0.0000     0.69217582E-15
+         -0.0428            0.0428            0.0428           -0.0428     0.69408923E-15
+         -0.1285            0.0428            0.0428            0.0428     0.71233883E-15
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   YDIPLEN  0.0000     -5.2660346    
+         -0.0428            0.0000            0.0000            0.0428     -5.3753263    
+         -0.0856            0.0428            0.0428            0.0000     -5.5319566    
+         -0.0428            0.0428            0.0428           -0.0428     -5.4222715    
+         -0.1285            0.0428            0.0428            0.0428     -5.8790230    
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000   ZDIPLEN  0.0000     0.92869496E-13
+         -0.0428            0.0000            0.0000            0.0428     0.91615480E-13
+         -0.0856            0.0428            0.0428            0.0000     0.94788303E-13
+         -0.0428            0.0428            0.0428           -0.0428     0.93157983E-13
+         -0.1285            0.0428            0.0428            0.0428     0.93969512E-13
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   XDIPLEN  0.0000    -0.31208268E-14
+         -0.0428            0.0000            0.0000            0.0428    -0.31415365E-14
+         -0.0856            0.0428            0.0428            0.0000    -0.32488228E-14
+         -0.0428            0.0428            0.0428           -0.0428    -0.31837774E-14
+         -0.1285            0.0428            0.0428            0.0428    -0.33616460E-14
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   YDIPLEN  0.0000     0.92869496E-13
+         -0.0428            0.0000            0.0000            0.0428     0.93726863E-13
+         -0.0856            0.0428            0.0428            0.0000     0.91148002E-13
+         -0.0428            0.0428            0.0428           -0.0428     0.93157983E-13
+         -0.1285            0.0428            0.0428            0.0428     0.93969512E-13
+
+ ZDIPLEN -0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000   ZDIPLEN  0.0000     -17.574269    
+         -0.0428            0.0000            0.0000            0.0428     -17.804077    
+         -0.0856            0.0428            0.0428            0.0000     -18.276410    
+         -0.0428            0.0428            0.0428           -0.0428     -18.039346    
+         -0.1285            0.0428            0.0428            0.0428     -19.014343    
+--------------------------------------------------------------------------------------
+---------------------------------------------------------------------------
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                   SUMMARY OF COUPLED CLUSTER CALCULATION                    *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+                                                                                
+            Total SCF   energy:                   -74.9630691811                
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                      END OF COUPLED CLUSTER CALCULATION                     *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+
+ CPU and wall time for CC :      29.896      34.889
+
+ 
+     Date and time (Linux)  : Wed Nov  8 11:55:05 2017 
+     Host name              : lmWn044.cism.ucl.ac.be                  
+
+
+                      .-------------------------------------.
+                      | End of Coupled Cluster Section (CC) |
+                      `-------------------------------------'
+
+  Total CPU  time used in DALTON:  30.05 seconds
+  Total wall time used in DALTON:  35.10 seconds
+
+ 
+     Date and time (Linux)  : Wed Nov  8 11:55:05 2017 
+     Host name              : lmWn044.cism.ucl.ac.be                  
