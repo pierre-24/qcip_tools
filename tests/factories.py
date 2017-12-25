@@ -1,6 +1,19 @@
 import numpy
 
-from qcip_tools import derivatives_e
+from qcip_tools import derivatives_e, derivatives
+
+
+class FakeTensor(derivatives.Tensor):
+    def __init__(self, representation, spacial_dof=None, frequency=None, factor=1., **kwargs):
+        super().__init__(representation, spacial_dof=spacial_dof, frequency=frequency, **kwargs)
+
+        dummy = .0
+
+        for i in self.representation.smart_iterator():
+            dummy += 1
+            val = dummy * factor
+            for j in self.representation.inverse_smart_iterator(i):
+                self.components[j] = val
 
 
 class FakeElectricDipole(derivatives_e.ElectricDipole):

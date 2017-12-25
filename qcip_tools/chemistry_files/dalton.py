@@ -7,7 +7,7 @@ import numpy
 import re
 import copy
 
-from qcip_tools import molecule, atom, quantities, derivatives, derivatives_e
+from qcip_tools import molecule, atom, quantities, derivatives, derivatives_e, derivatives_g
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
     FormatError, WithIdentificationMixin, PropertyNotPresent
 
@@ -255,6 +255,27 @@ class ArchiveOutput(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
         for i in range(number_of_atoms):
             a = lines[4 + number_of_kinds + i].split()
             self.molecule.insert(atom.Atom(symbol=str(a[0], 'utf-8'), position=[float(e) for e in a[1:]]))
+
+        # correct masses if any
+        fx = None
+        try:
+            fx = self.get_file('DALTON.NCA')
+        except FileNotFoundError:
+            pass
+
+        if fx is not None:
+            lines = fx.read().decode().splitlines()
+            mode_line = 0
+            for i, j in enumerate(lines[2:]):
+                if 'MODE' in j:
+                    mode_line = 2 + i
+                    break
+            masses = ' '.join(lines[2:mode_line]).split()
+            if len(masses) != len(self.molecule):
+                raise Exception('number of masses does not matches number of atoms')
+
+            for i, mass in enumerate(masses):
+                self.molecule[i].mass = float(mass)
 
     def get_file(self, name):
         """Get a ``io.BufferedReader`` from a filename, if exists. Note that you get ``bytes`` out of that kind of
@@ -614,6 +635,50 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
     return electrical_derivatives
 
 
+@ArchiveOutput.define_property('geometrical_derivatives')
+def dalton__archive_output__property__geometrical_derivatives(obj, *args, **kwargs):
+    """Get geometrical derivatives in Dalton archives. Returns a dictionary of tensor
+
+    .. note ::
+
+        Only return geometrical hessian
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput
+    :rtype: dict
+    """
+
+    geometrical_derivatives = {}
+
+    # CHECK RESULTS.RSP (response at the HF/DFT level)
+    f = None
+
+    try:
+        f = obj.get_file('DALTON.HES')
+    except FileNotFoundError:
+        pass
+
+    if f is not None:
+        lines = f.read().decode('utf-8').splitlines()
+
+        n = int(lines[0].strip())
+        if n != 3 * len(obj.molecule):
+            raise Exception('hessian and molecule does not match')
+
+        geometrical_derivatives['GG'] = derivatives_g.BaseGeometricalDerivativeTensor(
+            representation='GG', spacial_dof=n, trans_plus_rot=5 if obj.molecule.linear() else 6)
+
+        for i in range(n):
+            for j in range(n):
+                number = i * (n + 1) + j + 2
+                geometrical_derivatives['GG'].components[i, j] = float(lines[number])
+
+    if not geometrical_derivatives:
+        raise PropertyNotPresent('geometrical_derivatives')
+
+    return geometrical_derivatives
+
+
 class OutputSection:
     """Remind when a section is entered and exited
 
@@ -711,18 +776,32 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
 
         # fetch molecule
         coordinates_line = self.search('Cartesian Coordinates (a.u.)', into='START')
-        if coordinates_line == -1:
-            raise OutputFormatError('cannot find molecule in START')
+        if coordinates_line != -1:
+            number_of_atoms = int(math.floor(int(self.lines[coordinates_line + 3][-5:]) / 3))
+            for i in range(number_of_atoms):
+                content = self.lines[coordinates_line + 4 + i].split()
+                self.molecule.insert(
+                    atom.Atom(
+                        symbol=content[0],
+                        position=[a * quantities.AuToAngstrom for a in [
+                            float(content[4]), float(content[7]), float(content[10])]]
+                    ))
+        else:  # if it is C1 molecule, it may not be reprinted
+            coordinates_line = self.search('Content of the .mol file', into='START')
+            if coordinates_line == -1:
+                raise OutputFormatError('Unable to find molecule, not even in beginning!')
+            line_end = self.search(
+                'Output from DALTON general input processing', line_start=coordinates_line, into='START')
 
-        number_of_atoms = math.floor(int(self.lines[coordinates_line + 3][-5:]) / 3)
-        for i in range(number_of_atoms):
-            content = self.lines[coordinates_line + 4 + i].split()
-            self.molecule.insert(
-                atom.Atom(
-                    symbol=content[0],
-                    position=[a * quantities.AuToAngstrom for a in [
-                        float(content[4]), float(content[7]), float(content[10])]]
-                ))
+            mol_file = MoleculeInput()
+            mol_file.read(io.StringIO(''.join(self.lines[coordinates_line + 3:line_end - 3])))
+
+            self.molecule = copy.deepcopy(mol_file.molecule)
+
+        mass_line = self.search('Isotopic Masses', into='START')
+        for i in range(len(self.molecule)):
+            line = self.lines[mass_line + i + 3].split()
+            self.molecule[i].mass = float(line[-1])
 
         charge_line = self.search('@    Total charge of the molecule', into='SIRIUS')
         if charge_line == -1:
@@ -789,6 +868,70 @@ def dalton__output__computed_energies(obj, *args, **kwargs):
         energies['total'] = label
 
     return energies
+
+
+@Output.define_property('geometrical_derivatives')
+def dalton__output__get_gradient(obj, *args, **kwargs):
+    """Get the cartesian gradient out of a dalton calculation output
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.Output
+    :rtype: dict
+    """
+
+    geometrical_derivatives = {}
+
+    dof = 3 * len(obj.molecule)
+    trans_plus_rot = 5 if obj.molecule.linear() else 6
+
+    # CC
+    x = obj.search('Molecular gradient', into='CC')
+    if x != -1:
+        gradient = derivatives_g.BaseGeometricalDerivativeTensor(
+            representation='G', spacial_dof=dof, trans_plus_rot=trans_plus_rot)
+
+        for i in range(len(obj.molecule)):
+            line = obj.lines[x + 3 + i].split()
+            gradient.components[i * 3:(i + 1) * 3] = [float(a) for a in line[1:]]
+        geometrical_derivatives['G'] = gradient
+
+    # general !
+    if obj.chunk_exists('ABACUS'):
+        x = obj.search('Molecular gradient', into='ABACUS')
+        if x != -1:
+            gradient = derivatives_g.BaseGeometricalDerivativeTensor(
+                representation='G', spacial_dof=dof, trans_plus_rot=trans_plus_rot)
+
+            for i in range(len(obj.molecule)):
+                line = obj.lines[x + 3 + i].split()
+                gradient.components[i * 3:(i + 1) * 3] = [float(a) for a in line[1:]]
+            geometrical_derivatives['G'] = gradient
+
+        x = obj.search('Molecular Hessian (au)', into='ABACUS', line_start=x)
+        if x != -1:
+            hessian = derivatives_g.BaseGeometricalDerivativeTensor(
+                representation='GG', spacial_dof=dof, trans_plus_rot=trans_plus_rot)
+
+            spliting = [10, 22, 34, 46, 58, 70, 81]
+
+            for i in range(dof):
+                for j in range(dof):
+                    if j > i:
+                        continue
+
+                    r = math.floor(j / 6)
+                    s = math.floor(i / 3)
+                    line = (dof + len(obj.molecule) + 7 - 4 * r) * r + i + s - 8 * r
+                    hessian.components[i, j] = float(obj.lines[x + line + 5][spliting[j % 6]:spliting[j % 6 + 1]])
+                    if i != j:
+                        hessian.components[j, i] = hessian.components[i, j]
+
+            geometrical_derivatives['GG'] = hessian
+
+    if not geometrical_derivatives:
+        raise PropertyNotPresent('geometrical_derivatives')
+
+    return geometrical_derivatives
 
 
 #: Name of the allowed modules in dalton (according to documentation)
