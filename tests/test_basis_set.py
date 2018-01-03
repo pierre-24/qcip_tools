@@ -26,9 +26,6 @@ class BasisSetTestCase(QcipToolsTestCase):
         self.bf_O_D = basis_set.Function()
         self.bf_O_D.add_primitive(basis_set.Primitive(1.2920000, 1.))
 
-    def tearDown(self):
-        pass
-
     def test_basis_function(self):
         """Test basis functions"""
 
