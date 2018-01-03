@@ -13,6 +13,7 @@ class DataFileTestCase(QcipToolsTestCase):
         self.temporary_file = tempfile.mkstemp()[1]
 
     def tearDown(self):
+        super().tearDown()
         os.unlink(self.temporary_file)
 
     def test_data_file(self):

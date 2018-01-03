@@ -1059,7 +1059,7 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         fd.spacial_dof = 3 * len(fx.molecule)
         fd.trans_plus_rot_dof = 5
         fd.derivatives['F'] = {'static': factories.FakeElectricDipole()}
-        fd.derivatives['FD'] = {
+        fd.derivatives['dD'] = {
             '1064nm': factories.FakePolarizabilityTensor(isotropy_factor=2),
             0.04: factories.FakePolarizabilityTensor(isotropy_factor=1.5),
         }
@@ -1096,9 +1096,9 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         self.assertArraysAlmostEqual(
             fde.derivatives['F']['static'].components, fd.derivatives['F']['static'].components)
         self.assertArraysAlmostEqual(
-            fde.derivatives['FD']['1064nm'].components, fd.derivatives['FD']['1064nm'].components)
+            fde.derivatives['dD']['1064nm'].components, fd.derivatives['dD']['1064nm'].components)
         self.assertArraysAlmostEqual(
-            fde.derivatives['FD'][0.04].components, fd.derivatives['FD'][0.04].components)
+            fde.derivatives['dD'][0.04].components, fd.derivatives['dD'][0.04].components)
         self.assertArraysAlmostEqual(
             fde.derivatives['FFF']['static'].components, fd.derivatives['FFF']['static'].components)
         self.assertArraysAlmostEqual(

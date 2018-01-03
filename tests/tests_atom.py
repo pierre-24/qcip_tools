@@ -9,9 +9,6 @@ class AtomTestCase(QcipToolsTestCase):
     def setUp(self):
         pass
 
-    def tearDown(self):
-        pass
-
     def test_atom_creation(self):
         """Test the behavior of the atom class"""
 

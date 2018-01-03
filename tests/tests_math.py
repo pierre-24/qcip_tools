@@ -10,9 +10,6 @@ class MathTestCase(QcipToolsTestCase):
     def setUp(self):
         pass
 
-    def tearDown(self):
-        pass
-
     def test_vector_manipulation(self):
         """Test the behavior of vector manipularion functions"""
 

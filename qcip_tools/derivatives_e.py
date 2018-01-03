@@ -18,15 +18,15 @@ REPRESENTATIONS = {
     'mu': 'F',
     'alpha(0;0)': 'FF',
     'beta(0;0,0)': 'FFF',
-    'alpha(-w;w)': 'FD',
-    'beta(-2w;w,w)': 'FDD',
-    'beta(-w;w,0)': 'FDF',
+    'alpha(-w;w)': 'dD',
+    'beta(-2w;w,w)': 'XDD',
+    'beta(-w;0,w)': 'dFD',
     'beta(0;w,-w)': 'FDd',
     'gamma(0;0,0,0)': 'FFFF',
-    'gamma(-w;w,0,0)': 'FDFF',
-    'gamma(-2w;w,w,0)': 'FDDF',
-    'gamma(-w;w,w,-w)': 'FDDd',
-    'gamma(-3w;w,w,w)': 'FDDD',
+    'gamma(-w;0,0,w)': 'dFFD',
+    'gamma(-2w;w,w,0)': 'XDDF',
+    'gamma(-w;w,w,-w)': 'dDDd',
+    'gamma(-3w;w,w,w)': 'XDDD',
 }
 
 DERIVATIVES = list(REPRESENTATIONS.values())
@@ -35,14 +35,14 @@ NAMES = dict((b, a) for (a, b) in REPRESENTATIONS.items())
 
 PHENOMENON = {
     'FFF': 'static first hyperpolarizability',
-    'FDF': 'electro-optical Pockels effect (EOP)',
+    'dFD': 'electro-optical Pockels effect (EOP)',
     'FDd': 'optical rectification',
-    'FDD': 'second harmonic generation',
+    'XDD': 'second harmonic generation',
     'FFFF': 'static second hyperpolarizability',
-    'FDFF': 'dc-Kerr effect',
-    'FDDF': '(static) electric field-induced second harmonic generation (EFISHG)',
-    'FDDd': 'intensity dependent refractive index (IDRI/DFWM)',
-    'FDDD': 'third harmonic generation'
+    'dFFD': 'dc-Kerr effect',
+    'XDDF': '(static) electric field-induced second harmonic generation (EFISHG)',
+    'dDDd': 'intensity dependent refractive index (IDRI/DFWM)',
+    'XDDD': 'third harmonic generation'
 }
 
 #: List of all simplified names
@@ -53,9 +53,9 @@ SIMPLIFIED_NAMES = {
     'beta': 'β(0;0,0)',
     'alpha(-w;w)': 'α(-w;w)',
     'beta(-2w;w,w)': 'β(-2w;w,w)',
-    'beta(-w;w,0)': 'β(-w;w,0)',
+    'beta(-w;0,w)': 'β(-w;0,w)',
     'gamma': 'γ(0;0,0,0)',
-    'gamma(-w;w,0,0)': 'γ(-w;w,0,0)',
+    'gamma(-w;0,0,w)': 'γ(-w;0,0,w)',
     'gamma(-2w;w,w,0)': 'γ(-2w;w,w,0)',
     'gamma(-w;w,w,-w)': 'γ(-w;w,w,-w)',
     'gamma(-3w;w,w,w)': 'γ(-3w;w,w,w)',
@@ -133,22 +133,28 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
 
         if input_fields:
             representation = ''.join([field_to_representation[i] for i in input_fields])
+            sum_fields = -sum(input_fields)
+            if sum_fields in field_to_representation:
+                s_representation = field_to_representation[sum_fields]
+            else:
+                s_representation = 'X'
         else:
             representation = ''
+            s_representation = 'F'
 
-        if ('F' + representation) not in DERIVATIVES:
+        if (s_representation + representation) not in DERIVATIVES:
             each = collections.Counter(representation)
             n_repr = ''
 
             for i in 'DdF':
                 n_repr += each[i] * i
 
-            if ('F' + n_repr) not in DERIVATIVES:
-                raise derivatives.RepresentationError('F' + n_repr)
+            if (s_representation + n_repr) not in DERIVATIVES:
+                raise derivatives.RepresentationError(s_representation + n_repr)
             else:
                 representation = n_repr
 
-        super().__init__('F' + representation, frequency=frequency, components=tensor)
+        super().__init__(s_representation + representation, frequency=frequency, components=tensor)
         self.name = self.to_name()
 
     def to_string(self, threshold=1e-5, **kwargs):

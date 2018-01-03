@@ -424,16 +424,18 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                         raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for alpha')
                     data_per_frequencies[freq] = derivatives_e.PolarisabilityTensor(frequency=freq)
 
-                data_per_frequencies[freq]\
-                    .components[translate_diplens[l[5][0]], translate_diplens[l[6][0]]] \
-                    = float(l[4])
+                c1, c2, v = translate_diplens[l[5][0]], translate_diplens[l[6][0]], float(l[4])
+                data_per_frequencies[freq].components[c1, c2] = v
 
-            electrical_derivatives['FD'] = data_per_frequencies
-            if .0 in electrical_derivatives['FD']:
-                electrical_derivatives['FF'] = {'static': electrical_derivatives['FD'][.0]}
+                if not is_CC_calculation and c1 != c2:
+                    data_per_frequencies[freq].components[c2, c1] = v
+
+            electrical_derivatives['dD'] = data_per_frequencies
+            if .0 in electrical_derivatives['dD']:
+                electrical_derivatives['FF'] = {'static': electrical_derivatives['dD'][.0]}
                 electrical_derivatives['FF']['static'].input_fields = (0,)
                 electrical_derivatives['FF']['static'].representation = derivatives.Derivative(from_representation='FF')
-                del electrical_derivatives['FD'][.0]
+                del electrical_derivatives['dD'][.0]
 
         # hyperpolarizability
         if 3 in prop_sorted:
@@ -441,7 +443,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 raise WrongNumberOfData(len(prop_sorted[3]), 'hyperpolarizability')
 
             num_of_tensors = int(len(prop_sorted[3]) / 27)
-            found_frequencies = {'FFF': [], 'FDF': [], 'FDd': [], 'FDD': []}
+            found_frequencies = {'FFF': [], 'dFD': [], 'FDd': [], 'XDD': []}
             data = {}
 
             for l in prop_sorted[3]:
@@ -456,11 +458,11 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                     representation = 'FFF'
                     freq_1 = 'static'
                 elif freq_1 == freq_2:
-                    representation = 'FDD'
+                    representation = 'XDD'
                 elif freq_1 == -freq_2:
                     representation = 'FDd'
                 elif freq_2 == .0:
-                    representation = 'FDF'
+                    representation = 'dFD'
                 else:
                     raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
 
@@ -489,7 +491,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 raise WrongNumberOfData(len(prop_sorted[4]), 'hyperpolarizability')
 
             num_of_tensors = int(len(prop_sorted[4]) / 81)
-            found_frequencies = {'FFFF': [], 'FDFF': [], 'FDDF': [], 'FDDd': [], 'FDDD': []}
+            found_frequencies = {'FFFF': [], 'dFFD': [], 'XDDF': [], 'dDDd': [], 'XDDD': []}
             data = {}
 
             for l in prop_sorted[4]:
@@ -506,19 +508,19 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                     representation = 'FFFF'
                     freq = 'static'
                 elif freq_1 == freq_2 and freq_2 == .0:
-                    representation = 'FDFF'
+                    representation = 'dFFD'
                     freq = freq_3
                 elif freq_2 == freq_3 and freq_3 == .0:
-                    representation = 'FDFF'
+                    representation = 'dFFD'
                     freq = freq_1
                 elif freq_1 == freq_2 and freq_3 == .0:
-                    representation = 'FDDF'
+                    representation = 'XDDF'
                     freq = freq_1
                 elif freq_1 == freq_2 and freq_2 == -freq_3:
-                    representation = 'FDDd'
+                    representation = 'dDDd'
                     freq = freq_1
                 elif freq_1 == freq_2 and freq_2 == freq_3:
-                    representation = 'FDDD'
+                    representation = 'XDDD'
                     freq = freq_1
                 else:
                     raise Exception('unknown combination of field ({}, {}, {})'.format(freq_1, freq_2, freq_3))
@@ -546,7 +548,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
             electrical_derivatives.update(data)
 
-    # CHECK RESULTS.RSP (response at the HF/DFT level)
+    # CHECK RESULTS.RSP (beta response at the HF/DFT level)
     f = None
 
     try:
@@ -560,11 +562,11 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         is_optical_rectification_in_calculations = False
         is_EOP_in_calculations = False
         is_optical_rectification_use_later = []
-        found_frequencies = {'FFF': [], 'FDF': [], 'FDd': [], 'FDD': []}
+        found_frequencies = {'FFF': [], 'dFD': [], 'FDd': [], 'XDD': []}
         data = {}
 
         r_to_obj = {}  # to use inverse smart iterator
-        for x in ['FFF', 'FDF', 'FDd', 'FDD']:
+        for x in ['FFF', 'dFD', 'FDd', 'XDD']:
             r_to_obj[x] = derivatives.Derivative(from_representation=x)
 
         for line in lines:
@@ -586,7 +588,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 representation = 'FFF'
                 freq_1 = 'static'
             elif freq_1 == freq_2:
-                representation = 'FDD'
+                representation = 'XDD'
             elif freq_1 == -freq_2:  # will be treated later
                 representation = 'FDd'
                 is_optical_rectification_in_calculations = True
@@ -594,7 +596,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                     is_optical_rectification_use_later.append((freq_1, components, value))
                     continue
             elif freq_2 == .0:
-                representation = 'FDF'
+                representation = 'dFD'
                 is_EOP_in_calculations = True
             else:
                 raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
@@ -613,16 +615,16 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 data[representation][freq_1].components[components_] = value
 
         if is_optical_rectification_in_calculations and is_EOP_in_calculations:
-            freqs = list(data['FDF'].keys())
+            freqs = list(data['dFD'].keys())
             data['FDd'] = {}
             for freq in freqs:
                 data['FDd'][freq] = derivatives_e.FirstHyperpolarisabilityTensor(
                     frequency=freq, input_fields=(-1, 1))
-                for i in r_to_obj['FDF'].smart_iterator():
-                    if data['FDF'][freq].components[i] == .0:
+                for i in r_to_obj['dFD'].smart_iterator():
+                    if data['dFD'][freq].components[i] == .0:
                         continue
-                    for j in r_to_obj['FDF'].inverse_smart_iterator(i):
-                        data['FDd'][freq].components[j[2], j[1], j[0]] = data['FDF'][freq].components[j]
+                    for j in r_to_obj['dFD'].inverse_smart_iterator(i):
+                        data['FDd'][freq].components[j[2], j[1], j[0]] = data['dFD'][freq].components[j]
 
             for freq, components_, value in is_optical_rectification_use_later:
                 data['FDd'][freq].components[components_] = value
@@ -871,7 +873,7 @@ def dalton__output__computed_energies(obj, *args, **kwargs):
 
 
 @Output.define_property('geometrical_derivatives')
-def dalton__output__get_gradient(obj, *args, **kwargs):
+def dalton__output__get_geometrical_derivatives(obj, *args, **kwargs):
     """Get the cartesian gradient out of a dalton calculation output
 
     :param obj: object

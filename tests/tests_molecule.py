@@ -12,9 +12,6 @@ class MoleculeTestCase(QcipToolsTestCase):
     def setUp(self):
         pass
 
-    def tearDown(self):
-        pass
-
     def test_molecule_creation(self):
         """Test the behavior of the Molecule class"""
 
