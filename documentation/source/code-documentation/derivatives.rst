@@ -30,7 +30,7 @@ Due to the `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_d
 
 Two kind of derivatives are considered for the moment:
 
-+ Electrical, with respect to a static (``F``) or dynamic (``D``) electric field (though the first one is a special case of the second).
++ Electrical, with respect to a static (``F``) or dynamic (``D`` or ``d``) electric field (though the first one is a special case of the second).
   The input space is :math:`\mathbf{f}\in\mathbb{R}^3`, and
 
   .. math::
@@ -69,7 +69,7 @@ Note that you must provide ``spacial_dof``, the number of spacial degrees of fre
 
 The object ``Tensor`` allows to store this derivative in the ``components`` array (but without the specific operation that you can perform on certain tensors, e.g. the isotropic value for the polarizability and so all).
 It is provided with a ``Derivative`` (``self.representation``) for efficiency, so the ``components`` array is shaped accordingly.
-You must also provide ``frequency`` if the derivatives contains a dynamic electric field (``D``).
+You must also provide ``frequency`` if the derivatives contains a dynamic electric field (``D`` or ``d``).
 
 .. warning::
 
