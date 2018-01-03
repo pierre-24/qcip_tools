@@ -107,9 +107,9 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertEqual(num_smart_iterator_call, 6 * 45)  # Note: 45 = 9 * (9+1) / 2
 
         # tricky one:
-        d4 = derivatives.Derivative(from_representation='FDF')
-        self.assertEqual(d4.diff_representation, 'FDF')
-        self.assertEqual(d4.representation(), 'FDF')
+        d4 = derivatives.Derivative(from_representation='dDF')
+        self.assertEqual(d4.diff_representation, 'dDF')
+        self.assertEqual(d4.representation(), 'dDF')
         self.assertEqual(d4.dimension(), 3 * 3 * 3)
         self.assertEqual(d4.shape(), [3, 3, 3])
         self.assertIsNone(d4.basis)
@@ -125,13 +125,13 @@ class DerivativesTestCase(QcipToolsTestCase):
             for j in d4.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
-        self.assertEqual(num_smart_iterator_call, 18)  # 3 * 6
+        self.assertEqual(num_smart_iterator_call, 27)
         self.assertTrue(numpy.all(r == 1))
 
         # another tricky one:
-        d5 = derivatives.Derivative(from_representation='FDDF')
-        self.assertEqual(d5.diff_representation, 'FDDF')
-        self.assertEqual(d5.representation(), 'FDDF')
+        d5 = derivatives.Derivative(from_representation='XDDF')
+        self.assertEqual(d5.diff_representation, 'XDDF')
+        self.assertEqual(d5.representation(), 'XDDF')
         self.assertEqual(d5.dimension(), 3 * 3 * 3 * 3)
         self.assertEqual(d5.shape(), [3, 3, 3, 3])
         self.assertIsNone(d5.basis)
@@ -147,7 +147,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             for j in d5.inverse_smart_iterator(i, as_flatten=True):
                 r[j] += 1
 
-        self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
+        self.assertEqual(num_smart_iterator_call, 54)  # 9 * 6
         self.assertTrue(numpy.all(r == 1))
 
         # once again, but with full components (not flatten indices)
@@ -161,7 +161,7 @@ class DerivativesTestCase(QcipToolsTestCase):
             for j in d5.inverse_smart_iterator(i, as_flatten=False):
                 r[j] += 1
 
-        self.assertEqual(num_smart_iterator_call, 36)  # 6 * 6
+        self.assertEqual(num_smart_iterator_call, 54)  # 9 * 6
         self.assertTrue(numpy.all(r.flatten() == 1))
 
         # make the code cry:
@@ -183,7 +183,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         # test comparison
         self.assertTrue(d1 == 'GFF')
         self.assertTrue(d1 == 'FGF')  # no matter the order
-        self.assertTrue(d1 != 'FGD')  # ... But the type matter
+        self.assertTrue(d1 != 'dGD')  # ... But the type matter
         self.assertFalse(d1 == d2)
         self.assertTrue(d1 != d2)
 
@@ -192,9 +192,9 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         beta_tensor = numpy.array([a * (-1) ** a for a in range(27)]).reshape((3, 3, 3))
         # Note: a tensor is suppose to be symmetric, which is not the case here
-        t = derivatives.Tensor('FDD', components=beta_tensor, frequency='static')
+        t = derivatives.Tensor('XDD', components=beta_tensor, frequency='static')
 
-        self.assertEqual(t.representation.representation(), 'FDD')
+        self.assertEqual(t.representation.representation(), 'XDD')
         self.assertEqual(t.representation.dimension(), 27)
         self.assertEqual(t.frequency, 'static')
         self.assertIsNone(t.spacial_dof)
@@ -202,9 +202,9 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         gamma_tensor = numpy.array([a * (-1) ** a for a in range(81)]).reshape((3, 3, 3, 3))
         # Note: a tensor is suppose to be symmetric, which is not the case here
-        t = derivatives.Tensor('FdDD', components=gamma_tensor, frequency='static')
+        t = derivatives.Tensor('ddDD', components=gamma_tensor, frequency='static')
 
-        self.assertEqual(t.representation.representation(), 'FdDD')
+        self.assertEqual(t.representation.representation(), 'ddDD')
         self.assertEqual(t.representation.dimension(), 81)
         self.assertEqual(t.frequency, 'static')
         self.assertIsNone(t.spacial_dof)
@@ -212,7 +212,7 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         # make the code cry:
         with self.assertRaises(ValueError):
-            derivatives.Tensor('FDD')  # no frequency
+            derivatives.Tensor('XDD')  # no frequency
         with self.assertRaises(Exception):
             derivatives.Tensor('N')  # no dof
 
@@ -551,18 +551,18 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         # order and name
         g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(0, 1))
-        self.assertEqual(g.representation.representation(), 'FDF')
-        self.assertEqual(g.name, 'beta(-w;w,0)')
+        self.assertEqual(g.representation.representation(), 'dFD')
+        self.assertEqual(g.name, 'beta(-w;0,w)')
         self.assertEqual(g.rank(), 3)
 
         # just check that DFWM is now possible:
         g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(1, 1, -1))
-        self.assertEqual(g.representation.representation(), 'FDDd')
+        self.assertEqual(g.representation.representation(), 'dDDd')
         self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
         self.assertEqual(g.rank(), 4)
 
         g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(-1, 1, 1))
-        self.assertEqual(g.representation.representation(), 'FDDd')  # reordering
+        self.assertEqual(g.representation.representation(), 'dDDd')  # reordering
         self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
 
     def test_geometrical_derivatives(self):
@@ -687,8 +687,14 @@ class TensorNumDiff(QcipToolsTestCase):
         self.assertArraysAlmostEqual(beta.components, t.components, delta=.01)
 
     def test_numerical_differentiation_G(self):
-        input_fields = (1, 0)
-        d = 'F' + ''.join('D' if a == 1 else 'F' for a in input_fields)
+        input_fields = (0, 1)
+        d = ''.join('D' if a == 1 else 'F' for a in input_fields)
+
+        s = -sum(input_fields)
+        if s in derivatives_e.field_to_representation:
+            d = derivatives_e.field_to_representation[s] + d
+        else:
+            d = 'X' + d
 
         t_fdf = factories.FakeFirstHyperpolarizabilityTensor(input_fields=input_fields, frequency=.1)
         t_nfdf = factories.FakeTensor(derivatives.Derivative('N' + d, spacial_dof=6), frequency=.1, factor=10.)

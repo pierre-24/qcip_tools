@@ -11,11 +11,12 @@ from qcip_tools import math as qcip_math, numerical_differentiation
 #: ``F`` = static electric field derivative,
 #: ``D`` = dynamic electric field derivative (which can be static),
 #: ``d`` = inverse of the dynamic electric field (-w).
+#: ``X`` = anything but -w and w
 #: Note: do not change the order, except if you know what your are doing
-ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd')
+ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd', 'X')
 
 GEOMETRICAL_DERIVATIVES = ('G', 'N')
-ELECTRICAL_DERIVATIVES = ('F', 'D', 'd')
+ELECTRICAL_DERIVATIVES = ('F', 'D', 'd', 'X')
 
 
 def __is_derivative(derivative, typ):
@@ -98,6 +99,20 @@ class Derivative:
                     raise Exception('geometrical derivative and no spacial_dof !')
 
             self.diff_representation = from_representation
+
+        electric_part = self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES)
+        if electric_part != '':
+            f = {'F': 0, 'D': 1, 'd': -1}
+            if 'X' in electric_part[1:]:
+                raise RepresentationError('X can only be in first position!')
+            s = -sum(f[a] for a in electric_part[1:])
+            if s in f.values():
+                if f[electric_part[0]] != s:
+                    raise RepresentationError(
+                        'sum of fields and first electric derivative does not match (sum is {})'.format(s))
+            else:
+                if electric_part[0] != 'X':
+                    raise RepresentationError('first electrical derivative should be X')
 
     def __eq__(self, other):
         if type(other) is str:

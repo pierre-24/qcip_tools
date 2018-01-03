@@ -530,7 +530,7 @@ def beta_EOP_from_fchk(compressed_tensor, offset=0):
 
     tensor = numpy.zeros((3, 3, 3))
 
-    o = derivatives.Derivative(from_representation='FFD')
+    o = derivatives.Derivative(from_representation='dFD')
 
     for index, components in enumerate(to_consider):
         for uniques in o.inverse_smart_iterator(components):
@@ -617,7 +617,7 @@ def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
                 o.components = numpy.array(compressed_tensor[9 * i:9 * (i + 1)]).reshape(o.representation.shape())
                 data[frequencies[i]] = o
 
-            electrical_derivatives['FD'] = data
+            electrical_derivatives['dD'] = data
 
         if 'Beta(w,w,-2w)' in obj:
             compressed_tensor = obj.get('Beta(w,w,-2w)')
@@ -633,7 +633,7 @@ def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
                 o.components = beta_SHG_from_fchk(compressed_tensor, i)
                 data[frequencies[i]] = o
 
-            electrical_derivatives['FDD'] = data
+            electrical_derivatives['XDD'] = data
 
         if 'Beta(-w,w,0)' in obj:
             compressed_tensor = obj.get('Beta(-w,w,0)')
@@ -645,11 +645,11 @@ def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
             data = {}
 
             for i in range(1, num_of_frequencies):
-                o = derivatives_e.FirstHyperpolarisabilityTensor(frequency=frequencies[i], input_fields=(1, 0))
+                o = derivatives_e.FirstHyperpolarisabilityTensor(frequency=frequencies[i], input_fields=(0, 1))
                 o.components = beta_EOP_from_fchk(compressed_tensor, i)
                 data[frequencies[i]] = o
 
-            electrical_derivatives['FDF'] = data
+            electrical_derivatives['dFD'] = data
 
     if not electrical_derivatives:
         raise PropertyNotPresent('qs:electrical_derivatives')

@@ -92,18 +92,18 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FF', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
-        self.assertIn('FD', electrical_derivatives)
-        self.assertIn('FDF', electrical_derivatives)
-        self.assertIn('FDD', electrical_derivatives)
+        self.assertIn('dD', electrical_derivatives)
+        self.assertIn('dFD', electrical_derivatives)
+        self.assertIn('XDD', electrical_derivatives)
 
-        self.assertIn(0.02, electrical_derivatives['FDF'])
-        self.assertIn(0.04, electrical_derivatives['FDF'])
-        self.assertIn(0.06, electrical_derivatives['FDF'])
-        self.assertIn(0.08, electrical_derivatives['FDF'])
-        self.assertIn(0.10, electrical_derivatives['FDF'])
+        self.assertIn(0.02, electrical_derivatives['dFD'])
+        self.assertIn(0.04, electrical_derivatives['dFD'])
+        self.assertIn(0.06, electrical_derivatives['dFD'])
+        self.assertIn(0.08, electrical_derivatives['dFD'])
+        self.assertIn(0.10, electrical_derivatives['dFD'])
 
-        self.assertAlmostEqual(electrical_derivatives['FD'][0.02].isotropic_value(), 0.835791e1, places=5)
-        self.assertAlmostEqual(electrical_derivatives['FDD'][0.02].beta_hrs(), 6.2390, places=3)
+        self.assertAlmostEqual(electrical_derivatives['dD'][0.02].isotropic_value(), 0.835791e1, places=5)
+        self.assertAlmostEqual(electrical_derivatives['XDD'][0.02].beta_hrs(), 6.2390, places=3)
 
         # 2. In dalton archive:
         f = 0.0428226504
@@ -116,30 +116,30 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FF', electrical_derivatives)
-        self.assertIn('FD', electrical_derivatives)
-        self.assertIn('FDF', electrical_derivatives)
+        self.assertIn('dD', electrical_derivatives)
+        self.assertIn('dFD', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
-        self.assertIn('FDD', electrical_derivatives)
+        self.assertIn('XDD', electrical_derivatives)
         self.assertIn('FFFF', electrical_derivatives)
-        self.assertIn('FDFF', electrical_derivatives)
-        self.assertIn('FDDF', electrical_derivatives)
-        self.assertIn('FDDD', electrical_derivatives)
-        self.assertIn('FDDd', electrical_derivatives)
+        self.assertIn('dFFD', electrical_derivatives)
+        self.assertIn('XDDF', electrical_derivatives)
+        self.assertIn('XDDD', electrical_derivatives)
+        self.assertIn('dDDd', electrical_derivatives)
 
-        self.assertIn(f, electrical_derivatives['FD'])
+        self.assertIn(f, electrical_derivatives['dD'])
 
         tests_in_tensor = [
             ('F', 'static', (2,), 0.64738),
             ('FF', 'static', (0, 0), 0.04757),
-            ('FD', f, (0, 0), 0.047968),
+            ('dD', f, (0, 0), 0.047968),
             ('FFF', 'static', (0, 0, 2), 0.073362),
-            ('FDF', f, (0, 0, 2), 0.072835),
-            ('FDD', f, (0, 0, 2), 0.073591),
+            ('dFD', f, (0, 0, 2), 0.072835),
+            ('XDD', f, (0, 0, 2), 0.073591),
             ('FFFF', 'static', (0, 0, 0, 0), -0.351403),
-            ('FDFF', f, (0, 0, 0, 0), -0.35619),
-            ('FDDF', f, (0, 0, 0, 0), -0.36612),
-            ('FDDd', f, (0, 0, 0, 0), -0.36104),
-            ('FDDD', f, (0, 0, 0, 0), -0.382162)
+            ('dFFD', f, (0, 0, 0, 0), -0.35619),
+            ('XDDF', f, (0, 0, 0, 0), -0.36612),
+            ('dDDd', f, (0, 0, 0, 0), -0.36104),
+            ('XDDD', f, (0, 0, 0, 0), -0.382162)
         ]
 
         for(tensor, freq, coo, value) in tests_in_tensor:
@@ -153,17 +153,17 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FF', electrical_derivatives)
-        self.assertIn('FD', electrical_derivatives)
+        self.assertIn('dD', electrical_derivatives)
 
         self.assertNotIn('FFF', electrical_derivatives)
         self.assertNotIn('FFFF', electrical_derivatives)
 
-        self.assertIn(f, electrical_derivatives['FD'])
+        self.assertIn(f, electrical_derivatives['dD'])
 
         tests_in_tensor = [
             ('F', 'static', (2,), 0.67340),
             ('FF', 'static', (2, 2), 2.0408),
-            ('FD', f, (2, 2), 2.0459)
+            ('dD', f, (2, 2), 2.0459)
         ]
 
         for(tensor, freq, coo, value) in tests_in_tensor:
@@ -177,21 +177,21 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
-        self.assertIn('FDF', electrical_derivatives)
-        self.assertIn('FDD', electrical_derivatives)
+        self.assertIn('dFD', electrical_derivatives)
+        self.assertIn('XDD', electrical_derivatives)
 
         self.assertNotIn('FF', electrical_derivatives)
         self.assertNotIn('FFFF', electrical_derivatives)
 
         old_f = f
         f = 0.042823
-        self.assertIn(f, electrical_derivatives['FDD'])
+        self.assertIn(f, electrical_derivatives['XDD'])
 
         tests_in_tensor = [
             ('F', 'static', (2,), 0.67340),
             ('FFF', 'static', (2, 2, 2), -3.28102875),
-            ('FDF', f, (2, 2, 2), -3.30365796),
-            ('FDD', f, (2, 2, 2), -3.34979625)
+            ('dFD', f, (2, 2, 2), -3.30365796),
+            ('XDD', f, (2, 2, 2), -3.34979625)
         ]
 
         for(tensor, freq, coo, value) in tests_in_tensor:
@@ -205,24 +205,24 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FFFF', electrical_derivatives)
-        self.assertIn('FDFF', electrical_derivatives)
-        self.assertIn('FDDF', electrical_derivatives)
-        self.assertIn('FDDd', electrical_derivatives)
-        self.assertIn('FDDD', electrical_derivatives)
+        self.assertIn('dFFD', electrical_derivatives)
+        self.assertIn('XDDF', electrical_derivatives)
+        self.assertIn('dDDd', electrical_derivatives)
+        self.assertIn('XDDD', electrical_derivatives)
 
         self.assertNotIn('FF', electrical_derivatives)
         self.assertNotIn('FFF', electrical_derivatives)
 
         f = old_f
-        self.assertIn(f, electrical_derivatives['FDDD'])
+        self.assertIn(f, electrical_derivatives['XDDD'])
 
         tests_in_tensor = [
             ('F', 'static', (2,), 0.67340),
             ('FFFF', 'static', (0, 0, 0, 0), 0.29143),
-            ('FDFF', f, (0, 0, 0, 0), 0.29499),
-            ('FDDF', f, (0, 0, 0, 0), 0.30305),
-            ('FDDd', f, (0, 0, 0, 0), 0.29926),
-            ('FDDD', f, (0, 0, 0, 0), 0.31637),
+            ('dFFD', f, (0, 0, 0, 0), 0.29499),
+            ('XDDF', f, (0, 0, 0, 0), 0.30305),
+            ('dDDd', f, (0, 0, 0, 0), 0.29926),
+            ('XDDD', f, (0, 0, 0, 0), 0.31637),
         ]
 
         for(tensor, freq, coo, value) in tests_in_tensor:
