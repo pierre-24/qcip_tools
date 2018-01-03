@@ -1044,9 +1044,6 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
         self.fchk_file = self.copy_to_temporary_directory('gaussian_fchk.fchk')
         self.chemistry_data_file = self.copy_to_temporary_directory('chemistry_data_file.hdf5')
 
-    def tearDown(self):
-        pass
-
     def test_datafile(self):
         """Test the behavior of the datafile"""
 

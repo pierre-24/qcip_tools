@@ -12,9 +12,6 @@ class DerivativesTestCase(QcipToolsTestCase):
     def setUp(self):
         pass
 
-    def tearDown(self):
-        pass
-
     def test_derivatives(self):
         """Test the behavior of the Derivate object"""
 
