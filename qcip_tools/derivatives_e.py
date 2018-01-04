@@ -1098,16 +1098,14 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
                 r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
                 r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
                 r += 'DR        {: .3f}\n'.format(G2zzzz / G2zxxx)
-                r += 'DR\'       {: .3f}\n'.format(28 / 3 * (GJ0 / GJ2) ** 2 + 16 / 3)
+                r += 'DR\'      {: .3f}\n'.format(28 / 3 * (GJ0 / GJ2) ** 2 + 16 / 3)
                 r += 'G|J=0|    {: .5e}\n'.format(GJ0)
                 r += 'G|J=2|    {: .5e}\n'.format(GJ2)
                 r += 'G|J=4|    {: .5e}\n'.format(GJ4)
 
                 with suppress(ValueError):
-                    # r += 'rho_2*   {: .5e}\n'.format(GJ2 / GJ0)
-                    # r += 'rho_4*   {: .5e}\n'.format(GJ4 / GJ0)
-                    r += 'rho_0/2    {: .5e}\n'.format(GJ0 / GJ2)
-                    r += 'rho_4/2    {: .5e}\n'.format(GJ4 / GJ2)
+                    r += 'rho_0/2   {: .5e}\n'.format(GJ0 / GJ2)
+                    r += 'rho_4/2   {: .5e}\n'.format(GJ4 / GJ2)
 
             r += 'gamma_||  {: .5e}\n'.format(para)
             r += 'gamma_per {: .5e}\n'.format(perp)
