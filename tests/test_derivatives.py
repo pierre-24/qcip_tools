@@ -547,9 +547,9 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1500cm-1'), 0.0068, places=4)
 
         # order and name
-        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(0, 1))
-        self.assertEqual(g.representation.representation(), 'dFD')
-        self.assertEqual(g.name, 'beta(-w;0,w)')
+        g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(1, 0))
+        self.assertEqual(g.representation.representation(), 'dDF')
+        self.assertEqual(g.name, 'beta(-w;w,0)')
         self.assertEqual(g.rank(), 3)
 
         # just check that DFWM is now possible:

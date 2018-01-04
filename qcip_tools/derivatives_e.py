@@ -20,7 +20,7 @@ REPRESENTATIONS = {
     'beta(0;0,0)': 'FFF',
     'alpha(-w;w)': 'dD',
     'beta(-2w;w,w)': 'XDD',
-    'beta(-w;0,w)': 'dFD',
+    'beta(-w;w,0)': 'dDF',
     'beta(0;w,-w)': 'FDd',
     'gamma(0;0,0,0)': 'FFFF',
     'gamma(-w;0,0,w)': 'dFFD',
@@ -35,7 +35,7 @@ NAMES = dict((b, a) for (a, b) in REPRESENTATIONS.items())
 
 PHENOMENON = {
     'FFF': 'static first hyperpolarizability',
-    'dFD': 'electro-optical Pockels effect (EOP)',
+    'dDF': 'electro-optical Pockels effect (EOP)',
     'FDd': 'optical rectification',
     'XDD': 'second harmonic generation',
     'FFFF': 'static second hyperpolarizability',
@@ -53,7 +53,7 @@ SIMPLIFIED_NAMES = {
     'beta': 'β(0;0,0)',
     'alpha(-w;w)': 'α(-w;w)',
     'beta(-2w;w,w)': 'β(-2w;w,w)',
-    'beta(-w;0,w)': 'β(-w;0,w)',
+    'beta(-w;w,0)': 'β(-w;w,0)',
     'gamma': 'γ(0;0,0,0)',
     'gamma(-w;0,0,w)': 'γ(-w;0,0,w)',
     'gamma(-2w;w,w,0)': 'γ(-2w;w,w,0)',
