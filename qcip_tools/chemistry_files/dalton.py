@@ -443,7 +443,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 raise WrongNumberOfData(len(prop_sorted[3]), 'hyperpolarizability')
 
             num_of_tensors = int(len(prop_sorted[3]) / 27)
-            found_frequencies = {'FFF': [], 'dFD': [], 'FDd': [], 'XDD': []}
+            found_frequencies = {'FFF': [], 'dDF': [], 'FDd': [], 'XDD': []}
             data = {}
 
             for l in prop_sorted[3]:
@@ -462,7 +462,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 elif freq_1 == -freq_2:
                     representation = 'FDd'
                 elif freq_2 == .0:
-                    representation = 'dFD'
+                    representation = 'dDF'
                 else:
                     raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
 
@@ -562,11 +562,11 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         is_optical_rectification_in_calculations = False
         is_EOP_in_calculations = False
         is_optical_rectification_use_later = []
-        found_frequencies = {'FFF': [], 'dFD': [], 'FDd': [], 'XDD': []}
+        found_frequencies = {'FFF': [], 'dDF': [], 'FDd': [], 'XDD': []}
         data = {}
 
         r_to_obj = {}  # to use inverse smart iterator
-        for x in ['FFF', 'dFD', 'FDd', 'XDD']:
+        for x in ['FFF', 'dDF', 'FDd', 'XDD']:
             r_to_obj[x] = derivatives.Derivative(from_representation=x)
 
         for line in lines:
@@ -596,7 +596,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                     is_optical_rectification_use_later.append((freq_1, components, value))
                     continue
             elif freq_2 == .0:
-                representation = 'dFD'
+                representation = 'dDF'
                 is_EOP_in_calculations = True
             else:
                 raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
@@ -615,16 +615,16 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 data[representation][freq_1].components[components_] = value
 
         if is_optical_rectification_in_calculations and is_EOP_in_calculations:
-            freqs = list(data['dFD'].keys())
+            freqs = list(data['dDF'].keys())
             data['FDd'] = {}
             for freq in freqs:
                 data['FDd'][freq] = derivatives_e.FirstHyperpolarisabilityTensor(
                     frequency=freq, input_fields=(-1, 1))
-                for i in r_to_obj['dFD'].smart_iterator():
-                    if data['dFD'][freq].components[i] == .0:
+                for i in r_to_obj['dDF'].smart_iterator():
+                    if data['dDF'][freq].components[i] == .0:
                         continue
-                    for j in r_to_obj['dFD'].inverse_smart_iterator(i):
-                        data['FDd'][freq].components[j[2], j[1], j[0]] = data['dFD'][freq].components[j]
+                    for j in r_to_obj['dDF'].inverse_smart_iterator(i):
+                        data['FDd'][freq].components[j[2], j[1], j[0]] = data['dDF'][freq].components[j]
 
             for freq, components_, value in is_optical_rectification_use_later:
                 data['FDd'][freq].components[components_] = value

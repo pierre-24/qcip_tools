@@ -93,14 +93,14 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertIn('FF', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
         self.assertIn('dD', electrical_derivatives)
-        self.assertIn('dFD', electrical_derivatives)
+        self.assertIn('dDF', electrical_derivatives)
         self.assertIn('XDD', electrical_derivatives)
 
-        self.assertIn(0.02, electrical_derivatives['dFD'])
-        self.assertIn(0.04, electrical_derivatives['dFD'])
-        self.assertIn(0.06, electrical_derivatives['dFD'])
-        self.assertIn(0.08, electrical_derivatives['dFD'])
-        self.assertIn(0.10, electrical_derivatives['dFD'])
+        self.assertIn(0.02, electrical_derivatives['dDF'])
+        self.assertIn(0.04, electrical_derivatives['dDF'])
+        self.assertIn(0.06, electrical_derivatives['dDF'])
+        self.assertIn(0.08, electrical_derivatives['dDF'])
+        self.assertIn(0.10, electrical_derivatives['dDF'])
 
         self.assertAlmostEqual(electrical_derivatives['dD'][0.02].isotropic_value(), 0.835791e1, places=5)
         self.assertAlmostEqual(electrical_derivatives['XDD'][0.02].beta_hrs(), 6.2390, places=3)
@@ -117,7 +117,7 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FF', electrical_derivatives)
         self.assertIn('dD', electrical_derivatives)
-        self.assertIn('dFD', electrical_derivatives)
+        self.assertIn('dDF', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
         self.assertIn('XDD', electrical_derivatives)
         self.assertIn('FFFF', electrical_derivatives)
@@ -133,7 +133,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('FF', 'static', (0, 0), 0.04757),
             ('dD', f, (0, 0), 0.047968),
             ('FFF', 'static', (0, 0, 2), 0.073362),
-            ('dFD', f, (0, 0, 2), 0.072835),
+            ('dDF', f, (0, 0, 2), 0.072835),
             ('XDD', f, (0, 0, 2), 0.073591),
             ('FFFF', 'static', (0, 0, 0, 0), -0.351403),
             ('dFFD', f, (0, 0, 0, 0), -0.35619),
@@ -177,7 +177,7 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertIn('F', electrical_derivatives)
         self.assertIn('FFF', electrical_derivatives)
-        self.assertIn('dFD', electrical_derivatives)
+        self.assertIn('dDF', electrical_derivatives)
         self.assertIn('XDD', electrical_derivatives)
 
         self.assertNotIn('FF', electrical_derivatives)
@@ -190,7 +190,7 @@ class PropertiesTestCase(QcipToolsTestCase):
         tests_in_tensor = [
             ('F', 'static', (2,), 0.67340),
             ('FFF', 'static', (2, 2, 2), -3.28102875),
-            ('dFD', f, (2, 2, 2), -3.30365796),
+            ('dDF', f, (2, 2, 2), -3.30365796),
             ('XDD', f, (2, 2, 2), -3.34979625)
         ]
 
