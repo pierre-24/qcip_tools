@@ -649,7 +649,7 @@ def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
                 o.components = beta_EOP_from_fchk(compressed_tensor, i)
                 data[frequencies[i]] = o
 
-            electrical_derivatives['dFD'] = data
+            electrical_derivatives['dDF'] = data
 
     if not electrical_derivatives:
         raise PropertyNotPresent('qs:electrical_derivatives')
