@@ -4,7 +4,7 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom, quantities, basis_set, derivatives_e, derivatives_g, derivatives
+from qcip_tools import molecule, atom, quantities, basis_set, derivatives_e, derivatives_g
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
     FormatError, WithIdentificationMixin, PropertyNotPresent
 
@@ -530,11 +530,11 @@ def beta_EOP_from_fchk(compressed_tensor, offset=0):
 
     tensor = numpy.zeros((3, 3, 3))
 
-    o = derivatives.Derivative(from_representation='dFD')
-
     for index, components in enumerate(to_consider):
-        for uniques in o.inverse_smart_iterator(components):
-            tensor[uniques] = - compressed_tensor[offset * 18 + index]
+        v = - compressed_tensor[offset * 18 + index]
+        tensor[components] = v
+        if components[0] != components[1]:
+            tensor[components[1], components[0], components[2]] = v
 
     return tensor
 
