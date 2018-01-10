@@ -361,9 +361,10 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
           and also in RESULTS.RSP.
           You need to use an hidden option, ``.GAMALL`` to get all components of the gamma tensor
           (otherwise **only the one contributing to :math:`\gamma_{||}` are computed**).
-          The rest of the components are obtained from RESULT.RSP if ``.GAMALL`` is used.
-          Note that the first frequency is non-null for dc-Kerr, while it is the last one with CC response module.
-        + If you use the patched version, everything is in DALTON.PROP.
+          The rest of the components are obtained from RESULT.RSP (when symmetry is assumed) if ``.GAMALL`` is used.
+          Note that the first frequency is non-null for dc-Kerr, while it is the last one with CC response module
+          (so it is ``dDFF`` in with RESPONSE and ``dFFD`` with CC).
+        + If you use the patched version, everything (!) is in DALTON.PROP.
 
     :param obj: object
     :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput

@@ -3,7 +3,7 @@ import os
 import numpy
 
 from tests import QcipToolsTestCase
-from qcip_tools import derivatives_g
+from qcip_tools import derivatives_g, derivatives
 from qcip_tools.chemistry_files import gaussian, dalton, PropertyNotPresent
 
 
@@ -145,6 +145,12 @@ class PropertiesTestCase(QcipToolsTestCase):
         for(tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4)
 
+            d = derivatives.Derivative(tensor)
+            for i in d.smart_iterator():
+                v = electrical_derivatives[tensor][freq].components[i]
+                for j in d.inverse_smart_iterator(i):
+                    self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
+
         # Response alpha:
         archive_file, path, electrical_derivatives = self.get_property(
             dalton.ArchiveOutput,
@@ -168,6 +174,12 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         for(tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
+
+            d = derivatives.Derivative(tensor)
+            for i in d.smart_iterator():
+                v = electrical_derivatives[tensor][freq].components[i]
+                for j in d.inverse_smart_iterator(i):
+                    self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
 
         # Response beta:
         archive_file, path, electrical_derivatives = self.get_property(
@@ -197,6 +209,12 @@ class PropertiesTestCase(QcipToolsTestCase):
         for(tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
+            d = derivatives.Derivative(tensor)
+            for i in d.smart_iterator():
+                v = electrical_derivatives[tensor][freq].components[i]
+                for j in d.inverse_smart_iterator(i):
+                    self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
+
         # Response beta (patched version, in DALTON.PROP):
         archive_file, path, electrical_derivatives = self.get_property(
             dalton.ArchiveOutput,
@@ -223,6 +241,12 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
+
+            d = derivatives.Derivative(tensor)
+            for i in d.smart_iterator():
+                v = electrical_derivatives[tensor][freq].components[i]
+                for j in d.inverse_smart_iterator(i):
+                    self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
 
         # Response gamma:
         archive_file, path, electrical_derivatives = self.get_property(
@@ -254,6 +278,12 @@ class PropertiesTestCase(QcipToolsTestCase):
         for(tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
+            d = derivatives.Derivative(tensor)
+            for i in d.smart_iterator():
+                v = electrical_derivatives[tensor][freq].components[i]
+                for j in d.inverse_smart_iterator(i):
+                    self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
+
         # Response gamma (patched version):
         archive_file, path, electrical_derivatives = self.get_property(
             dalton.ArchiveOutput,
@@ -283,6 +313,12 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         for(tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
+
+            d = derivatives.Derivative(tensor)
+            for i in d.smart_iterator():
+                v = electrical_derivatives[tensor][freq].components[i]
+                for j in d.inverse_smart_iterator(i):
+                    self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
 
     def test_geometrical_derivatives(self):
         """Test geometrical properties"""
