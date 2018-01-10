@@ -24,6 +24,7 @@ REPRESENTATIONS = {
     'beta(0;w,-w)': 'FDd',
     'gamma(0;0,0,0)': 'FFFF',
     'gamma(-w;0,0,w)': 'dFFD',
+    'gamma(-w;w,0,0)': 'dDFF',
     'gamma(-2w;w,w,0)': 'XDDF',
     'gamma(-w;w,w,-w)': 'dDDd',
     'gamma(-3w;w,w,w)': 'XDDD',
@@ -40,6 +41,7 @@ PHENOMENON = {
     'XDD': 'second harmonic generation',
     'FFFF': 'static second hyperpolarizability',
     'dFFD': 'dc-Kerr effect',
+    'dDFF': 'dc-Kerr effect (from dalton)',
     'XDDF': '(static) electric field-induced second harmonic generation (EFISHG)',
     'dDDd': 'intensity dependent refractive index (IDRI/DFWM)',
     'XDDD': 'third harmonic generation'
@@ -56,6 +58,7 @@ SIMPLIFIED_NAMES = {
     'beta(-w;w,0)': 'β(-w;w,0)',
     'gamma': 'γ(0;0,0,0)',
     'gamma(-w;0,0,w)': 'γ(-w;0,0,w)',
+    'gamma(-w;w,0,0)': 'γ(-w;0,0,w)',
     'gamma(-2w;w,w,0)': 'γ(-2w;w,w,0)',
     'gamma(-w;w,w,-w)': 'γ(-w;w,w,-w)',
     'gamma(-3w;w,w,w)': 'γ(-3w;w,w,w)',
