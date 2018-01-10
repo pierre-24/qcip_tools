@@ -351,12 +351,20 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         is f\*\*\*g inconsistent:
 
         + dipole moment is in DALTON.PROP
-        + alpha is in DALTON.PROP, but only the non-zero components
+        + alpha is in DALTON.PROP, but only the non-zero components (and you need to assume permutation)
         + beta is in RESULTS.RSP, because why not. You need to assume Kleinman condition for SHG, and
           optical rectification is assumed to be the same as EOP, just permuted (and I'm not entirely sure
           of the validity of what I did there).
-        + gamma is in DALTON.PROP (only non-zero component) and also in RESULTS.RSP (not used here).
-          Note that the first frequency is non-null for dc-Kerr, while it is the last one with CC response module.
+        + If you use the *patched* version of Dalton (see installation part), results are then available in
+          DALTON.PROP (but you still need to assume permutation).
+        + gamma is in DALTON.PROP (main source, but only non-zero components that contribute to :math:`\gamma_{||}`)
+          and also in RESULTS.RSP.
+          You need to use an hidden option, ``.GAMALL`` to get all components of the gamma tensor
+          (otherwise **only the one contributing to :math:`\gamma_{||}` are computed**).
+          The rest of the components are obtained from RESULT.RSP (when symmetry is assumed) if ``.GAMALL`` is used.
+          Note that the first frequency is non-null for dc-Kerr, while it is the last one with CC response module
+          (so it is ``dDFF`` in with RESPONSE and ``dFFD`` with CC).
+        + If you use the patched version, everything (!) is in DALTON.PROP.
 
     :param obj: object
     :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput
@@ -373,6 +381,9 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         f = obj.get_file('DALTON.PROP')
     except FileNotFoundError:
         pass
+
+    beta_already_found = False
+    missing_gamma_components = False
 
     if f is not None:
         lines = f.read().decode('utf-8').splitlines()
@@ -442,9 +453,14 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             if len(prop_sorted[3]) % 27 != 0:
                 raise WrongNumberOfData(len(prop_sorted[3]), 'hyperpolarizability')
 
+            beta_already_found = True
             num_of_tensors = int(len(prop_sorted[3]) / 27)
             found_frequencies = {'FFF': [], 'dDF': [], 'FDd': [], 'XDD': []}
             data = {}
+            r_to_obj = {}
+
+            for x in found_frequencies.keys():
+                r_to_obj[x] = derivatives.Derivative(from_representation=x)
 
             for l in prop_sorted[3]:
                 if len(l[9]) == 22:
@@ -472,16 +488,20 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
                     found_frequencies[representation].append(freq_1)
 
-                    if sum(len(x) for x in found_frequencies.values()) > num_of_tensors:
+                    if is_CC_calculation and sum(len(x) for x in found_frequencies.values()) > num_of_tensors:
                         raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for beta')
 
                     data[representation][freq_1] = derivatives_e.FirstHyperpolarisabilityTensor(
                         frequency=freq_1, input_fields=tuple(
                             derivatives_e.representation_to_field[x] for x in representation[1:]))
 
-                data[representation][freq_1] \
-                    .components[translate_diplens[l[5][0]], translate_diplens[l[6][0]], translate_diplens[l[7][0]]] \
-                    = float(l[4])
+                c1, c2, c3 = translate_diplens[l[5][0]], translate_diplens[l[6][0]], translate_diplens[l[7][0]]
+                v = float(l[4])
+                data[representation][freq_1].components[c1, c2, c3] = v
+
+                if not is_CC_calculation:
+                    for k in r_to_obj[representation].inverse_smart_iterator((c1, c2, c3)):
+                        data[representation][freq_1].components[k] = v
 
             electrical_derivatives.update(data)
 
@@ -491,7 +511,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                 raise WrongNumberOfData(len(prop_sorted[4]), 'hyperpolarizability')
 
             num_of_tensors = int(len(prop_sorted[4]) / 81)
-            found_frequencies = {'FFFF': [], 'dFFD': [], 'XDDF': [], 'dDDd': [], 'XDDD': []}
+            found_frequencies = {'FFFF': [], 'dFFD': [], 'dDFF': [], 'XDDF': [], 'dDDd': [], 'XDDD': []}
             data = {}
 
             for l in prop_sorted[4]:
@@ -511,7 +531,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                     representation = 'dFFD'
                     freq = freq_3
                 elif freq_2 == freq_3 and freq_3 == .0:
-                    representation = 'dFFD'
+                    representation = 'dDFF'
                     freq = freq_1
                 elif freq_1 == freq_2 and freq_3 == .0:
                     representation = 'XDDF'
@@ -531,8 +551,11 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
                     found_frequencies[representation].append(freq)
 
-                    if is_CC_calculation and sum(len(x) for x in found_frequencies.values()) > num_of_tensors:
-                        raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for gamma')
+                    if sum(len(x) for x in found_frequencies.values()) > num_of_tensors:
+                        if is_CC_calculation:
+                            raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for gamma')
+                        else:
+                            missing_gamma_components = True
 
                     data[representation][freq] = derivatives_e.SecondHyperpolarizabilityTensor(
                         frequency=freq, input_fields=tuple(
@@ -558,76 +581,119 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
     if f is not None:
         lines = f.read().decode('utf-8').splitlines()
-        splits = [0, 10, 20, 29, 40, 48, 53, 59, 73]
-        is_optical_rectification_in_calculations = False
-        is_EOP_in_calculations = False
-        is_optical_rectification_use_later = []
-        found_frequencies = {'FFF': [], 'dDF': [], 'FDd': [], 'XDD': []}
         data = {}
 
-        r_to_obj = {}  # to use inverse smart iterator
-        for x in ['FFF', 'dDF', 'FDd', 'XDD']:
-            r_to_obj[x] = derivatives.Derivative(from_representation=x)
+        if not beta_already_found:
+            found_frequencies = {'FFF': [], 'dDF': [], 'FDd': [], 'XDD': []}
+            splits = [0, 10, 20, 29, 40, 48, 53, 59, 73]
+            is_optical_rectification_in_calculations = False
+            is_EOP_in_calculations = False
+            is_optical_rectification_use_later = []
 
-        for line in lines:
-            if len(line) == 0:
-                break
-            if 'Cubic response function' in line:
-                break
+            r_to_obj = {}  # to use inverse smart iterator
+            for x in found_frequencies.keys():
+                r_to_obj[x] = derivatives.Derivative(from_representation=x)
 
-            info = []
-            for index, split in enumerate(splits[1:]):
-                info.append(line[splits[index]:split].strip())
+            for line in lines:
+                if len(line) == 0:
+                    break
+                if 'Cubic response function' in line:
+                    break
 
-            freq_1 = float(info[1])
-            freq_2 = float(info[3])
-            components = tuple(translate_diplens[x] for x in re.split('\W', info[5]))
-            value = float(info[7])
+                info = []
+                for index, split in enumerate(splits[1:]):
+                    info.append(line[splits[index]:split].strip())
 
-            if freq_1 == freq_2 and freq_1 == .0:
-                representation = 'FFF'
-                freq_1 = 'static'
-            elif freq_1 == freq_2:
-                representation = 'XDD'
-            elif freq_1 == -freq_2:  # will be treated later
-                representation = 'FDd'
-                is_optical_rectification_in_calculations = True
-                if is_EOP_in_calculations:
-                    is_optical_rectification_use_later.append((freq_1, components, value))
-                    continue
-            elif freq_2 == .0:
-                representation = 'dDF'
-                is_EOP_in_calculations = True
-            else:
-                raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
+                freq_1 = float(info[1])
+                freq_2 = float(info[3])
+                components = tuple(translate_diplens[x] for x in re.split('\W', info[5]))
+                value = float(info[7])
 
-            if freq_1 not in found_frequencies[representation]:
-                if representation not in data:
-                    data[representation] = {}
-
-                found_frequencies[representation].append(freq_1)
-
-                data[representation][freq_1] = derivatives_e.FirstHyperpolarisabilityTensor(
-                    frequency=freq_1, input_fields=tuple(
-                        derivatives_e.representation_to_field[x] for x in representation[1:]))
-
-            for components_ in r_to_obj[representation].inverse_smart_iterator(components):
-                data[representation][freq_1].components[components_] = value
-
-        if is_optical_rectification_in_calculations and is_EOP_in_calculations:
-            freqs = list(data['dDF'].keys())
-            data['FDd'] = {}
-            for freq in freqs:
-                data['FDd'][freq] = derivatives_e.FirstHyperpolarisabilityTensor(
-                    frequency=freq, input_fields=(-1, 1))
-                for i in r_to_obj['dDF'].smart_iterator():
-                    if data['dDF'][freq].components[i] == .0:
+                if freq_1 == freq_2 and freq_1 == .0:
+                    representation = 'FFF'
+                    freq_1 = 'static'
+                elif freq_1 == freq_2:
+                    representation = 'XDD'
+                elif freq_1 == -freq_2:  # will be treated later
+                    representation = 'FDd'
+                    is_optical_rectification_in_calculations = True
+                    if is_EOP_in_calculations:
+                        is_optical_rectification_use_later.append((freq_1, components, value))
                         continue
-                    for j in r_to_obj['dDF'].inverse_smart_iterator(i):
-                        data['FDd'][freq].components[j[2], j[1], j[0]] = data['dDF'][freq].components[j]
+                elif freq_2 == .0:
+                    representation = 'dDF'
+                    is_EOP_in_calculations = True
+                else:
+                    raise Exception('unknown combination of field ({}, {})'.format(freq_1, freq_2))
 
-            for freq, components_, value in is_optical_rectification_use_later:
-                data['FDd'][freq].components[components_] = value
+                if freq_1 not in found_frequencies[representation]:
+                    if representation not in data:
+                        data[representation] = {}
+
+                    found_frequencies[representation].append(freq_1)
+
+                    data[representation][freq_1] = derivatives_e.FirstHyperpolarisabilityTensor(
+                        frequency=freq_1, input_fields=tuple(
+                            derivatives_e.representation_to_field[x] for x in representation[1:]))
+
+                for components_ in r_to_obj[representation].inverse_smart_iterator(components):
+                    data[representation][freq_1].components[components_] = value
+
+            if is_optical_rectification_in_calculations and is_EOP_in_calculations:
+                freqs = list(data['dDF'].keys())
+                data['FDd'] = {}
+                for freq in freqs:
+                    data['FDd'][freq] = derivatives_e.FirstHyperpolarisabilityTensor(
+                        frequency=freq, input_fields=(-1, 1))
+                    for i in r_to_obj['dDF'].smart_iterator():
+                        if data['dDF'][freq].components[i] == .0:
+                            continue
+                        for j in r_to_obj['dDF'].inverse_smart_iterator(i):
+                            data['FDd'][freq].components[j[2], j[1], j[0]] = data['dDF'][freq].components[j]
+
+                for freq, components_, value in is_optical_rectification_use_later:
+                    data['FDd'][freq].components[components_] = value
+
+        if missing_gamma_components:
+            i = 0
+            found_frequencies = {'FFFF': [], 'dDFF': [], 'XDDF': [], 'dDDd': [], 'XDDD': []}
+
+            r_to_obj = {}
+            for x in found_frequencies.keys():
+                r_to_obj[x] = derivatives.Derivative(from_representation=x)
+
+            while i < len(lines):
+                if 'Cubic response function value in a.u. for' in lines[i]:
+                    v = -float(lines[i + 6][25:])
+
+                    freq_1, freq_2, freq_3 = tuple(float(lines[i + k][49:]) for k in range(2, 5))
+                    if freq_1 == freq_2 and freq_2 == freq_3 and freq_3 == .0:
+                        representation = 'FFFF'
+                    elif freq_2 == freq_3 and freq_3 == .0:
+                        representation = 'dDFF'
+                    elif freq_1 == freq_2 and freq_3 == .0:
+                        representation = 'XDDF'
+                    elif freq_1 == freq_2 and freq_2 == -freq_3:
+                        representation = 'dDDd'
+                    elif freq_1 == freq_2 and freq_2 == freq_3:
+                        representation = 'XDDD'
+                    else:
+                        raise Exception('unknown combination of field ({}, {}, {})'.format(freq_1, freq_2, freq_3))
+
+                    components = tuple(translate_diplens[lines[i + k][36:37]] for k in range(1, 5))
+                    i += 8
+
+                    if not any(i == 1 for i in collections.Counter(components).values()):
+                        continue
+
+                    freq = 'static'
+                    if representation != 'FFFF':
+                        freq = next(f for f in electrical_derivatives[representation] if (f - freq_1) < 1e-5)
+
+                    for components_ in r_to_obj[representation].inverse_smart_iterator(components):
+                        electrical_derivatives[representation][freq].components[components_] = v
+                else:
+                    i += 1
 
         electrical_derivatives.update(data)
 
