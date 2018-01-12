@@ -450,7 +450,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
         # hyperpolarizability
         if 3 in prop_sorted:
-            if len(prop_sorted[3]) % 27 != 0:
+            if is_CC_calculation and len(prop_sorted[3]) % 27 != 0:
                 raise WrongNumberOfData(len(prop_sorted[3]), 'hyperpolarizability')
 
             beta_already_found = True
