@@ -5,7 +5,7 @@ Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the m
 <!-- STABLE: -->
 Current version: [release-v0.5.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.5.1) (January 10, 2018)
 
-Previous releases:
+Previous releases (see [the changelog](./CHANGELOG.md)):
 
 <!-- PREVIOUS: -->
 +  [release-v0.5](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.5) (January 04, 2018)
