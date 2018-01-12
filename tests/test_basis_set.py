@@ -1,5 +1,3 @@
-import unittest
-
 from tests import QcipToolsTestCase
 from qcip_tools import basis_set, basis_set_esml
 
@@ -159,7 +157,7 @@ class BasisSetTestCase(QcipToolsTestCase):
         with self.assertRaises(Exception):
             44444 in sto3g  # non-existing atom
 
-    @unittest.skip('ESML temporally unavailable')
+    # @unittest.skip('ESML temporally unavailable')
     def test_ESML(self):
         """Test scrapping data from ESML basis set exchange"""
 
