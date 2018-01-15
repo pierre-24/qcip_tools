@@ -828,7 +828,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            \\gamma_{\\perp} = \\frac{2}{15}\\,\\sum_{ij} \\gamma_{ijji} - \\gamma_{iijj}
+            \\gamma_{\\perp} = \\frac{1}{15}\\,\\sum_{ij} 2\\gamma_{iijj} - \\gamma_{ijij}
 
         :rtype: float
         """
@@ -836,7 +836,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         val = 0.0
         for i in derivatives.COORDINATES_LIST:
             for j in derivatives.COORDINATES_LIST:
-                val += 2 * self.components[i, j, j, i] - self.components[i, i, j, j]
+                val += 2 * self.components[i, i, j, j] - self.components[i, j, i, j]
 
         return val * 1 / 15
 
