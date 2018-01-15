@@ -28,7 +28,7 @@ The following  commands allow you to `get the sources <https://gitlab.com/dalton
 
 .. code-block:: bash
 
-  git clone https://gitlab.com/dalton/dalton.git
+  git clone --recursive https://gitlab.com/dalton/dalton.git
   cd dalton/
   git checkout -b special_version origin/release/2016
   # use "origin/master" if you want the latest (maybe buggy) version
