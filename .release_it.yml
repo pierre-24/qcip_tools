@@ -14,5 +14,5 @@ update_readme:
   file: README.md
   stable_line_indicator: '<!-- STABLE: -->'
   previous_line_indicator: '<!-- PREVIOUS: -->'
-  text_before: 'Current version:'
-  url: 'https://gitlab.unamur.be/pierre.beaujean/qcip_tools'
+  text_before: 'Current release:'
+  url: 'https://gitlab.unamur.be/chimie/lct/qcip_tools'
