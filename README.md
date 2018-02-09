@@ -3,26 +3,26 @@
 Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
 
 <!-- STABLE: -->
-Current version: [release-v0.5.1.2](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.5.1.2) (January 15, 2018)
+Current version: [release-v0.5.1.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1.2) (January 15, 2018)
 
 Previous releases (see [the changelog](./CHANGELOG.md)):
 
 <!-- PREVIOUS: -->
-+  [release-v0.5.1.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.5.1.1) (January 12, 2018)
-+  [release-v0.5.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.5.1) (January 10, 2018)
-+  [release-v0.5](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.5) (January 04, 2018)
-+ [release-v0.4.3](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4.3) (December 25, 2017)
-+ [release-v0.4.2](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4.2) (December 18, 2017)
-+ [release-v0.4.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4.1) (December 05, 2017)
-+ [release-v0.4](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.4) (November 21, 2017)
-+ [release-v0.3.2](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.3.2) (September 29, 2017)
-+ [release-v0.3.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.3.1) (September 26, 2017)
-+ [release-v0.3](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.3) (September 25, 2017)
-+ [release-v0.3a](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.3a) (September 19, 2017)
-+ [release-v0.2.2](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.2.2) (August 25, 2017).
-+ [release-v0.2.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.2.1) (August 25, 2017).
-+ [release-v0.2](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.2) (August, 24 2017).
-+ [release-v0.1](https://gitlab.unamur.be/pierre.beaujean/qcip_tools/tree/release-v0.1) (July, 11 2017).
++  [release-v0.5.1.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1.1) (January 12, 2018)
++  [release-v0.5.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1) (January 10, 2018)
++  [release-v0.5](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5) (January 04, 2018)
++ [release-v0.4.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4.3) (December 25, 2017)
++ [release-v0.4.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4.2) (December 18, 2017)
++ [release-v0.4.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4.1) (December 05, 2017)
++ [release-v0.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4) (November 21, 2017)
++ [release-v0.3.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3.2) (September 29, 2017)
++ [release-v0.3.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3.1) (September 26, 2017)
++ [release-v0.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3) (September 25, 2017)
++ [release-v0.3a](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3a) (September 19, 2017)
++ [release-v0.2.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.2.2) (August 25, 2017).
++ [release-v0.2.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.2.1) (August 25, 2017).
++ [release-v0.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.2) (August, 24 2017).
++ [release-v0.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.1) (July, 11 2017).
 
 ## Purpose
 
@@ -35,7 +35,7 @@ Previous releases (see [the changelog](./CHANGELOG.md)):
 With pip:
 
 ```bash
-pip install git+ssh://git@gitlab.unamur.be/pierre.beaujean/qcip_tools.git@release-vXX
+pip install git+ssh://git@gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
 ```
 
 where `release-vXX` is the release you want (see above).
