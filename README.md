@@ -3,7 +3,7 @@
 Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
 
 <!-- STABLE: -->
-Current version: [release-v0.5.1.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1.2) (January 15, 2018)
+Current release: [release-v0.5.1.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1.2) (January 15, 2018)
 
 Previous releases (see [the changelog](./CHANGELOG.md)):
 
@@ -43,6 +43,8 @@ where `release-vXX` is the release you want (see above).
 See the [installation page](./documentation/source/install.rst) for more information.
 
 ## API documentation
+
+The documentation of the latest version is available online at [this address](http://perso.unamur.be/~pbeaujea/qcip_tools/html/) (login is `doc` and password is `doc`).
 
 Build the documentation with `make doc`.
 

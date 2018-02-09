@@ -13,6 +13,8 @@ test_package:
     - make lint
 
 make-doc:
+  only:
+    - master
   tags:
     - python-numpy
   script:
