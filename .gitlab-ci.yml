@@ -11,3 +11,14 @@ test_package:
   script:
     - python3 setup.py test
     - make lint
+
+make-doc:
+  only:
+    - master
+  tags:
+    - python-numpy
+  script:
+    - ssh-add <(echo "$SSH_PRIVATE_KEY_HAL")
+    - python setup.py install
+    - make doc
+    - scp -r ./documentation/build/html $DOC_LOCATION
