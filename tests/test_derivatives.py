@@ -161,6 +161,28 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertEqual(num_smart_iterator_call, 54)  # 9 * 6
         self.assertTrue(numpy.all(r.flatten() == 1))
 
+        # test excitations
+        d6 = derivatives.Derivative(from_representation='!FF', nstate=10)
+        self.assertEqual(d6.diff_representation, '!FF')
+        self.assertEqual(d6.representation(), '!FF')
+        self.assertEqual(d6.dimension(), 10 * 3 * 3)
+        self.assertEqual(d6.shape(), [10, 3, 3])
+        self.assertIsNone(d6.basis)
+        self.assertEqual(d6.order(), 3)
+
+        # test smart iterator
+        num_smart_iterator_call = 0
+
+        r = numpy.zeros(d6.shape()).flatten()
+        for i in d6.smart_iterator(as_flatten=True):
+            num_smart_iterator_call += 1
+            self.assertTrue(i < d6.dimension(), i)
+            for j in d6.inverse_smart_iterator(i, as_flatten=True):
+                r[j] += 1
+
+        self.assertEqual(num_smart_iterator_call, 10 * 6)
+        self.assertTrue(numpy.all(r == 1))
+
         # make the code cry:
         with self.assertRaises(derivatives.RepresentationError):
             derivatives.Derivative(from_representation='NE', spacial_dof=6)  # "E"
@@ -168,6 +190,12 @@ class DerivativesTestCase(QcipToolsTestCase):
             derivatives.Derivative(from_representation='N')  # missing dof
         with self.assertRaises(Exception):
             derivatives.Derivative(from_representation='G')  # missing dof
+        with self.assertRaises(Exception):
+            derivatives.Derivative(from_representation='!F')  # missing nstate
+        with self.assertRaises(Exception):
+            derivatives.Derivative(from_representation='!!F', nstate=10)  # double transition
+        with self.assertRaises(Exception):
+            derivatives.Derivative(from_representation='##F', nstate=10)  # double excitation
         with self.assertRaises(ValueError):
             d0.differentiate('')  # nothing
         with self.assertRaises(derivatives.RepresentationError):
@@ -183,6 +211,8 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertTrue(d1 != 'dGD')  # ... But the type matter
         self.assertFalse(d1 == d2)
         self.assertTrue(d1 != d2)
+
+        self.assertTrue(d6 == derivatives.Derivative('F!F', nstate=10))
 
     def test_tensor(self):
         """Test the behavior of the Tensor object"""
