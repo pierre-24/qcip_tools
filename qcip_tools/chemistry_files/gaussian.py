@@ -4,7 +4,7 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom, quantities, basis_set, derivatives_e, derivatives_g
+from qcip_tools import molecule, atom, quantities, basis_set, derivatives, derivatives_e, derivatives_g
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
     FormatError, WithIdentificationMixin, PropertyNotPresent
 
@@ -726,6 +726,45 @@ def gaussian__fchk__property__geometrical_derivatives(obj, *args, **kwargs):
         raise PropertyNotPresent('geometrical_derivatives')
 
     return geometrical_derivatives
+
+
+@FCHK.define_property('excitations')
+def gaussian__fchk__property__excitations(obj, *args, **kwargs):
+    """Get excitation properties in FCHK. Returns a dictionary:
+
+    .. code-block:: text
+
+        + "!" : Tensor
+        + "!F" : Tensor
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK
+    :rtype: dict
+    """
+
+    excitations = {}
+
+    scf_energy = obj.get('SCF Energy')
+
+    if 'ETran scalars' in obj:
+        nstate = obj.get('ETran scalars')[0]
+        n_per_state = obj.get('ETran scalars')[1]
+        if nstate < 0:
+            raise Exception('number of excitation < 0 ?')
+
+        if 'ETran state values' in obj:
+            c = obj.get('ETran state values')
+            excitations['!'] = derivatives.Tensor('!', nstate=nstate + 1)
+            excitations['!F'] = derivatives.Tensor('!F', nstate=nstate + 1)
+
+            for i in range(nstate):
+                excitations['!'].components[i + 1] = c[i * n_per_state] - scf_energy
+                excitations['!F'].components[i + 1] = c[i * n_per_state + 1:i * n_per_state + 4]
+
+    if not excitations:
+        raise PropertyNotPresent('excitations')
+
+    return excitations
 
 
 class LinkCalled:

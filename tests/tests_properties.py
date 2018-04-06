@@ -3,7 +3,7 @@ import os
 import numpy
 
 from tests import QcipToolsTestCase
-from qcip_tools import derivatives_g, derivatives
+from qcip_tools import derivatives_g, derivatives, derivatives_e
 from qcip_tools.chemistry_files import gaussian, dalton, PropertyNotPresent
 
 
@@ -433,3 +433,18 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertArraysAlmostEqual(
             geometrical_derivatives_2['GG'].components, geometrical_derivatives['GG'].components, places=4)
+
+    def test_excitations(self):
+        """Test excitations"""
+
+        # 1. Test gaussian
+        fchk_file, path, excitations = self.get_property(
+            gaussian.FCHK, 'excitations/gaussian_output.fchk', 'excitations')
+
+        self.assertIn('!', excitations)
+        self.assertIn('!F', excitations)
+
+        self.assertEqual(excitations['!'].components[0], .0)  # ground state has no energy wrt ground state
+        self.assertAlmostEqual(derivatives_e.convert_energy_to(excitations['!'].components[1], 'eV'), 4.6202, places=4)
+        self.assertAlmostEqual(
+            derivatives_e.ElectricDipole(dipole=excitations['!F'].components[1]).norm(), 0.4886, places=4)
