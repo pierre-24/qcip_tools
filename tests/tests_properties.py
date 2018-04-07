@@ -3,7 +3,7 @@ import os
 import numpy
 
 from tests import QcipToolsTestCase
-from qcip_tools import derivatives_g, derivatives, derivatives_e
+from qcip_tools import derivatives_g, derivatives, derivatives_e, derivatives_exci
 from qcip_tools.chemistry_files import gaussian, dalton, PropertyNotPresent
 
 
@@ -445,6 +445,10 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertIn('!F', excitations)
 
         self.assertEqual(excitations['!'].components[0], .0)  # ground state has no energy wrt ground state
-        self.assertAlmostEqual(derivatives_e.convert_energy_to(excitations['!'].components[1], 'eV'), 4.6202, places=4)
+
+        exci = derivatives_exci.Excitations(excitations['!'], excitations['!F'])
+
+        self.assertAlmostEqual(derivatives_e.convert_energy_to(exci.transition_energy(1), 'eV'), 4.6202, places=4)
         self.assertAlmostEqual(
-            derivatives_e.ElectricDipole(dipole=excitations['!F'].components[1]).norm(), 0.4886, places=4)
+            derivatives_e.ElectricDipole(dipole=exci.transition_dipole(1)).norm(), 0.4886, places=4)
+        self.assertAlmostEqual(exci.oscillator_strength(3), 0.2831, places=4)
