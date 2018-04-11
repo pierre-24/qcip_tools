@@ -747,6 +747,67 @@ def dalton__archive_output__property__geometrical_derivatives(obj, *args, **kwar
     return geometrical_derivatives
 
 
+@ArchiveOutput.define_property('excitations')
+def dalton__archive_output__property__excitations(obj, *args, **kwargs):
+    """Get excitations in Dalton archives. Returns a dictionary of tensor
+
+    .. warning::
+
+        The excitations are NOT sorted by energy (since Dalton groups them by symmetry)
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.dalton.ArchiveOutput
+    :rtype: dict
+    """
+
+    translate_diplens = {'X': 0, 'Y': 1, 'Z': 2}
+
+    excitations = {}
+    f = None
+
+    try:
+        f = obj.get_file('DALTON.PROP')
+    except FileNotFoundError:
+        pass
+
+    if f is not None:
+        lines = f.read().decode().splitlines()
+        energies_found = []
+        energies = []
+        dipoles = []
+
+        for line in lines:
+            n = int(line[9:13])
+            if n == -1:
+                value = float(line[23:46])
+                component = translate_diplens[line[47]]
+                energy_str = line[82:105]
+                energy = float(energy_str)
+
+                try:
+                    index = energies_found.index(energy_str)
+                except ValueError:
+                    index = len(energies_found)
+                    energies_found.append(energy_str)
+                    energies.append(energy)
+                    dipoles.append(numpy.zeros(3))
+
+                dipoles[index][component] = value
+
+        nstates = len(energies_found)
+
+        if nstates > 0:
+            energies.insert(0, 0.)
+            dipoles.insert(0, numpy.zeros(3))
+            excitations['!'] = derivatives.Tensor('!', nstates=nstates + 1, components=energies)
+            excitations['!F'] = derivatives.Tensor('!F', nstates=nstates + 1, components=dipoles)
+
+    if not excitations:
+        raise PropertyNotPresent('excitations')
+
+    return excitations
+
+
 class OutputSection:
     """Remind when a section is entered and exited
 

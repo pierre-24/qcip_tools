@@ -3,7 +3,7 @@ import os
 import numpy
 
 from tests import QcipToolsTestCase
-from qcip_tools import derivatives_g, derivatives
+from qcip_tools import derivatives_g, derivatives, derivatives_e, derivatives_exci
 from qcip_tools.chemistry_files import gaussian, dalton, PropertyNotPresent
 
 
@@ -433,3 +433,34 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertArraysAlmostEqual(
             geometrical_derivatives_2['GG'].components, geometrical_derivatives['GG'].components, places=4)
+
+    def test_excitations(self):
+        """Test excitations"""
+
+        # 1. Test gaussian
+        fchk_file, path, excitations = self.get_property(
+            gaussian.FCHK, 'excitations/gaussian_output.fchk', 'excitations')
+
+        self.assertIn('!', excitations)
+        self.assertIn('!F', excitations)
+
+        self.assertEqual(excitations['!'].components[0], .0)  # ground state has no energy wrt ground state
+
+        exci = derivatives_exci.Excitations(excitations['!'], excitations['!F'])
+
+        self.assertAlmostEqual(derivatives_e.convert_energy_to(exci.transition_energy(1), 'eV'), 4.6202, places=4)
+        self.assertAlmostEqual(
+            derivatives_e.ElectricDipole(dipole=exci.transition_dipole(1)).norm(), 0.4886, places=4)
+        self.assertAlmostEqual(exci.oscillator_strength(3), 0.2831, places=4)
+
+        # 2. Test dalton
+        archive_file, path, excitations = self.get_property(
+            dalton.ArchiveOutput, 'excitations/dalton_output.tar.gz', 'excitations')
+
+        self.assertIn('!', excitations)
+        self.assertIn('!F', excitations)
+
+        exci = derivatives_exci.Excitations(excitations['!'], excitations['!F'])
+
+        self.assertAlmostEqual(derivatives_e.convert_energy_to(exci.transition_energy(1), 'eV'), 9.19565, places=5)
+        self.assertAlmostEqual(exci.oscillator_strength(1), 0.0199271, places=5)

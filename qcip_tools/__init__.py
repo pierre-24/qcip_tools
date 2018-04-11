@@ -3,7 +3,7 @@ Quantum Chemistry In Python (QCIP) tools package.
 """
 
 __name__ = 'qcip_tools'
-__version__ = '0.5.2.1'
+__version__ = '0.5.3'
 __author__ = 'Pierre Beaujean'
 __maintainer__ = 'Pierre Beaujean'
 __email__ = 'pierre.beaujean@unamur.be'
@@ -18,4 +18,4 @@ class ValueOutsideDomain(ValueError):
 
 def assert_in_domain(val, min_, max_, help_=''):
     if val > max_ or val < min_:
-        raise ValueOutsideDomain(val, min_, max_, help_='')
+        raise ValueOutsideDomain(val, min_, max_, help_=help_)
