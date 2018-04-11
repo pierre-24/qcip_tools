@@ -1293,10 +1293,10 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
         rho_p = self.records.copy()
         rho_p[numpy.where(rho_p < 0.0)] = 0.0
 
-        charge_transferred = rho_p.sum() * dV
-
         rho_m = self.records.copy()
         rho_m[numpy.where(rho_p > 0.0)] = 0.0
+
+        charge_transferred = .5 * (rho_p.sum() - rho_m.sum()) * dV
 
         # find barycenter positions (in angstrom)
         positions = self.positions()

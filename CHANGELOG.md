@@ -7,6 +7,7 @@
 + Correct gamma perpendicular
 + Add excitation: `!` and `#` (!46), and extract from Dalton (archive) and Gaussian (FCHK)
 + Upgrade numpy and scipy version, remove matplotlib
++ Correct charge transfert (!48)
 
 ## Version 0.5
 
