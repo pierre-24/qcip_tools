@@ -452,3 +452,15 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(
             derivatives_e.ElectricDipole(dipole=exci.transition_dipole(1)).norm(), 0.4886, places=4)
         self.assertAlmostEqual(exci.oscillator_strength(3), 0.2831, places=4)
+
+        # 2. Test dalton
+        archive_file, path, excitations = self.get_property(
+            dalton.ArchiveOutput, 'excitations/dalton_output.tar.gz', 'excitations')
+
+        self.assertIn('!', excitations)
+        self.assertIn('!F', excitations)
+
+        exci = derivatives_exci.Excitations(excitations['!'], excitations['!F'])
+
+        self.assertAlmostEqual(derivatives_e.convert_energy_to(exci.transition_energy(1), 'eV'), 9.19565, places=5)
+        self.assertAlmostEqual(exci.oscillator_strength(1), 0.0199271, places=5)

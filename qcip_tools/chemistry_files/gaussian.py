@@ -754,8 +754,8 @@ def gaussian__fchk__property__excitations(obj, *args, **kwargs):
 
         if 'ETran state values' in obj:
             c = obj.get('ETran state values')
-            excitations['!'] = derivatives.Tensor('!', nstate=nstate + 1)
-            excitations['!F'] = derivatives.Tensor('!F', nstate=nstate + 1)
+            excitations['!'] = derivatives.Tensor('!', nstates=nstate + 1)
+            excitations['!F'] = derivatives.Tensor('!F', nstates=nstate + 1)
 
             for i in range(nstate):
                 excitations['!'].components[i + 1] = c[i * n_per_state] - scf_energy

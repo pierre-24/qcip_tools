@@ -22,7 +22,7 @@ class Excitations:
         if transition_dipoles.representation.representation() != '!F':
             raise Exception('this is not transition dipole')
 
-        if transition_energies.representation.nstate != transition_dipoles.representation.nstate:
+        if transition_energies.representation.nstate != transition_dipoles.representation.nstates:
             raise Exception('nstates does not match')
 
         self.energies = transition_energies
@@ -57,7 +57,7 @@ class Excitations:
         if i <= 0 or i >= self.nstates:
             raise ValueError(i)
 
-        if self.energies.representation.raw_representation() == '#':
+        if self.energies.representation.raw_representation() == '!':
             return self.energies.components[i]
         else:
             return self.energies.components[i] - self.energies.components[0]

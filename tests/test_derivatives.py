@@ -162,7 +162,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertTrue(numpy.all(r.flatten() == 1))
 
         # test excitations
-        d6 = derivatives.Derivative(from_representation='!FF', nstate=10)
+        d6 = derivatives.Derivative(from_representation='!FF', nstates=10)
         self.assertEqual(d6.diff_representation, '!FF')
         self.assertEqual(d6.representation(), '!FF')
         self.assertEqual(d6.dimension(), 10 * 3 * 3)
@@ -193,9 +193,9 @@ class DerivativesTestCase(QcipToolsTestCase):
         with self.assertRaises(Exception):
             derivatives.Derivative(from_representation='!F')  # missing nstate
         with self.assertRaises(Exception):
-            derivatives.Derivative(from_representation='!!F', nstate=10)  # double transition
+            derivatives.Derivative(from_representation='!!F', nstates=10)  # double transition
         with self.assertRaises(Exception):
-            derivatives.Derivative(from_representation='##F', nstate=10)  # double excitation
+            derivatives.Derivative(from_representation='##F', nstates=10)  # double excitation
         with self.assertRaises(ValueError):
             d0.differentiate('')  # nothing
         with self.assertRaises(derivatives.RepresentationError):
@@ -212,7 +212,7 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertFalse(d1 == d2)
         self.assertTrue(d1 != d2)
 
-        self.assertTrue(d6 == derivatives.Derivative('F!F', nstate=10))
+        self.assertTrue(d6 == derivatives.Derivative('F!F', nstates=10))
 
     def test_tensor(self):
         """Test the behavior of the Tensor object"""
