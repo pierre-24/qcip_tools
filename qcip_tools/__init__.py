@@ -3,7 +3,7 @@ Quantum Chemistry In Python (QCIP) tools package.
 """
 
 __name__ = 'qcip_tools'
-__version__ = '0.5.2.1'
+__version__ = '0.5.3'
 __author__ = 'Pierre Beaujean'
 __maintainer__ = 'Pierre Beaujean'
 __email__ = 'pierre.beaujean@unamur.be'
