@@ -22,12 +22,12 @@ class Excitations:
         if transition_dipoles.representation.representation() != '!F':
             raise Exception('this is not transition dipole')
 
-        if transition_energies.representation.nstate != transition_dipoles.representation.nstates:
+        if transition_energies.representation.nstates != transition_dipoles.representation.nstates:
             raise Exception('nstates does not match')
 
         self.energies = transition_energies
         self.dipoles = transition_dipoles
-        self.nstates = transition_energies.representation.nstate
+        self.nstates = transition_energies.representation.nstates
 
     def oscillator_strength(self, i):
         """Get the oscillator strength
