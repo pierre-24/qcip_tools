@@ -387,10 +387,10 @@ class GaussianTestCase(QcipToolsTestCase):
         diff_of_square = MO_2 ** 2 - MO_1 ** 2
         ct = diff_of_square.compute_charge_transfer()
 
-        # those results are checked against the original implementation of D. Jacquemin.
-        self.assertArraysAlmostEqual(ct.charge, 0.8836, places=4)
-        self.assertAlmostEqual(ct.distance, 2.4217, places=4)
-        self.assertArraysAlmostEqual(ct.vector, [.0, .0, -2.4217], places=4)
+        # those results are checked against the original implementation of D. Jacquemin (like really!)
+        self.assertArraysAlmostEqual(ct.charge, 0.882013, places=4)
+        self.assertAlmostEqual(ct.distance, 2.42609, places=4)
+        self.assertArraysAlmostEqual(ct.vector, [.0, .0, -2.42609], places=4)
 
     def test_sum_density(self):
         """Test the sum of density.
