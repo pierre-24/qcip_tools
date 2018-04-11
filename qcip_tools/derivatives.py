@@ -5,6 +5,10 @@ import numpy
 
 from qcip_tools import math as qcip_math, numerical_differentiation
 
+GEOMETRICAL_DERIVATIVES = ('G', 'N')
+ELECTRICAL_DERIVATIVES = ('F', 'D', 'd', 'X')
+SYMBOL_EXCITATIONS = ('!', '#')
+
 #: In term of derivative of the energy
 #: ``G`` = geometrical derivative,
 #: ``N`` = normal mode derivative,
@@ -12,11 +16,10 @@ from qcip_tools import math as qcip_math, numerical_differentiation
 #: ``D`` = dynamic electric field derivative (which can be static),
 #: ``d`` = inverse of the dynamic electric field (-w).
 #: ``X`` = anything but -w and w
+#: ``!`` = excited state (for example ``!F`` stands for "excited state dipole moment")
+#: ``#`` = transition (for example, ``#F`` stands for "transition dipole moment")
 #: Note: do not change the order, except if you know what your are doing
-ALLOWED_DERIVATIVES = ('G', 'N', 'F', 'D', 'd', 'X')
-
-GEOMETRICAL_DERIVATIVES = ('G', 'N')
-ELECTRICAL_DERIVATIVES = ('F', 'D', 'd', 'X')
+ALLOWED_DERIVATIVES = SYMBOL_EXCITATIONS + GEOMETRICAL_DERIVATIVES + ELECTRICAL_DERIVATIVES
 
 
 def __is_derivative(derivative, typ):
@@ -52,6 +55,15 @@ def is_geometrical(derivative):
     return __is_derivative(derivative, GEOMETRICAL_DERIVATIVES)
 
 
+def is_excitation(derivative):
+    """Return if the derivatives contains an excitation
+
+    :type derivative: str|qcip_tools.derivatives.Derivative
+    :rtype: bool
+    """
+    return __is_derivative(derivative, SYMBOL_EXCITATIONS)
+
+
 COORDINATES = {0: 'x', 1: 'y', 2: 'z'}  #: spacial 3D coordinates
 COORDINATES_LIST = list(COORDINATES)
 ORDERS = {1: 'first', 2: 'second', 3: 'third', 4: 'fourth', 5: 'fifth'}  #: number to x*th*.
@@ -64,19 +76,22 @@ class RepresentationError(Exception):
 class Derivative:
     """Represent a quantity, which is derivable
 
-        :param from_representation: representation of the derivative
-        :type from_representation: str
-        :param basis: basis for the representation, if any
-        :type basis: Derivative
-        :param spacial_dof: spacial degrees of freedom (3N)
-        :type spacial_dof: int
-        """
+    :param from_representation: representation of the derivative
+    :type from_representation: str
+    :param basis: basis for the representation, if any
+    :type basis: Derivative
+    :param spacial_dof: spacial degrees of freedom (3N)
+    :type spacial_dof: int
+    :param nstates: number of excited states
+    :type nstates: int
+    """
 
-    def __init__(self, from_representation=None, basis=None, spacial_dof=None):
+    def __init__(self, from_representation=None, basis=None, spacial_dof=None, nstates=None):
 
         self.basis = None
         self.spacial_dof = spacial_dof
         self.diff_representation = ''
+        self.nstates = nstates
 
         if basis:
             if isinstance(basis, Derivative):
@@ -98,9 +113,12 @@ class Derivative:
                 if i in GEOMETRICAL_DERIVATIVES and not spacial_dof:
                     raise Exception('geometrical derivative and no spacial_dof !')
 
+                if i in SYMBOL_EXCITATIONS and not nstates:
+                    raise Exception('excitation and no nstate!')
+
             self.diff_representation = from_representation
 
-        electric_part = self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES)
+        electric_part = self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES + SYMBOL_EXCITATIONS)
         if electric_part != '':
             f = {'F': 0, 'D': 1, 'd': -1}
             if 'X' in electric_part[1:]:
@@ -113,6 +131,12 @@ class Derivative:
             else:
                 if electric_part[0] != 'X':
                     raise RepresentationError('first electrical derivative should be X')
+
+        excitation_part = self.raw_representation(exclude=ELECTRICAL_DERIVATIVES + GEOMETRICAL_DERIVATIVES)
+        if excitation_part != '':
+            for i in SYMBOL_EXCITATIONS:
+                if excitation_part.count(i) > 1:
+                    raise Exception('more than one {}!'.format(i))
 
     def __eq__(self, other):
         if type(other) is str:
@@ -136,13 +160,16 @@ class Derivative:
 
         .. note::
 
-            First comme the geometrical derivatives (G or N), then the electrical ones (F, D or d).
+            First come the excitations, then the geometrical derivatives (G or N), then the electrical ones (F, D or d).
 
         :rtype: str
         """
 
-        return self.raw_representation(exclude=ELECTRICAL_DERIVATIVES) + \
-            self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES)
+        excitations = self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES + ELECTRICAL_DERIVATIVES)
+
+        return ('#' if '#' in excitations else '') + ('!' if '!' in excitations else '') + \
+            self.raw_representation(exclude=ELECTRICAL_DERIVATIVES + SYMBOL_EXCITATIONS) + \
+            self.raw_representation(exclude=GEOMETRICAL_DERIVATIVES + SYMBOL_EXCITATIONS)
 
     def raw_representation(self, exclude=None):
         """Get raw representation (simply the parent representation + obj representation).
@@ -162,7 +189,7 @@ class Derivative:
 
         return ''.join(a for a in raw if a not in exclude)
 
-    def differentiate(self, derivatives_representation, spacial_dof=None):
+    def differentiate(self, derivatives_representation, spacial_dof=None, nstate=None):
         """Create a new derivative from the differentiation of of the current one.
 
         :param derivatives_representation: the representation of the derivatives
@@ -186,9 +213,15 @@ class Derivative:
             representation += i
 
         sdof = spacial_dof if spacial_dof else self.spacial_dof
+        nst = nstate if nstate else self.nstates
 
-        if ('N' in representation and not sdof) or ('G' in representation and not sdof):
-            raise Exception('No DOF')
+        for i in GEOMETRICAL_DERIVATIVES:
+            if i in representation and not sdof:
+                raise Exception('No DOF')
+
+        for i in SYMBOL_EXCITATIONS:
+            if i in representation and not nst:
+                raise Exception('No nstate')
 
         return Derivative(
             from_representation=representation,
@@ -207,6 +240,9 @@ class Derivative:
 
         return qcip_math.prod(self.shape(raw=raw))
 
+    def _shape_of(self, i):
+        return 3 if i in ELECTRICAL_DERIVATIVES else self.nstates if i in SYMBOL_EXCITATIONS else self.spacial_dof
+
     def shape(self, raw=False):
         """Return the shape of the (full) tensor
 
@@ -221,7 +257,7 @@ class Derivative:
         shape = [1] if representation == '' else []
 
         for i in representation:
-            shape.append(3 if i in ELECTRICAL_DERIVATIVES else self.spacial_dof)
+            shape.append(self._shape_of(i))
 
         return shape
 
@@ -285,7 +321,7 @@ class Derivative:
     def correct_components(cls, ideal_representation, representation, list_of_components):
         """Correct the order of the components
 
-        :param ideal_representation: representation when the different type of derivatives nicelly follows each others
+        :param ideal_representation: representation when the different type of derivatives nicely follows each others
         :type ideal_representation: str
         :param representation: real representation
         :type representation: str
@@ -343,7 +379,7 @@ class Derivative:
 
             perms = [
                 a for a in itertools.combinations_with_replacement(
-                    range(self.spacial_dof if c in GEOMETRICAL_DERIVATIVES else 3), each[c])]
+                    range(self._shape_of(c)), each[c])]
             list_of_components = Derivative.expend_list(list_of_components, perms)
 
             ideal_representation += each[c] * c
@@ -460,6 +496,12 @@ def representation_to_operator(representation, component=None, molecule=None):
     if representation not in ALLOWED_DERIVATIVES:
         raise RepresentationError(representation)
 
+    if representation in SYMBOL_EXCITATIONS:
+        if representation == '!':
+            return '|{}>'.format(component if component != 0 else 'g') if component is not None else '|e>'
+        else:
+            return '<{}|'.format(component if component != 0 else 'g') if component is not None else '<e|'
+
     if representation == 'N':
         return 'dQ' + ('({})'.format(component + 1) if component is not None else '')
 
@@ -482,13 +524,16 @@ class Tensor:
     :type spacial_dof: int
     :param frequency: frequency if dynamic electric field
     :type frequency: str|float
+    :param nstates: number of excited states
+    :type nstates: int
     """
 
-    def __init__(self, representation, components=None, spacial_dof=None, frequency=None, name=''):
+    def __init__(self, representation, components=None, spacial_dof=None, frequency=None, nstates=None, name=''):
         if isinstance(representation, Derivative):
             self.representation = representation
         else:
-            self.representation = Derivative(from_representation=representation, spacial_dof=spacial_dof)
+            self.representation = Derivative(
+                from_representation=representation, spacial_dof=spacial_dof, nstates=nstates)
 
         if components is not None:
             if type(components) is list:

@@ -115,7 +115,7 @@ def convert_frequency_from_string(f):
                 quantities.convert(quantities.ureg.joule, quantities.ureg.hartree)
         else:
             raise Exception('A wavelength of 0nm is requested, which is impossible')
-    elif f[-2:].lower() in ['ev', 'eV']:
+    elif f[-2:].lower() == 'ev':
         val = float(f[:-2]) * quantities.convert(quantities.ureg.electron_volt, quantities.ureg.hartree)
     elif f[-4:].lower() == 'cm-1':
         val = float(f[:-4]) * quantities.convert(quantities.ureg.wavenumber, quantities.ureg.hartree)
@@ -123,6 +123,31 @@ def convert_frequency_from_string(f):
         val = float(f)
 
     return val
+
+
+def convert_energy_to(e, unit):
+    """Convert energy to something else
+
+    :param e: the energy (in atomic unit)
+    :type e: float
+    :param unit: the unit (nm, ev, cm-1)
+    :type unit: str
+    """
+
+    unit = unit.lower()
+
+    if unit not in ['au', 'nm', 'ev', 'cm-1']:
+        raise ValueError(unit)
+
+    if unit == 'au':
+        return e
+    elif unit == 'ev':
+        return e * quantities.convert(quantities.ureg.hartree, quantities.ureg.electron_volt)
+    elif unit == 'cm-1':
+        return e * quantities.convert(quantities.ureg.hartree, quantities.ureg.wavenumber)
+    else:
+        return (constants.h * constants.c) / \
+               (e * quantities.convert(quantities.ureg.hartree, quantities.ureg.joule)) * 1e9
 
 
 class BaseElectricalDerivativeTensor(derivatives.Tensor):

@@ -5,6 +5,7 @@
 + Add this changelog (#38)
 + Handle the patched version of dalton if needed (!41)
 + Correct gamma perpendicular
++ Add excitation: `!` and `#`, and extract from Dalton (arcchive) and Gaussian (FCHK)
 
 ## Version 0.5
 

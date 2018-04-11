@@ -1,0 +1,3893 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON 2015.0
+   ----------------------------------------------------------------------------
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       J. Cukras, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, M. Kaminski, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2013. (doi: 10.1002/wcms.1172)
+    
+    and
+    
+       Dalton, a Molecular Electronic Structure Program,
+       Release DALTON2014.0 (2015), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             KTH Stockholm,                Sweden      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Tue Jan 12 21:46:16 2016
+     Host name              : n010                                    
+
+ * Work memory size             :   262144000 =  1.953 gigabytes.
+
+ * Directories for basis set searches:
+   1) /home/pbeaujea/workdir/exci
+   2) /opt/cluster/apps/dalton/2015.0/serial/x86_64-Linux/default/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | fwautele
+ Host                     | hercules
+ System                   | Linux-3.2.0-4-amd64
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/gfortran
+ Fortran compiler version | GNU Fortran (Debian 4.7.2-5) 4.7.2
+ C compiler               | /usr/bin/gcc
+ C compiler version       | gcc (Debian 4.7.2-5) 4.7.2
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (Debian 4.7.2-5) 4.7.2
+ BLAS                     | /usr/lib/atlas-base/libf77blas.so;/usr/lib/atlas-b
+                          | ase/libcblas.so;/usr/lib/atlas-base/libatlas.so
+ LAPACK                   | /usr/lib/atlas-base/libatlas.so;/usr/lib/atlas-bas
+                          | e/atlas/liblapack.so
+ Static linking           | OFF
+ Last Git revision        | d34efb170c481236ad60c789dea90a4c857c6bab
+ Configuration time       | 2015-06-19 14:03:50.436878
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+**DALTON INPUT                                    
+.RUN RESPONSE                                     
+**INTEGRALS                                       
+.DIPLEN                                           
+**WAVEFUNCTION                                    
+.CC                                               
+*CC INPUT                                         
+.CC2                                              
+.MAXRED                                           
+400                                               
+*CCLRSD                                           
+.DIPOLE                                           
+*CCEXCI                                           
+.NCCEXC                                           
+3 3 3 3                                           
+**END OF DALTON INPUT                             
+
+
+   Content of the .mol file
+ ----------------------------
+
+BASIS                                                                          
+d-aug-cc-pVDZ                                                                  
+Water                                                                          
+                                                                               
+Atomtypes=2  Angstrom                                                          
+Charge=8.0 Atoms=1                                                             
+O        0.000000000      0.000000000     -0.115095289                         
+Charge=1.0 Atoms=2                                                             
+H        0.000000000      0.767462907      0.460381156                         
+H        0.000000000     -0.767462907      0.460381156                         
+                                                                               
+                                                                               
+                                                                               
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+    Dynamic molecular response properties section will be executed (RESPONSE module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1: Water                                                                   
+ 2:                                                                         
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   8.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   8 :
+     "/opt/cluster/apps/dalton/2015.0/serial/x86_64-Linux/default/basis/aug-cc-pVDZ"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    2
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/opt/cluster/apps/dalton/2015.0/serial/x86_64-Linux/default/basis/aug-cc-pVDZ"
+
+
+                      SYMADD: Requested addition of symmetry
+                      --------------------------------------
+
+ Symmetry test threshold:  5.00E-06
+
+@   The molecule is centered at center of mass and rotated
+@   so principal axes of inertia are along coordinate axes.
+
+ Symmetry class found: C(2v)          
+
+ Symmetry Independent Centres             
+ ----------------------------
+       8 :      0.00000000     0.00000000    -0.12170662  Isotope  1
+       1 :      0.00000000     1.45029471     0.96578625  Isotope  1
+
+ The following elements were found:   X  Y     
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Full point group is: C(2v)          
+@    Represented as:      C2v
+
+@  * The irrep name for each symmetry:    1: A1     2: B1     3: B2     4: A2 
+
+   * The point group was generated by:
+
+      Reflection in the yz-plane
+      Reflection in the xz-plane
+
+   * Group multiplication table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+     E  |  E   C2z  Oxz  Oyz
+    C2z | C2z   E   Oyz  Oxz
+    Oxz | Oxz  Oyz   E   C2z
+    Oyz | Oyz  Oxz  C2z   E 
+
+   * Character table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+    A1  |   1    1    1    1
+    B1  |   1   -1    1   -1
+    B2  |   1   -1   -1    1
+    A2  |   1    1   -1   -1
+
+   * Direct product table
+
+        | A1   B1   B2   A2 
+   -----+--------------------
+    A1  | A1   B1   B2   A2 
+    B1  | B1   A1   A2   B2 
+    B2  | B2   A2   A1   B1 
+    A2  | A2   B2   B1   A1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           O          15.994915
+                           H   _1      1.007825
+                           H   _2      1.007825
+
+                       Total mass:    18.010565 amu
+                       Natural abundance:  99.730 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.000000
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    2
+  Total number of atoms:    3
+
+  Basis set used is "d-aug-cc-pVDZ" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  O           1    8.0000    44    32      [11s6p3d|5s4p3d]                                   
+  H           2    1.0000    15    13      [6s3p|4s3p]                                        
+  ----------------------------------------------------------------------
+  total:      3   10.0000    74    58
+  ----------------------------------------------------------------------
+  Spherical harmonic basis used.
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    9
+  O       :     1  x   0.0000000000    2  y   0.0000000000    3  z  -0.1217066210
+  H   / 1 :     4  x   0.0000000000    5  y   1.4502947053    6  z   0.9657862514
+  H   / 2 :     7  x   0.0000000000    8  y  -1.4502947053    9  z   0.9657862514
+
+
+  Symmetry Coordinates
+  --------------------
+
+  Number of coordinates in each symmetry:     3    2    3    1
+
+  Symmetry  A1  ( 1)
+
+    1   O     z    3
+    2   H     y    [  5  -    8 ]/2
+    3   H     z    [  6  +    9 ]/2
+
+  Symmetry  B1  ( 2)
+
+    4   O     x    1
+    5   H     x    [  4  +    7 ]/2
+
+  Symmetry  B2  ( 3)
+
+    6   O     y    2
+    7   H     y    [  5  +    8 ]/2
+    8   H     z    [  6  -    9 ]/2
+
+  Symmetry  A2  ( 4)
+
+    9   H     x    [  4  -    7 ]/2
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            O           H   _1      H   _2
+            ------      ------      ------
+ O     :    0.000000
+ H   _1:    0.959256    0.000000
+ H   _2:    0.959256    1.534926    0.000000
+
+
+  Max    interatomic separation is    1.5349 Angstrom (    2.9006 Bohr)
+  between atoms    3 and    2, "H   _2" and "H   _1".
+
+  Min HX interatomic separation is    0.9593 Angstrom (    1.8127 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H   _1     O            0.959256
+  bond distance:  H   _2     O            0.959256
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     H   _1     O          H   _2       106.272
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.592823          0.000000    1.000000    0.000000
+   IB       1.187216          0.000000    0.000000    1.000000
+   IC       1.780039          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+         852496.0403         425683.9593         283914.5424 MHz
+           28.436207           14.199288            9.470370 cm-1
+
+
+@  Nuclear repulsion energy :    9.171216386055 Hartree
+
+
+  Symmetry Orbitals
+  -----------------
+
+  Number of orbitals in each symmetry:          25   10   17    6
+
+
+  Symmetry  A1 ( 1)
+
+    1     O        1s         1
+    2     O        1s         2
+    3     O        1s         3
+    4     O        1s         4
+    5     O        1s         5
+    6     O        2pz        8
+    7     O        2pz       11
+    8     O        2pz       14
+    9     O        2pz       17
+   10     O        3d0       20
+   11     O        3d2+      22
+   12     O        3d0       25
+   13     O        3d2+      27
+   14     O        3d0       30
+   15     O        3d2+      32
+   16     H        1s        33 +   34
+   17     H        1s        35 +   36
+   18     H        1s        37 +   38
+   19     H        1s        39 +   40
+   20     H        2py       43 -   44
+   21     H        2pz       45 +   46
+   22     H        2py       49 -   50
+   23     H        2pz       51 +   52
+   24     H        2py       55 -   56
+   25     H        2pz       57 +   58
+
+
+  Symmetry  B1 ( 2)
+
+   26     O        2px        6
+   27     O        2px        9
+   28     O        2px       12
+   29     O        2px       15
+   30     O        3d1+      21
+   31     O        3d1+      26
+   32     O        3d1+      31
+   33     H        2px       41 +   42
+   34     H        2px       47 +   48
+   35     H        2px       53 +   54
+
+
+  Symmetry  B2 ( 3)
+
+   36     O        2py        7
+   37     O        2py       10
+   38     O        2py       13
+   39     O        2py       16
+   40     O        3d1-      19
+   41     O        3d1-      24
+   42     O        3d1-      29
+   43     H        1s        33 -   34
+   44     H        1s        35 -   36
+   45     H        1s        37 -   38
+   46     H        1s        39 -   40
+   47     H        2py       43 +   44
+   48     H        2pz       45 -   46
+   49     H        2py       49 +   50
+   50     H        2pz       51 -   52
+   51     H        2py       55 +   56
+   52     H        2pz       57 -   58
+
+
+  Symmetry  A2 ( 4)
+
+   53     O        3d2-      18
+   54     O        3d2-      23
+   55     O        3d2-      28
+   56     H        2px       41 -   42
+   57     H        2px       47 -   48
+   58     H        2px       53 -   54
+
+  Symmetries of electric field:  B1 (2)  B2 (3)  A1 (1)
+
+  Symmetries of magnetic field:  B2 (3)  B1 (2)  A2 (4)
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+
+    *************************************************************************
+    ****************** Output from HERMIT input processing ******************
+    *************************************************************************
+
+
+ Default print level:        1
+
+ * Nuclear model: Point charge
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ The following one-electron property integrals are calculated as requested:
+          - overlap integrals
+          - dipole length integrals
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:      357187 ( 24.4% )
+ HERMIT - Megabytes written:                              4.095
+
+ >>>  Time used in TWOINT     is   0.13 seconds
+ >>>> Total CPU  time used in HERMIT:   0.16 seconds
+ >>>> Total wall time used in HERMIT:   0.23 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+ NCCEXCI for singlet:           3           3           3           3
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          F
+     Using EHT  model:          T
+     Number of Huckel orbitals each symmetry:    4    1    2    0
+
+ Huckel EHT eigenvalues for symmetry :  1
+          -20.705432      -1.504729      -0.668554      -0.293147
+
+ Huckel EHT eigenvalues for symmetry :  2
+           -0.616200
+
+ Huckel EHT eigenvalues for symmetry :  3
+           -0.733958      -0.257880
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Tue Jan 12 21:46:17 2016
+     Host name              : n010                                    
+
+ Title lines from ".mol" input file:
+     Water                                                                   
+                                                                             
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    (Integral direct) CC calculation.
+
+@    This is a combination run starting with
+@              a restricted, closed shell Hartree-Fock calculation
+
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EHT   " input option
+
+     Wave function specification
+     ============================
+
+     For the specification of the Coupled Cluster: see later.
+
+@    Wave function type        >>> CC <<<
+@    Number of closed shell electrons          10
+@    Number of electrons in active shells       0
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 4 (point group: C2v)
+@    Reference state symmetry                   1 (irrep name : A1 )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1    2    3    4
+@                                          |  A1   B1   B2   A2 
+                                       --- |  ---  ---  ---  ---
+@    Total number of orbitals           58 |   25   10   17    6
+@    Number of basis functions          58 |   25   10   17    6
+
+      ** Automatic occupation of RHF orbitals **
+
+      -- Initial occupation of symmetries is determined from extended Huckel guess.           
+      -- Initial occupation of symmetries is :
+@    Occupied SCF orbitals               5 |    3    1    1    0
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-06
+
+
+ Changes of defaults for CC:
+ ---------------------------
+
+ -Excitation energies calculated
+ -One-photon absorption strengths will be calculated
+ -Oscillator strengths calculated
+  
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Automatic occupation of symmetries with  10 electrons.
+
+ Iter     Total energy    Error norm  Delta(E)    SCF occupation
+ -----------------------------------------------------------------------------
+     (Precalculated two-electron integrals are transformed to P-supermatrix elements.
+      Threshold for discarding integrals :  1.00D-12 )
+@  1  -75.8117936117       2.34D+00  -7.58D+01     3   1   1   0
+      Virial theorem: -V/T =      1.997224
+@      MULPOP O      -0.30; H   _1  0.15; H   _2  0.15; 
+ -----------------------------------------------------------------------------
+@  2  -76.0326878222       3.63D-01  -2.21D-01     3   1   1   0
+      Virial theorem: -V/T =      2.001545
+@      MULPOP O      -0.53; H   _1  0.27; H   _2  0.27; 
+ -----------------------------------------------------------------------------
+@  3  -76.0409025738       8.44D-02  -8.21D-03     3   1   1   0
+      Virial theorem: -V/T =      2.001946
+@      MULPOP O      -0.58; H   _1  0.29; H   _2  0.29; 
+ -----------------------------------------------------------------------------
+@  4  -76.0416755026       1.71D-02  -7.73D-04     3   1   1   0
+      Virial theorem: -V/T =      2.001534
+@      MULPOP O      -0.60; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@  5  -76.0417150410       5.73D-03  -3.95D-05     3   1   1   0
+      Virial theorem: -V/T =      2.001703
+@      MULPOP O      -0.61; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@  6  -76.0417178346       2.16D-03  -2.79D-06     3   1   1   0
+      Virial theorem: -V/T =      2.001605
+@      MULPOP O      -0.61; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@  7  -76.0417183482       2.95D-04  -5.14D-07     3   1   1   0
+      Virial theorem: -V/T =      2.001642
+@      MULPOP O      -0.61; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@  8  -76.0417183630       4.35D-05  -1.48D-08     3   1   1   0
+      Virial theorem: -V/T =      2.001643
+@      MULPOP O      -0.61; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@  9  -76.0417183633       7.94D-06  -3.12D-10     3   1   1   0
+      Virial theorem: -V/T =      2.001644
+@      MULPOP O      -0.61; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@ 10  -76.0417183633       1.79D-06  -1.06D-11     3   1   1   0
+      Virial theorem: -V/T =      2.001644
+@      MULPOP O      -0.61; H   _1  0.30; H   _2  0.30; 
+ -----------------------------------------------------------------------------
+@ 11  -76.0417183633       3.52D-07  -4.41D-13     3   1   1   0
+
+@ *** DIIS converged in  11 iterations !
+@     Converged SCF energy, gradient:    -76.041718363321    3.52D-07
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Only the 20 lowest virtual orbital energies printed in each symmetry.
+
+ Number of electrons :   10
+ Orbital occupations :    3    1    1    0
+
+ Sym       Hartree-Fock orbital energies
+
+1 A1    -20.57669649    -1.35417710    -0.58160248     0.00749955     0.03483402
+          0.04386636     0.08425843     0.09676327     0.12362533     0.25247666
+          0.28887855     0.31995479     0.36563497     0.48098019     0.61188811
+          0.72382902     0.99464539     1.17686418     1.50687063     1.73985890
+          2.41511329     2.65778143     3.04146621
+
+2 B1     -0.50848448     0.03816320     0.09930016     0.27976326     0.32878102
+          0.58929995     1.14892289     1.57770941     2.19119888     3.69478980
+
+3 B2     -0.72148597     0.01367596     0.04993388     0.07636445     0.11877708
+          0.13526127     0.29542401     0.32475705     0.49344139     0.56941997
+          0.70761916     0.88163015     1.65135952     2.02851419     2.51543566
+          2.76814768     4.37244309
+
+4 A2      0.08767770     0.34005684     0.55205890     1.16798317     2.15255510
+          3.71446117
+
+    E(LUMO) :     0.00749955 au (symmetry 1)
+  - E(HOMO) :    -0.50848448 au (symmetry 2)
+  ------------------------------------------
+    gap     :     0.51598403 au
+
+ >>> Writing SIRIFC interface file
+
+ >>>> CPU and wall time for SCF :       0.052       0.057
+
+
+                       .-----------------------------------.
+                       | >>> Final results from SIRIUS <<< |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A1  in C2v )
+@    Total charge of molecule:    0
+
+@    Final HF energy:             -76.041718363321                 
+@    Nuclear repulsion:             9.171216386055
+@    Electronic energy:           -85.212934749376
+
+@    Final gradient norm:           0.000000352223
+
+ 
+     Date and time (Linux)  : Tue Jan 12 21:46:17 2016
+     Host name              : n010                                    
+
+File label for MO orbitals:  12Jan16   FOCKDIIS
+
+ (Only coefficients >0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :1s     1.0010  -0.0068  -0.0014   0.0007   0.0046   0.0058   0.0005
+   2 O   :1s     0.0046   0.8792  -0.2936  -0.0405   0.0567   0.1026  -0.0123
+   3 O   :1s    -0.0080  -0.1164  -0.1436  -0.0420  -0.0610  -0.0500  -0.0172
+   4 O   :1s    -0.0091   0.1459  -0.0223  -0.5721  -0.9944  -1.1604  -0.1108
+   5 O   :1s    -0.0036   0.0379   0.0279  -2.0577  -5.1760  -4.5278  -2.4585
+   6 O   :2pz    0.0024   0.1121   0.8026  -0.0354   0.0751   0.0351   0.0084
+   7 O   :2pz   -0.0028  -0.0685  -0.0371  -0.0217  -0.0299  -0.0349   0.0353
+   8 O   :2pz   -0.0014   0.0268   0.0750  -0.1240  -0.2703  -0.1221   0.4135
+   9 O   :2pz   -0.0003   0.0045   0.0107   0.0486  -1.6463   1.1989   0.6899
+  10 O   :3d0   -0.0000   0.0027   0.0144  -0.0006   0.0001   0.0006  -0.0012
+  12 O   :3d0    0.0000  -0.0055   0.0169  -0.0014   0.0075  -0.0020   0.0007
+  13 O   :3d2+   0.0003   0.0202   0.0133   0.0024   0.0004   0.0127  -0.0122
+  14 O   :3d0    0.0003  -0.0116   0.0059   0.0168  -0.0356   0.0868   0.2441
+  15 O   :3d2+   0.0003  -0.0170  -0.0109   0.0206   0.0558   0.0533   0.1978
+  16 H   :1s     0.0006   0.3498   0.3574   0.0056   0.0067  -0.0130   0.0132
+  17 H   :1s     0.0053  -0.2480  -0.1543   0.1805   0.3029   0.3532   0.0394
+  18 H   :1s     0.0027  -0.0292  -0.0145   0.7921   2.1647   1.4601   1.5018
+  19 H   :1s     0.0002  -0.0013  -0.0010   0.8203   0.7397   0.7340   0.0404
+  20 H   :2py    0.0003  -0.0359  -0.0296   0.0017  -0.0072  -0.0107   0.0025
+  21 H   :2pz    0.0003  -0.0221  -0.0000   0.0014  -0.0046  -0.0043   0.0039
+  22 H   :2py   -0.0014  -0.0002  -0.0020  -0.0125  -0.0690  -0.0461   0.0964
+  23 H   :2pz   -0.0015   0.0202   0.0092  -0.0227  -0.0552  -0.1044  -0.1493
+  24 H   :2py   -0.0002  -0.0016  -0.0043  -0.0844  -0.1258  -0.5285   1.5479
+  25 H   :2pz   -0.0001  -0.0007  -0.0100  -0.1058   0.0802  -0.7523  -0.7429
+
+    Orbital         8        9       10       11       12       13
+   1 O   :1s    -0.0078  -0.0035   0.0235  -0.0253  -0.0087  -0.0231
+   2 O   :1s    -0.0010   0.1536   0.0734  -0.3015   0.0081  -0.2807
+   3 O   :1s     0.1413   0.2355  -0.4267   0.3064   0.1702   0.2232
+   4 O   :1s     2.1878   3.7336  -6.6207   6.6977   0.6234   4.5190
+   5 O   :1s     8.0120   8.7454  -6.4641   7.7008  -0.3660   3.7823
+   6 O   :2pz    0.1158   0.0764   0.2570  -0.1644   0.0689   0.0002
+   7 O   :2pz    0.0971   0.1155  -0.2162   0.1035  -0.0462   0.2196
+   8 O   :2pz    1.4096   0.0638  -4.0888   0.2934  -0.4953  -0.8335
+   9 O   :2pz    2.5741  -0.4840  -1.1781   0.4275  -0.8512  -0.4840
+  10 O   :3d0    0.0001   0.0044   0.0107   0.0039  -0.0250   0.0013
+  11 O   :3d2+  -0.0029   0.0017   0.0030  -0.0188   0.0028   0.0254
+  12 O   :3d0    0.0130  -0.0131  -0.0455  -0.0444   0.0834  -0.0116
+  13 O   :3d2+   0.0110  -0.0253   0.0208   0.0056  -0.0148  -0.1250
+  14 O   :3d0    0.1240  -0.1682  -0.5024  -0.5981  -1.4487  -0.3066
+  15 O   :3d2+  -0.1327  -0.0851   0.1039  -1.0614  -0.3039   0.9915
+  16 H   :1s     0.0023  -0.0627   0.0385   0.1949   0.0075  -0.0790
+  17 H   :1s    -0.9000  -0.8682   2.8023  -1.9059  -0.5018  -0.4606
+  18 H   :1s    -4.4555  -4.7233   4.1947  -5.1959   0.2160  -2.7356
+  19 H   :1s    -0.4423  -0.7128   0.3035  -0.3723   0.0176  -0.2712
+  20 H   :2py    0.0013  -0.0037  -0.0372   0.0383   0.0233   0.0091
+  21 H   :2pz    0.0013  -0.0047  -0.0332  -0.0026  -0.0273   0.0153
+  22 H   :2py    0.1245   0.0769  -0.4598   0.2519  -0.2090   0.4671
+  23 H   :2pz   -0.0480   0.2693   0.1814   0.8497   0.3116   0.6168
+  24 H   :2py   -0.4415   1.1627  -0.3176  -0.0020  -0.3504   1.0899
+  25 H   :2pz   -1.1182   1.3141   0.6585   0.6345   0.5901   0.9728
+
+ Molecular orbitals for symmetry species 2  (B1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2px    0.9150  -0.0495   0.1040   0.2704   0.1005   0.2786   0.0572
+   2 O   :2px    0.0323  -0.0076   0.0158   0.0893  -0.0278   0.7617   0.0280
+   3 O   :2px    0.0930   0.0847   0.9978  -2.7064  -1.2156   3.0092   0.3310
+   4 O   :2px    0.0070   1.9337   2.4583  -0.7895  -1.1172   0.4106  -0.2408
+   5 O   :3d1+   0.0138   0.0009  -0.0005   0.0177  -0.0273  -0.0120  -0.0164
+   6 O   :3d1+   0.0182  -0.0118   0.0027  -0.0541   0.0959   0.0749   1.1810
+   7 O   :3d1+   0.0118   0.0698   0.1629  -0.2465  -1.3143   1.3679  -0.3785
+   8 H   :2px    0.0268   0.0008   0.0065  -0.0174  -0.0285   0.0074   0.0327
+   9 H   :2px    0.0051  -0.0134  -0.1819   0.5731   0.3059  -2.1207  -0.3122
+  10 H   :2px   -0.0098  -0.5796  -1.8166   1.0303   0.9195  -0.5805   0.1208
+
+    Orbital         8        9       10
+   1 O   :2px   -1.4588   0.2010   0.0273
+   2 O   :2px    2.5832   0.3038  -0.0879
+   3 O   :2px    0.3207  -0.9976  -0.1798
+   4 O   :2px   -0.1197  -0.2427   0.0943
+   5 O   :3d1+  -0.0089  -0.0485   1.1999
+   6 O   :3d1+   0.2499   0.7192  -0.7092
+   7 O   :3d1+   0.4080  -0.4842   0.1383
+   8 H   :2px   -0.0951  -1.0127  -0.0811
+   9 H   :2px   -0.8559   0.6125   0.1780
+  10 H   :2px    0.1031   0.2725  -0.0422
+
+ Molecular orbitals for symmetry species 3  (B2 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2py    0.7262  -0.0190  -0.0664  -0.0393   0.0534  -0.1371  -0.3612
+   2 O   :2py   -0.1375  -0.0235   0.0707   0.0359   0.0477  -0.1897   0.2591
+   3 O   :2py    0.0966  -0.2969   0.8322   0.5781   0.1705  -3.0082   4.9516
+   4 O   :2py    0.0148  -1.2548   3.5377  -3.3062   6.2036  -0.0364   1.6599
+   5 O   :3d1-   0.0291  -0.0009   0.0002   0.0006   0.0010  -0.0061   0.0217
+   6 O   :3d1-  -0.0324  -0.0030   0.0103   0.0188   0.0314  -0.0135  -0.0093
+   7 O   :3d1-   0.0301  -0.0473   0.1325  -0.0375  -0.1199  -0.4510   1.4096
+   8 H   :1s     0.5987  -0.0038  -0.0230   0.0023   0.0161  -0.0007   0.1262
+   9 H   :1s    -0.2816   0.1970  -0.5988  -0.2463  -0.2440   1.6355  -3.2874
+  10 H   :1s    -0.2412   1.2712  -5.2585 -15.7806  21.0759  39.6906 -23.5154
+  11 H   :1s    -0.0200   6.3108  -6.2845   1.3604  -3.7879   2.7114  -2.0760
+  12 H   :2py   -0.0259  -0.0007   0.0082   0.0076   0.0011  -0.0065   0.0333
+  13 H   :2pz   -0.0327  -0.0007   0.0080   0.0035   0.0044  -0.0009   0.0421
+  14 H   :2py   -0.0101  -0.0178   0.0963   0.0084   0.0735  -0.0782   0.4704
+  15 H   :2pz   -0.0057  -0.0121   0.0568   0.0919   0.0226  -0.1406   0.3359
+  16 H   :2py    0.0415   0.0924   0.2841   5.6355  -8.5863  -9.5958   4.1094
+  17 H   :2pz    0.0101  -0.2731   1.1150   1.1173   2.9775  -0.6527   0.7435
+
+    Orbital         8        9       10       11
+   1 O   :2py    0.0495   0.2462   0.1073  -0.4860
+   2 O   :2py   -0.3807  -0.0398  -0.1285  -1.6473
+   3 O   :2py   -4.6441   4.7059   4.3041  -5.5346
+   4 O   :2py   -1.9969   1.1213  -0.5640  -1.3340
+   5 O   :3d1-   0.0219   0.0021   0.0149  -0.0198
+   6 O   :3d1-  -0.1302  -0.0518  -0.0710  -0.0022
+   7 O   :3d1-   0.1628   2.9919   0.9751  -0.5077
+   8 H   :1s     0.2518  -0.1207   0.0436   0.3158
+   9 H   :1s     3.1002  -3.5468   0.8564   9.2689
+  10 H   :1s    12.7238  -6.3366 -16.4645  14.0758
+  11 H   :1s     1.8783  -0.8783  -0.1651   1.3485
+  12 H   :2py   -0.0400   0.0029   0.0196  -0.0145
+  13 H   :2pz   -0.0121   0.0159  -0.0247  -0.0212
+  14 H   :2py   -0.4027  -0.8428  -2.9732  -2.7506
+  15 H   :2pz   -0.3381  -1.5878   0.5435  -1.9299
+  16 H   :2py   -1.3470   0.4609   3.8952  -2.0159
+  17 H   :2pz   -2.1483   0.4051   0.1732  -1.0097
+
+ Molecular orbitals for symmetry species 4  (A2 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6
+   1 O   :3d2-  -0.0015   0.0269   0.0332  -0.0162  -0.0746   1.2088
+   2 O   :3d2-   0.0227  -0.0869  -0.1283   1.2520   0.9152  -0.7057
+   3 O   :3d2-  -0.2175   1.5205  -1.9077  -0.1082  -0.7181   0.0230
+   4 H   :2px   -0.0023   0.0422  -0.0167   0.0382  -1.0040  -0.1321
+   5 H   :2px    0.0839  -0.3845   2.4250  -0.7196   0.7517   0.3350
+   6 H   :2px    2.3032  -1.1365   0.2731   0.3498   0.1926  -0.1384
+
+
+
+ >>>> Total CPU  time used in SIRIUS :      0.06 seconds
+ >>>> Total wall time used in SIRIUS :      0.09 seconds
+
+ 
+     Date and time (Linux)  : Tue Jan 12 21:46:17 2016
+     Host name              : n010                                    
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+                    .------------------------------------------.
+                    | Starting in Coupled Cluster Section (CC) |
+                    `------------------------------------------'
+
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                    START OF COUPLED CLUSTER CALCULATION                     *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+
+
+ CCR12 ANSATZ =   0
+
+ CCR12 APPROX =   0
+
+   
+
+ *******************************************************************
+ *                                                                 *
+ *<<<<<<<<<<                                             >>>>>>>>>>*
+ *<<<<<<<<<< OUTPUT FROM COUPLED CLUSTER ENERGY PROGRAM  >>>>>>>>>>*
+ *<<<<<<<<<<                                             >>>>>>>>>>*
+ *                                                                 *
+ *******************************************************************
+
+
+             The Direct Coupled Cluster Energy Program
+             -----------------------------------------
+
+
+          Number of t1 amplitudes                 :        91
+          Number of t2 amplitudes                 :      9598
+          Total number of amplitudes in ccsd      :      9689
+
+ Iter.  1: Coupled cluster MP2   energy :     -76.2641125438466361
+ Iter.  1: Coupled cluster CC2   energy :     -76.2640203343609926
+ Iter.  2: Coupled cluster CC2   energy :     -76.2659530788261719
+ Iter.  3: Coupled cluster CC2   energy :     -76.2664327188524425
+ Iter.  4: Coupled cluster CC2   energy :     -76.2663987527936769
+ Iter.  5: Coupled cluster CC2   energy :     -76.2663955685526105
+ Iter.  6: Coupled cluster CC2   energy :     -76.2663998533706717
+ Iter.  7: Coupled cluster CC2   energy :     -76.2664002016379072
+ Iter.  8: Coupled cluster CC2   energy :     -76.2664000260429020
+ Iter.  9: Coupled cluster CC2   energy :     -76.2664000252303254
+
+ CC2   energy converged to within   0.10D-07 is          -76.266400025230
+ Final 2-norm of the CC vector function:  2.30417411D-06
+
+
+
+
+
+             +-------------------------------------------------------+
+             ! Final results from the Coupled Cluster energy program !
+             +-------------------------------------------------------+
+
+
+
+            Total SCF   energy:                   -76.0417183633
+
+            Total MP2   energy:                   -76.2641125438
+
+            Total CC2   energy:                   -76.2664000252
+
+
+
+
+                   +--------------------------------------------+
+                   ! Calculating singlet intermediates for CCLR !
+                   +--------------------------------------------+
+
+
+
+            E-intermediates calculated 
+            Fock-intermediate calculated 
+
+
+   
+
+ *******************************************************************
+ *                                                                 *
+ *<<<<<<<<<<<<< OUTPUT FROM COUPLED CLUSTER RESPONSE  >>>>>>>>>>>>>*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                         +-------------------------------+
+                         ! Coupled Cluster model is: CC2 !
+                         +-------------------------------+
+
+ RPA: call cceq_str
+ RPA: exit cceq_str
+  
+   
+
+ *******************************************************************
+ *                                                                 *
+ *<<<<<<<<<< OUTPUT FROM COUPLED CLUSTER LINEAR RESPONSE >>>>>>>>>>*
+ *                                                                 *
+ *<<<<<<<<<<     CALCULATION OF EXCITATION ENERGIES      >>>>>>>>>>*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                            +--------------------------+
+                            !  CC2 Excitation Energies !
+                            +--------------------------+
+
+
+ --------------------------
+ Symmetry class Nr.:     1
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      9689
+ Converging for  3 roots.
+ Start vector guessed from diagonal
+ ... selected element no. 67
+ Start vector guessed from diagonal
+ ... selected element no. 45
+ Start vector guessed from diagonal
+ ... selected element no. 68
+
+
+ SYMMETRY CLASS NR.    1
+ MULTIPLICITY          1
+
+
+ CC2        right excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.3379339415        9.1956503195
+         2            0.3472187216        9.4483020374
+         3            0.3924569067       10.6792956749
+
+
+ Total excited state energies for states of symmetry/spin    1    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    1    1           -75.928466083740133
+@@    1    2           -75.919181303663677
+@@    1    3           -75.873943118501302
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.1957 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              94.0905 %
+
+          Double Excitation Contribution :               5.9095 %
+
+          ||T1||/||T2||                  :               3.9902
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   1   |   1       3     |       45          |              |   -0.242687  |
+ | 1   1   |   2       3     |       46          |              |    0.212920  |
+ | 1   1   |   3       3     |       47          |              |    0.243604  |
+ | 1   1   |   6       3     |       50          |              |    0.217756  |
+ | 2   2   |   1       1     |       67          |              |    0.696184  |
+ | 2   2   |   2       1     |       68          |              |   -0.435498  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 2 1 |   1   7   1   3 |       67       51 |         2262 |    0.050430  |
+ | 2 2 2 2 |   2   1   1   1 |       68       67 |         2345 |    0.055383  |
+ | 2 2 2 2 |   3   1   1   1 |       69       67 |         2413 |    0.077349  |
+ | 2 2 2 2 |   5   1   1   1 |       71       67 |         2552 |    0.049474  |
+ | 3 2 3 2 |   6   1   1   1 |       81       67 |         3307 |   -0.049250  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9496
+
+          Printed all single excitations greater than 0.194000
+
+          Printed all double excitations greater than 0.048619
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.4483 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              94.1427 %
+
+          Double Excitation Contribution :               5.8573 %
+
+          ||T1||/||T2||                  :               4.0091
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   1   |   1       3     |       45          |              |   -0.431549  |
+ | 1   1   |   2       3     |       46          |              |    0.349377  |
+ | 1   1   |   3       3     |       47          |              |    0.438760  |
+ | 1   1   |   6       3     |       50          |              |    0.366412  |
+ | 2   2   |   1       1     |       67          |              |   -0.446951  |
+ | 2   2   |   2       1     |       68          |              |    0.211968  |
+ +-----------------------------------------------------------------------------+
+ | 2 2 2 2 |   3   1   1   1 |       69       67 |         2413 |   -0.049040  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9392
+
+          Printed all single excitations greater than 0.194054
+
+          Printed all double excitations greater than 0.048404
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.6793 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.7209 %
+
+          Double Excitation Contribution :               6.2791 %
+
+          ||T1||/||T2||                  :               3.8634
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 2   2   |   1       1     |       67          |              |    0.495934  |
+ | 2   2   |   2       1     |       68          |              |    0.799142  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 2 1 |   2   7   1   3 |       68       51 |         2329 |    0.057457  |
+ | 2 2 2 2 |   3   1   1   1 |       69       67 |         2413 |    0.055556  |
+ | 2 2 2 2 |   3   2   1   1 |       69       68 |         2414 |    0.086453  |
+ | 2 2 2 2 |   5   2   1   1 |       71       68 |         2553 |    0.057577  |
+ | 3 2 3 2 |   6   2   1   1 |       81       68 |         3308 |   -0.057735  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9514
+
+          Printed all single excitations greater than 0.193619
+
+          Printed all double excitations greater than 0.050116
+
+ --------------------------
+ Symmetry class Nr.:     1
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     19287
+ No Excitation Energies calculated in this symmetry class
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     2
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      8328
+ Converging for  3 roots.
+ Start vector guessed from diagonal
+ ... selected element no. 28
+ Start vector guessed from diagonal
+ ... selected element no. 29
+ Start vector guessed from diagonal
+ ... selected element no. 30
+
+
+ SYMMETRY CLASS NR.    2
+ MULTIPLICITY          1
+
+
+ CC2        right excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.2597175725        7.0672746521
+         2            0.3389461049        9.2231926861
+         3            0.3560658548        9.6890447785
+
+
+ Total excited state energies for states of symmetry/spin    2    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    2    1           -76.006682452704098
+@@    2    2           -75.927453920359056
+@@    2    3           -75.910334170449602
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                             7.0673 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              94.5194 %
+
+          Double Excitation Contribution :               5.4806 %
+
+          ||T1||/||T2||                  :               4.1529
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   2   |   1       1     |       28          |              |    0.486161  |
+ | 1   2   |   2       1     |       29          |              |   -0.433062  |
+ | 1   2   |   3       1     |       30          |              |   -0.478575  |
+ | 1   2   |   5       1     |       32          |              |   -0.222984  |
+ | 1   2   |   6       1     |       33          |              |   -0.426401  |
+ +-----------------------------------------------------------------------------+
+ | 4 1 3 1 |   2   2   1   3 |       51       46 |         2526 |    0.047671  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9417
+
+          Printed all single excitations greater than 0.194442
+
+          Printed all double excitations greater than 0.046821
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.2232 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.9387 %
+
+          Double Excitation Contribution :               6.0613 %
+
+          ||T1||/||T2||                  :               3.9368
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   2   |   2       1     |       29          |              |    0.582902  |
+ | 1   2   |   3       1     |       30          |              |   -0.529683  |
+ | 1   2   |   4       1     |       31          |              |    0.253782  |
+ | 1   2   |   5       1     |       32          |              |    0.417139  |
+ | 1   2   |   7       1     |       34          |              |    0.196407  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 1 1 |   4   6   2   3 |       13       50 |         2708 |   -0.058007  |
+ | 1 1 2 1 |   5   4   1   3 |       32       48 |         2617 |    0.060466  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9510
+
+          Printed all single excitations greater than 0.193844
+
+          Printed all double excitations greater than 0.049239
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.6890 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.4794 %
+
+          Double Excitation Contribution :               6.5206 %
+
+          ||T1||/||T2||                  :               3.7863
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   2   |   1       1     |       28          |              |    0.793597  |
+ | 1   2   |   3       1     |       30          |              |    0.215334  |
+ | 1   2   |   5       1     |       32          |              |    0.257826  |
+ | 1   2   |   6       1     |       33          |              |    0.343637  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 1 1 |   8   3   1   3 |        8       47 |         2538 |   -0.060581  |
+ | 1 1 2 1 |   6   2   1   3 |       33       46 |         2508 |    0.063009  |
+ | 4 1 3 1 |   1   2   1   3 |       50       46 |         2525 |    0.052483  |
+ | 4 1 3 1 |   2   2   1   3 |       51       46 |         2526 |    0.090254  |
+ | 4 1 3 1 |   4   2   1   3 |       53       46 |         2528 |    0.060512  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9396
+
+          Printed all single excitations greater than 0.193369
+
+          Printed all double excitations greater than 0.051071
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     2
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     16601
+ No Excitation Energies calculated in this symmetry class
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     3
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      9357
+ Converging for  3 roots.
+ Start vector guessed from diagonal
+ ... selected element no. 33
+ Start vector guessed from diagonal
+ ... selected element no. 49
+ Start vector guessed from diagonal
+ ... selected element no. 34
+
+
+ SYMMETRY CLASS NR.    3
+ MULTIPLICITY          1
+
+
+ CC2        right excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.3794202919       10.3245513402
+         2            0.4023457233       10.9483840617
+         3            0.4518676286       12.2959436528
+
+
+ Total excited state energies for states of symmetry/spin    3    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    3    1           -75.886979733321226
+@@    3    2           -75.864054301939774
+@@    3    3           -75.814532396670245
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.3246 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.6126 %
+
+          Double Excitation Contribution :               6.3874 %
+
+          ||T1||/||T2||                  :               3.8283
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 4   2   |   1       1     |       49          |              |    0.949004  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 1 1 |  11  15   1   3 |       11       59 |         4419 |    0.069590  |
+ | 3 1 1 1 |  16  15   1   3 |       16       59 |         4424 |   -0.053815  |
+ | 3 1 1 1 |  12  15   2   3 |       28       59 |         4436 |    0.059067  |
+ | 3 1 1 1 |  13  15   2   3 |       29       59 |         4437 |    0.100836  |
+ | 3 1 1 1 |  15  15   2   3 |       31       59 |         4439 |    0.070214  |
+ | 3 1 1 1 |   1  15   3   3 |       33       59 |         4441 |   -0.058118  |
+ | 3 1 1 1 |   9  15   3   3 |       41       59 |         4449 |   -0.069086  |
+ | 3 1 1 1 |  13  15   3   3 |       45       59 |         4453 |   -0.057190  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9687
+
+          Printed all single excitations greater than 0.193507
+
+          Printed all double excitations greater than 0.050547
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.9484 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              94.2912 %
+
+          Double Excitation Contribution :               5.7088 %
+
+          ||T1||/||T2||                  :               4.0641
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   1   |   1       3     |       33          |              |    0.456807  |
+ | 3   1   |   2       3     |       34          |              |    0.657583  |
+ | 3   1   |   3       3     |       35          |              |    0.209111  |
+ | 3   1   |   4       3     |       36          |              |   -0.197671  |
+ | 3   1   |   5       3     |       37          |              |    0.399389  |
+ | 3   1   |   6       3     |       38          |              |    0.212669  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 1 1 |  14  19   1   2 |       14       41 |         3054 |    0.053232  |
+ | 3 1 1 1 |  16  19   2   2 |       32       41 |         3072 |    0.054968  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9667
+
+          Printed all single excitations greater than 0.194207
+
+          Printed all double excitations greater than 0.047786
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                            12.2959 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.8039 %
+
+          Double Excitation Contribution :               6.1961 %
+
+          ||T1||/||T2||                  :               3.8909
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   1   |   1       3     |       33          |              |    0.584217  |
+ | 3   1   |   3       3     |       35          |              |   -0.665599  |
+ | 3   1   |   5       3     |       37          |              |   -0.271316  |
+ | 3   1   |   6       3     |       38          |              |   -0.216292  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 1 1 |   1  18   2   2 |       17       40 |         2981 |    0.056420  |
+ | 3 1 1 1 |  13  20   2   2 |       29       42 |         3145 |   -0.056491  |
+ | 3 1 1 1 |  15  20   3   2 |       47       42 |         3163 |   -0.058285  |
+ | 1 1 3 1 |  21  17   1   2 |       75       39 |         2963 |    0.052899  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9578
+
+          Printed all single excitations greater than 0.193705
+
+          Printed all double excitations greater than 0.049784
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     3
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     18638
+ No Excitation Energies calculated in this symmetry class
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     4
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      8136
+ Converging for  3 roots.
+ Start vector guessed from diagonal
+ ... selected element no. 19
+ Start vector guessed from diagonal
+ ... selected element no. 20
+ Start vector guessed from diagonal
+ ... selected element no. 21
+
+
+ SYMMETRY CLASS NR.    4
+ MULTIPLICITY          1
+
+
+ CC2        right excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.3188469875        8.6762678808
+         2            0.3692976151       10.0490992928
+         3            0.3790070201       10.3133056426
+
+
+ Total excited state energies for states of symmetry/spin    4    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    4    1           -75.947553037738501
+@@    4    2           -75.897102410112481
+@@    4    3           -75.887393005116991
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                             8.6763 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              94.2146 %
+
+          Double Excitation Contribution :               5.7854 %
+
+          ||T1||/||T2||                  :               4.0354
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   2   |   1       1     |       19          |              |    0.436173  |
+ | 3   2   |   2       1     |       20          |              |    0.644347  |
+ | 3   2   |   3       1     |       21          |              |    0.238748  |
+ | 3   2   |   5       1     |       23          |              |    0.416725  |
+ | 3   2   |   6       1     |       24          |              |    0.252209  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 3 1 |   1  20   1   2 |       35       42 |         5978 |    0.064046  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9507
+
+          Printed all single excitations greater than 0.194128
+
+          Printed all double excitations greater than 0.048106
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.0491 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.6360 %
+
+          Double Excitation Contribution :               6.3640 %
+
+          ||T1||/||T2||                  :               3.8358
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   2   |   1       1     |       19          |              |    0.631745  |
+ | 3   2   |   3       1     |       21          |              |   -0.603266  |
+ | 3   2   |   5       1     |       23          |              |   -0.279013  |
+ | 3   2   |   6       1     |       24          |              |   -0.245862  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 2 1 |  12  18   1   2 |       30       40 |         5887 |    0.072027  |
+ | 2 1 3 1 |   6  22   1   2 |       40       44 |         6069 |   -0.062641  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9542
+
+          Printed all single excitations greater than 0.193531
+
+          Printed all double excitations greater than 0.050454
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.3133 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              93.4612 %
+
+          Double Excitation Contribution :               6.5388 %
+
+          ||T1||/||T2||                  :               3.7806
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   2   |   1       1     |       19          |              |    0.557856  |
+ | 3   2   |   2       1     |       20          |              |   -0.363358  |
+ | 3   2   |   3       1     |       21          |              |    0.549868  |
+ | 3   2   |   4       1     |       22          |              |    0.370046  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 2 1 |  12  18   1   2 |       30       40 |         5887 |    0.063671  |
+ | 2 1 3 1 |   6  22   1   2 |       40       44 |         6069 |    0.058819  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9434
+
+          Printed all single excitations greater than 0.193351
+
+          Printed all double excitations greater than 0.051142
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     4
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     16229
+ No Excitation Energies calculated in this symmetry class
+   
+
+ *******************************************************************
+ *                                                                 *
+ *<<<<<<<<<< OUTPUT FROM COUPLED CLUSTER LINEAR RESPONSE >>>>>>>>>>*
+ *                                                                 *
+ *<<<<<<<<<<     CALCULATION OF EXCITATION ENERGIES      >>>>>>>>>>*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                            +--------------------------+
+                            !  CC2 Excitation Energies !
+                            +--------------------------+
+
+
+ --------------------------
+ Symmetry class Nr.:     1
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      9689
+ Converging for  3 roots.
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  2 of symmetry  1 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  3 of symmetry  1 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+
+
+ SYMMETRY CLASS NR.    1
+ MULTIPLICITY          1
+
+
+ CC2        left excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.3379339136        9.1956495594
+         2            0.3472191315        9.4483131918
+         3            0.3924566242       10.6792879855
+
+
+ Total excited state energies for states of symmetry/spin    1    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    1    1           -75.928466111673544
+@@    1    2           -75.919180893750237
+@@    1    3           -75.873943401078435
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.1956 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              85.3678 %
+
+          Double Excitation Contribution :              14.6322 %
+
+          ||T1||/||T2||                  :               2.4154
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   1   |   1       3     |       45          |              |   -0.236669  |
+ | 1   1   |   2       3     |       46          |              |    0.207990  |
+ | 1   1   |   3       3     |       47          |              |    0.237516  |
+ | 1   1   |   6       3     |       50          |              |    0.212113  |
+ | 2   2   |   1       1     |       67          |              |    0.658628  |
+ | 2   2   |   2       1     |       68          |              |   -0.410880  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 2 1 |   1   7   1   3 |       67       51 |         2262 |    0.088659  |
+ | 3 2 3 2 |   6   1   1   1 |       81       67 |         3307 |   -0.090288  |
+ | 3 2 3 2 |  10   1   1   1 |       85       67 |         3637 |   -0.077601  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9085
+
+          Printed all single excitations greater than 0.184789
+
+          Printed all double excitations greater than 0.076504
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.4483 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              85.6770 %
+
+          Double Excitation Contribution :              14.3230 %
+
+          ||T1||/||T2||                  :               2.4458
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   1   |   1       3     |       45          |              |   -0.415794  |
+ | 1   1   |   2       3     |       46          |              |    0.336933  |
+ | 1   1   |   3       3     |       47          |              |    0.421915  |
+ | 1   1   |   6       3     |       50          |              |    0.351511  |
+ | 2   2   |   1       1     |       67          |              |   -0.416403  |
+ | 2   2   |   2       1     |       68          |              |    0.198339  |
+ +-----------------------------------------------------------------------------+
+ | 1 1 1 1 |   1   6   3   2 |       45       28 |         1018 |   -0.016756  |
+ | 1 1 1 1 |   1   8   3   2 |       45       30 |         1020 |    0.020060  |
+ | 1 1 1 1 |   2   8   3   2 |       46       30 |         1065 |   -0.015208  |
+ | 1 1 1 1 |   3   8   3   2 |       47       30 |         1111 |   -0.019492  |
+ | 1 1 1 1 |   1  10   3   2 |       45       32 |         1022 |    0.016806  |
+ | 1 1 1 1 |   3  10   3   2 |       47       32 |         1113 |   -0.016276  |
+ | 1 1 1 1 |   1  13   3   2 |       45       35 |         1025 |    0.024854  |
+ | 1 1 1 1 |   2  13   3   2 |       46       35 |         1070 |   -0.019729  |
+ | 1 1 1 1 |   3  13   3   2 |       47       35 |         1116 |   -0.024708  |
+ | 1 1 1 1 |   6  13   3   2 |       50       35 |         1260 |   -0.019242  |
+ | 1 1 1 1 |   2   1   3   3 |       46       45 |         1080 |   -0.016188  |
+ | 1 1 1 1 |   5   1   3   3 |       49       45 |         1221 |   -0.021681  |
+ | 1 1 1 1 |   7   1   3   3 |       51       45 |         1320 |   -0.032926  |
+ | 1 1 1 1 |  11   1   3   3 |       55       45 |         1530 |    0.018560  |
+ | 1 1 1 1 |  12   1   3   3 |       56       45 |         1585 |    0.027148  |
+ | 1 1 1 1 |  17   1   3   3 |       61       45 |         1875 |    0.017689  |
+ | 1 1 1 1 |   2   2   3   3 |       46       46 |         1081 |    0.019217  |
+ | 1 1 1 1 |   5   2   3   3 |       49       46 |         1222 |    0.019914  |
+ | 1 1 1 1 |   7   2   3   3 |       51       46 |         1321 |    0.026298  |
+ | 1 1 1 1 |  12   2   3   3 |       56       46 |         1586 |   -0.021927  |
+ | 1 1 1 1 |   5   3   3   3 |       49       47 |         1223 |    0.020229  |
+ | 1 1 1 1 |   7   3   3   3 |       51       47 |         1322 |    0.032194  |
+ | 1 1 1 1 |  11   3   3   3 |       55       47 |         1532 |   -0.018872  |
+ | 1 1 1 1 |  12   3   3   3 |       56       47 |         1587 |   -0.026671  |
+ | 1 1 1 1 |  17   3   3   3 |       61       47 |         1877 |   -0.017464  |
+ | 1 1 1 1 |   6   5   3   3 |       50       49 |         1274 |    0.016521  |
+ | 1 1 1 1 |   7   6   3   3 |       51       50 |         1325 |    0.024348  |
+ | 1 1 1 1 |  12   6   3   3 |       56       50 |         1590 |   -0.020471  |
+ | 2 1 2 1 |   1   6   1   2 |       67       28 |         2239 |   -0.021374  |
+ | 2 1 2 1 |   1   8   1   2 |       67       30 |         2241 |    0.022413  |
+ | 2 1 2 1 |   1  10   1   2 |       67       32 |         2243 |    0.019863  |
+ | 2 1 2 1 |   1  13   1   2 |       67       35 |         2246 |    0.028116  |
+ | 2 1 2 1 |   1   1   1   3 |       67       45 |         2256 |    0.025989  |
+ | 2 1 2 1 |   2   1   1   3 |       68       45 |         2323 |   -0.035782  |
+ | 2 1 2 1 |   3   1   1   3 |       69       45 |         2391 |   -0.060383  |
+ | 2 1 2 1 |   4   1   1   3 |       70       45 |         2460 |   -0.021773  |
+ | 2 1 2 1 |   5   1   1   3 |       71       45 |         2530 |   -0.043773  |
+ | 2 1 2 1 |   7   1   1   3 |       73       45 |         2673 |    0.043648  |
+ | 2 1 2 1 |   1   2   1   3 |       67       46 |         2257 |   -0.033818  |
+ | 2 1 2 1 |   2   2   1   3 |       68       46 |         2324 |    0.033945  |
+ | 2 1 2 1 |   3   2   1   3 |       69       46 |         2392 |    0.045383  |
+ | 2 1 2 1 |   4   2   1   3 |       70       46 |         2461 |    0.020305  |
+ | 2 1 2 1 |   5   2   1   3 |       71       46 |         2531 |    0.034141  |
+ | 2 1 2 1 |   7   2   1   3 |       73       46 |         2674 |   -0.033813  |
+ | 2 1 2 1 |   1   3   1   3 |       67       47 |         2258 |   -0.018528  |
+ | 2 1 2 1 |   2   3   1   3 |       68       47 |         2325 |    0.031006  |
+ | 2 1 2 1 |   3   3   1   3 |       69       47 |         2393 |    0.056890  |
+ | 2 1 2 1 |   4   3   1   3 |       70       47 |         2462 |    0.019753  |
+ | 2 1 2 1 |   5   3   1   3 |       71       47 |         2532 |    0.042513  |
+ | 2 1 2 1 |   7   3   1   3 |       73       47 |         2675 |   -0.042944  |
+ | 2 1 2 1 |   1   5   1   3 |       67       49 |         2260 |   -0.038583  |
+ | 2 1 2 1 |   2   5   1   3 |       68       49 |         2327 |    0.025181  |
+ | 2 1 2 1 |   1   6   1   3 |       67       50 |         2261 |   -0.019449  |
+ | 2 1 2 1 |   2   6   1   3 |       68       50 |         2328 |    0.023795  |
+ | 2 1 2 1 |   3   6   1   3 |       69       50 |         2396 |    0.037822  |
+ | 2 1 2 1 |   4   6   1   3 |       70       50 |         2465 |    0.015594  |
+ | 2 1 2 1 |   5   6   1   3 |       71       50 |         2535 |    0.030330  |
+ | 2 1 2 1 |   7   6   1   3 |       73       50 |         2678 |   -0.032190  |
+ | 2 1 2 1 |   1   7   1   3 |       67       51 |         2262 |   -0.056896  |
+ | 2 1 2 1 |   2   7   1   3 |       68       51 |         2329 |    0.025881  |
+ | 2 1 2 1 |   1   8   1   3 |       67       52 |         2263 |    0.019516  |
+ | 2 1 2 1 |   1  10   1   3 |       67       54 |         2265 |   -0.016858  |
+ | 2 1 2 1 |   1  11   1   3 |       67       55 |         2266 |    0.034002  |
+ | 2 1 2 1 |   1  12   1   3 |       67       56 |         2267 |    0.044128  |
+ | 2 1 2 1 |   2  12   1   3 |       68       56 |         2334 |   -0.019664  |
+ | 2 1 2 1 |   1  16   1   3 |       67       60 |         2271 |    0.021317  |
+ | 2 1 2 1 |   1  17   1   3 |       67       61 |         2272 |    0.032349  |
+ | 3 1 3 1 |   2   1   1   3 |       77       45 |         2971 |    0.015190  |
+ | 3 1 3 1 |   5   1   1   3 |       80       45 |         3205 |    0.030021  |
+ | 3 1 3 1 |   6   1   1   3 |       81       45 |         3285 |    0.055410  |
+ | 3 1 3 1 |   8   1   1   3 |       83       45 |         3448 |   -0.026063  |
+ | 3 1 3 1 |  10   1   1   3 |       85       45 |         3615 |    0.046378  |
+ | 3 1 3 1 |  12   1   1   3 |       87       45 |         3786 |    0.022619  |
+ | 3 1 3 1 |   5   2   1   3 |       80       46 |         3206 |   -0.023358  |
+ | 3 1 3 1 |   6   2   1   3 |       81       46 |         3286 |   -0.045078  |
+ | 3 1 3 1 |   8   2   1   3 |       83       46 |         3449 |    0.022083  |
+ | 3 1 3 1 |  10   2   1   3 |       85       46 |         3616 |   -0.036956  |
+ | 3 1 3 1 |  12   2   1   3 |       87       46 |         3787 |   -0.017458  |
+ | 3 1 3 1 |   5   3   1   3 |       80       47 |         3207 |   -0.027692  |
+ | 3 1 3 1 |   6   3   1   3 |       81       47 |         3287 |   -0.051924  |
+ | 3 1 3 1 |   8   3   1   3 |       83       47 |         3450 |    0.024801  |
+ | 3 1 3 1 |  10   3   1   3 |       85       47 |         3617 |   -0.045090  |
+ | 3 1 3 1 |  12   3   1   3 |       87       47 |         3788 |   -0.022491  |
+ | 3 1 3 1 |   6   5   1   3 |       81       49 |         3289 |   -0.020212  |
+ | 3 1 3 1 |  10   5   1   3 |       85       49 |         3619 |   -0.015198  |
+ | 3 1 3 1 |   5   6   1   3 |       80       50 |         3210 |   -0.017504  |
+ | 3 1 3 1 |   6   6   1   3 |       81       50 |         3290 |   -0.036367  |
+ | 3 1 3 1 |   8   6   1   3 |       83       50 |         3453 |    0.018590  |
+ | 3 1 3 1 |  10   6   1   3 |       85       50 |         3620 |   -0.033755  |
+ | 3 1 3 1 |  12   6   1   3 |       87       50 |         3791 |   -0.016626  |
+ | 2 2 2 2 |   1   1   1   1 |       67       67 |         2278 |    0.024706  |
+ | 2 2 2 2 |   2   1   1   1 |       68       67 |         2345 |   -0.027251  |
+ | 2 2 2 2 |   3   1   1   1 |       69       67 |         2413 |   -0.042746  |
+ | 2 2 2 2 |   5   1   1   1 |       71       67 |         2552 |   -0.029282  |
+ | 2 2 2 2 |   7   1   1   1 |       73       67 |         2695 |    0.026562  |
+ | 2 2 2 2 |   2   2   1   1 |       68       68 |         2346 |    0.019776  |
+ | 2 2 2 2 |   3   2   1   1 |       69       68 |         2414 |    0.019159  |
+ | 3 2 3 2 |   2   1   1   1 |       77       67 |         2993 |    0.017712  |
+ | 3 2 3 2 |   5   1   1   1 |       80       67 |         3227 |    0.033590  |
+ | 3 2 3 2 |   6   1   1   1 |       81       67 |         3307 |    0.057560  |
+ | 3 2 3 2 |   8   1   1   1 |       83       67 |         3470 |   -0.026216  |
+ | 3 2 3 2 |  10   1   1   1 |       85       67 |         3637 |    0.049531  |
+ | 3 2 3 2 |  12   1   1   1 |       87       67 |         3808 |    0.028187  |
+ | 3 2 3 2 |   6   2   1   1 |       81       68 |         3308 |   -0.026574  |
+ | 3 2 3 2 |  10   2   1   1 |       85       68 |         3638 |   -0.022830  |
+ | 1 2 2 1 |  14   1   1   2 |       41       10 |         5016 |   -0.015257  |
+ | 1 2 2 1 |   5   1   1   3 |       32       19 |         4701 |    0.017488  |
+ | 1 2 2 1 |   7   1   1   3 |       34       19 |         4766 |    0.023973  |
+ | 1 2 2 1 |  11   1   1   3 |       38       19 |         4908 |   -0.016464  |
+ | 1 2 2 1 |  12   1   1   3 |       39       19 |         4946 |   -0.018589  |
+ | 1 2 2 1 |  17   1   1   3 |       44       19 |         5151 |   -0.016288  |
+ | 1 2 2 1 |   1   3   1   3 |       28       21 |         4585 |    0.025380  |
+ | 1 2 2 1 |   2   3   1   3 |       29       21 |         4613 |   -0.018396  |
+ | 1 2 2 1 |   3   3   1   3 |       30       21 |         4642 |   -0.023311  |
+ | 1 2 2 1 |   1   5   1   3 |       28       23 |         4587 |    0.016641  |
+ | 1 2 2 1 |   3   5   1   3 |       30       23 |         4644 |   -0.015980  |
+ | 1 2 2 1 |   1   7   1   3 |       28       25 |         4589 |   -0.019520  |
+ | 1 2 2 1 |   2   7   1   3 |       29       25 |         4617 |    0.015154  |
+ | 1 2 2 1 |   3   7   1   3 |       30       25 |         4646 |    0.019401  |
+ | 1 3 3 1 |   1   6   1   3 |       55       38 |         7249 |   -0.023912  |
+ | 1 3 3 1 |   2   6   1   3 |       56       38 |         7304 |    0.019036  |
+ | 1 3 3 1 |   3   6   1   3 |       57       38 |         7360 |    0.020983  |
+ | 1 3 3 1 |   1  10   1   3 |       55       42 |         7253 |   -0.020632  |
+ | 1 3 3 1 |   2  10   1   3 |       56       42 |         7308 |    0.016555  |
+ | 1 3 3 1 |   3  10   1   3 |       57       42 |         7364 |    0.019692  |
+ | 2 3 3 2 |   1   6   1   1 |       35       24 |         9271 |   -0.024983  |
+ | 2 3 3 2 |   1  10   1   1 |       35       28 |         9275 |   -0.022000  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9512
+
+          Printed all single excitations greater than 0.185124
+
+          Printed all double excitations greater than 0.015138
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.6793 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              83.5808 %
+
+          Double Excitation Contribution :              16.4192 %
+
+          ||T1||/||T2||                  :               2.2562
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 2   2   |   1       1     |       67          |              |    0.468661  |
+ | 2   2   |   2       1     |       68          |              |    0.754402  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 2 1 |   2   7   1   3 |       68       51 |         2329 |    0.099967  |
+ | 2 1 2 1 |   2  12   1   3 |       68       56 |         2334 |   -0.081884  |
+ | 3 2 3 2 |   6   2   1   1 |       81       68 |         3308 |   -0.105450  |
+ | 3 2 3 2 |  10   2   1   1 |       85       68 |         3638 |   -0.089233  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9080
+
+          Printed all single excitations greater than 0.182845
+
+          Printed all double excitations greater than 0.081041
+
+
+
++======================================================================+
+| contributions of excitation levels to right eigenvectors as computed |
+| from the (RE|RE) self overlap                                        |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    1|   1   |   1   |    9.19565 |  94.0905  |   5.9095  |   0.0000  |
+|    1|   1   |   2   |    9.44830 |  94.1427  |   5.8573  |   0.0000  |
+|    1|   1   |   3   |   10.67930 |  93.7209  |   6.2791  |   0.0000  |
++======================================================================+
+
+
+
+
+
++======================================================================+
+| contributions of excitation levels to excited states as computed     |
+| from the (LE|RE) overlap                                             |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    1|   1   |   1   |    9.19565 |  91.7801  |   8.2199  |   0.0000  |
+|    1|   1   |   2   |    9.44830 |  91.9062  |   8.0938  |   0.0000  |
+|    1|   1   |   3   |   10.67930 |  90.9495  |   9.0505  |   0.0000  |
++======================================================================+
+
+
+
+ --------------------------
+ Symmetry class Nr.:     1
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     19287
+ No Excitation Energies calculated in this symmetry class
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     2
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      8328
+ Converging for  3 roots.
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  4 of symmetry  2 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  5 of symmetry  2 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  6 of symmetry  2 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+
+
+ SYMMETRY CLASS NR.    2
+ MULTIPLICITY          1
+
+
+ CC2        left excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.2597175749        7.0672747166
+         2            0.3389461132        9.2231929126
+         3            0.3560658953        9.6890458814
+
+
+ Total excited state energies for states of symmetry/spin    2    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    2    1           -76.006682450332505
+@@    2    2           -75.927453912037279
+@@    2    3           -75.910334129919320
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                             7.0673 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              87.0868 %
+
+          Double Excitation Contribution :              12.9132 %
+
+          ||T1||/||T2||                  :               2.5969
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   2   |   1       1     |       28          |              |    0.467421  |
+ | 1   2   |   2       1     |       29          |              |   -0.416069  |
+ | 1   2   |   3       1     |       30          |              |   -0.459931  |
+ | 1   2   |   5       1     |       32          |              |   -0.213591  |
+ | 1   2   |   6       1     |       33          |              |   -0.409134  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 1 1 |   1   2   2   3 |       10       46 |         2485 |    0.021324  |
+ | 2 1 1 1 |   3   2   2   3 |       12       46 |         2487 |   -0.023987  |
+ | 2 1 1 1 |   5   2   2   3 |       14       46 |         2489 |   -0.020958  |
+ | 2 1 1 1 |   8   2   2   3 |       17       46 |         2492 |   -0.030813  |
+ | 2 1 1 1 |   5   2   3   3 |       23       46 |         2498 |   -0.014586  |
+ | 2 1 1 1 |   4   3   1   3 |        4       47 |         2534 |   -0.017611  |
+ | 2 1 1 1 |   7   3   1   3 |        7       47 |         2537 |   -0.034680  |
+ | 2 1 1 1 |   8   3   1   3 |        8       47 |         2538 |   -0.062591  |
+ | 2 1 1 1 |   1   3   2   3 |       10       47 |         2540 |    0.030186  |
+ | 2 1 1 1 |   3   3   2   3 |       12       47 |         2542 |   -0.053261  |
+ | 2 1 1 1 |   5   3   2   3 |       14       47 |         2544 |   -0.029857  |
+ | 2 1 1 1 |   3   4   2   3 |       12       48 |         2597 |   -0.026930  |
+ | 2 1 1 1 |   5   4   2   3 |       14       48 |         2599 |   -0.048736  |
+ | 2 1 1 1 |   6   4   2   3 |       15       48 |         2600 |    0.018125  |
+ | 2 1 1 1 |   9   4   2   3 |       18       48 |         2603 |    0.028676  |
+ | 2 1 1 1 |   1   4   3   3 |       19       48 |         2604 |    0.043979  |
+ | 2 1 1 1 |   2   4   3   3 |       20       48 |         2605 |    0.017739  |
+ | 2 1 1 1 |   5   4   3   3 |       23       48 |         2608 |    0.021671  |
+ | 2 1 1 1 |   6   4   3   3 |       24       48 |         2609 |    0.028964  |
+ | 2 1 1 1 |   9   5   3   3 |       27       49 |         2667 |   -0.018919  |
+ | 2 1 1 1 |   1   6   1   3 |        1       50 |         2696 |    0.017162  |
+ | 2 1 1 1 |   4   6   1   3 |        4       50 |         2699 |    0.023891  |
+ | 2 1 1 1 |   5   6   1   3 |        5       50 |         2700 |    0.032322  |
+ | 2 1 1 1 |   3   6   2   3 |       12       50 |         2707 |   -0.021658  |
+ | 2 1 1 1 |   4   6   2   3 |       13       50 |         2708 |   -0.040211  |
+ | 2 1 1 1 |   6   6   2   3 |       15       50 |         2710 |   -0.030690  |
+ | 2 1 1 1 |   8   6   2   3 |       17       50 |         2712 |    0.026387  |
+ | 2 1 1 1 |   3   6   3   3 |       21       50 |         2716 |    0.015427  |
+ | 2 1 1 1 |   6   6   3   3 |       24       50 |         2719 |    0.030975  |
+ | 2 1 1 1 |   7   6   3   3 |       25       50 |         2720 |    0.056974  |
+ | 2 1 1 1 |   9   6   3   3 |       27       50 |         2722 |   -0.028025  |
+ | 2 1 1 1 |   3   9   2   3 |       12       53 |         2872 |   -0.020836  |
+ | 2 1 1 1 |   8   9   2   3 |       17       53 |         2877 |    0.023321  |
+ | 2 1 1 1 |   9  10   3   3 |       27       54 |         2942 |    0.016836  |
+ | 2 1 1 1 |   2  11   1   3 |        2       55 |         2972 |    0.019617  |
+ | 2 1 1 1 |   3  11   1   3 |        3       55 |         2973 |    0.025901  |
+ | 2 1 1 1 |   1  11   2   3 |       10       55 |         2980 |   -0.017931  |
+ | 2 1 1 1 |   2  11   2   3 |       11       55 |         2981 |   -0.031641  |
+ | 2 1 1 1 |   4  11   2   3 |       13       55 |         2983 |   -0.025194  |
+ | 2 1 1 1 |   6  11   2   3 |       15       55 |         2985 |    0.020674  |
+ | 2 1 1 1 |   4  11   3   3 |       22       55 |         2992 |    0.021332  |
+ | 2 1 1 1 |   5  11   3   3 |       23       55 |         2993 |    0.042932  |
+ | 2 1 1 1 |   7  11   3   3 |       25       55 |         2995 |   -0.022581  |
+ | 2 1 1 1 |   9  11   3   3 |       27       55 |         2997 |    0.040193  |
+ | 2 1 1 1 |   5  12   3   3 |       23       56 |         3048 |   -0.022743  |
+ | 2 1 1 1 |   6  12   3   3 |       24       56 |         3049 |    0.017491  |
+ | 2 1 1 1 |   7  12   3   3 |       25       56 |         3050 |    0.019641  |
+ | 2 1 1 1 |   2  19   1   3 |        2       63 |         3412 |    0.015265  |
+ | 1 1 2 1 |   1   2   1   3 |       28       46 |         2503 |    0.018086  |
+ | 1 1 2 1 |   4   2   1   3 |       31       46 |         2506 |    0.033423  |
+ | 1 1 2 1 |   6   2   1   3 |       33       46 |         2508 |    0.057818  |
+ | 1 1 2 1 |   7   2   1   3 |       34       46 |         2509 |   -0.019954  |
+ | 1 1 2 1 |  10   2   1   3 |       37       46 |         2512 |   -0.034736  |
+ | 1 1 2 1 |  11   2   1   3 |       38       46 |         2513 |   -0.049174  |
+ | 1 1 2 1 |  12   2   1   3 |       39       46 |         2514 |   -0.018674  |
+ | 1 1 2 1 |  15   2   1   3 |       42       46 |         2517 |   -0.024852  |
+ | 1 1 2 1 |  16   2   1   3 |       43       46 |         2518 |   -0.033844  |
+ | 1 1 2 1 |  19   3   1   3 |       46       47 |         2576 |   -0.017690  |
+ | 1 1 2 1 |  21   3   1   3 |       48       47 |         2578 |    0.020447  |
+ | 1 1 2 1 |   4   4   1   3 |       31       48 |         2616 |   -0.020475  |
+ | 1 1 2 1 |   5   4   1   3 |       32       48 |         2617 |   -0.036101  |
+ | 1 1 2 1 |   6   4   1   3 |       33       48 |         2618 |   -0.014614  |
+ | 1 1 2 1 |   7   4   1   3 |       34       48 |         2619 |   -0.028271  |
+ | 1 1 2 1 |   9   4   1   3 |       36       48 |         2621 |    0.024065  |
+ | 1 1 2 1 |  13   4   1   3 |       40       48 |         2625 |    0.014834  |
+ | 1 1 2 1 |  16   4   1   3 |       43       48 |         2628 |    0.029872  |
+ | 1 1 2 1 |  17   4   1   3 |       44       48 |         2629 |    0.055805  |
+ | 1 1 2 1 |  19   4   1   3 |       46       48 |         2631 |   -0.027835  |
+ | 1 1 2 1 |  21   4   1   3 |       48       48 |         2633 |    0.046454  |
+ | 1 1 2 1 |   2   5   1   3 |       29       49 |         2669 |    0.022654  |
+ | 1 1 2 1 |   4   5   1   3 |       31       49 |         2671 |    0.019764  |
+ | 1 1 2 1 |   7   5   1   3 |       34       49 |         2674 |    0.029771  |
+ | 1 1 2 1 |  18   5   1   3 |       45       49 |         2685 |   -0.016784  |
+ | 1 1 2 1 |  21   5   1   3 |       48       49 |         2688 |   -0.029965  |
+ | 1 1 2 1 |   2   6   1   3 |       29       50 |         2724 |    0.050273  |
+ | 1 1 2 1 |   4   6   1   3 |       31       50 |         2726 |    0.028785  |
+ | 1 1 2 1 |  15   9   1   3 |       42       53 |         2902 |    0.029123  |
+ | 1 1 2 1 |  17   9   1   3 |       44       53 |         2904 |   -0.016420  |
+ | 1 1 2 1 |  19   9   1   3 |       46       53 |         2906 |    0.022399  |
+ | 1 1 2 1 |   2  10   1   3 |       29       54 |         2944 |    0.015541  |
+ | 1 1 2 1 |   5  10   1   3 |       32       54 |         2947 |    0.024772  |
+ | 1 1 2 1 |  19  10   1   3 |       46       54 |         2961 |   -0.019052  |
+ | 1 1 2 1 |  21  10   1   3 |       48       54 |         2963 |   -0.037316  |
+ | 1 1 2 1 |   2  11   1   3 |       29       55 |         2999 |    0.022860  |
+ | 1 1 2 1 |  11  20   1   3 |       38       64 |         3503 |    0.020339  |
+ | 1 1 2 1 |  12  20   1   3 |       39       64 |         3504 |   -0.018327  |
+ | 1 1 2 1 |  13  20   1   3 |       40       64 |         3505 |   -0.018160  |
+ | 4 1 3 1 |   1   2   1   3 |       50       46 |         2525 |    0.023451  |
+ | 4 1 3 1 |   2   2   1   3 |       51       46 |         2526 |    0.042986  |
+ | 4 1 3 1 |   3   2   1   3 |       52       46 |         2527 |    0.014658  |
+ | 4 1 3 1 |   4   2   1   3 |       53       46 |         2528 |    0.032375  |
+ | 4 1 3 1 |   6   2   1   3 |       55       46 |         2530 |   -0.028058  |
+ | 4 1 3 1 |   1   3   1   3 |       50       47 |         2580 |    0.018096  |
+ | 4 1 3 1 |   4   3   1   3 |       53       47 |         2583 |    0.026847  |
+ | 4 1 3 1 |   1   4   1   3 |       50       48 |         2635 |    0.025384  |
+ | 4 1 3 1 |   1   5   1   3 |       50       49 |         2690 |   -0.052617  |
+ | 4 1 3 1 |   2   5   1   3 |       51       49 |         2691 |    0.018146  |
+ | 4 1 3 1 |   5   5   1   3 |       54       49 |         2694 |    0.032915  |
+ | 4 1 3 1 |   6   5   1   3 |       55       49 |         2695 |    0.045634  |
+ | 4 1 3 1 |   3  10   1   3 |       52       54 |         2967 |    0.024502  |
+ | 4 1 3 1 |   4  10   1   3 |       53       54 |         2968 |    0.036101  |
+ | 4 1 3 1 |   5  10   1   3 |       54       54 |         2969 |    0.014804  |
+ | 1 2 2 2 |   6   1   1   1 |       33       67 |         3663 |    0.015951  |
+ | 1 2 2 2 |   8   1   1   1 |       35       67 |         3665 |   -0.015113  |
+ | 4 2 3 2 |   4   6   1   1 |       53       72 |         3958 |    0.016845  |
+ | 4 2 3 2 |   5   6   1   1 |       54       72 |         3959 |   -0.014619  |
+ | 4 2 3 2 |   6   6   1   1 |       55       72 |         3960 |   -0.016125  |
+ | 2 3 3 1 |   6  10   1   3 |       40       42 |         6808 |    0.025038  |
+ | 2 3 3 1 |   7  10   1   3 |       41       42 |         6809 |   -0.021865  |
+ | 2 3 3 1 |   8  10   1   3 |       42       42 |         6810 |   -0.020874  |
+ | 4 4 1 2 |   1   2   1   1 |        1       50 |         7113 |   -0.020521  |
+ | 4 4 1 2 |   2   2   1   1 |        2       50 |         7114 |   -0.021698  |
+ | 4 4 1 2 |   5   2   1   1 |        5       50 |         7117 |   -0.016408  |
+ | 2 4 3 2 |   9   1   1   1 |       43       49 |         7112 |    0.023426  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9549
+
+          Printed all single excitations greater than 0.186641
+
+          Printed all double excitations greater than 0.014374
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.2232 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              85.0410 %
+
+          Double Excitation Contribution :              14.9590 %
+
+          ||T1||/||T2||                  :               2.3843
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   2   |   2       1     |       29          |              |    0.554855  |
+ | 1   2   |   3       1     |       30          |              |   -0.504523  |
+ | 1   2   |   4       1     |       31          |              |    0.240717  |
+ | 1   2   |   5       1     |       32          |              |    0.397057  |
+ | 1   2   |   7       1     |       34          |              |    0.185689  |
+ +-----------------------------------------------------------------------------+
+ | 1 1 2 1 |  17   4   1   3 |       44       48 |         2629 |   -0.078486  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9048
+
+          Printed all single excitations greater than 0.184435
+
+          Printed all double excitations greater than 0.077354
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                             9.6890 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              83.7573 %
+
+          Double Excitation Contribution :              16.2427 %
+
+          ||T1||/||T2||                  :               2.2708
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 1   2   |   1       1     |       28          |              |    0.751927  |
+ | 1   2   |   3       1     |       30          |              |    0.203093  |
+ | 1   2   |   5       1     |       32          |              |    0.243894  |
+ | 1   2   |   6       1     |       33          |              |    0.324786  |
+ +-----------------------------------------------------------------------------+
+ | 2 1 1 1 |   8   3   1   3 |        8       47 |         2538 |   -0.112012  |
+ | 2 1 1 1 |   3   3   2   3 |       12       47 |         2542 |   -0.093226  |
+ | 1 1 2 1 |   6   2   1   3 |       33       46 |         2508 |    0.111401  |
+ | 1 1 2 1 |  11   2   1   3 |       38       46 |         2513 |   -0.085926  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9015
+
+          Printed all single excitations greater than 0.183038
+
+          Printed all double excitations greater than 0.080604
+
+
+
++======================================================================+
+| contributions of excitation levels to right eigenvectors as computed |
+| from the (RE|RE) self overlap                                        |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    2|   1   |   1   |    7.06727 |  94.5194  |   5.4806  |   0.0000  |
+|    2|   1   |   2   |    9.22319 |  93.9387  |   6.0613  |   0.0000  |
+|    2|   1   |   3   |    9.68904 |  93.4794  |   6.5206  |   0.0000  |
++======================================================================+
+
+
+
+
+
++======================================================================+
+| contributions of excitation levels to excited states as computed     |
+| from the (LE|RE) overlap                                             |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    2|   1   |   1   |    7.06727 |  92.6174  |   7.3826  |   0.0000  |
+|    2|   1   |   2   |    9.22319 |  91.6210  |   8.3790  |   0.0000  |
+|    2|   1   |   3   |    9.68904 |  90.9152  |   9.0848  |   0.0000  |
++======================================================================+
+
+
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     2
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     16601
+ No Excitation Energies calculated in this symmetry class
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     3
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      9357
+ Converging for  3 roots.
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  7 of symmetry  3 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  8 of symmetry  3 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr.  9 of symmetry  3 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+
+
+ SYMMETRY CLASS NR.    3
+ MULTIPLICITY          1
+
+
+ CC2        left excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.3794202324       10.3245497208
+         2            0.4023457597       10.9483850519
+         3            0.4518676049       12.2959430097
+
+
+ Total excited state energies for states of symmetry/spin    3    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    3    1           -75.886979792831951
+@@    3    2           -75.864054265550720
+@@    3    3           -75.814532420301916
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.3245 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              84.0407 %
+
+          Double Excitation Contribution :              15.9593 %
+
+          ||T1||/||T2||                  :               2.2948
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 4   2   |   1       1     |       49          |              |    0.899139  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 1 1 |  11  15   1   3 |       11       59 |         4419 |    0.121976  |
+ | 3 1 1 1 |  16  15   1   3 |       16       59 |         4424 |   -0.096960  |
+ | 3 1 1 1 |  13  15   2   3 |       29       59 |         4437 |    0.089550  |
+ | 3 1 1 1 |   9  15   3   3 |       41       59 |         4449 |   -0.126551  |
+ | 3 1 1 1 |  13  15   3   3 |       45       59 |         4453 |   -0.107181  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9318
+
+          Printed all single excitations greater than 0.183347
+
+          Printed all double excitations greater than 0.079898
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.9484 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              85.6644 %
+
+          Double Excitation Contribution :              14.3356 %
+
+          ||T1||/||T2||                  :               2.4445
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   1   |   1       3     |       33          |              |    0.436055  |
+ | 3   1   |   2       3     |       34          |              |    0.627553  |
+ | 3   1   |   3       3     |       35          |              |    0.199461  |
+ | 3   1   |   4       3     |       36          |              |   -0.188109  |
+ | 3   1   |   5       3     |       37          |              |    0.380377  |
+ | 3   1   |   6       3     |       38          |              |    0.200772  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 1 1 |  16  19   2   2 |       32       41 |         3072 |    0.094513  |
+ | 3 1 1 1 |  12  19   3   2 |       44       41 |         3084 |   -0.084699  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9275
+
+          Printed all single excitations greater than 0.185110
+
+          Printed all double excitations greater than 0.075725
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                            12.2959 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              84.2893 %
+
+          Double Excitation Contribution :              15.7107 %
+
+          ||T1||/||T2||                  :               2.3163
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   1   |   1       3     |       33          |              |    0.552895  |
+ | 3   1   |   3       3     |       35          |              |   -0.632369  |
+ | 3   1   |   5       3     |       37          |              |   -0.256321  |
+ | 3   1   |   6       3     |       38          |              |   -0.203637  |
+ +-----------------------------------------------------------------------------+
+ | 3 1 1 1 |   1  18   2   2 |       17       40 |         2981 |    0.096157  |
+ | 3 1 1 1 |  13  18   2   2 |       29       40 |         2993 |   -0.080779  |
+ | 3 1 1 1 |  15  20   3   2 |       47       42 |         3163 |   -0.099771  |
+ | 1 1 3 1 |   5  20   1   2 |       59       42 |         3175 |    0.085686  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9197
+
+          Printed all single excitations greater than 0.183618
+
+          Printed all double excitations greater than 0.079273
+
+
+
++======================================================================+
+| contributions of excitation levels to right eigenvectors as computed |
+| from the (RE|RE) self overlap                                        |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    3|   1   |   1   |   10.32455 |  93.6126  |   6.3874  |   0.0000  |
+|    3|   1   |   2   |   10.94838 |  94.2912  |   5.7088  |   0.0000  |
+|    3|   1   |   3   |   12.29594 |  93.8039  |   6.1961  |   0.0000  |
++======================================================================+
+
+
+
+
+
++======================================================================+
+| contributions of excitation levels to excited states as computed     |
+| from the (LE|RE) overlap                                             |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    3|   1   |   1   |   10.32455 |  91.0950  |   8.9050  |   0.0000  |
+|    3|   1   |   2   |   10.94838 |  92.0075  |   7.9925  |   0.0000  |
+|    3|   1   |   3   |   12.29594 |  91.2591  |   8.7409  |   0.0000  |
++======================================================================+
+
+
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     3
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     18638
+ No Excitation Energies calculated in this symmetry class
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     4
+ Multiplicity      :     1
+ --------------------------
+
+ Length of Excitation vectors in this class is:      8136
+ Converging for  3 roots.
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr. 10 of symmetry  4 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr. 11 of symmetry  4 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+Try to use right eigenvector as start for a left eigenvector.
+ Vector nr. 12 of symmetry  4 found on file - RESTART SUCCESS
+ Start vector is a  CC2       RE vector
+
+
+ SYMMETRY CLASS NR.    4
+ MULTIPLICITY          1
+
+
+ CC2        left excitation energies:
+ ====================================
+ (conversion factor used: 1 au = 27.2113957 eV)
+
+ Excitation no.       Hartree               eV 
+ --------------       -------               --
+         1            0.3188469975        8.6762681529
+         2            0.3692976503       10.0491002512
+         3            0.3790070406       10.3133062000
+
+
+ Total excited state energies for states of symmetry/spin    4    1
+ Excitation no.       Energy (Hartree) 
+ ------------------------------------- 
+@@    4    1           -75.947553027739971
+@@    4    2           -75.897102374891759
+@@    4    3           -75.887392984630679
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  1
+ -------------------------------------------------------------
+
+          Excitation Energy :                             8.6763 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              85.7243 %
+
+          Double Excitation Contribution :              14.2757 %
+
+          ||T1||/||T2||                  :               2.4505
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   2   |   1       1     |       19          |              |    0.416929  |
+ | 3   2   |   2       1     |       20          |              |    0.615628  |
+ | 3   2   |   3       1     |       21          |              |    0.227621  |
+ | 3   2   |   5       1     |       23          |              |    0.397156  |
+ | 3   2   |   6       1     |       24          |              |    0.238244  |
+ +-----------------------------------------------------------------------------+
+ | 4 1 1 1 |   5  20   3   2 |       17       42 |         5960 |    0.079605  |
+ | 4 1 1 1 |   4  21   1   2 |        4       43 |         5990 |   -0.082932  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9123
+
+          Printed all single excitations greater than 0.185175
+
+          Printed all double excitations greater than 0.075566
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  2
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.0491 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              84.2106 %
+
+          Double Excitation Contribution :              15.7894 %
+
+          ||T1||/||T2||                  :               2.3094
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   2   |   1       1     |       19          |              |    0.600744  |
+ | 3   2   |   3       1     |       21          |              |   -0.571428  |
+ | 3   2   |   5       1     |       23          |              |   -0.264371  |
+ | 3   2   |   6       1     |       24          |              |   -0.231719  |
+ +-----------------------------------------------------------------------------+
+ | 4 1 1 1 |   6  18   2   2 |       12       40 |         5869 |    0.087758  |
+ | 2 1 3 1 |   8  18   1   2 |       42       40 |         5899 |   -0.088420  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9091
+
+          Printed all single excitations greater than 0.183533
+
+          Printed all double excitations greater than 0.079472
+
+
+ Analysis of the Coupled Cluster Excitation Vector Number :  3
+ -------------------------------------------------------------
+
+          Excitation Energy :                            10.3133 eV
+
+
+          CC_PRAM:Overall Contribution of the Different Components
+          --------------------------------------------------------
+
+
+
+          Single Excitation Contribution :              83.6414 %
+
+          Double Excitation Contribution :              16.3586 %
+
+          ||T1||/||T2||                  :               2.2612
+
+          Norm of Total Amplitude Vector :               1.0000
+
+
+ +=============================================================================+
+ | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
+ |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
+ +=============================================================================+
+ | 3   2   |   1       1     |       19          |              |    0.528735  |
+ | 3   2   |   2       1     |       20          |              |   -0.344037  |
+ | 3   2   |   3       1     |       21          |              |    0.519090  |
+ | 3   2   |   4       1     |       22          |              |    0.349939  |
+ +-----------------------------------------------------------------------------+
+ | 3 2 1 1 |   9   4   1   2 |        9       13 |          921 |    0.019546  |
+ | 3 2 1 1 |  11   5   3   2 |       43       14 |         1031 |    0.018666  |
+ | 3 2 1 1 |  12   6   3   3 |       44       24 |         1792 |   -0.021791  |
+ | 3 2 1 1 |  14   6   3   3 |       46       24 |         1794 |   -0.034501  |
+ | 3 2 1 1 |   9   7   2   3 |       25       25 |         1849 |    0.020695  |
+ | 3 2 1 1 |   2   8   1   3 |        2       26 |         1902 |   -0.018480  |
+ | 3 2 1 1 |   4   8   1   3 |        4       26 |         1904 |   -0.031067  |
+ | 3 2 1 1 |   8   8   1   3 |        8       26 |         1908 |    0.018825  |
+ | 3 2 1 1 |   9   8   1   3 |        9       26 |         1909 |    0.023724  |
+ | 3 2 1 1 |  14   8   1   3 |       14       26 |         1914 |    0.019814  |
+ | 4 2 2 1 |   2   6   1   3 |       50       24 |         1798 |    0.020565  |
+ | 4 2 2 1 |   3   6   1   3 |       51       24 |         1799 |    0.025829  |
+ | 1 2 3 1 |  14   3   1   2 |       68       12 |          904 |    0.016410  |
+ | 1 2 3 1 |   2   6   1   3 |       56       24 |         1804 |    0.020504  |
+ | 1 2 3 1 |   5   8   1   3 |       59       26 |         1959 |   -0.019481  |
+ | 4 1 1 1 |   2  18   1   2 |        2       40 |         5859 |   -0.017025  |
+ | 4 1 1 1 |   1  18   2   2 |        7       40 |         5864 |    0.030466  |
+ | 4 1 1 1 |   4  18   2   2 |       10       40 |         5867 |    0.048215  |
+ | 4 1 1 1 |   6  18   2   2 |       12       40 |         5869 |    0.078374  |
+ | 4 1 1 1 |   1  18   3   2 |       13       40 |         5870 |   -0.025307  |
+ | 4 1 1 1 |   3  18   3   2 |       15       40 |         5872 |    0.019912  |
+ | 4 1 1 1 |   4  18   3   2 |       16       40 |         5873 |   -0.045495  |
+ | 4 1 1 1 |   5  18   3   2 |       17       40 |         5874 |   -0.061131  |
+ | 4 1 1 1 |   6  18   3   2 |       18       40 |         5875 |   -0.021921  |
+ | 4 1 1 1 |   1  19   1   2 |        1       41 |         5901 |    0.036460  |
+ | 4 1 1 1 |   3  19   1   2 |        3       41 |         5903 |   -0.065900  |
+ | 4 1 1 1 |   5  19   1   2 |        5       41 |         5905 |   -0.036646  |
+ | 4 1 1 1 |   1  20   1   2 |        1       42 |         5944 |    0.023370  |
+ | 4 1 1 1 |   6  20   2   2 |       12       42 |         5955 |   -0.016818  |
+ | 4 1 1 1 |   3  20   3   2 |       15       42 |         5958 |   -0.027723  |
+ | 4 1 1 1 |   5  20   3   2 |       17       42 |         5960 |   -0.047398  |
+ | 4 1 1 1 |   1  21   1   2 |        1       43 |         5987 |    0.017390  |
+ | 4 1 1 1 |   3  21   1   2 |        3       43 |         5989 |    0.025012  |
+ | 4 1 1 1 |   4  21   1   2 |        4       43 |         5990 |    0.046337  |
+ | 4 1 1 1 |   6  21   1   2 |        6       43 |         5992 |   -0.020821  |
+ | 4 1 1 1 |   2  21   2   2 |        8       43 |         5994 |    0.041078  |
+ | 4 1 1 1 |   4  21   2   2 |       10       43 |         5996 |    0.023852  |
+ | 4 1 1 1 |   1  22   1   2 |        1       44 |         6030 |   -0.028778  |
+ | 4 1 1 1 |   3  22   1   2 |        3       44 |         6032 |   -0.024682  |
+ | 4 1 1 1 |   6  22   1   2 |        6       44 |         6035 |   -0.035284  |
+ | 4 1 1 1 |   6  22   2   2 |       12       44 |         6041 |   -0.016415  |
+ | 4 1 1 1 |   5  22   3   2 |       17       44 |         6046 |    0.026360  |
+ | 4 1 1 1 |   1   1   1   3 |        1       45 |         6073 |   -0.033368  |
+ | 4 1 1 1 |   5   1   1   3 |        5       45 |         6077 |   -0.025619  |
+ | 4 1 1 1 |   1   1   2   3 |        7       45 |         6079 |    0.020791  |
+ | 4 1 1 1 |   2   1   2   3 |        8       45 |         6080 |   -0.043693  |
+ | 4 1 1 1 |   3   1   2   3 |        9       45 |         6081 |   -0.072302  |
+ | 4 1 1 1 |   5   1   2   3 |       11       45 |         6083 |    0.032980  |
+ | 4 1 1 1 |   1   1   3   3 |       13       45 |         6085 |   -0.061749  |
+ | 4 1 1 1 |   3   1   3   3 |       15       45 |         6087 |   -0.035412  |
+ | 4 1 1 1 |   4   2   1   3 |        4       46 |         6119 |    0.017897  |
+ | 4 1 1 1 |   6   2   1   3 |        6       46 |         6121 |   -0.019044  |
+ | 4 1 1 1 |   5   2   2   3 |       11       46 |         6126 |   -0.023316  |
+ | 4 1 1 1 |   1   3   1   3 |        1       47 |         6159 |    0.016979  |
+ | 4 1 1 1 |   2   3   1   3 |        2       47 |         6160 |    0.033037  |
+ | 4 1 1 1 |   4   3   1   3 |        4       47 |         6162 |    0.024396  |
+ | 4 1 1 1 |   6   3   1   3 |        6       47 |         6164 |   -0.021667  |
+ | 4 1 1 1 |   1   3   3   3 |       13       47 |         6171 |   -0.024887  |
+ | 4 1 1 1 |   2   3   3   3 |       14       47 |         6172 |   -0.046714  |
+ | 4 1 1 1 |   4   3   3   3 |       16       47 |         6174 |    0.021354  |
+ | 4 1 1 1 |   6   3   3   3 |       18       47 |         6176 |   -0.040643  |
+ | 4 1 1 1 |   2   5   3   3 |       14       49 |         6258 |    0.022728  |
+ | 4 1 1 1 |   4   5   3   3 |       16       49 |         6260 |    0.021547  |
+ | 3 1 2 1 |  14  17   1   2 |       32       39 |         5846 |    0.029284  |
+ | 3 1 2 1 |  16  17   1   2 |       34       39 |         5848 |   -0.030287  |
+ | 3 1 2 1 |   3  18   1   2 |       21       40 |         5878 |   -0.030012  |
+ | 3 1 2 1 |   4  18   1   2 |       22       40 |         5879 |   -0.041710  |
+ | 3 1 2 1 |  10  18   1   2 |       28       40 |         5885 |   -0.016879  |
+ | 3 1 2 1 |  11  18   1   2 |       29       40 |         5886 |    0.030288  |
+ | 3 1 2 1 |  12  18   1   2 |       30       40 |         5887 |    0.056592  |
+ | 3 1 2 1 |  13  18   1   2 |       31       40 |         5888 |    0.016840  |
+ | 3 1 2 1 |  14  18   1   2 |       32       40 |         5889 |    0.040210  |
+ | 3 1 2 1 |  16  18   1   2 |       34       40 |         5891 |   -0.035043  |
+ | 3 1 2 1 |   3  20   1   2 |       21       42 |         5964 |    0.029702  |
+ | 3 1 2 1 |   4  20   1   2 |       22       42 |         5965 |    0.036345  |
+ | 3 1 2 1 |   8  20   1   2 |       26       42 |         5969 |    0.019232  |
+ | 3 1 2 1 |   9  20   1   2 |       27       42 |         5970 |    0.026649  |
+ | 3 1 2 1 |  16  20   1   2 |       34       42 |         5977 |   -0.018002  |
+ | 3 1 2 1 |   2  22   1   2 |       20       44 |         6049 |    0.042546  |
+ | 3 1 2 1 |   4  22   1   2 |       22       44 |         6051 |    0.071681  |
+ | 3 1 2 1 |   5  22   1   2 |       23       44 |         6052 |   -0.022267  |
+ | 3 1 2 1 |   7  22   1   2 |       25       44 |         6054 |    0.019678  |
+ | 3 1 2 1 |   8  22   1   2 |       26       44 |         6055 |   -0.042955  |
+ | 3 1 2 1 |   9  22   1   2 |       27       44 |         6056 |   -0.056531  |
+ | 3 1 2 1 |  10  22   1   2 |       28       44 |         6057 |   -0.020003  |
+ | 3 1 2 1 |  13  22   1   2 |       31       44 |         6060 |   -0.028810  |
+ | 3 1 2 1 |  14  22   1   2 |       32       44 |         6061 |   -0.040224  |
+ | 3 1 2 1 |   4   2   1   3 |       22       46 |         6137 |    0.016491  |
+ | 3 1 2 1 |   7   2   1   3 |       25       46 |         6140 |    0.026766  |
+ | 3 1 2 1 |   9   2   1   3 |       27       46 |         6142 |    0.045173  |
+ | 3 1 2 1 |  13   2   1   3 |       31       46 |         6146 |   -0.028164  |
+ | 3 1 2 1 |  14   2   1   3 |       32       46 |         6147 |   -0.036211  |
+ | 3 1 2 1 |   2   3   1   3 |       20       47 |         6178 |   -0.023596  |
+ | 3 1 2 1 |  14   4   1   3 |       32       48 |         6233 |   -0.019537  |
+ | 3 1 2 1 |   1   5   1   3 |       19       49 |         6263 |    0.019021  |
+ | 3 1 2 1 |   5   5   1   3 |       23       49 |         6267 |    0.018018  |
+ | 3 1 2 1 |   1   7   1   3 |       19       51 |         6349 |    0.034825  |
+ | 3 1 2 1 |   2   7   1   3 |       20       51 |         6350 |   -0.020092  |
+ | 3 1 2 1 |   3   7   1   3 |       21       51 |         6351 |    0.031490  |
+ | 3 1 2 1 |   4   7   1   3 |       22       51 |         6352 |    0.020478  |
+ | 2 1 3 1 |   2  17   1   2 |       36       39 |         5850 |   -0.026159  |
+ | 2 1 3 1 |   5  17   1   2 |       39       39 |         5853 |   -0.037027  |
+ | 2 1 3 1 |   4  18   1   2 |       38       40 |         5895 |   -0.027088  |
+ | 2 1 3 1 |   6  18   1   2 |       40       40 |         5897 |    0.020882  |
+ | 2 1 3 1 |   7  18   1   2 |       41       40 |         5898 |   -0.047701  |
+ | 2 1 3 1 |   8  18   1   2 |       42       40 |         5899 |   -0.079933  |
+ | 2 1 3 1 |   3  19   1   2 |       37       41 |         5937 |   -0.018253  |
+ | 2 1 3 1 |   5  19   1   2 |       39       41 |         5939 |    0.019165  |
+ | 2 1 3 1 |   7  19   1   2 |       41       41 |         5941 |    0.016306  |
+ | 2 1 3 1 |   1  20   1   2 |       35       42 |         5978 |   -0.035498  |
+ | 2 1 3 1 |   3  20   1   2 |       37       42 |         5980 |   -0.024832  |
+ | 2 1 3 1 |   5  20   1   2 |       39       42 |         5982 |    0.022027  |
+ | 2 1 3 1 |   8  21   1   2 |       42       43 |         6028 |    0.027530  |
+ | 2 1 3 1 |   5  22   1   2 |       39       44 |         6068 |    0.026908  |
+ | 2 1 3 1 |   6  22   1   2 |       40       44 |         6069 |    0.052070  |
+ | 2 1 3 1 |   8  22   1   2 |       42       44 |         6071 |    0.037411  |
+ | 2 1 3 1 |   2   2   1   3 |       36       46 |         6151 |   -0.019150  |
+ | 2 1 3 1 |   3   2   1   3 |       37       46 |         6152 |   -0.026085  |
+ | 2 1 3 1 |   5  15   1   3 |       39       59 |         6713 |    0.029231  |
+ | 2 1 3 1 |   6  15   1   3 |       40       59 |         6714 |   -0.018344  |
+ | 2 1 3 1 |   7  15   1   3 |       41       59 |         6715 |    0.027277  |
+ | 2 1 3 1 |   8  15   1   3 |       42       59 |         6716 |    0.018075  |
+ +=============================================================================+
+
+
+          Norm of Printed Amplitude Vector :             0.9617
+
+          Printed all single excitations greater than 0.182911
+
+          Printed all double excitations greater than 0.016178
+
+
+
++======================================================================+
+| contributions of excitation levels to right eigenvectors as computed |
+| from the (RE|RE) self overlap                                        |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    4|   1   |   1   |    8.67627 |  94.2146  |   5.7854  |   0.0000  |
+|    4|   1   |   2   |   10.04910 |  93.6360  |   6.3640  |   0.0000  |
+|    4|   1   |   3   |   10.31331 |  93.4612  |   6.5388  |   0.0000  |
++======================================================================+
+
+
+
+
+
++======================================================================+
+| contributions of excitation levels to excited states as computed     |
+| from the (LE|RE) overlap                                             |
++----------------------------------------------------------------------+
+| sym | multi | state |    E / eV  | % singles | % doubles | % triples |
++======================================================================+
+|    4|   1   |   1   |    8.67627 |  92.0037  |   7.9963  |   0.0000  |
+|    4|   1   |   2   |   10.04910 |  91.1583  |   8.8417  |   0.0000  |
+|    4|   1   |   3   |   10.31331 |  90.8694  |   9.1306  |   0.0000  |
++======================================================================+
+
+
+
+
+ *******************************************************************************
+
+ --------------------------
+ Symmetry class Nr.:     4
+ Multiplicity      :     3
+ --------------------------
+
+ Length of Excitation vectors in this class is:     16229
+ No Excitation Energies calculated in this symmetry class
+     
+
+   *******************************************************************
+   *                                                                 *
+   *<<<<<<<<   OUTPUT FROM PROPERTY AND SYMMETRY ANALYSIS   >>>>>>>>>*
+   *                                                                 *
+   *******************************************************************
+
+
+
+                         +-------------------------------+
+                         ! REQUESTED PROPERTY OPERATORS: !
+                         +-------------------------------+
+
+             Index   Oper. Label  Symmetry  Transp.  PDBS  Atom
+             --------------------------------------------------
+                1     HAM0            1        1      T      0
+                2     ZDIPLEN         1        1      F      0
+                3     XDIPLEN         2        1      F      0
+                4     YDIPLEN         3        1      F      0
+             --------------------------------------------------
+
+
+
+
+                         +-------------------------------+
+                         ! REQUESTED EXPECTATION VALUES: !
+                         +-------------------------------+
+
+                       Index   Oper. Label  Symmetry
+                       -----------------------------
+                       -----------------------------
+
+
+
+
+                       +------------------------------------+
+                       ! REQUESTED EFFECTIVE FOCK MATRICES: !
+                       +------------------------------------+
+
+                       Index   Oper. Label  Symmetry
+                       -----------------------------
+                       -----------------------------
+
+
+
+
+                        +----------------------------------+
+                        ! REQUESTED FIRST ORDER M-VECTORS: !
+                        +----------------------------------+
+
+               Index   State Symmetry  Frequency
+               --------------------------------------------------
+                  1             1    1     3.379339D-01
+                  2             2    1     3.472187D-01
+                  3             3    1     3.924569D-01
+                  4             4    2     2.597176D-01
+                  5             5    2     3.389461D-01
+                  6             6    2     3.560659D-01
+                  7             7    3     3.794203D-01
+                  8             8    3     4.023457D-01
+                  9             9    3     4.518676D-01
+               --------------------------------------------------
+
+
+      
+
+    *******************************************************************
+    *          SOLVING COUPLED CLUSTER RESPONSE EQUATIONS             *
+    *******************************************************************
+
+
+
+ 
+ +======================================================================+
+ !                     RHS & ETA VECTORS TO COMPUTE:                    !
+ +======================================================================+
+ | TYPE | # VEC. |  NEEDED FOR:                                         |
+ +----------------------------------------------------------------------+
+ +======================================================================+
+
+
+
+ +======================================================================+
+ !                       LINEAR EQUATIONS TO SOLVE:                     !
+ +======================================================================+
+ | TYPE | # VEC. |  EQUATION:                                           |
+ +----------------------------------------------------------------------+
+ |  M1  |    9   |  first-order ground - excited state multipliers      |
+ +======================================================================+
+
+
+
+ +======================================================================+
+ !                F MATRIX TRANSFORMATIONS TO COMPUTE:                  !
+ +======================================================================+
+ | TYPE | # VEC. |  TRANSFORMED:                                        |
+ +----------------------------------------------------------------------+
+ |  FR  |    9   |  right eigenvectors (RE)                             |
+ +======================================================================+
+
+
+
+ RPA: call cceq_str
+ RPA: exit cceq_str
+ RPA: call cceq_str
+ RPA: exit cceq_str
+ RPA: call cceq_str
+ RPA: exit cceq_str
+
+ Solution of CC response equations completed.
+
+
+ *******************************************************************
+ *                                                                 *
+ *<<<<<<<<  OUTPUT FROM COUPLED CLUSTER LINEAR RESPONSE   >>>>>>>>>*
+ *                                                                 *
+ *<<<<<<<<      CALCULATION OF SECOND ORDER RESIDUES      >>>>>>>>>*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                  +---------------------------------------------+
+                  ! CC_SOPR: Calculation of CC2        Residues !
+                  +---------------------------------------------+
+
+
+
+ CC2   Right transition moments in atomic units:
+ -----------------------------------------------
+
+  4       0.259718  <XDIPLEN |f> =       0.78611219
+  5       0.338946  <XDIPLEN |f> =       0.22510908
+  6       0.356066  <XDIPLEN |f> =      -0.07747199
+  7       0.379420  <YDIPLEN |f> =       0.42266227
+  8       0.402346  <YDIPLEN |f> =       0.34684880
+  9       0.451868  <YDIPLEN |f> =      -0.43094426
+  1       0.337934  <ZDIPLEN |f> =      -0.40870878
+  2       0.347219  <ZDIPLEN |f> =      -0.80982482
+  3       0.392457  <ZDIPLEN |f> =      -0.34987159
+
+
+ CC2   Left  transition moments in atomic units:
+ -----------------------------------------------
+
+  4       0.259718  <f|XDIPLEN > =       0.40246315
+  5       0.338946  <f|XDIPLEN > =       0.11459070
+  6       0.356066  <f|XDIPLEN > =      -0.03936137
+  7       0.379420  <f|YDIPLEN > =       0.21225631
+  8       0.402346  <f|YDIPLEN > =       0.18104313
+  9       0.451868  <f|YDIPLEN > =      -0.22053910
+  1       0.337934  <f|ZDIPLEN > =      -0.21641577
+  2       0.347219  <f|ZDIPLEN > =      -0.41696247
+  3       0.392457  <f|ZDIPLEN > =      -0.17663776
+
+
+ CC2   linear response residue property in atomic units:
+ -------------------------------------------------------
+
+ RES{<<XDIPLEN ,XDIPLEN >>( 0.259718)} =     0.31638119 (   0.56247772)
+ RES{<<XDIPLEN ,XDIPLEN >>( 0.338946)} =     0.02579541 (   0.16060949)
+ RES{<<XDIPLEN ,XDIPLEN >>( 0.356066)} =     0.00304940 (   0.05522140)
+ RES{<<YDIPLEN ,YDIPLEN >>( 0.379420)} =     0.08971274 (   0.29952084)
+ RES{<<YDIPLEN ,YDIPLEN >>( 0.402346)} =     0.06279459 (   0.25058849)
+ RES{<<YDIPLEN ,YDIPLEN >>( 0.451868)} =     0.09504006 (   0.30828568)
+ RES{<<ZDIPLEN ,ZDIPLEN >>( 0.337934)} =     0.08845103 (   0.29740717)
+ RES{<<ZDIPLEN ,ZDIPLEN >>( 0.347219)} =     0.33766656 (   0.58109083)
+ RES{<<ZDIPLEN ,ZDIPLEN >>( 0.392457)} =     0.06180053 (   0.24859713)
+
+
+ CC2   Transition strength matrix for state nr.  1 of symmetry 1
+ CC2   excitation energy: 0.33793394
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       3       0.00000000     0.00000000     0.08845103
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.08845103
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  1 of symmetry 1
+ CC2   excitation energy: 0.33793394
+
+
+               Column   1     Column   2     Column   3
+       3       0.00000000     0.00000000     0.01992707
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.01992707
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  2 of symmetry 1
+ CC2   excitation energy: 0.34721872
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       3       0.00000000     0.00000000     0.33766656
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.33766656
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  2 of symmetry 1
+ CC2   excitation energy: 0.34721872
+
+
+               Column   1     Column   2     Column   3
+       3       0.00000000     0.00000000     0.07816277
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.07816277
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  3 of symmetry 1
+ CC2   excitation energy: 0.39245691
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       3       0.00000000     0.00000000     0.06180053
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.06180053
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  3 of symmetry 1
+ CC2   excitation energy: 0.39245691
+
+
+               Column   1     Column   2     Column   3
+       3       0.00000000     0.00000000     0.01616936
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.01616936
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  1 of symmetry 2
+ CC2   excitation energy: 0.25971757
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       1       0.31638119     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.31638119
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  1 of symmetry 2
+ CC2   excitation energy: 0.25971757
+
+
+               Column   1     Column   2     Column   3
+       1       0.05477984     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.05477984
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  2 of symmetry 2
+ CC2   excitation energy: 0.33894610
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       1       0.02579541     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.02579541
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  2 of symmetry 2
+ CC2   excitation energy: 0.33894610
+
+
+               Column   1     Column   2     Column   3
+       1       0.00582884     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00582884
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  3 of symmetry 2
+ CC2   excitation energy: 0.35606585
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       1       0.00304940     0.00000000     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00304940
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  3 of symmetry 2
+ CC2   excitation energy: 0.35606585
+
+
+               Column   1     Column   2     Column   3
+       1     7.238590D-04   0.000000D+00   0.000000D+00
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00072386
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  1 of symmetry 3
+ CC2   excitation energy: 0.37942029
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       2       0.00000000     0.08971274     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.08971274
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  1 of symmetry 3
+ CC2   excitation energy: 0.37942029
+
+
+               Column   1     Column   2     Column   3
+       2       0.00000000     0.02269255     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.02269255
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  2 of symmetry 3
+ CC2   excitation energy: 0.40234572
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       2       0.00000000     0.06279459     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.06279459
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  2 of symmetry 3
+ CC2   excitation energy: 0.40234572
+
+
+               Column   1     Column   2     Column   3
+       2       0.00000000     0.01684342     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.01684342
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  3 of symmetry 3
+ CC2   excitation energy: 0.45186763
+
+ Gauge: length
+
+               Column   1     Column   2     Column   3
+       2       0.00000000     0.09504006     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.09504006
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  3 of symmetry 3
+ CC2   excitation energy: 0.45186763
+
+
+               Column   1     Column   2     Column   3
+       2       0.00000000     0.02863035     0.00000000
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.02863035
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  1 of symmetry 4
+ CC2   excitation energy: 0.31884699
+
+ Gauge: length
+
+     Zero matrix.
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  1 of symmetry 4
+ CC2   excitation energy: 0.31884699
+
+
+     Zero matrix.
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  2 of symmetry 4
+ CC2   excitation energy: 0.36929762
+
+ Gauge: length
+
+     Zero matrix.
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  2 of symmetry 4
+ CC2   excitation energy: 0.36929762
+
+
+     Zero matrix.
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2   Transition strength matrix for state nr.  3 of symmetry 4
+ CC2   excitation energy: 0.37900702
+
+ Gauge: length
+
+     Zero matrix.
+    ==== End of matrix output ====
+
+ Principal values of diagonalized transition strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized transition strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+
+ CC2    oscillator strength matrix for state nr.  3 of symmetry 4
+ CC2   excitation energy: 0.37900702
+
+
+     Zero matrix.
+    ==== End of matrix output ====
+
+ Principal values of diagonalized oscillator strength matrix:
+
+             a.u.               
+ 1       0.00000000
+ 2       0.00000000
+ 3       0.00000000
+
+ Principal axis of diagonalized oscillator strength matrix:
+
+
+               Column   1     Column   2     Column   3
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
+       3       0.00000000     0.00000000     1.00000000
+    ==== End of matrix output ====
+
+ >>> Total time for      9 linear response residues:       0.02 seconds.
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                   SUMMARY OF COUPLED CLUSTER CALCULATION                    *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+                                                                                
+                                                                                
+            Total SCF   energy:                   -76.0417183633                
+            Total MP2   energy:                   -76.2641125438                
+            Total CC2   energy:                   -76.2664000252                
+                                                                                
+                                                                                
+ +=============================================================================+
+ |  sym. | Exci.  |        CC2        Excitation energies            | ||T1||  |
+ |(spin, |        +------------------------------------------------------------+
+ | spat) |        |     Hartree    |       eV.      |     cm-1       |    %    |
+ +=============================================================================+
+ | ^1A1  |    1   |     0.3379339  |       9.19565  |     74167.927  |  94.09  |
+ | ^1A1  |    2   |     0.3472187  |       9.44830  |     76205.700  |  94.14  |
+ | ^1A1  |    3   |     0.3924569  |      10.67930  |     86134.334  |  93.72  |
+ +-----------------------------------------------------------------------------+
+ | ^1B1  |    1   |     0.2597176  |       7.06727  |     57001.418  |  94.52  |
+ | ^1B1  |    2   |     0.3389461  |       9.22319  |     74390.071  |  93.94  |
+ | ^1B1  |    3   |     0.3560659  |       9.68904  |     78147.421  |  93.48  |
+ +-----------------------------------------------------------------------------+
+ | ^1B2  |    1   |     0.3794203  |      10.32455  |     83273.128  |  93.61  |
+ | ^1B2  |    2   |     0.4023457  |      10.94838  |     88304.678  |  94.29  |
+ | ^1B2  |    3   |     0.4518676  |      12.29594  |     99173.480  |  93.80  |
+ +-----------------------------------------------------------------------------+
+ | ^1A2  |    1   |     0.3188470  |       8.67627  |     69978.824  |  94.21  |
+ | ^1A2  |    2   |     0.3692976  |      10.04910  |     81051.457  |  93.64  |
+ | ^1A2  |    3   |     0.3790070  |      10.31331  |     83182.425  |  93.46  |
+ +=============================================================================+
+                                                                                
+                                                                                
+     Total energies in Hartree:                                                 
+             1 ^1A1       -75.9284660837                                        
+             2 ^1A1       -75.9191813037                                        
+             3 ^1A1       -75.8739431185                                        
+             1 ^1B1       -76.0066824527                                        
+             2 ^1B1       -75.9274539204                                        
+             3 ^1B1       -75.9103341704                                        
+             1 ^1B2       -75.8869797333                                        
+             2 ^1B2       -75.8640543019                                        
+             3 ^1B2       -75.8145323967                                        
+             1 ^1A2       -75.9475530377                                        
+             2 ^1A2       -75.8971024101                                        
+             3 ^1A2       -75.8873930051                                        
+                                                                                
+                                                                                
+ +=============================================================================+
+ |  sym. | Exci.  |        CC2        Length   Gauge Oscillator Strength       |
+ |(spin, |        +------------------------------------------------------------+
+ | spat) |        | Dipole Strength(a.u.) | Oscillator strength  | Direction   |
+ +=============================================================================+
+ | ^1A1  |    1   |        0.0884510      |      0.0199271       |    Z        |
+ | ^1A1  |    2   |        0.3376666      |      0.0781628       |    Z        |
+ | ^1A1  |    3   |        0.0618005      |      0.0161694       |    Z        |
+ +-----------------------------------------------------------------------------+
+ | ^1B1  |    1   |        0.3163812      |      0.0547798       |    X        |
+ | ^1B1  |    2   |        0.0257954      |      0.0058288       |    X        |
+ | ^1B1  |    3   |        0.0030494      |      0.0007239       |    X        |
+ +-----------------------------------------------------------------------------+
+ | ^1B2  |    1   |        0.0897127      |      0.0226926       |    Y        |
+ | ^1B2  |    2   |        0.0627946      |      0.0168434       |    Y        |
+ | ^1B2  |    3   |        0.0950401      |      0.0286304       |    Y        |
+ +-----------------------------------------------------------------------------+
+ | ^1A2  |    1   |        0.0000000      |      0.0000000       |    -        |
+ | ^1A2  |    2   |        0.0000000      |      0.0000000       |    -        |
+ | ^1A2  |    3   |        0.0000000      |      0.0000000       |    -        |
+ +=============================================================================+
+
+  1 a.u. =        27.21138 eV.  
+  1 a.u. =    219474.62934 cm-1.
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                      END OF COUPLED CLUSTER CALCULATION                     *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+
+ >>>> CPU and wall time for CC :      13.252      14.015
+
+ 
+     Date and time (Linux)  : Tue Jan 12 21:46:31 2016
+     Host name              : n010                                    
+
+
+                      .-------------------------------------.
+                      | End of Coupled Cluster Section (CC) |
+                      `-------------------------------------'
+
+
+
+                 .------------------------------------------------.
+                 | Starting in Dynamic Property Section (RESPONS) |
+                 `------------------------------------------------'
+
+
+ ------------------------------------------------------------------------------
+  RESPONSE  -  an MCSCF, MC-srDFT, DFT, and SOPPA response property program
+ ------------------------------------------------------------------------------
+
+
+ <<<<<<<<<< OUTPUT FROM RESPONSE INPUT PROCESSING >>>>>>>>>>
+
+
+
+
+   SCF energy         :      -76.041718363320683
+ -- inactive part     :      -85.212934749375890
+ -- nuclear repulsion :        9.171216386055210
+
+
+                     ***************************************
+                     *** RHF response calculation (TDHF) ***
+                     ***************************************
+
+
+ >>>> Total CPU  time used in RESPONSE:   0.00 seconds
+ >>>> Total wall time used in RESPONSE:   0.06 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Dynamic Property Section (RESPONS) |
+                   `-------------------------------------------'
+
+ >>>> Total CPU  time used in DALTON:  13.49 seconds
+ >>>> Total wall time used in DALTON:  14.49 seconds
+
+ 
+     Date and time (Linux)  : Tue Jan 12 21:46:31 2016
+     Host name              : n010                                    

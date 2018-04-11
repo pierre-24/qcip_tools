@@ -28,7 +28,7 @@ By facility, it will be referred as the term "tensor of order 2". For any :math:
 Due to the `Shwarz's theorem <https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem>`_ (referred as "Kleinman symmetry" in the field of nonlinear optics), some component of those tensors are equals to each others.
 
 
-Two kind of derivatives are considered for the moment:
+Three kind of derivatives are considered for the moment:
 
 + Electrical, with respect to a static (``F``) or dynamic (``D`` or ``d``) electric field (though the first one is a special case of the second).
   The input space is :math:`\mathbf{f}\in\mathbb{R}^3`, and
@@ -52,6 +52,10 @@ Two kind of derivatives are considered for the moment:
 
   where :math:`F_i=\left.\frac{\partial V}{\partial\mathbf{q}_i}\right|_{\mathbf{q}=0}` is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), :math:`H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{q}_i\mathbf{q}_j}\right|_{\mathbf{q}=0}` is the hessian (force constant matrix) and :math:`F_{ijk}` is the cubic force constants matrix (and so on).
 
++ Excitation energies: not exactly derivatives themselves, but obtained by single/double/... residue on the response functions.
+  Excited state are represented by ``#``, while excitation are represented by ``!``.
+  Therefore, ``#F`` means "excited state dipole moment" while ``!F`` means "(ground to excited) transition dipole moment", and ``#!F`` means "excited to excited transition dipole moment".
+
 All derivatives are written with respect to the energy (assuming a corresponding Maclaurrin expansion). For example, ``GG`` corresponds to the hessian expressed in cartesian coordinates (second order derivative of the energy), while ``F`` is the electric dipole moment.
 Therefore, ``FG`` (or ``GF``) is the first-order derivative of the dipole moment with respect to the cartesian coordinates.
 
@@ -65,7 +69,7 @@ Implementation
 
 The object ``Derivative`` handle the manipulation of derivative on a symbolic level : you can define a derivative and differenciate it.
 It computes the shape, dimension and order of the corresponding derivative.
-Note that you must provide ``spacial_dof``, the number of spacial degrees of freeedom of the corresponding system if the derivative contains a geometrical one (``G`` or ``N``).
+Note that you must provide ``spacial_dof``, the number of spacial degrees of freeedom of the corresponding system if the derivative contains a geometrical one (``G`` or ``N``), and ``nstate`` if the derivative contains an excitation (``!`` or ``#``).
 
 The object ``Tensor`` allows to store this derivative in the ``components`` array (but without the specific operation that you can perform on certain tensors, e.g. the isotropic value for the polarizability and so all).
 It is provided with a ``Derivative`` (``self.representation``) for efficiency, so the ``components`` array is shaped accordingly.
