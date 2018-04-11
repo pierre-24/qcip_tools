@@ -18,4 +18,4 @@ class ValueOutsideDomain(ValueError):
 
 def assert_in_domain(val, min_, max_, help_=''):
     if val > max_ or val < min_:
-        raise ValueOutsideDomain(val, min_, max_, help_='')
+        raise ValueOutsideDomain(val, min_, max_, help_=help_)
