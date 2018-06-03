@@ -5,8 +5,6 @@ try: # for pip >= 10
 except ImportError: # for pip <= 9.0.3
     from pip.req import parse_requirements
 
-import release_it
-
 pkgs = []
 dependency_links = []
 for pkg in parse_requirements('requirements.txt', session=False):
