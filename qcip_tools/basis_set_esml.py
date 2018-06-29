@@ -145,7 +145,7 @@ class ESMLBasisSet:
 
 
 #: current JS PEID
-JS_PEID = 11535052407933
+JS_PEID = 11543880926284
 
 #: URL for the download
 URL = 'https://bse.pnl.gov:443/bse/portal/user/anon/js_peid/{}/action/' \

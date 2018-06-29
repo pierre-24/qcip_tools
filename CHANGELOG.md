@@ -1,6 +1,8 @@
 # Changelog
 
-## Next version
+## Current version
+
+"Have you ever eared about graphs?"
 
 + Add this changelog (#38)
 + Handle the patched version of dalton if needed (!41)
@@ -8,6 +10,7 @@
 + Add excitation: `!` and `#` (!46), and extract from Dalton (archive) and Gaussian (FCHK)
 + Upgrade numpy and scipy version, remove matplotlib
 + Correct charge transfert (!48)
++ Upgrade to the latest version of h5py, remove warning (!50)
 
 ## Version 0.5
 
