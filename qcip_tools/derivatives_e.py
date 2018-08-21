@@ -328,7 +328,23 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
     def polarization_angle_dependant_intensity(self, angle):
         """Compute the angle (:math:`\\Psi`) dependant intensity in the SHS setup.
 
-        :param angle: angle (in degree)
+        .. math::
+
+            \\langle\\beta^2\\rangle = \\frac{1}{105}\\,\\begin{pmatrix}
+            4-26\\cos^2\\Psi+20\\cos^4\\Psi\\\\
+            4+2\\cos^2\\Psi-8\\cos^4\\Psi \\\\
+            1-10\\cos^2\\Psi+12\\cos^4\\Psi \\\\
+            2+8\\cos^2\\Psi-4\\cos^4\\Psi \\\\
+            4+2\\cos^2\\Psi-8\\cos^4\\Psi
+            \\end{pmatrix}^T\\,\\begin{pmatrix}
+            [g\\beta^2]_A\\\\
+            [g\\beta^2]_B\\\\
+            [g\\beta^2]_C\\\\
+            [g\\beta^2]_D\\\\
+            [g\\beta^2]_E\\\\
+            \\end{pmatrix}.
+
+        :param angle: angle (in **degree**)
         :type angle: float
         :rtype: float
         """
@@ -343,23 +359,23 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         ang_4 = ang ** 4
 
         mat_angs = numpy.dot(numpy.array([
-            [2, 8, -4],
             [4, -26, 20],
             [4, 2, -8],
             [1, -10, 12],
+            [2, 8, -4],
             [4, 2, -8]
         ]), numpy.array([1, ang_2, ang_4]).transpose())
 
         for i in derivatives.COORDINATES_LIST:
             for j in derivatives.COORDINATES_LIST:
                     for k in derivatives.COORDINATES_LIST:
-                        tmp += numpy.dot([
-                            self.components[i, j, k] ** 2,
+                        tmp += numpy.dot(mat_angs.transpose(), [
                             self.components[i, i, j] * self.components[j, k, k],
                             self.components[i, i, j] * self.components[k, j, k],
                             self.components[i, j, j] * self.components[i, k, k],
+                            self.components[i, j, k] ** 2,
                             self.components[i, j, k] * self.components[j, i, k]
-                        ], mat_angs)
+                        ])
 
         return 1 / 105 * tmp
 
@@ -375,7 +391,21 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         return True
 
     def beta_squared_zxx(self):
-        """Compute :math:`\\langle\\beta^2_{ZXX}\\rangle`
+        """Compute :math:`\\langle\\beta^2_{ZXX}\\rangle`:
+
+
+        .. math::
+
+            \\begin{align}
+            \\langle\\beta^2_{ZXX}\\rangle
+            &= \\frac{1}{105}\\,
+            \\sum_{ijk}^{xyz} 6\\,\\beta_{ijk}^2
+            + 3\\,\\beta_{ijj} \\beta_{ikk}
+            -2\\, (\\beta_{iij} \\beta_{jkk} +\\beta_{iij} \\beta_{kjk}  +\\beta_{ijk} \\beta_{jik})\\\\
+            &\\approx \\frac{1}{105}\\,\\sum_{ijk}^{xyz}4\\, \\beta_{ijk}^2-\\beta_{ijj} \\beta_{ikk}
+            \\end{align}
+
+        (actually computed using the polarization dependant intensity)
 
         :rtype: float
         """
@@ -383,25 +413,24 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_shg():
             raise NotSHG(self.input_fields)
 
-        # tmp = 1 / 9 * self.dipolar_ms_contribution_squared() + 1 / 45 * self.dipolar_fs_contribution_squared() + \
-        #       1 / 15 * self.quadrupolar_contribution_squared() + 4 / 105 * self.octupolar_contribution_squared()
-        # return tmp
-
-        tmp = 0
-
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        tmp += -2 * self.components[i, i, j] * self.components[j, k, k]
-                        tmp += -2 * self.components[i, i, j] * self.components[k, j, k]
-                        tmp += 3 * self.components[i, j, j] * self.components[i, k, k]
-                        tmp += 6 * self.components[i, j, k] ** 2
-                        tmp += -2 * self.components[i, j, k] * self.components[j, i, k]
-
-        return 1 / 105 * tmp
+        return self.polarization_angle_dependant_intensity(0)
 
     def beta_squared_zzz(self):
-        """Compute :math:`\\langle\\beta^2_{ZZZ}\\rangle`.
+        """Compute :math:`\\langle\\beta^2_{ZZZ}\\rangle`:
+
+
+        .. math::
+
+            \\begin{align}
+            \\langle\\beta^2_{ZZZ}\\rangle
+            &= \\frac{1}{105}\\,\\sum_{ijk}^{xyz} 2\\,
+            \\beta_{ijk}^2 + \\beta_{ijj} \\beta_{ikk}
+            + 4\\, (\\beta_{iij} \\beta_{jkk}
+            + \\beta_{iij} \\beta_{kjk} + \\beta_{ijk} \\beta_{jik})\\\\
+            &\\approx \\frac{1}{35}\\,\\sum_{ijk}^{xyz} 2\\,\\beta_{ijk}^2 + 3 \\beta_{ijj} \\beta_{ikk}
+            \\end{align}
+
+        (actually computed using the polarization dependant intensity)
 
         :rtype: float
         """
@@ -409,35 +438,15 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_shg():
             raise NotSHG(self.input_fields)
 
-        # tmp = 3 / 15 * self.dipolar_fs_contribution_squared() + 2 / 35 * self.octupolar_contribution_squared()
-        # return tmp
-
-        tmp = 0
-
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        tmp += 4 * self.components[i, i, j] * self.components[j, k, k]
-                        tmp += 4 * self.components[i, i, j] * self.components[k, j, k]
-                        tmp += self.components[i, j, j] * self.components[i, k, k]
-                        tmp += 2 * self.components[i, j, k] ** 2
-                        tmp += 4 * self.components[i, j, k] * self.components[j, i, k]
-
-        return 1 / 105 * tmp
+        return self.polarization_angle_dependant_intensity(90)
 
     def beta_hrs(self):
         """Hyper-Rayleigh scattering quantity:
 
         .. math ::
 
-            \\beta_{HRS}=\\left\\{\\begin{array}{ll}
-                |\\beta_{J=1}|\,\\sqrt{\\frac{2}{21}\\rho^2+\\frac{2}{9}} & \\text{if Kleinman's conditions} \\\\
-                \\sqrt{\\langle\\beta^2_{ZZZ}\\rangle + \\langle\\beta^2_{ZXX}\\rangle} & \\text{otherwise}
-            \\end{array}\\right.
+            \\beta_{HRS}=\\sqrt{\\langle\\beta^2_{ZZZ}\\rangle + \\langle\\beta^2_{ZXX}\\rangle}
 
-        :param assume_kleinman:
-            Assume the Kleinman conditions's (full permutation of the components) and use the alternate definition
-        :type assume_kleinman: bool
         :rtype: float
         """
 
@@ -879,6 +888,27 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
     def polarization_angle_dependant_intensity(self, angle):
         """Compute the angle (:math:`\\Psi`) dependant intensity in the THS setup.
 
+        .. math::
+
+            \\langle\\gamma^2\\rangle = \\frac{1}{630}\\,
+            \\begin{pmatrix}
+            6-81\\cos^2\\Psi+198\\cos^4\\Psi-126\\cos^6\\Psi\\\\
+            24-108\\cos^2\\Psi-72\\cos^4\\Psi+144\\cos^6\\Psi\\\\
+            12+54\\cos^2\\Psi-90\\cos^4\\Psi+18\\cos^6\\Psi\\\\
+            6-54\\cos^2\\Psi+36\\cos^4\\Psi+36\\cos^6\\Psi\\\\
+            4+36\\cos^2\\Psi-12\\cos^4\\Psi-12\\cos^6\\Psi \\\\
+            6-81\\cos^2\\Psi+198\\cos^4\\Psi-126\\cos^6\\Psi\\\\
+            12+54\\cos^2\\Psi-90\\cos^4\\Psi+18\\cos^6\\Psi
+            \\end{pmatrix}^T\\,\\begin{pmatrix}
+            [g\\gamma^2]_A\\\\
+            [g\\gamma^2]_B\\\\
+            [g\\gamma^2]_C\\\\
+            [g\\gamma^2]_D\\\\
+            [g\\gamma^2]_E\\\\
+            [g\\gamma^2]_F\\\\
+            [g\\gamma^2]_G\\\\
+            \\end{pmatrix}.
+
         :param angle: angle (in degree)
         :type angle: float
         :rtype: float
@@ -895,11 +925,11 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         ang_6 = ang ** 6
 
         mat_angs = numpy.dot(numpy.array([
-            [4, 36, -12, -12],
             [6, -81, 198, -126],
             [24, -108, -72, 144],
             [12, 54, -90, 18],
             [6, -54, 36, 36],
+            [4, 36, -12, -12],
             [6, -81, 198, -126],
             [12, 54, -90, 18]
         ]), numpy.array([1, ang_2, ang_4, ang_6]))
@@ -908,20 +938,37 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
             for j in derivatives.COORDINATES_LIST:
                     for k in derivatives.COORDINATES_LIST:
                         for l in derivatives.COORDINATES_LIST:
-                            tmp += numpy.dot([
-                                self.components[i, j, k, l] ** 2,
+                            tmp += numpy.dot(mat_angs.transpose(), [
                                 self.components[i, i, j, j] * self.components[k, l, l, k],
                                 self.components[i, i, j, k] * self.components[j, l, l, k],
                                 self.components[i, i, j, k] * self.components[l, j, l, k],
                                 self.components[i, j, j, k] * self.components[i, k, l, l],
+                                self.components[i, j, k, l] ** 2,
                                 self.components[i, j, j, k] * self.components[k, i, l, l],
                                 self.components[i, j, k, l] * self.components[j, i, k, l]
-                            ], mat_angs)
+                            ])
 
         return 1 / 630 * tmp
 
     def gamma_squared_zzzz(self):
-        """Compute :math:`\\langle\\gamma^2_{ZZZZ}\\rangle`.
+        """Compute :math:`\\langle\\gamma^2_{ZZZZ}\\rangle`:
+
+        .. math::
+
+            \\langle\\gamma_{ZZZZ}^2\\rangle &=
+            \\frac{1}{315}\\sum_{ijkl}^{xyz} \\left\\{\\begin{array}{l}
+            2\\,\\gamma_{ijkl}^2
+            + 12\\,\\gamma_{iijk} \\gamma_{jllk}
+            + 6\\,(\\gamma_{iijk} \\gamma_{ljlk}
+            + \\gamma_{ijkl} \\gamma_{jikl} )\\\\
+            + 3\\,(\\gamma_{ijjk} \\gamma_{ikll}
+            +\\gamma_{iijj} \\gamma_{kllk}
+            +\\gamma_{ijjk} \\gamma_{kill})
+            \\end{array}\\right\\}\\\\
+            &\\approx \\frac{1}{315}\\,\\sum_{ijkl}^{xyz}
+            8\\,\\gamma^2_{ijkl} + 24\\, \\gamma_{iijk}\\gamma_{jkll}+3\\,\\gamma_{iijj}\\gamma_{kkll}
+
+        (actually computed using the polarization dependant intensity)
 
         :rtype: float
         """
@@ -929,24 +976,26 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_thg():
             raise NotTHG(self.input_fields)
 
-        tmp = 0
-
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        for l in derivatives.COORDINATES_LIST:
-                            tmp += 2 * self.components[i, j, k, l] ** 2
-                            tmp += 12 * self.components[i, i, j, k] * self.components[j, l, l, k]
-                            tmp += 6 * self.components[i, i, j, k] * self.components[l, j, l, k]
-                            tmp += 6 * self.components[i, j, k, l] * self.components[j, i, k, l]
-                            tmp += 3 * self.components[i, j, j, k] * self.components[i, k, l, l]
-                            tmp += 3 * self.components[i, i, j, j] * self.components[k, l, l, k]
-                            tmp += 3 * self.components[i, j, j, k] * self.components[k, i, l, l]
-
-        return 1 / 315 * tmp
+        return self.polarization_angle_dependant_intensity(90)
 
     def gamma_squared_zxxx(self):
-        """Compute :math:`\\langle\\gamma^2_{ZXXX}\\rangle`.
+        """Compute :math:`\\langle\\gamma^2_{ZXXX}\\rangle`:
+
+        .. math::
+
+            \\langle\\gamma_{ZXXX}^2\\rangle &=
+            \\frac{1}{630}\\sum_{ijkl}^{xyz} \\left\\{\\begin{array}{l}
+            16\\,\\gamma_{ijkl}^2
+            +24\\,\\gamma_{ijjk} \\gamma_{ikll}
+            - 12\\,\\gamma_{iijk} \\gamma_{jllk}\\\\
+             - 6\\,(\\gamma_{iijk} \\gamma_{ljlk}
+             + \\gamma_{ijkl} \\gamma_{jikl} )
+             -3\\,(\\gamma_{iijj} \\gamma_{kllk}+\\gamma_{ijjk} \\gamma_{kill})
+            \\end{array}\\right\\}\\\\
+            &\\approx \\frac{1}{630} \\sum_{ijkl}^{xyz}
+            10\\,\\gamma^2_{ijkl} +3\\,\\gamma_{iijk}\\gamma_{jkll}  -3\\gamma_{iijj}\\gamma_{kkll}
+
+        (actually computed using the polarization dependant intensity)
 
         :rtype: float
         """
@@ -954,21 +1003,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_thg():
             raise NotTHG(self.input_fields)
 
-        tmp = 0
-
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        for l in derivatives.COORDINATES_LIST:
-                            tmp += 16 * self.components[i, j, k, l] ** 2
-                            tmp += 24 * self.components[i, j, j, k] * self.components[i, k, l, l]
-                            tmp += -12 * self.components[i, i, j, k] * self.components[j, l, l, k]
-                            tmp += -6 * self.components[i, i, j, k] * self.components[l, j, l, k]
-                            tmp += -6 * self.components[i, j, k, l] * self.components[j, i, k, l]
-                            tmp += -3 * self.components[i, i, j, j] * self.components[k, l, l, k]
-                            tmp += -3 * self.components[i, j, j, k] * self.components[k, i, l, l]
-
-        return 1 / 630 * tmp
+        return self.polarization_angle_dependant_intensity(0)
 
     def gamma_ths(self):
         """Compute :math:`\\gamma_{THS}`, the quantity from a third harmonic scattering experiment.
