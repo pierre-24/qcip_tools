@@ -605,14 +605,6 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         :param old_version: Use the previous (with Kleinman's conditions) version
         :type old_version: bool
         :rtype: float
-
-        .. math::
-
-            \\begin{align}
-                |\\beta_{J=1}|^2 &=\\frac{3}{5} \\sum_{ijk} \\beta_{ijj} \\beta_{ikk}
-            \\end{align}
-
-        :rtype: float
         """
 
         if not self.is_shg():
@@ -640,14 +632,6 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         :param old_version: Use the previous (with Kleinman's conditions) version
         :type old_version: bool
-        :rtype: float
-
-        .. math::
-
-            \\begin{align}
-                |\\beta_{J=3}|^2 &= - \\frac{1}{5} \\sum_{ijk} 3 \\beta_{ijj} \\beta_{ikk} + 5 \\beta_{ijk}^2
-            \\end{align}
-
         :rtype: float
         """
 
@@ -821,7 +805,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
                     r += 'beta^K    {: .5e}\n'.format(self.beta_kerr(dipole))
 
-            if sum(self.input_fields) == 2 or self.frequency == .0 or self.frequency == 'static':  # SHG
+            if self.is_shg():  # SHG
                 B2zzz = self.beta_squared_zzz()
                 B2zxx = self.beta_squared_zxx()
                 BJ1 = self.dipolar_contribution(old_version=True)
@@ -1065,109 +1049,301 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
         return self.gamma_squared_zzzz() / self.gamma_squared_zxxx()
 
-    def isotropic_contribution_squared(self, first_version=True):
+    def compute_sum(self, what):
+        """Shorthand to simplify the computation of invariant quantities.
+        ``what`` is the list of quantities to compute:
+        ``gamma_tensor.compute_sum([(2/5, 'ijklijkl'), (3/5, 'iijjkkll'])`` is equivalent to
+
+        .. math::
+
+            \\sum_{ijk}^{xyz} \\frac{2}{5}\\,\\sgg{ijkl}{ijkl} + \\frac{2}{5}\\,\\sgg{iijj}{kkll}.
+
+
+        :param what: what to compute ? list of tuple of the form (fraction, string of 8 char  [either i, j, k or l])
+        :type what: list
+        :rtype: float
+        """
+
+        def _sum(i, j, k, l):
+            r = 0
+
+            trans = {'i': i, 'j': j, 'k': k, 'l': l}
+            for f, c in what:
+                r += f * \
+                    self.components[tuple(trans[x] for x in c[0:4])] * \
+                    self.components[tuple(trans[x] for x in c[4:])]
+            return r
+
+        tmp = 0
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                for k in derivatives.COORDINATES_LIST:
+                    for l in derivatives.COORDINATES_LIST:
+                        tmp += _sum(i, j, k, l)
+        return tmp
+
+    def spherical_J0_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=0}|^2` contribution:
+
+        .. math::
+
+           |\\gamma_{J=0}|^2 = \\frac{1}{5} \\sum^{xyz}_{ijkl} \\sgg{iijj}{kllk}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 5 * self.compute_sum([(1, 'iijjkkll')])
+
+    def spherical_J1_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=1}|^2` contribution:
+
+        .. math::
+
+           |\\gamma_{J=1}|^2 = \\frac{1}{10} \\sum^{xyz}_{ijkl} 3\\,\\sgg{ijjk}{ikll} - 3\\,\\sgg{ijjk}{kill}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 10 * self.compute_sum([(3, 'ijjkikll'), (-3, 'ijjkkill')])
+
+    def spherical_J2a_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=2\\alpha}|^2` contribution:
+
+        .. math::
+
+            |\\gamma_{J=2\\alpha}|^2 =
+            \\frac{1}{42}\\,\\sum_{ijkl}^{xyz} 15\\,\\sgg{ijjk}{kill}+15\\,\\sgg{ijjk}{ikll}-10\\,\\sgg{iijj}{kllk}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 42 * self.compute_sum([(15, 'ijjkkill'), (15, 'ijjkikll'), (-10, 'iijjkllk')])
+
+    def spherical_J2b_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=2\\beta}|^2` contribution:
+
+        .. math::
+
+            |\\gamma_{J=2\\beta}|^2 = \\frac{1}{21} \\sum_{ijkl}^{xyz} 15\\,\\sgg{iijk}{ljlk}-5\\,\\sgg{iijj}{kllk}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 21 * self.compute_sum([(15, 'iijkljlk'), (-5, 'iijjkllk')])
+
+    def spherical_J2ab_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=2\\alpha\\beta}|^2` contribution:
+
+        .. math::
+
+            |\\gamma_{J=2\\alpha\\beta}|^2
+            =\\frac{1}{21}\\,\\sum_{ijkl}^{xyz} 2\\,\\sgg{iijj}{kllk}-6\\,\\sgg{iijk}{jllk}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 21 * self.compute_sum([(6, 'iijkjllk'), (2, 'iijjkllk')])
+
+    def spherical_J2_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=2}|^2` contribution:
+
+        .. math::
+
+            \\begin{align}
+            |\\gamma_{J=2}|^2 &=
+            |\\gamma_{J=2\\alpha}|^2 + |\\gamma_{J=2\\beta}|^2 + 2\\,|\\gamma_{J=2\\alpha\\beta}|^2 \\\\
+            &= \\frac{1}{14}\\,\\sum_{ijkl}^{xyz}
+            10\\,\\sgg{iijk}{ljlk}+5\\,\\sgg{ijjk}{kill}
+            +5\\,\\sgg{ijjk}{ikll}-8\\,\\sgg{iijk}{jllk}-4\\,\\sgg{iijj}{kllk}
+            \\end{align}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 14 * self.compute_sum([
+            (10, 'iijkljlk'), (5, 'ijjkkill'), (5, 'ijjkikll'), (-8, 'iijkjllk'), (-4, 'iijjkllk')])
+
+    def spherical_J3_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=3}|^2` contribution:
+
+        .. math::
+
+            |\\gamma_{J=3}|^2 = \\frac{1}{20} \\sum^{xyz}_{ijkl}\\left\\{
+            \\begin{array}{l}
+            15\\,\\gamma_{ijkl}^2+20\\,\\sgg{iijk}{jllk}+\\sgg{ijjk}{kill}\\\\
+            -10\\,\\sgg{iijk}{ljlk}-15\\,\\sgg{ijkl}{jikl}-11\\sgg{ijjk}{ikll}
+            \\end{array}
+            \\right\\}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 20 * self.compute_sum([
+            (15, 'ijklijkl'), (20, 'iijkjllk'),
+            (-10, 'iijkljlk'), (1, 'ijjkkill'), (-15, 'ijkljikl'), (-11, 'ijjkikll')])
+
+    def spherical_J4_contribution_squared(self):
+        """
+        Calculate the :math:`|\\gamma_{J=4}|^2` contribution:
+
+        .. math::
+
+            |\\gamma_{J=4}|^2 = \\frac{1}{140} \\sum^{xyz}_{ijkl}\\left\\{
+            \\begin{array}{l}
+            35\\,\\gamma_{ijkl}^2+105\\,\\sgg{ijkl}{jikl}+12\\,\\sgg{iijj}{kllk}\\\\
+            -60\\,\\sgg{iijk}{jllk}-30\\,\\sgg{iijk}{ljlk}-15\\sgg{ijjk}{ikll}-15\\sgg{ijjk}{kill}
+            \\end{array}
+            \\right\\}
+
+
+        :rtype: float
+        """
+
+        if not self.is_thg():
+            raise NotTHG(self.input_fields)
+
+        return 1 / 140 * self.compute_sum([
+            (35, 'ijklijkl'), (105, 'ijkljikl'),
+            (12, 'iijjkllk'), (-60, 'iijkjllk'), (-30, 'iijkljlk'), (-15, 'ijjkkill'), (-15, 'ijjkikll')])
+
+    def isotropic_contribution_squared(self, old_version=True):
         """Compute the square of the isotropic contribution
 
-        :param first_version: version assuming static limit
-        :type first_version: bool
+        :param old_version: Use the previous (with Kleinman's conditions) version
+        :type old_version: bool
         :rtype: float
         """
-
-        if not first_version:
-            raise NotImplementedError('full version!')
 
         if not self.is_thg():
             raise NotTHG(self.input_fields)
 
         tmp = 0
 
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        for l in derivatives.COORDINATES_LIST:
-                            tmp += 1 / 5 * self.components[i, i, j, j] * self.components[k, k, l, l]
+        if old_version:
+            for i in derivatives.COORDINATES_LIST:
+                for j in derivatives.COORDINATES_LIST:
+                        for k in derivatives.COORDINATES_LIST:
+                            for l in derivatives.COORDINATES_LIST:
+                                tmp += 1 / 5 * self.components[i, i, j, j] * self.components[k, k, l, l]
+        else:
+            tmp = self.spherical_J0_contribution_squared()
 
         return tmp
 
-    def quadrupolar_contribution_squared(self, first_version=True):
+    def quadrupolar_contribution_squared(self, old_version=True):
         """Compute the square of the quadrupolar contribution
 
-        :param first_version: version assuming static limit
-        :type first_version: bool
+        :param old_version: Use the previous (with Kleinman's conditions) version
+        :type old_version: bool
         :rtype: float
         """
-
-        if not first_version:
-            raise NotImplementedError('full version!')
 
         if not self.is_thg():
             raise NotTHG(self.input_fields)
 
         tmp = 0
 
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        for l in derivatives.COORDINATES_LIST:
-                            tmp += 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
-                            tmp -= 2 / 7 * self.components[i, i, j, j] * self.components[k, k, l, l]
+        if old_version:
+            for i in derivatives.COORDINATES_LIST:
+                for j in derivatives.COORDINATES_LIST:
+                        for k in derivatives.COORDINATES_LIST:
+                            for l in derivatives.COORDINATES_LIST:
+                                tmp += 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
+                                tmp -= 2 / 7 * self.components[i, i, j, j] * self.components[k, k, l, l]
+        else:
+            tmp = self.spherical_J2_contribution_squared()
 
         return tmp
 
-    def hexadecapolar_contribution_squared(self, first_version=True):
+    def hexadecapolar_contribution_squared(self, old_version=True):
         """Compute the square of the hexadecapolar (bless you!) contribution
 
-        :param first_version: version assuming static limit
-        :type first_version: bool
+        :param old_version: Use the previous (with Kleinman's conditions) version
+        :type old_version: bool
         :rtype: float
         """
-
-        if not first_version:
-            raise NotImplementedError('full version!')
 
         if not self.is_thg():
             raise NotTHG(self.input_fields)
 
         tmp = 0
 
-        for i in derivatives.COORDINATES_LIST:
-            for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        for l in derivatives.COORDINATES_LIST:
-                            tmp += self.components[i, j, k, l] ** 2
-                            tmp -= 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
-                            tmp += 3 / 35 * self.components[i, i, j, j] * self.components[k, k, l, l]
+        if old_version:
+            for i in derivatives.COORDINATES_LIST:
+                for j in derivatives.COORDINATES_LIST:
+                        for k in derivatives.COORDINATES_LIST:
+                            for l in derivatives.COORDINATES_LIST:
+                                tmp += self.components[i, j, k, l] ** 2
+                                tmp -= 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
+                                tmp += 3 / 35 * self.components[i, i, j, j] * self.components[k, k, l, l]
+        else:
+            tmp = self.spherical_J4_contribution_squared()
 
         return tmp
 
-    def isotropic_contribution(self, first_version=True):
+    def isotropic_contribution(self, old_version=True):
         """Compute the isotropic contribution
 
-        :param first_version: version assuming static limit
-        :type first_version: bool
+        :param old_version: Use the previous (with Kleinman's conditions) version
+        :type old_version: bool
         :rtype: float
         """
 
-        return math.sqrt(self.isotropic_contribution_squared(first_version=first_version))
+        return math.sqrt(self.isotropic_contribution_squared(old_version=old_version))
 
-    def quadrupolar_contribution(self, first_version=True):
+    def quadrupolar_contribution(self, old_version=True):
         """Compute the quadrupolar contribution
 
-        :param first_version: version assuming static limit
-        :type first_version: bool
+        :param old_version: Use the previous (with Kleinman's conditions) version
+        :type old_version: bool
         :rtype: float
         """
-        return math.sqrt(self.quadrupolar_contribution_squared(first_version=first_version))
+        return math.sqrt(self.quadrupolar_contribution_squared(old_version=old_version))
 
-    def hexadecapolar_contribution(self, first_version=True):
+    def hexadecapolar_contribution(self, old_version=True):
         """Compute the hexadecapolar contribution
 
-        :param first_version: version assuming static limit
-        :type first_version: bool
+        :param old_version: Use the previous (with Kleinman's conditions) version
+        :type old_version: bool
         :rtype: float
         """
 
-        return math.sqrt(self.hexadecapolar_contribution_squared(first_version=first_version))
+        return math.sqrt(self.hexadecapolar_contribution_squared(old_version=old_version))
 
     def to_string(self, threshold=1e-5, disable_extras=False, dipole=None, **kwargs):
         """Rewritten to add information
@@ -1185,29 +1361,37 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
             para = self.gamma_parallel()
             perp = self.gamma_perpendicular()
 
-            if sum(self.input_fields) == 3 or self.frequency == .0 or self.frequency == 'static':  # THG
+            r += 'gamma_||   {: .5e}\n'.format(para)
+            r += 'gamma_per  {: .5e}\n'.format(perp)
+            r += 'r          {: .3f}\n'.format(para / perp)
+
+            if self.is_thg():  # THG
                 G2zzzz = self.gamma_squared_zzzz()
                 G2zxxx = self.gamma_squared_zxxx()
 
-                GJ0 = self.isotropic_contribution(first_version=True)
-                GJ2 = self.quadrupolar_contribution(first_version=True)
-                GJ4 = self.hexadecapolar_contribution(first_version=True)
+                GJ0 = self.isotropic_contribution(old_version=True)
+                GJ2 = self.quadrupolar_contribution(old_version=True)
+                GJ4 = self.hexadecapolar_contribution(old_version=True)
 
-                r += '<G2zzzz>  {: .5e}\n'.format(G2zzzz)
-                r += '<G2zxxx>  {: .5e}\n'.format(G2zxxx)
-                r += 'gamma_THS {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
-                r += 'DR        {: .3f}\n'.format(G2zzzz / G2zxxx)
-                r += 'DR\'      {: .3f}\n'.format(28 / 3 * (GJ0 / GJ2) ** 2 + 16 / 3)
-                r += 'G|J=0|    {: .5e}\n'.format(GJ0)
-                r += 'G|J=2|    {: .5e}\n'.format(GJ2)
-                r += 'G|J=4|    {: .5e}\n'.format(GJ4)
+                r += '<G2zzzz>   {: .5e}\n'.format(G2zzzz)
+                r += '<G2zxxx>   {: .5e}\n'.format(G2zxxx)
+                r += 'gamma_THS  {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
+                r += 'DR         {: .3f}\n'.format(G2zzzz / G2zxxx)
+                r += 'G|J=0|     {: .5e}\n'.format(GJ0)
+                r += 'G|J=2|     {: .5e}\n'.format(GJ2)
+                r += 'G|J=4|     {: .5e}\n'.format(GJ4)
 
                 with suppress(ValueError):
-                    r += 'rho_0/2   {: .5e}\n'.format(GJ0 / GJ2)
-                    r += 'rho_4/2   {: .5e}\n'.format(GJ4 / GJ2)
+                    r += 'rho_0/2    {: .5e}\n'.format(GJ0 / GJ2)
+                    r += 'rho_4/2    {: .5e}\n'.format(GJ4 / GJ2)
 
-            r += 'gamma_||  {: .5e}\n'.format(para)
-            r += 'gamma_per {: .5e}\n'.format(perp)
-            r += 'r         {: .3f}\n'.format(para / perp)
+                r += 'G|J=0|*    {: .5e}\n'.format(math.sqrt(self.spherical_J0_contribution_squared()))
+                r += 'G|J=1|*    {: .5e}\n'.format(math.sqrt(self.spherical_J1_contribution_squared()))
+                r += 'G|J=2|*    {: .5e}\n'.format(math.sqrt(self.spherical_J2_contribution_squared()))
+                r += 'G|J=3|*    {: .5e}\n'.format(math.sqrt(self.spherical_J3_contribution_squared()))
+                r += 'G|J=4|*    {: .5e}\n'.format(math.sqrt(self.spherical_J4_contribution_squared()))
+                r += 'B²|J=2a|*  {: .5e}\n'.format(self.spherical_J2a_contribution_squared())
+                r += 'G²|J=2b|*  {: .5e}\n'.format(self.spherical_J2b_contribution_squared())
+                r += 'G²|J=2ab|* {: .5e}\n'.format(self.spherical_J2ab_contribution_squared())
 
         return r

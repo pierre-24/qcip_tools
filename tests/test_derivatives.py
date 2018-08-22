@@ -543,24 +543,26 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
 
-            GJ4 = ng.hexadecapolar_contribution_squared(first_version=True)
-            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
-            GJ0 = ng.isotropic_contribution_squared()
-
-            rho_2 = GJ2 / GJ0
-            rho_4 = GJ4 / GJ0
-            rho_0m = GJ0 / GJ2
-            rho_4m = GJ4 / GJ2
-
-            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
-            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
             self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
-            self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
+                ng.isotropic_contribution_squared(old_version=True),
+                ng.isotropic_contribution_squared(old_version=False),
+                places=4
+            )
 
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx(), places=4)
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz(), places=4)
+            self.assertAlmostEqual(
+                ng.quadrupolar_contribution_squared(old_version=True),
+                ng.quadrupolar_contribution_squared(old_version=False),
+                places=4
+            )
+
+            self.assertAlmostEqual(
+                ng.hexadecapolar_contribution_squared(old_version=True),
+                ng.hexadecapolar_contribution_squared(old_version=False),
+                places=4
+            )
+
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J3_contribution_squared(), .0, places=3)
 
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
@@ -608,24 +610,86 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
 
-            GJ4 = ng.hexadecapolar_contribution_squared(first_version=True)
-            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
-            GJ0 = ng.isotropic_contribution_squared()
-
-            rho_2 = GJ2 / GJ0
-            rho_4 = GJ4 / GJ0
-            rho_0m = GJ0 / GJ2
-            rho_4m = GJ4 / GJ2
-
-            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
-            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
             self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
-            self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
+                ng.isotropic_contribution_squared(old_version=True),
+                ng.isotropic_contribution_squared(old_version=False),
+                places=4
+            )
 
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx(), places=4)
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz(), places=4)
+            self.assertAlmostEqual(
+                ng.hexadecapolar_contribution_squared(old_version=True),
+                ng.hexadecapolar_contribution_squared(old_version=False),
+                places=4
+            )
+
+            self.assertAlmostEqual(ng.spherical_J2_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J3_contribution_squared(), .0, places=3)
+
+        # water, 514.5nm, CCSD/aug-cc-pVDZ (dalton)
+        gamma = numpy.array([
+            [[[-2.159784e+04, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -1.757685e+04, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -1.229660e+04]],
+             [[0.000000e+00, -1.757685e+04, 0.000000e+00],
+              [-1.757685e+04, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00]],
+             [[0.000000e+00, 0.000000e+00, -1.229660e+04],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [-1.229660e+04, 0.000000e+00, 0.000000e+00]]],
+            [[[0.000000e+00, -7.928857e+02, 0.000000e+00],
+              [-7.928857e+02, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00]],
+             [[-7.928857e+02, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -8.872187e+02, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -6.652815e+02]],
+             [[0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -6.652815e+02],
+              [0.000000e+00, -6.652815e+02, 0.000000e+00]]],
+            [[[0.000000e+00, 0.000000e+00, -8.213404e+02],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [-8.213404e+02, 0.000000e+00, 0.000000e+00]],
+             [[0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -1.166566e+03],
+              [0.000000e+00, -1.166566e+03, 0.000000e+00]],
+             [[-8.213404e+02, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -1.166566e+03, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -2.396609e+03]]]
+        ])
+
+        orig_g = derivatives_e.SecondHyperpolarizabilityTensor(tensor=gamma)
+
+        for angles in angles_set:
+            new_gamma = qcip_math.tensor_rotate(gamma, *angles)
+            ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
+
+            self.assertAlmostEqual(ng.gamma_parallel(), orig_g.gamma_parallel(), places=3)
+            self.assertAlmostEqual(ng.gamma_perpendicular(), orig_g.gamma_perpendicular(), places=3)
+            self.assertAlmostEqual(ng.gamma_kerr(), orig_g.gamma_kerr(), places=3)
+
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz(), places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx(), places=3)
+            self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
+            self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
+
+            self.assertAlmostEqual(
+                ng.isotropic_contribution_squared(old_version=True),
+                ng.isotropic_contribution_squared(old_version=False),
+                places=3
+            )  # Kleinman's conditions does not change anything here!
+
+            self.assertNotEqual(
+                ng.quadrupolar_contribution_squared(old_version=True),
+                ng.quadrupolar_contribution_squared(old_version=False)
+            )
+
+            self.assertNotEqual(
+                ng.hexadecapolar_contribution_squared(old_version=True),
+                ng.hexadecapolar_contribution_squared(old_version=False)
+            )
+
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
+            self.assertNotEqual(ng.spherical_J3_contribution_squared(), .0)
 
         # test conversion
         self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
