@@ -697,7 +697,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            \\beta_i = \\frac{1}{3} \\sum_j \\beta_{ijj} + \\beta_{jij} + \\beta_{jii}
+            \\beta_i = \\frac{1}{3} \\sum_j \\beta_{ijj} + \\beta_{jij} + \\beta_{jji}
 
         :rtype: numpy.ndarray
         """
@@ -822,7 +822,9 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                     r += 'rho_3/1    {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
 
                 r += 'B|J=1|*    {: .5e}\n'.format(math.sqrt(self.spherical_J1_contribution_squared()))
-                r += 'B|J=2|*    {: .5e}\n'.format(math.sqrt(self.spherical_J2_contribution_squared()))
+
+                with suppress(ValueError):
+                    r += 'B|J=2|*    {: .5e}\n'.format(math.sqrt(self.spherical_J2_contribution_squared()))
                 r += 'B|J=3|*    {: .5e}\n'.format(math.sqrt(self.spherical_J3_contribution_squared()))
                 r += 'B²|J=1a|*  {: .5e}\n'.format(self.spherical_J1a_contribution_squared())
                 r += 'B²|J=1b|*  {: .5e}\n'.format(self.spherical_J1b_contribution_squared())
