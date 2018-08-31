@@ -497,7 +497,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J1a_contribution_squared(self):
         """
-        Calculate the :math:`|\\beta_{J=1\\alpha}|^2` contribution
+        Compute the :math:`|\\beta_{J=1\\alpha}|^2` contribution
 
        .. math::
 
@@ -513,7 +513,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J1b_contribution_squared(self):
         """
-        Calculate the :math:`|\\beta_{J=1\\beta}|^2` contribution
+        Compute the :math:`|\\beta_{J=1\\beta}|^2` contribution
 
        .. math::
 
@@ -529,7 +529,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J1ab_contribution_squared(self):
         """
-        Calculate the :math:`|\\beta_{J=1\\alpha\\beta}|^2` contribution
+        Compute the :math:`|\\beta_{J=1\\alpha\\beta}|^2` contribution
 
        .. math::
 
@@ -545,7 +545,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J1_contribution_squared(self):
         """
-        Calculate the :math:`|\\beta_{J=1}|^2` contribution
+        Compute the :math:`|\\beta_{J=1}|^2` contribution
 
        .. math::
 
@@ -564,7 +564,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J2_contribution_squared(self):
         """
-        Calculate the :math:`|\\beta_{J=2}|^2` contribution
+        Compute the :math:`|\\beta_{J=2}|^2` contribution
 
        .. math::
 
@@ -582,7 +582,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J3_contribution_squared(self):
         """
-        Calculate the :math:`|\\beta_{J=3}|^2` contribution
+        Compute the :math:`|\\beta_{J=3}|^2` contribution
 
        .. math::
 
@@ -600,7 +600,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             (5, 'ijkijk'), (10, 'ijkjik'), (-1, 'ijjikk'), (-4, 'iijjkk'), (-4, 'iijkjk')])
 
     def dipolar_contribution_squared(self, old_version=True):
-        """Calculate the square of the dipolar contribution
+        """Compute the square of the dipolar contribution
 
         :param old_version: Use the previous (with Kleinman's conditions) version
         :type old_version: bool
@@ -628,7 +628,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         return tmp
 
     def octupolar_contribution_squared(self, old_version=True):
-        """Calculate the square of the octupolar contribution
+        """Compute the square of the octupolar contribution
 
         :param old_version: Use the previous (with Kleinman's conditions) version
         :type old_version: bool
@@ -1086,7 +1086,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J0_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=0}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=0}|^2` contribution:
 
         .. math::
 
@@ -1103,7 +1103,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J1_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=1}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=1}|^2` contribution:
 
         .. math::
 
@@ -1120,7 +1120,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J2a_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=2\\alpha}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=2\\alpha}|^2` contribution:
 
         .. math::
 
@@ -1138,7 +1138,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J2b_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=2\\beta}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=2\\beta}|^2` contribution:
 
         .. math::
 
@@ -1155,7 +1155,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J2ab_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=2\\alpha\\beta}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=2\\alpha\\beta}|^2` contribution:
 
         .. math::
 
@@ -1169,11 +1169,11 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_thg():
             raise NotTHG(self.input_fields)
 
-        return 1 / 21 * self.compute_sum([(6, 'iijkjllk'), (2, 'iijjkllk')])
+        return 1 / 21 * self.compute_sum([(-6, 'iijkjllk'), (2, 'iijjkllk')])
 
     def spherical_J2_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=2}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=2}|^2` contribution:
 
         .. math::
 
@@ -1197,7 +1197,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J3_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=3}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=3}|^2` contribution:
 
         .. math::
 
@@ -1221,7 +1221,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
     def spherical_J4_contribution_squared(self):
         """
-        Calculate the :math:`|\\gamma_{J=4}|^2` contribution:
+        Compute the :math:`|\\gamma_{J=4}|^2` contribution:
 
         .. math::
 
