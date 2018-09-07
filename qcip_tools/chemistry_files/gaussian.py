@@ -419,7 +419,8 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
             a = atom.Atom(
                 atomic_number=c,
                 position=[a * quantities.AuToAngstrom for a in atoms_coordinates[index * 3:index * 3 + 3]])
-            a.mass = weights[index]
+            if weights[index] > .0:  # for a reason that I don't get, fchk files sometimes contains only zeroes
+                a.mass = weights[index]
             self.molecule.insert(a)
 
         self.molecule.charge = self.get('Charge')
