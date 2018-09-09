@@ -1324,9 +1324,6 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
         :rtype: dict
         """
 
-        if self.data_per_record != 1:
-            raise ValueError(self.data_per_record)
-
         if len(bounding_sets) == 0:
             return {}
 
