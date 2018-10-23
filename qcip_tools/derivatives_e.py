@@ -2,7 +2,6 @@ import itertools
 import math
 import collections
 from scipy import constants
-from contextlib import suppress
 
 import numpy
 from qcip_tools import derivatives, quantities
@@ -150,6 +149,13 @@ def convert_energy_to(e, unit):
                (e * quantities.convert(quantities.ureg.hartree, quantities.ureg.joule)) * 1e9
 
 
+def _sqrt_or_neg_sqrt(i):
+    try:
+        return math.sqrt(i)
+    except ValueError:
+        return -math.sqrt(-i)
+
+
 class BaseElectricalDerivativeTensor(derivatives.Tensor):
     """Base for all derivatives of the energy with respect to the electric field.
 
@@ -290,10 +296,7 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
         for i in range(3):
             for j in range(3):
                 tmp += 3 * self.components[i, j] ** 2 - self.components[i, i] * self.components[j, j]
-        try:
-            return math.sqrt(.5 * tmp)
-        except ValueError:
-            return 0.0
+        return _sqrt_or_neg_sqrt(.5 * tmp)
 
     def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
         """Rewritten to add information
@@ -450,7 +453,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
-        return math.sqrt(self.beta_squared_zxx() + self.beta_squared_zzz())
+        return _sqrt_or_neg_sqrt(self.beta_squared_zxx() + self.beta_squared_zzz())
 
     def depolarization_ratio(self):
         """Hyper-Rayleigh depolarization ratio:
@@ -664,7 +667,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
-        return math.sqrt(self.dipolar_contribution_squared(old_version=old_version))
+        return _sqrt_or_neg_sqrt(self.dipolar_contribution_squared(old_version=old_version))
 
     def octupolar_contribution(self, old_version=True):
         """
@@ -674,21 +677,21 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
-        return math.sqrt(self.octupolar_contribution_squared(old_version=old_version))
+        return _sqrt_or_neg_sqrt(self.octupolar_contribution_squared(old_version=old_version))
 
     def nonlinear_anisotropy(self, old_version=True):
         """Compute the nonlinear anisotropy:
 
         .. math::
 
-            \\rho = \\frac{|\\beta_{J=3}|}{|\\beta_{J=1}|}
+            \\rho_{3/1}^2 = \\frac{|\\beta_{J=3}|^2}{|\\beta_{J=1}|^2}
 
         :param old_version: Use the previous (with Kleinman's conditions) version
         :type old_version: bool
         :rtype: float
         """
 
-        return math.sqrt(
+        return _sqrt_or_neg_sqrt(
             self.octupolar_contribution_squared(old_version=old_version) /
             self.dipolar_contribution_squared(old_version=old_version))
 
@@ -808,27 +811,26 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             if self.is_shg():  # SHG
                 B2zzz = self.beta_squared_zzz()
                 B2zxx = self.beta_squared_zxx()
-                BJ1 = self.dipolar_contribution(old_version=True)
-                BJ3 = self.octupolar_contribution(old_version=True)
 
                 r += '<B2zzz>    {: .5e}\n'.format(B2zzz)
                 r += '<B2zxx>    {: .5e}\n'.format(B2zxx)
-                r += 'beta_HRS   {: .5e}\n'.format(math.sqrt(B2zxx + B2zzz))
+                r += 'beta_HRS   {: .5e}\n'.format(_sqrt_or_neg_sqrt(B2zxx + B2zzz))
                 r += 'DR         {: .3f}\n'.format(B2zzz / B2zxx)
+
+                # "old" version
+                BJ1 = self.dipolar_contribution(old_version=True)
+                BJ3 = self.octupolar_contribution(old_version=True)
                 r += 'B|J=1|     {: .5e}\n'.format(BJ1)
                 r += 'B|J=3|     {: .5e}\n'.format(BJ3)
+                r += 'rho_3/1    {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
 
-                with suppress(ValueError):
-                    r += 'rho_3/1    {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
-
-                r += 'B|J=1|*    {: .5e}\n'.format(math.sqrt(self.spherical_J1_contribution_squared()))
-
-                with suppress(ValueError):
-                    r += 'B|J=2|*    {: .5e}\n'.format(math.sqrt(self.spherical_J2_contribution_squared()))
-                r += 'B|J=3|*    {: .5e}\n'.format(math.sqrt(self.spherical_J3_contribution_squared()))
-                r += 'B²|J=1a|*  {: .5e}\n'.format(self.spherical_J1a_contribution_squared())
-                r += 'B²|J=1b|*  {: .5e}\n'.format(self.spherical_J1b_contribution_squared())
-                r += 'B²|J=1ab|* {: .5e}\n'.format(self.spherical_J1ab_contribution_squared())
+                # new version:
+                r += 'B|J=1a|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1a_contribution_squared()))
+                r += 'B|J=1b|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1b_contribution_squared()))
+                r += 'B|J=1ab|*  {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1ab_contribution_squared()))
+                r += 'B|J=1|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared()))
+                r += 'B|J=2|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared()))
+                r += 'B|J=3|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared()))
 
         return r
 
@@ -1037,7 +1039,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
-        return math.sqrt(self.gamma_squared_zzzz() + self.gamma_squared_zxxx())
+        return _sqrt_or_neg_sqrt(self.gamma_squared_zzzz() + self.gamma_squared_zxxx())
 
     def depolarization_ratio(self):
         """Compute the depolarization ratio:
@@ -1326,7 +1328,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
-        return math.sqrt(self.isotropic_contribution_squared(old_version=old_version))
+        return _sqrt_or_neg_sqrt(self.isotropic_contribution_squared(old_version=old_version))
 
     def quadrupolar_contribution(self, old_version=True):
         """Compute the quadrupolar contribution
@@ -1335,7 +1337,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :type old_version: bool
         :rtype: float
         """
-        return math.sqrt(self.quadrupolar_contribution_squared(old_version=old_version))
+        return _sqrt_or_neg_sqrt(self.quadrupolar_contribution_squared(old_version=old_version))
 
     def hexadecapolar_contribution(self, old_version=True):
         """Compute the hexadecapolar contribution
@@ -1345,7 +1347,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         :rtype: float
         """
 
-        return math.sqrt(self.hexadecapolar_contribution_squared(old_version=old_version))
+        return _sqrt_or_neg_sqrt(self.hexadecapolar_contribution_squared(old_version=old_version))
 
     def to_string(self, threshold=1e-5, disable_extras=False, dipole=None, **kwargs):
         """Rewritten to add information
@@ -1365,35 +1367,36 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
             r += 'gamma_||   {: .5e}\n'.format(para)
             r += 'gamma_per  {: .5e}\n'.format(perp)
-            r += 'r          {: .3f}\n'.format(para / perp)
+            r += 'r (||/per) {: .3f}\n'.format(para / perp)
 
             if self.is_thg():  # THG
                 G2zzzz = self.gamma_squared_zzzz()
                 G2zxxx = self.gamma_squared_zxxx()
 
+                r += '<G2zzzz>   {: .5e}\n'.format(G2zzzz)
+                r += '<G2zxxx>   {: .5e}\n'.format(G2zxxx)
+                r += 'gamma_THS  {: .5e}\n'.format(_sqrt_or_neg_sqrt(G2zzzz + G2zxxx))
+                r += 'DR         {: .3f}\n'.format(G2zzzz / G2zxxx)
+
+                # "old" definition
                 GJ0 = self.isotropic_contribution(old_version=True)
                 GJ2 = self.quadrupolar_contribution(old_version=True)
                 GJ4 = self.hexadecapolar_contribution(old_version=True)
 
-                r += '<G2zzzz>   {: .5e}\n'.format(G2zzzz)
-                r += '<G2zxxx>   {: .5e}\n'.format(G2zxxx)
-                r += 'gamma_THS  {: .5e}\n'.format(math.sqrt(G2zzzz + G2zxxx))
-                r += 'DR         {: .3f}\n'.format(G2zzzz / G2zxxx)
                 r += 'G|J=0|     {: .5e}\n'.format(GJ0)
                 r += 'G|J=2|     {: .5e}\n'.format(GJ2)
                 r += 'G|J=4|     {: .5e}\n'.format(GJ4)
+                r += 'rho_0/2    {: .5e}\n'.format(GJ0 / GJ2 if GJ2 != .0 else float('inf'))
+                r += 'rho_4/2    {: .5e}\n'.format(GJ4 / GJ2 if GJ2 != .0 else float('inf'))
 
-                with suppress(ValueError):
-                    r += 'rho_0/2    {: .5e}\n'.format(GJ0 / GJ2)
-                    r += 'rho_4/2    {: .5e}\n'.format(GJ4 / GJ2)
-
-                r += 'G|J=0|*    {: .5e}\n'.format(math.sqrt(self.spherical_J0_contribution_squared()))
-                r += 'G|J=1|*    {: .5e}\n'.format(math.sqrt(self.spherical_J1_contribution_squared()))
-                r += 'G|J=2|*    {: .5e}\n'.format(math.sqrt(self.spherical_J2_contribution_squared()))
-                r += 'G|J=3|*    {: .5e}\n'.format(math.sqrt(self.spherical_J3_contribution_squared()))
-                r += 'G|J=4|*    {: .5e}\n'.format(math.sqrt(self.spherical_J4_contribution_squared()))
-                r += 'B²|J=2a|*  {: .5e}\n'.format(self.spherical_J2a_contribution_squared())
-                r += 'G²|J=2b|*  {: .5e}\n'.format(self.spherical_J2b_contribution_squared())
-                r += 'G²|J=2ab|* {: .5e}\n'.format(self.spherical_J2ab_contribution_squared())
+                # new definition
+                r += 'G|J=0|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J0_contribution_squared()))
+                r += 'G|J=1|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared()))
+                r += 'G|J=2a|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2a_contribution_squared()))
+                r += 'G|J=2b|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2b_contribution_squared()))
+                r += 'G|J=2ab|*  {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2ab_contribution_squared()))
+                r += 'G|J=2|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared()))
+                r += 'G|J=3|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared()))
+                r += 'G|J=4|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J4_contribution_squared()))
 
         return r
