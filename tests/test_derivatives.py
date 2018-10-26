@@ -712,6 +712,19 @@ class DerivativesTestCase(QcipToolsTestCase):
         self.assertEqual(g.representation.representation(), 'dDDd')  # reordering
         self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
 
+    def test_electric_responses(self):
+        """Check responses to electric field"""
+
+        b_tensor = numpy.zeros((3, 3, 3))
+        b_tensor[0, 0, 0] = 1.
+        b_tensor[1, 1, 1] = 2.
+        b_tensor[2, 2, 2] = 3.
+
+        b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=b_tensor)
+        self.assertArraysAlmostEqual(b.response_to_electric_field([1, 0, 0]), [1., 0, 0])
+        self.assertArraysAlmostEqual(b.response_to_electric_field([0, 1, 0]), [0, 2., 0])
+        self.assertArraysAlmostEqual(b.response_to_electric_field([0, 0, 1]), [0, 0, 3.])
+
     def test_geometrical_derivatives(self):
         """Test geometrical ones.
 

@@ -235,6 +235,32 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
 
         return self.representation.order()
 
+    def response_to_electric_field(self, field):
+        """Response to an electric field, located at the (0, 0, 0) position and for which the direction is given
+        by ``field``.
+
+        .. math::
+
+            E_i = \\sum_{ij\\ldot}^{x,y,z} \chi_{ij\\ldots}\\,F_i\,F_j\\,\\ldots
+
+        :param field: The electric field
+        :type field: numpy.array
+        :rtype: numpy.array
+        """
+        if len(field) != 3:
+            raise ValueError('your field should have 3 coordinates')
+
+        response = numpy.zeros(3)
+
+        for i in range(3):
+            for set in itertools.product(range(3), repeat=self.rank() - 1):
+                tmp = self.components[tuple([i] + list(set))] * field[i]
+                for j in set:
+                    tmp *= field[j]
+                response[i] += tmp
+
+        return response
+
 
 class ElectricDipole(BaseElectricalDerivativeTensor):
     """Dipole moment, commonly written :math:`\\mu`."""
@@ -490,6 +516,10 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                     self.components[tuple(trans[x] for x in c[0:3])] * \
                     self.components[tuple(trans[x] for x in c[3:])]
             return r
+
+        for _, c in what:
+            if len(c) != 6:
+                raise Exception('not 6 characters string')
 
         tmp = 0
         for i in derivatives.COORDINATES_LIST:
@@ -798,11 +828,11 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 r += '({})\n\n'.format(PHENOMENON[self.representation.representation()])
 
             beta_vector = self.beta_vector()
-            r += '||B||     {: .5e}\n'.format(numpy.linalg.norm(beta_vector))
+            r += '||B||      {: .5e}\n'.format(numpy.linalg.norm(beta_vector))
 
             if dipole is not None:
-                r += 'B_||      {: .5e}\n'.format(self.beta_parallel(dipole))
-                r += 'theta     {: .3f}°\n'.format(numpy.rad2deg(math.acos(
+                r += 'B_||       {: .5e}\n'.format(self.beta_parallel(dipole))
+                r += 'theta      {: .3f}°\n'.format(numpy.rad2deg(math.acos(
                     numpy.dot(dipole, beta_vector) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(beta_vector)))))
 
                 if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
@@ -1077,6 +1107,10 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
                     self.components[tuple(trans[x] for x in c[0:4])] * \
                     self.components[tuple(trans[x] for x in c[4:])]
             return r
+
+        for _, c in what:
+            if len(c) != 8:
+                raise Exception('not 8 characters string')
 
         tmp = 0
         for i in derivatives.COORDINATES_LIST:
