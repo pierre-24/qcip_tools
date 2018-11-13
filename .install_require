@@ -1,7 +1,6 @@
-numpy>=1.14,<1.15
-scipy>=1.0,<1.1
-pint>=0.8,<0.9
-requests>=2.19,<2.20
-beautifulsoup4 == 4.6.0
-h5py==2.8.0
-setuptools>=39.0,<40.0
+numpy>=1.14
+scipy>=1.0
+pint>=0.8
+requests>=2.19
+beautifulsoup4>=4.6.0
+h5py>=2.8.0

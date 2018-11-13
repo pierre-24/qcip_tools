@@ -12,6 +12,7 @@
 + Correct charge transfert (!48)
 + Upgrade to the latest version of h5py, remove warning (!50)
 + Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants, !51)
++ Use pipenv (!52)
 
 ## Version 0.5
 

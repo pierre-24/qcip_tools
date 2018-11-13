@@ -9,7 +9,7 @@ help:
 	@echo "  help                        to get this help"
 
 init:
-	pipenv install --dev
+	pipenv install --dev --ignore-pipfile
 
 lint:
 	pipenv run flake8 qcip_tools tests --max-line-length=120 --ignore=N802
