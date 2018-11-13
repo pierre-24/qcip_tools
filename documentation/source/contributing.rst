@@ -37,8 +37,8 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
     Since ``qcip_tools`` now rely on `pipenv <https://pipenv.readthedocs.io>`_, the workflow is currently the following :
 
     1. Normal installation use ``pipenv install --dev --ignore-pipfile`` (``make init``)
-    2. To update the dependencies from upstream, ``pipenv sync``.
-    3. To update the ``Pipfile.lock`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pipenv lock``.
+    2. To update the dependencies from upstream, ``pipenv sync --dev``  (``make sync``).
+    3. To update the ``Pipfile.lock`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pipenv lock`` (followed by ``make sync`` on the dev's machine).
 
 Licence
 -------
