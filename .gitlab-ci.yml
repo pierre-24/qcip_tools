@@ -4,7 +4,7 @@ before_script:
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo "$SSH_SERVER_HOSTKEYS" > ~/.ssh/known_hosts'
   - pip3 install pipenv
-  - make install-dependencies
+  - pipenv install --dev --ignore-pipfile # "deterministic build"
 
 test_package:
   tags:
