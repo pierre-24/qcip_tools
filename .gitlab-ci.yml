@@ -10,7 +10,7 @@ test_package:
   tags:
     - python-numpy
   script:
-    - make tests
+    - make test
     - make lint
 
 make-doc:
