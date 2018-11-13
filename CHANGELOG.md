@@ -11,6 +11,7 @@
 + Upgrade numpy and scipy version, remove matplotlib
 + Correct charge transfert (!48)
 + Upgrade to the latest version of h5py, remove warning (!50)
++ Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants, !51)
 
 ## Version 0.5
 

@@ -243,6 +243,32 @@ class DerivativesTestCase(QcipToolsTestCase):
         with self.assertRaises(Exception):
             derivatives.Tensor('N')  # no dof
 
+    def test_sum(self):
+        """Just test that the explicit sum and the shorthand gives the same results
+        """
+
+        beta_tensor = factories.FakeFirstHyperpolarizabilityTensor(octupolar_factor=2)
+
+        # compute explicit J=3 contribution of beta tensor
+        tmp = .0
+        for i in derivatives.COORDINATES_LIST:
+            for j in derivatives.COORDINATES_LIST:
+                for k in derivatives.COORDINATES_LIST:
+                    tmp -= 1 / 15 * beta_tensor.components[i, j, j] * beta_tensor.components[i, k, k]
+                    tmp -= 4 / 15 * beta_tensor.components[i, i, j] * beta_tensor.components[j, k, k]
+                    tmp -= 4 / 15 * beta_tensor.components[i, i, j] * beta_tensor.components[k, j, k]
+                    tmp += 5 / 15 * beta_tensor.components[i, j, k] ** 2
+                    tmp += 10 / 15 * beta_tensor.components[i, j, k] * beta_tensor.components[j, i, k]
+
+        # now, with shorthand:
+        self.assertEqual(tmp, 1 / 15 * beta_tensor.compute_sum([
+            (5, 'ijkijk'),
+            (10, 'ijkjik'),
+            (-1, 'ijjikk'),
+            (-4, 'iijkjk'),
+            (-4, 'iijjkk')
+        ]))
+
     def test_electrical_derivatives_tensors(self):
         """Test the objects in derivatives_e.py
 
@@ -308,11 +334,20 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.depolarization_ratio(), 3.4320, places=3)
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 167.0257, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), 99.3520, places=3)
-            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.2966, places=3)
 
             self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
             self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
+
+            # check that new and old version are equal
+            self.assertAlmostEqual(
+                nb.octupolar_contribution_squared(old_version=True),
+                nb.octupolar_contribution_squared(old_version=False),
+                places=3)
+            self.assertAlmostEqual(
+                nb.dipolar_contribution_squared(old_version=True),
+                nb.dipolar_contribution_squared(old_version=False),
+                places=3)
 
         # static NH3, HF/d-aug-cc-pVDZ (Gaussian)
         dipole = derivatives_e.ElectricDipole(dipole=[.0, .0, 0.625899])
@@ -360,13 +395,21 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.beta_squared_zxx(), 19.8385, places=3)
             self.assertAlmostEqual(nb.beta_hrs(), 9.1917, places=3)
             self.assertAlmostEqual(nb.depolarization_ratio(), 3.2587, places=3)
+
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 398.6438, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), 209.3432, places=3)
-            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
             self.assertAlmostEqual(nb.nonlinear_anisotropy(), 1.3799, places=3)
+            self.assertAlmostEqual(nb.spherical_J2_contribution_squared(), .0, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
+            # check that new and old version are equal
+            self.assertAlmostEqual(
+                nb.octupolar_contribution_squared(old_version=True),
+                nb.octupolar_contribution_squared(old_version=False),
+                places=3)
+            self.assertAlmostEqual(
+                nb.dipolar_contribution_squared(old_version=True),
+                nb.dipolar_contribution_squared(old_version=False),
+                places=3)
 
         # static CH4, HF/d-aug-cc-pVDZ (Gaussian)
         alpha = numpy.array(
@@ -402,12 +445,20 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.beta_squared_zxx(), 31.5975, places=3)
             self.assertAlmostEqual(nb.beta_hrs(), 8.8878, places=3)
             self.assertAlmostEqual(nb.depolarization_ratio(), 1.5, places=3)
+
             self.assertAlmostEqual(nb.octupolar_contribution_squared(), 829.4336, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(), .0, places=3)
-            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(nb.spherical_J2_contribution_squared(), .0, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
+            # check that new and old version are equal
+            self.assertAlmostEqual(
+                nb.octupolar_contribution_squared(old_version=True),
+                nb.octupolar_contribution_squared(old_version=False),
+                places=3)
+            self.assertAlmostEqual(
+                nb.dipolar_contribution_squared(old_version=True),
+                nb.dipolar_contribution_squared(old_version=False),
+                places=3)
 
         # ... since CH4 has no dipole moment, the rest of the properties failed ;)
 
@@ -426,20 +477,25 @@ class DerivativesTestCase(QcipToolsTestCase):
 
         for angles in angles_set:
             new_beta = qcip_math.tensor_rotate(beta, *angles)
-            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta)
+            nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta, frequency='911.3nm')
 
             # Values obtained directly from the contribution matrices
             self.assertAlmostEqual(nb.octupolar_contribution_squared(old_version=False), 123.3727, places=3)
-            # self.assertAlmostEqual(nb.dipolar_contribution_squared(), 1367.5055 + 1.2128, places=3)
-            self.assertAlmostEqual(nb.quadrupolar_contribution_squared(old_version=False), 1.9108, places=3)
+            self.assertAlmostEqual(nb.dipolar_contribution_squared(old_version=False), 1276.4387, places=3)
+            self.assertAlmostEqual(nb.spherical_J2_contribution_squared(), 1.9108, places=3)  # see ? There is a J=2 !
 
             self.assertAlmostEqual(nb.beta_squared_zzz(), 280.551, places=3)
             self.assertAlmostEqual(nb.beta_squared_zxx(), 31.304, places=3)
             self.assertAlmostEqual(nb.beta_hrs(), 17.659, places=3)
             self.assertAlmostEqual(nb.depolarization_ratio(), 8.962, places=3)
 
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(0), nb.beta_squared_zxx(), places=4)
-            self.assertAlmostEqual(nb.polarization_angle_dependant_intensity(90), nb.beta_squared_zzz(), places=4)
+            # check that new and old version are NOT (!) equal
+            self.assertNotEqual(
+                nb.octupolar_contribution_squared(old_version=True),
+                nb.octupolar_contribution_squared(old_version=False))
+            self.assertNotEqual(
+                nb.dipolar_contribution_squared(old_version=True),
+                nb.dipolar_contribution_squared(old_version=False))
 
         # static CH2Cl2, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array(
@@ -487,24 +543,26 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
 
-            GJ4 = ng.hexadecapolar_contribution_squared(first_version=True)
-            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
-            GJ0 = ng.isotropic_contribution_squared()
-
-            rho_2 = GJ2 / GJ0
-            rho_4 = GJ4 / GJ0
-            rho_0m = GJ0 / GJ2
-            rho_4m = GJ4 / GJ2
-
-            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
-            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
             self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
-            self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
+                ng.isotropic_contribution_squared(old_version=True),
+                ng.isotropic_contribution_squared(old_version=False),
+                places=4
+            )
 
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx(), places=4)
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz(), places=4)
+            self.assertAlmostEqual(
+                ng.quadrupolar_contribution_squared(old_version=True),
+                ng.quadrupolar_contribution_squared(old_version=False),
+                places=4
+            )
+
+            self.assertAlmostEqual(
+                ng.hexadecapolar_contribution_squared(old_version=True),
+                ng.hexadecapolar_contribution_squared(old_version=False),
+                places=4
+            )
+
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J3_contribution_squared(), .0, places=3)
 
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
@@ -552,24 +610,86 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
             self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio())
 
-            GJ4 = ng.hexadecapolar_contribution_squared(first_version=True)
-            GJ2 = ng.quadrupolar_contribution_squared(first_version=True)
-            GJ0 = ng.isotropic_contribution_squared()
-
-            rho_2 = GJ2 / GJ0
-            rho_4 = GJ4 / GJ0
-            rho_0m = GJ0 / GJ2
-            rho_4m = GJ4 / GJ2
-
-            self.assertAlmostEqual(ng.gamma_squared_zzzz(), 8 / 315 * GJ4 + 4 / 35 * GJ2 + 1 / 5 * GJ0, places=3)
-            self.assertAlmostEqual(ng.gamma_squared_zxxx(), 1 / 63 * GJ4 + 3 / 140 * GJ2, places=3)
             self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4 + 144 * rho_2 + 252) / (20 * rho_4 + 27 * rho_2), places=3)
-            self.assertAlmostEqual(
-                ng.depolarization_ratio(), (32 * rho_4m + 252 * rho_0m + 144) / (20 * rho_4m + 27), places=3)
+                ng.isotropic_contribution_squared(old_version=True),
+                ng.isotropic_contribution_squared(old_version=False),
+                places=4
+            )
 
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(0), ng.gamma_squared_zxxx(), places=4)
-            self.assertAlmostEqual(ng.polarization_angle_dependant_intensity(90), ng.gamma_squared_zzzz(), places=4)
+            self.assertAlmostEqual(
+                ng.hexadecapolar_contribution_squared(old_version=True),
+                ng.hexadecapolar_contribution_squared(old_version=False),
+                places=4
+            )
+
+            self.assertAlmostEqual(ng.spherical_J2_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J3_contribution_squared(), .0, places=3)
+
+        # water, 514.5nm, CCSD/aug-cc-pVDZ (dalton)
+        gamma = numpy.array([
+            [[[-2.159784e+04, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -1.757685e+04, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -1.229660e+04]],
+             [[0.000000e+00, -1.757685e+04, 0.000000e+00],
+              [-1.757685e+04, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00]],
+             [[0.000000e+00, 0.000000e+00, -1.229660e+04],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [-1.229660e+04, 0.000000e+00, 0.000000e+00]]],
+            [[[0.000000e+00, -7.928857e+02, 0.000000e+00],
+              [-7.928857e+02, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00]],
+             [[-7.928857e+02, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -8.872187e+02, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -6.652815e+02]],
+             [[0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -6.652815e+02],
+              [0.000000e+00, -6.652815e+02, 0.000000e+00]]],
+            [[[0.000000e+00, 0.000000e+00, -8.213404e+02],
+              [0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [-8.213404e+02, 0.000000e+00, 0.000000e+00]],
+             [[0.000000e+00, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -1.166566e+03],
+              [0.000000e+00, -1.166566e+03, 0.000000e+00]],
+             [[-8.213404e+02, 0.000000e+00, 0.000000e+00],
+              [0.000000e+00, -1.166566e+03, 0.000000e+00],
+              [0.000000e+00, 0.000000e+00, -2.396609e+03]]]
+        ])
+
+        orig_g = derivatives_e.SecondHyperpolarizabilityTensor(tensor=gamma)
+
+        for angles in angles_set:
+            new_gamma = qcip_math.tensor_rotate(gamma, *angles)
+            ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
+
+            self.assertAlmostEqual(ng.gamma_parallel(), orig_g.gamma_parallel(), places=3)
+            self.assertAlmostEqual(ng.gamma_perpendicular(), orig_g.gamma_perpendicular(), places=3)
+            self.assertAlmostEqual(ng.gamma_kerr(), orig_g.gamma_kerr(), places=3)
+
+            self.assertAlmostEqual(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz(), places=3)
+            self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx(), places=3)
+            self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths())
+            self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
+
+            self.assertAlmostEqual(
+                ng.isotropic_contribution_squared(old_version=True),
+                ng.isotropic_contribution_squared(old_version=False),
+                places=3
+            )  # Kleinman's conditions does not change anything here!
+
+            self.assertNotEqual(
+                ng.quadrupolar_contribution_squared(old_version=True),
+                ng.quadrupolar_contribution_squared(old_version=False)
+            )
+
+            self.assertNotEqual(
+                ng.hexadecapolar_contribution_squared(old_version=True),
+                ng.hexadecapolar_contribution_squared(old_version=False)
+            )
+
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
+            self.assertNotEqual(ng.spherical_J3_contribution_squared(), .0)
 
         # test conversion
         self.assertAlmostEqual(derivatives_e.convert_frequency_from_string('1064nm'), 0.0428, places=3)
@@ -591,6 +711,19 @@ class DerivativesTestCase(QcipToolsTestCase):
         g = derivatives_e.BaseElectricalDerivativeTensor(input_fields=(-1, 1, 1))
         self.assertEqual(g.representation.representation(), 'dDDd')  # reordering
         self.assertEqual(g.name, 'gamma(-w;w,w,-w)')
+
+    def test_electric_responses(self):
+        """Check responses to electric field"""
+
+        b_tensor = numpy.zeros((3, 3, 3))
+        b_tensor[0, 0, 0] = 1.
+        b_tensor[1, 1, 1] = 2.
+        b_tensor[2, 2, 2] = 3.
+
+        b = derivatives_e.FirstHyperpolarisabilityTensor(tensor=b_tensor)
+        self.assertArraysAlmostEqual(b.response_to_electric_field([1, 0, 0]), [1., 0, 0])
+        self.assertArraysAlmostEqual(b.response_to_electric_field([0, 1, 0]), [0, 2., 0])
+        self.assertArraysAlmostEqual(b.response_to_electric_field([0, 0, 1]), [0, 0, 3.])
 
     def test_geometrical_derivatives(self):
         """Test geometrical ones.

@@ -3,6 +3,7 @@ import random
 import io
 import argparse
 import numpy
+import unittest
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase, factories
@@ -554,7 +555,7 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertTrue('O' in b1p)
         self.assertFalse('C' in b1p)
 
-    # @unittest.skip('ESML temporally unavailable')
+    @unittest.skip('ESML temporally unavailable')
     def test_basis_set_esml(self):
         """Test basis set coming from the ESML basis set exchange"""
 
