@@ -64,8 +64,8 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
 
                         derivative = \
                             c.prefactor(0, h0) * sum(
-                                c.mat_coefs[i] *
-                                self.univariate_polynom(numerical_differentiation.ak_shifted(a, c.mat_i[i]) * h0)
+                                c.mat_coefs[i] * self.univariate_polynom(
+                                    numerical_differentiation.ak_shifted(a, c.mat_i[i]) * h0)
                                 for i in range(len(c.mat_coefs)))
 
                         # notice the large threshold:

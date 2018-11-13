@@ -348,7 +348,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
         (thought it takes some memory) and it gives all the responses in one single file: DALTON.PROP.
 
         On the other hand, the ``**RESPONSE`` module of dalton does not allows for many order at the same time, and
-        is f\*\*\*g inconsistent:
+        is f\\*\\*\\*g inconsistent:
 
         + dipole moment is in DALTON.PROP
         + alpha is in DALTON.PROP, but only the non-zero components (and you need to assume permutation)
@@ -357,10 +357,10 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
           of the validity of what I did there).
         + If you use the *patched* version of Dalton (see installation part), results are then available in
           DALTON.PROP (but you still need to assume permutation).
-        + gamma is in DALTON.PROP (main source, but only non-zero components that contribute to :math:`\gamma_{||}`)
+        + gamma is in DALTON.PROP (main source, but only non-zero components that contribute to :math:`\\gamma_{||}`)
           and also in RESULTS.RSP.
           You need to use an hidden option, ``.GAMALL`` to get all components of the gamma tensor
-          (otherwise **only the one contributing to :math:`\gamma_{||}` are computed**).
+          (otherwise **only the one contributing to :math:`\\gamma_{||}` are computed**).
           The rest of the components are obtained from RESULT.RSP (when symmetry is assumed) if ``.GAMALL`` is used.
           Note that the first frequency is non-null for dc-Kerr, while it is the last one with CC response module
           (so it is ``dDFF`` in with RESPONSE and ``dFFD`` with CC).
@@ -606,7 +606,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
                 freq_1 = float(info[1])
                 freq_2 = float(info[3])
-                components = tuple(translate_diplens[x] for x in re.split('\W', info[5]))
+                components = tuple(translate_diplens[x] for x in re.split('\\W', info[5]))
                 value = float(info[7])
 
                 if freq_1 == freq_2 and freq_1 == .0:

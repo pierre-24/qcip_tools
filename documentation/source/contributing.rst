@@ -38,7 +38,7 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
 
     1. Normal installation use ``pipenv install --dev --ignore-pipfile`` (``make init``)
     2. To update the dependencies from upstream, ``pipenv sync``.
-    3. To update the ``Pipfile.lock`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pipenv update``.
+    3. To update the ``Pipfile.lock`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pipenv lock``.
 
 Licence
 -------
