@@ -4,13 +4,13 @@ before_script:
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo "$SSH_SERVER_HOSTKEYS" > ~/.ssh/known_hosts'
   - pip3 install pipenv
-  - pipenv install --dev --ignore-pipfile # "deterministic build"
+  - pipenv install --dev --ignore-pipfile
 
 test_package:
   tags:
     - python-numpy
   script:
-    - python3 setup.py test
+    - make tests
     - make lint
 
 make-doc:
@@ -20,6 +20,5 @@ make-doc:
     - python-numpy
   script:
     - ssh-add <(echo "$SSH_PRIVATE_KEY_HAL")
-    - python setup.py install
     - make doc
     - scp -r ./documentation/build/html $DOC_LOCATION
