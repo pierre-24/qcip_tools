@@ -4,6 +4,12 @@ Derivatives w.r.t. electric field (``qcip_tools.derivatives_e``)
 
 Tools to help the manipulation of derivatives of the energy with respect to a static (``F``) or dynamic (``D``) electric field (though the first one is a special case of the second).
 
+.. math::
+
+    \newcommand{\sbb}[2]{\beta_{#1}\,\beta_{#2}}
+    \newcommand{\sgg}[2]{\gamma_{#1}\,\gamma_{#2}}
+
+
 Theory
 ------
 

@@ -118,6 +118,10 @@ class BoundingSet:
 
         return n
 
+    def __iadd__(self, other):
+        self.include(other)
+        return self
+
     def exclude(self, bounding_object):
         """Add an object to the inclusion set
 
@@ -142,6 +146,10 @@ class BoundingSet:
         n.exclude(other)
 
         return n
+
+    def __isub__(self, other):
+        self.exclude(other)
+        return self
 
     def contains(self, item):
         """Test if point in the set
