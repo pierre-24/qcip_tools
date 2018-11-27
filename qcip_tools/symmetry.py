@@ -3,6 +3,8 @@ Symmetry handling
 
 See https://physics.stackexchange.com/questions/351372/generate-all-elements-of-a-point-group-from-generating-set
 and https://github.com/naftaliharris/Abstract-Algebra/blob/master/absalg/Group.py
+and https://pdfs.semanticscholar.org/4edd/1ac673ea4cab251bb0b64bf0f5b65f18cc9d.pdf
+and http://www.euclideanspace.com/maths/geometry/affine/reflection/quaternion/index.htm
 """
 
 import numpy
