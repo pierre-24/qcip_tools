@@ -1,5 +1,7 @@
 """
-Symmetry handling
+Symmetry handling.
+
+See https://en.wikipedia.org/wiki/Group_(mathematics)
 
 See https://physics.stackexchange.com/questions/351372/generate-all-elements-of-a-point-group-from-generating-set
 and https://github.com/naftaliharris/Abstract-Algebra/blob/master/absalg/Group.py
@@ -9,6 +11,139 @@ and http://www.euclideanspace.com/maths/geometry/affine/reflection/quaternion/in
 
 import numpy
 import math
+
+
+class Set(set):
+    """Define a (finite) set of (unique) elements
+    """
+
+    def __mul__(self, other):
+        """Cartesian product:
+
+        .. math::
+
+            A\\times B = \\{(x,y) | x \\in A, y \\in B\\}
+
+        :rtype: Set
+        """
+
+        if not isinstance(other, Set):
+            raise TypeError('other must be a set')
+
+        return Set((x, y) for x in self for y in other)
+
+
+class BinaryOperation:
+    """Define a binary operation :math:`f` such that,
+
+    .. math::
+
+        f:S\\times S \rightarrow S.
+
+    Thus, we only define a binary operation trough its codomain.
+
+    See https://en.wikipedia.org/wiki/Binary_operation
+    """
+
+    def __init__(self, codomain, func):
+        self.function = func
+        self.codomain = codomain
+
+    def __call__(self, e):
+        """Call the function on an element of the domain
+
+        :return: an element of the codomain
+        """
+        if e[0] not in self.codomain or e[1] not in self.codomain:
+            raise TypeError('not an element of the domain: {}'.format(e))
+
+        return self.function(e)
+
+    def image(self):
+        """Get the image set (which is part of the codomain)
+
+        :rtype: Set
+        """
+
+        return Set(self(e) for e in self.codomain * self.codomain)
+
+    def check_closure(self):
+        """Check that the relation gives elements that are in the codomain
+
+        :rtype: bool
+        """
+
+        return all(self(e) in self.codomain for e in self.codomain * self.codomain)
+
+    def check_associativity(self):
+        """Check if the binary operation is associative
+
+        :rtype: bool
+        """
+
+        return all(
+            self((a, self((b, c)))) == self((self((a, b)), c))
+            for a in self.codomain for b in self.codomain for c in self.codomain)
+
+
+class Group:
+    """A set G, together with an operation * (group law), form a group (G, *) if it satisfies 4 requirements:
+
+    - Closure (not checked here);
+    - Associativity (not checked here) ;
+    - (unique) Identity ;
+    - Inverse.
+
+    A group may also be Abelian.
+    """
+
+    def __init__(self, binary_operation):
+        if not isinstance(binary_operation, BinaryOperation):
+            raise TypeError('binary_operation must be a BinaryOperation')
+
+        self.binary_operation = binary_operation
+        self.G = binary_operation.codomain
+
+        # get identity
+        self.e = None
+        for i in self.G:
+            if all(self.binary_operation((i, a)) == a for a in self.G):
+                self.e = i
+                break
+
+        if self.e is None:
+            raise RuntimeError('G does not contain an identity element')
+
+        # get inverses (and check if Abelian)
+        self.inverses = {}
+        self.abelian = True
+        for i in self.G:
+            inverse_found = False
+            for j in self.G:
+                if self.binary_operation((i, j)) == self.e:
+                    self.inverses[i] = j
+                    inverse_found = True
+                    if j in self.inverses and self.inverses[j] != i:
+                        self.abelian = False
+                    break
+            if not inverse_found:
+                raise RuntimeError('{} does not have an inverse!'.format(i))
+
+    def identity(self):
+        """Get identity
+
+        :return: an element of G
+        """
+
+        return self.e
+
+    def inverse(self, element):
+        """Return an inverse of a given element of G
+
+        :return: another element of G
+        """
+
+        return self.inverses[element]
 
 
 class SymmetryElement:
