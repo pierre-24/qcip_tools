@@ -67,16 +67,21 @@ class BinaryOperation:
 
         return Set(self(e) for e in self.codomain * self.codomain)
 
-    def check_closure(self):
+    def check_closure(self, full=False):
         """Check that the relation gives elements that are in the codomain
 
+        :param full: check if the image domain equals (!) the codomain
+        :type full: bool
         :rtype: bool
         """
 
-        return all(self(e) in self.codomain for e in self.codomain * self.codomain)
+        if full:
+            return self.image() == self.codomain
+        else:
+            return self.image() <= self.codomain
 
     def check_associativity(self):
-        """Check if the binary operation is associative
+        """Check if the binary operation is associative for all the element of the domain
 
         :rtype: bool
         """
@@ -89,7 +94,7 @@ class BinaryOperation:
 class Group:
     """A set G, together with an operation * (group law), form a group (G, *) if it satisfies 4 requirements:
 
-    - Closure (not checked here);
+    - Closure (not checked here) ;
     - Associativity (not checked here) ;
     - (unique) Identity ;
     - Inverse.
@@ -116,12 +121,18 @@ class Group:
 
         # get inverses (and check if Abelian)
         self.inverses = {}
+        invs = []
         self.abelian = True
         for i in self.G:
             inverse_found = False
             for j in self.G:
                 if self.binary_operation((i, j)) == self.e:
+                    if j in invs:
+                        raise RuntimeError(
+                            '{} is already the inverse of an element, so cannot be the one of {} as well'.format(j, i))
+
                     self.inverses[i] = j
+                    invs.append(j)
                     inverse_found = True
                     if j in self.inverses and self.inverses[j] != i:
                         self.abelian = False
