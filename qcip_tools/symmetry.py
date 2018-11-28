@@ -3,8 +3,9 @@ Symmetry handling.
 
 See https://en.wikipedia.org/wiki/Group_(mathematics)
 
+Base implementation inspired from https://github.com/naftaliharris/Abstract-Algebra/
+
 See https://physics.stackexchange.com/questions/351372/generate-all-elements-of-a-point-group-from-generating-set
-and https://github.com/naftaliharris/Abstract-Algebra/blob/master/absalg/Group.py
 and https://pdfs.semanticscholar.org/4edd/1ac673ea4cab251bb0b64bf0f5b65f18cc9d.pdf
 and http://www.euclideanspace.com/maths/geometry/affine/reflection/quaternion/index.htm
 """
@@ -67,18 +68,21 @@ class BinaryOperation:
 
         return Set(self(e) for e in self.codomain * self.codomain)
 
-    def check_closure(self, full=False):
+    def check_closure(self):
         """Check that the relation gives elements that are in the codomain
 
-        :param full: check if the image domain equals (!) the codomain
-        :type full: bool
         :rtype: bool
         """
 
-        if full:
-            return self.image() == self.codomain
-        else:
-            return self.image() <= self.codomain
+        return self.image() <= self.codomain
+
+    def check_surjectivity(self):
+        """Check surjectivity (image equals codomain)
+
+        :rtype: bool
+        """
+
+        return self.image() == self.codomain
 
     def check_associativity(self):
         """Check if the binary operation is associative for all the element of the domain
@@ -91,8 +95,67 @@ class BinaryOperation:
             for a in self.codomain for b in self.codomain for c in self.codomain)
 
 
+class GroupElement:
+    """Syntaxic sugar
+    """
+
+    def __init__(self, element, group):
+        if not isinstance(group, Group):
+            raise TypeError('Group must be group')
+        if element not in group.binary_operation.codomain:
+            raise TypeError('{} is not in group element'.format(element))
+
+        self.element = element
+        self.group = group
+
+    def __repr__(self):
+        return repr(self.element)
+
+    def __mul__(self, other):
+        e = other
+        if isinstance(other, GroupElement):
+            e = other.element
+        if e not in self.group:
+            raise ValueError('{} is not in group domain')
+
+        return GroupElement(self.group.binary_operation((self.element, e)), self.group)
+
+    def __rmul__(self, other):
+        e = other
+        if isinstance(other, GroupElement):
+            e = other.element
+
+        return GroupElement(self.group.binary_operation((e, self.element)), self.group)
+
+    def __eq__(self, other):
+        e = other
+        if isinstance(other, GroupElement):
+            e = other.element
+
+        return self.element == e
+
+    def __pow__(self, power, modulo=None):
+        if not isinstance(power, int):
+            raise TypeError('power must be an integer')
+
+        if power == 0:
+            return self.group.e
+        elif power == 1:
+            return self
+        elif power < 0:
+            return self.group.inverse(self.element) ** -power
+        elif power % 2 == 1:
+            return self * (self ** (power - 1))
+        else:
+            return (self * self) ** int(power / 2)
+
+    def __hash__(self):
+        return hash(self.element)
+
+
 class Group:
-    """A set G, together with an operation * (group law), form a group (G, *) if it satisfies 4 requirements:
+    """A set :math:`G`, together with an operation :math:`\\star` (group law),
+    form a group :math:`(G, \\star)` if it satisfies 4 requirements:
 
     - Closure (not checked here) ;
     - Associativity (not checked here) ;
@@ -107,26 +170,26 @@ class Group:
             raise TypeError('binary_operation must be a BinaryOperation')
 
         self.binary_operation = binary_operation
-        self.G = binary_operation.codomain
+        self.G = [GroupElement(e, self) for e in binary_operation.codomain]
 
         # get identity
         self.e = None
         for i in self.G:
-            if all(self.binary_operation((i, a)) == a for a in self.G):
+            if all(i * a == a for a in self.G):
                 self.e = i
                 break
 
         if self.e is None:
             raise RuntimeError('G does not contain an identity element')
 
-        # get inverses (and check if Abelian)
+        # get inverses (and check if Abelian in the meantime)
         self.inverses = {}
         invs = []
         self.abelian = True
         for i in self.G:
             inverse_found = False
             for j in self.G:
-                if self.binary_operation((i, j)) == self.e:
+                if i * j == self.e:
                     if j in invs:
                         raise RuntimeError(
                             '{} is already the inverse of an element, so cannot be the one of {} as well'.format(j, i))
@@ -151,10 +214,22 @@ class Group:
     def inverse(self, element):
         """Return an inverse of a given element of G
 
+        :param element: the element
         :return: another element of G
         """
 
         return self.inverses[element]
+
+    def __contains__(self, item):
+        """is an element part of the group
+
+        :param item: the element
+        :rtype: bool
+        """
+        if isinstance(item, GroupElement):
+            return item in self.G
+        else:
+            return item in self.binary_operation.codomain
 
 
 class SymmetryElement:
