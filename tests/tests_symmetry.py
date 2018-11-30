@@ -1,4 +1,6 @@
 import sympy
+import numpy
+import random
 
 from tests import QcipToolsTestCase
 from qcip_tools import symmetry
@@ -31,10 +33,83 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(n3 ** -2, 2)
 
     def test_symmetry_element(self):
-        s = symmetry.SymmetryElement.S(4, 7)
-        print(s)
+        p = numpy.array([random.randint(-3, 3), random.randint(-3, 3), random.randint(-3, 3)])
+
+        # basic elements
+        E = symmetry.SymElement.E()
+        self.assertArraysAlmostEqual(E.apply(p), p)
+
+        i = symmetry.SymElement.i()
+        self.assertArraysAlmostEqual(i.apply(p), -p)
+
+        Oz = symmetry.SymElement.sigma()
+        self.assertArraysAlmostEqual(Oz.apply(p), numpy.array([*p[:2], -p[2]]))
+
+        # test identity
+        t = Oz * Oz
+        self.assertArraysAlmostEqual(t.apply(p), p)
+        t = i * i
+        self.assertArraysAlmostEqual(t.apply(p), p)
+
+        # Check that C_3 is cyclic
+        C3z = symmetry.SymElement.C(3)
+        C23z = symmetry.SymElement.C(3, 2)
+
+        t = C3z * C3z
+        self.assertArraysAlmostEqual(t.apply(p), C23z.apply(p))
+
+        t = t * C3z
+        self.assertArraysAlmostEqual(t.apply(p), p)
+
+        # Check that S_3 is cyclic
+        S3z = symmetry.SymElement.S(3)
+        S53z = symmetry.SymElement.S(3, 5)
+
+        t = S3z * S3z
+        self.assertArraysAlmostEqual(t.apply(p), C23z.apply(p))
+
+        t = t * S3z
+        self.assertArraysAlmostEqual(t.apply(p), Oz.apply(p))
+
+        t = t * S3z
+        self.assertArraysAlmostEqual(t.apply(p), C3z.apply(p))
+
+        t = t * S3z
+        self.assertArraysAlmostEqual(t.apply(p), S53z.apply(p))
+
+        t = t * S3z
+        self.assertArraysAlmostEqual(t.apply(p), p)
+
+        # Check composition: C_n(z) * O(z) = S_n(z)
+        n = 5
+        Cnz = symmetry.SymElement.C(n)
+        Snz = symmetry.SymElement.S(n)
+        t = Cnz * Oz
+        self.assertArraysAlmostEqual(t.apply(p), Snz.apply(p))
+
+        # Check composition: C_2(y) * C_2(x) = C_2(z)
+        C2z = symmetry.SymElement.C(2, axis=numpy.array([0, 0, 1.]))
+        C2y = symmetry.SymElement.C(2, axis=numpy.array([0, 1., 0]))
+        C2x = symmetry.SymElement.C(2, axis=numpy.array([1., 0, 0]))
+        t = C2y * C2x
+        self.assertArraysAlmostEqual(t.apply(p), C2z.apply(p))
+
+        # Check composition: O(y) * O(x) = C_2(z)
+        Ox = symmetry.SymElement.sigma(axis=numpy.array([1, 0., 0]))
+        Oy = symmetry.SymElement.sigma(axis=numpy.array([0, 1., 0]))
+        t = Oy * Ox
+        self.assertArraysAlmostEqual(t.apply(p), C2z.apply(p))
+
+        # Check composition: O(y) * O(xy') = C_4(z)
+        Oxy = symmetry.SymElement.sigma(axis=numpy.array([1., -1., 0]))
+        C4z = symmetry.SymElement.C(4)
+        t = Oy * Oxy
+        self.assertArraysAlmostEqual(t.apply(p), C4z.apply(p))
 
     def test_random(self):
+        """That test will disappear in the future
+        """
+
         class Quat:
             """
             NT: according to https://www.mdpi.com/2073-8994/2/3/1423/pdf,
@@ -76,7 +151,7 @@ class SymmetryTestCase(QcipToolsTestCase):
                     q,
                     improper=(self.improper and not other.improper) or (other.improper and not self.improper))
 
-        p = [-1, -2, -1]
+        p = [3, -2, 1]
 
         E = Quat.from_axangle([0, 0, 1])
         self.assertEqual(E.apply(p), tuple(p))
@@ -85,65 +160,5 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(Oz.apply(p)[:2], tuple(p[:2]))
         self.assertEqual(Oz.apply(p)[2], -p[2])
 
-        # Check identity for Oz * Oz
-        t = Oz * Oz
-        self.assertEqual(t.apply(p), E.apply(p))
-
-        # Check C_n(z) cyclicity
-        C3z = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / 3)
-        C23z = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / 3 * 2)
-        t = C3z * C3z
-        self.assertEqual(t.q, C23z.q)
-        self.assertEqual(t.apply(p), C23z.apply(p))
-
-        t = t * C3z
-        self.assertEqual(E.q, t.q)
-        self.assertEqual(t.apply(p), E.apply(p))
-        self.assertEqual(E.apply(p), tuple(p))
-
-        # Check S_n(z) cyclicity
-        S3z = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 3, improper=True)
-        S53z = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 3 * 5, improper=True)
-
-        t = S3z * S3z
-        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(C23z.apply(p)))
-
-        t = t * S3z
-        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(Oz.apply(p)))
-
-        t = t * S3z
-        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(C3z.apply(p)))
-
-        t = t * S3z
-        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(S53z.apply(p)))
-
-        t = t * S3z
-        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(E.apply(p)))
-
-        # check composition of C_n(z) * O(z) → S_n(z)
-        n = 7
-        Snz = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / n, improper=True)
-        Cnz = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / n)
-        t = Cnz * Oz
-        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(Snz.apply(p)))
-
-        # check C_2(z) * C_2(x) → C2z
-        C2z = Quat.from_axangle([0, 0, 1], angle=sympy.pi)
-        C2y = Quat.from_axangle([0, 1, 0], angle=sympy.pi)
-        C2x = Quat.from_axangle([1, 0, 0], angle=sympy.pi)
-        t = C2y * C2x
-        self.assertEqual(t.q, C2z.q)
-        self.assertEqual(t.apply(p), C2z.apply(p))
-
-        # check O(x) * O(y) → C2z
-        Ox = Quat.from_axangle([1, 0, 0], angle=sympy.pi + 2 * sympy.pi, improper=True)
-        Oy = Quat.from_axangle([0, 1, 0], angle=sympy.pi + 2 * sympy.pi, improper=True)
-        t = Oy * Ox
-        self.assertEqual(t.q, C2z.q)
-        self.assertEqual(t.apply(p), C2z.apply(p))
-
-        # Check O(y) * O(xy') → C4z
-        Od = Quat.from_axangle([1, -1, 0], angle=sympy.pi + 2 * sympy.pi, improper=True)
-        t = Oy * Od
-        C4z = Quat.from_axangle([0, 0, 1], angle=2 * sympy.pi / 4)
-        self.assertEqual(t.apply(p), C4z.apply(p))
+        i = Quat.from_axangle([0, 0, 1], angle=sympy.pi + sympy.pi, improper=True)
+        self.assertEqual(i.apply(p), (-p[0], -p[1], -p[2]))
