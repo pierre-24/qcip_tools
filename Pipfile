@@ -10,7 +10,6 @@ requests = "*"
 "beautifulsoup4" = "*"
 "h5py" = "*"
 Pint = "*"
-sympy = "*"
 transforms3d = "*"
 
 [dev-packages]

@@ -7,11 +7,12 @@ Base implementation inspired from https://github.com/naftaliharris/Abstract-Alge
 
 See https://physics.stackexchange.com/questions/351372/generate-all-elements-of-a-point-group-from-generating-set
 and https://pdfs.semanticscholar.org/4edd/1ac673ea4cab251bb0b64bf0f5b65f18cc9d.pdf
-and http://www.euclideanspace.com/maths/geometry/affine/reflection/quaternion/index.htm
 """
 
 import numpy
 import math
+from enum import Enum
+
 from transforms3d import quaternions
 
 
@@ -136,6 +137,15 @@ class GroupElement:
         return self.element == e
 
     def __pow__(self, power, modulo=None):
+        """Compute the power of a group element
+
+        Only the multiplication is required for this to work.
+
+        :param power: the power
+        :type power: int
+        :param modulo: (**modulo is not used**)
+        :rtype: GroupElement
+        """
         if not isinstance(power, int):
             raise TypeError('power must be an integer')
 
@@ -233,7 +243,26 @@ class Group:
             return item in self.binary_operation.codomain
 
 
-class SymElement:
+def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10):
+    """A fairly simple algorithm to get the fraction out of a floating number.
+    Try to get as close as possible to ``x``.
+
+    Notice that the maximum denominator is chosen to be the multiplication of the first numbers
+
+    :param x: the float
+    :type x: float
+    :param max_denominator: the maximum denominator
+    :type max_denominator: int
+    :rtype: tuple(int, int)
+    """
+    e = int(x * max_denominator)
+    if abs((e + 1) / max_denominator - x) <= abs(e / max_denominator - x):
+        e += 1
+    g = math.gcd(e, max_denominator)
+    return e // g, max_denominator // g
+
+
+class Operation:
     """Define a symmetry element (fully based on quaternion).
 
     According `Mamone et al. <https://www.mdpi.com/2073-8994/2/3/1423/pdf>`_,
@@ -246,19 +275,34 @@ class SymElement:
     To use this operator on a point, the opposite of the sandwich product must be taken, so that the conjugate of the
     quaternion that represent the point is actually used.
 
-    TODO: __equal__, __pow__, __hash__ (for usage with Group)
+    TODO: __hash__ (for its usage with Group)
     """
 
-    def __init__(self, q, improper=False):
+    def __init__(self, q, improper=False, description=None):
         self.q = q
         self.improper = improper
+        self.description = description
 
     def __mul__(self, other):
-        if not isinstance(other, SymElement):
-            raise TypeError('other must be SymElement')
+        if not isinstance(other, Operation):
+            raise TypeError('other must be Operation')
 
         q = quaternions.qmult(other.q, self.q)
-        return SymElement(q, (self.improper and not other.improper) or (other.improper and not self.improper))
+        return Operation(q, (self.improper and not other.improper) or (other.improper and not self.improper))
+
+    def __eq__(self, other):
+        """
+        Check equality. Note that a quaternion or its multiplication by -1 gives the same transformation
+        (but this is checked by ``transform3d``).
+
+        :param other: the other symmetry element
+        :type other: Operation
+        :rtype: bool
+        """
+        if not isinstance(other, Operation):
+            return False
+
+        return quaternions.nearly_equivalent(self.q, other.q) and self.improper == other.improper
 
     def apply(self, pin):
         """Apply the operation on a point
@@ -275,8 +319,66 @@ class SymElement:
         qe = quaternions.qmult(self.q, quaternions.qmult(qp, quaternions.qconjugate(self.q)))
         return qe[1:]
 
+    def get_description(self, force=False):
+        """Try to recognize the transformation:
+
+        1. Extract axis and angle from quaternion (using ``quat2axangle()``) ;
+        2. Treat angle (:math:`\\theta`):
+
+           - if the axis have a negative z, take the opposite and set :math:`\\theta = 2\\pi-\\theta`,
+           - if this is an improper rotation, set :math:`\\theta=\\theta-\\pi`,
+           - Cast between 0 and :math:`4\\pi`,
+           - divide by :math:`2\\pi` (so that the result is between 0 and 2).
+        3. Try to extract a simple fraction (thus :math:`k` and :math:`n`) out of this number ;
+        4. Further reduce k to be smaller than :math:`n` if proper rotation or odd :math:`n` ;
+        5. Recognize the specific :math:`n` cases (1 or 2).
+
+        :param force: use ``self.description`` if ``False``, or try a new recognition otherwise
+        :type force: bool
+        :rtype: OperationDescription
+        """
+
+        if self.description is None or force:
+            axis, angle = quaternions.quat2axangle(self.q)
+
+            # treatment on angle:
+            angle /= 2 * numpy.pi
+
+            if axis[2] < .0:  # return axis so that it always have a positive z
+                axis = -axis
+                angle = 1 - angle
+
+            if self.improper:
+                angle -= .5
+
+            if self.improper:
+                angle %= 2
+            else:
+                angle %= 1
+
+            k, n = closest_fraction(angle)
+
+            if not self.improper or n % 2 == 0:
+                k %= n
+
+            # find symbol
+            symbol = Symbol.improper_rotation if self.improper else Symbol.proper_rotation
+
+            if n == 1:
+                if not self.improper:
+                    symbol = Symbol.identity
+                else:
+                    symbol = Symbol.reflexion_plane
+
+            if n == 2 and self.improper:
+                symbol = Symbol.inversion
+
+            self.description = OperationDescription(symbol, axis, n, k)
+
+        return self.description
+
     @classmethod
-    def from_axangle(cls, axis, angle=2 * numpy.pi, improper=False, in_degree=False):
+    def from_axangle(cls, axis, angle=2 * numpy.pi, improper=False, in_degree=False, description=None):
         """Create from axe and angle
 
         :param axis: the rotation axe
@@ -286,8 +388,10 @@ class SymElement:
         :param improper: is it an improper rotation ?
         :type improper: bool
         :param in_degree: is the angle in degree
+        :param description: description of the operation
+        :type description: OperationDescription
         :type in_degree: bool
-        :rtype: SymElement
+        :rtype: Operation
         """
 
         if in_degree:
@@ -298,19 +402,19 @@ class SymElement:
         axis /= numpy.linalg.norm(axis)
 
         q = numpy.array([math.cos(angle / 2), *(math.sin(angle / 2) * axis)])
-        return cls(q, improper)
+        return cls(q, improper, description=description)
 
     @classmethod
     def E(cls):
         """Generate the identity
 
-        :rtype: SymElement
+        :rtype: Operation
         """
-        return cls(quaternions.qeye())
+        return cls(quaternions.qeye(), description=OperationDescription(Symbol.identity))
 
     @classmethod
     def C(cls, n, k=1, axis=numpy.array([0, 0, 1.])):
-        """Generate the representation of a proper rotation (parallel to ẑ)
+        """Generate the representation of a proper rotation
 
         :param n: order of the axis
         :type n: int
@@ -318,7 +422,7 @@ class SymElement:
         :type k: int
         :param axis: to which axis this rotation axis should be parallel ?
         :type axis: numpy.ndarray
-        :rtype: SymElement
+        :rtype: Operation
         """
 
         if n < 1:
@@ -334,11 +438,12 @@ class SymElement:
             n = int(n / g)
             k = int(k / g)
 
-        return cls.from_axangle(axis, 2 * numpy.pi / n * k)
+        return cls.from_axangle(
+            axis, 2 * numpy.pi / n * k, description=OperationDescription(Symbol.proper_rotation, axis, n, k))
 
     @classmethod
     def S(cls, n, k=1, axis=numpy.array([0, 0, 1.])):
-        """Generate the representation of a proper rotation (parallel to ẑ)
+        """Generate the representation of a improper rotation
 
         :param n: order of the axis
         :type n: int
@@ -346,7 +451,7 @@ class SymElement:
         :type k: int
         :param axis: to which axis this rotation axis should be parallel ?
         :type axis: numpy.ndarray
-        :rtype: SymElement
+        :rtype: Operation
         """
         if n < 1:
             raise ValueError('n<1')
@@ -362,13 +467,20 @@ class SymElement:
         if n % 2 == 0 and k % 2 == 0:
             return cls.C(k, n, axis=axis)
         else:
-            return cls.from_axangle(axis, 2 * numpy.pi / n * k, improper=True)
+            symbol = Symbol.improper_rotation
+            if n == 1:
+                symbol = Symbol.reflexion_plane
+            elif n == 2:
+                symbol = symbol.inversion
+
+            return cls.from_axangle(
+                axis, 2 * numpy.pi / n * k, improper=True, description=OperationDescription(symbol, axis, n, k))
 
     @classmethod
     def i(cls):
         """Generate an inversion center
 
-        :rtype: SymElement
+        :rtype: Operation
         """
         return cls.S(2)
 
@@ -378,6 +490,65 @@ class SymElement:
 
         :param axis: normal axis to the plane
         :type axis: numpy.ndarray
-        :rtype: SymElement
+        :rtype: Operation
         """
         return cls.S(1, axis=axis)
+
+
+class Symbol(str, Enum):
+    """Symbol of the symmetry element, in `Schoenflies notation <https://en.wikipedia.org/wiki/Schoenflies_notation>`_.
+
+    """
+    proper_rotation = 'C'
+    improper_rotation = 'S'
+    identity = 'E'
+    reflexion_plane = 'σ'
+    inversion = 'i'
+
+
+class OperationDescription:
+    """Store the description of a symmetry operation
+    """
+
+    def __init__(self, symbol, axis=numpy.zeros(3), n=1, k=1):
+        if symbol not in Symbol:
+            raise ValueError('not an allowed symbol')
+
+        self.symbol = symbol
+        self.axis = axis
+        self.textual_axis = OperationDescription.find_textual_axis(axis)
+        self.n = n
+        self.k = k
+
+    def __eq__(self, other):
+        if not isinstance(other, OperationDescription):
+            return False
+
+        # TODO: being less strict on axis, k and n if E, sigma or i
+        return self.symbol == other.symbol and \
+            self.n == other.n and self.k == other.k and numpy.allclose(self.axis, other.axis)
+
+    def __str__(self):
+        if self.symbol in [Symbol.identity, Symbol.inversion]:
+            return self.symbol.value
+        if self.symbol == Symbol.reflexion_plane:
+            return '{}({})'.format(self.symbol.value, self.textual_axis if self.textual_axis else self.axis)
+        else:
+            return '{}({},{},{})'.format(
+                self.symbol.value, self.n, self.k, self.textual_axis if self.textual_axis else self.axis)
+
+    @staticmethod
+    def find_textual_axis(axis):
+        """Try to find the main axis (does not try a lot, though).
+
+        :param axis: the axis
+        :type axis: numpy.ndarray
+        :rtype: str|None
+        """
+
+        if numpy.allclose(axis, [0, 0, 1]):
+            return 'z'
+        if numpy.allclose(axis, [0, 1, 0]):
+            return 'y'
+        if numpy.allclose(axis, [1, 0, 0]):
+            return 'x'
