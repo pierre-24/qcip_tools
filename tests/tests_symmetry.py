@@ -23,7 +23,7 @@ class SymmetryTestCase(QcipToolsTestCase):
         for i in range(4):
             self.assertEqual(g.inverse(i) ** -1, i)
 
-        n3 = g.G[3]
+        n3 = symmetry.GroupElement(3, g)
         self.assertEqual(n3, 3)
         self.assertEqual(n3 ** 1, 3)
         self.assertEqual(n3 ** 2, 2)
@@ -127,3 +127,12 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(t, C4z)
         self.assertEqual(t.get_description(), C4z.get_description())
         self.assertArraysAlmostEqual(t.apply(p), C4z.apply(p))
+
+    def test_point_group(self):
+        f = symmetry.BinaryOperation(
+            symmetry.Set(symmetry.Operation.C(4, i + 1) for i in range(4)), lambda e: e[0] * e[1])
+
+        self.assertTrue(f.check_surjectivity())
+        self.assertTrue(f.check_associativity())
+
+        symmetry.Group(f)

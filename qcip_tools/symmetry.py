@@ -37,11 +37,12 @@ class Set(set):
 
 
 class BinaryOperation:
-    """Define a binary operation :math:`f` such that,
+    """
+    Define a binary operation :math:`f` such that,
 
     .. math::
 
-        f:S\\times S \rightarrow S.
+        f:S\\times S \\rightarrow S.
 
     Thus, we only define a binary operation trough its codomain.
 
@@ -243,11 +244,11 @@ class Group:
             return item in self.binary_operation.codomain
 
 
-def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10):
+def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 7 * 9 * 11 * 13):
     """A fairly simple algorithm to get the fraction out of a floating number.
     Try to get as close as possible to ``x``.
 
-    Notice that the maximum denominator is chosen to be the multiplication of the first numbers
+    Notice that the maximum denominator is chosen to be the multiplication of the primes (and their odd power)
 
     :param x: the float
     :type x: float
@@ -274,8 +275,6 @@ class Operation:
     where :math:`\\hat{R}` is the normal rotation operator.
     To use this operator on a point, the opposite of the sandwich product must be taken, so that the conjugate of the
     quaternion that represent the point is actually used.
-
-    TODO: __hash__ (for its usage with Group)
     """
 
     def __init__(self, q, improper=False, description=None):
@@ -303,6 +302,14 @@ class Operation:
             return False
 
         return quaternions.nearly_equivalent(self.q, other.q) and self.improper == other.improper
+
+    def __hash__(self):
+        """TODO: I cannot base the construction of a group on its sole string representation.
+        """
+        return hash(str(self.get_description()))
+
+    def __repr__(self):
+        return str(self.get_description())
 
     def apply(self, pin):
         """Apply the operation on a point
