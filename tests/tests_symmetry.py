@@ -64,22 +64,30 @@ class SymmetryTestCase(QcipToolsTestCase):
                 if not isinstance(other, Quat):
                     raise TypeError('other must be Quat')
 
-                qa = self.q
-                if self.improper:
-                    qa = qa.conjugate()
-                qb = other.q
-                if other.improper:
-                    qb = qb.conjugate()
+                if other.q != self.q:
+                    qa = self.q
+                    qb = other.q
+
+                    q = qb.mul(qa)
+                else:
+                    q = self.q ** 2
 
                 return Quat(
-                    qb.mul(qa),
+                    q,
                     improper=(self.improper and not other.improper) or (other.improper and not self.improper))
 
-        p = [1, 0, 3]
+        p = [-1, -2, -1]
+
+        E = Quat.from_axangle([0, 0, 1])
+        self.assertEqual(E.apply(p), tuple(p))
 
         Oz = Quat.from_axangle([0, 0, 1], angle=sympy.pi + 2 * sympy.pi, improper=True)
         self.assertEqual(Oz.apply(p)[:2], tuple(p[:2]))
         self.assertEqual(Oz.apply(p)[2], -p[2])
+
+        # Check identity for Oz * Oz
+        t = Oz * Oz
+        self.assertEqual(t.apply(p), E.apply(p))
 
         # Check C_n(z) cyclicity
         C3z = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / 3)
@@ -88,53 +96,36 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(t.q, C23z.q)
         self.assertEqual(t.apply(p), C23z.apply(p))
 
-        E = Quat.from_axangle([0, 0, 1])
-        t = C3z * C3z * C3z
+        t = t * C3z
         self.assertEqual(E.q, t.q)
         self.assertEqual(t.apply(p), E.apply(p))
         self.assertEqual(E.apply(p), tuple(p))
 
-        # Check S_n cyclicity
+        # Check S_n(z) cyclicity
         S3z = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 3, improper=True)
+        S53z = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 3 * 5, improper=True)
+
         t = S3z * S3z
-        self.assertEqual(t.q, C3z.q)  # ok, there is something wrong here :/
-        self.assertEqual(t.apply(p), C3z.apply(p))
+        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(C23z.apply(p)))
 
-        x = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 3 * 2, improper=True)  # S23z
-        print(x.apply(p), C23z.apply(p))
+        t = t * S3z
+        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(Oz.apply(p)))
 
-        x = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 3 * 3, improper=True)  # Oz
-        print(x.apply(p), Oz.apply(p))
+        t = t * S3z
+        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(C3z.apply(p)))
 
-        t = S3z * S3z * S3z
-        self.assertEqual(Oz.q, t.q)  # that make sense
-        self.assertEqual(t.apply(p), Oz.apply(p))
+        t = t * S3z
+        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(S53z.apply(p)))
 
-        t = S3z * S3z * S3z * S3z
-        C23z = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / 3 * -1)  # C^-1_3 = C^2_3
-        self.assertEqual(t.q, C23z.q)
-        self.assertEqual(t.apply(p), C23z.apply(p))
-
-        t = S3z * S3z * S3z * S3z * S3z
-        self.assertEqual(t.q, S3z.q)  # God damn it!
-        self.assertEqual(t.apply(p), S3z.apply(p))
-
-        t = S3z * S3z * S3z * S3z * S3z * S3z
-        self.assertEqual(t.q, C3z.q)  # But ... ?!?
-        self.assertEqual(t.apply(p), C3z.apply(p))
+        t = t * S3z
+        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(E.apply(p)))
 
         # check composition of C_n(z) * O(z) → S_n(z)
-        C4z = Quat.from_axangle([0, 0, 1], sympy.pi / 2)
-        S4z = Quat.from_axangle([0, 0, 1], angle=sympy.pi + 2 * sympy.pi / 4, improper=True)
-        t = C4z * Oz
-        self.assertEqual(t.q, S4z.q)
-        self.assertEqual(t.apply(p), S4z.apply(p))
-
-        C5z = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / 5)
-        S5z = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / 5, improper=True)
-        t = C5z * Oz
-        self.assertEqual(t.q, S5z.q)
-        self.assertEqual(t.apply(p), S5z.apply(p))
+        n = 7
+        Snz = Quat.from_axangle([0, 0, 1], sympy.pi + 2 * sympy.pi / n, improper=True)
+        Cnz = Quat.from_axangle([0, 0, 1], 2 * sympy.pi / n)
+        t = Cnz * Oz
+        self.assertEqual(sympy.simplify(t.apply(p)), sympy.simplify(Snz.apply(p)))
 
         # check C_2(z) * C_2(x) → C2z
         C2z = Quat.from_axangle([0, 0, 1], angle=sympy.pi)
@@ -144,9 +135,15 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(t.q, C2z.q)
         self.assertEqual(t.apply(p), C2z.apply(p))
 
-        # check Ox * Oy → C2z
+        # check O(x) * O(y) → C2z
         Ox = Quat.from_axangle([1, 0, 0], angle=sympy.pi + 2 * sympy.pi, improper=True)
         Oy = Quat.from_axangle([0, 1, 0], angle=sympy.pi + 2 * sympy.pi, improper=True)
         t = Oy * Ox
         self.assertEqual(t.q, C2z.q)
         self.assertEqual(t.apply(p), C2z.apply(p))
+
+        # Check O(y) * O(xy') → C4z
+        Od = Quat.from_axangle([1, -1, 0], angle=sympy.pi + 2 * sympy.pi, improper=True)
+        t = Oy * Od
+        C4z = Quat.from_axangle([0, 0, 1], angle=2 * sympy.pi / 4)
+        self.assertEqual(t.apply(p), C4z.apply(p))
