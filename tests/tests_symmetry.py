@@ -132,19 +132,22 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         # checked against http://gernot-katzers-spice-pages.com/character_tables/index.html
         groups = [
-            (symmetry.PointGroup.C_n(4), 4),
-            (symmetry.PointGroup.C_nv(2), 4),
-            (symmetry.PointGroup.C_nv(3), 6),
-            (symmetry.PointGroup.C_nh(1), 2),  # = C_s
-            (symmetry.PointGroup.C_nh(2), 4),  # != S_2
-            (symmetry.PointGroup.C_nh(3), 6),
-            (symmetry.PointGroup.C_nh(4), 8),  # != S_4
-            (symmetry.PointGroup.S_n(2), 2),  # = C_i
-            (symmetry.PointGroup.S_n(4), 4),
+            (symmetry.PointGroup.C_n(4), 4, True, 4),
+            (symmetry.PointGroup.C_nv(2), 4, True, 4),
+            (symmetry.PointGroup.C_nv(3), 6, False, 3),
+            (symmetry.PointGroup.C_nv(4), 8, False, 5),
+            (symmetry.PointGroup.C_nh(1), 2, True, 2),  # = C_s
+            (symmetry.PointGroup.C_nh(2), 4, True, 4),  # != S_2
+            (symmetry.PointGroup.C_nh(3), 6, True, 6),
+            (symmetry.PointGroup.C_nh(4), 8, True, 8),  # != S_4
+            (symmetry.PointGroup.S_n(2), 2, True, 2),  # = C_i
+            (symmetry.PointGroup.S_n(4), 4, True, 4),
         ]
 
-        for g, n_elements in groups:
+        for g, n_elements, is_abelian, number_of_class in groups:
             print(g)
             self.assertEqual(len(g.G), n_elements)
+            self.assertEqual(g.abelian, is_abelian)
+            self.assertEqual(g.number_of_class, number_of_class)
             self.assertTrue(g.binary_operation.check_surjectivity())
             self.assertTrue(g.binary_operation.check_associativity())

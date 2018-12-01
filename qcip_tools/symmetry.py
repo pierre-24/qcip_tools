@@ -3,9 +3,8 @@ Symmetry handling.
 
 See https://en.wikipedia.org/wiki/Group_(mathematics)
 
-Base implementation inspired from https://github.com/naftaliharris/Abstract-Algebra/
+Base implementation inspired by https://github.com/naftaliharris/Abstract-Algebra/
 
-See https://physics.stackexchange.com/questions/351372/generate-all-elements-of-a-point-group-from-generating-set
 and https://pdfs.semanticscholar.org/4edd/1ac673ea4cab251bb0b64bf0f5b65f18cc9d.pdf
 """
 
@@ -135,6 +134,10 @@ class BinaryOperation:
         return cls(Set(L), func)
 
 
+class NotInGroup(Exception):
+    pass
+
+
 class GroupElement:
     """Syntaxic sugar
     """
@@ -143,7 +146,7 @@ class GroupElement:
         if not isinstance(group, Group):
             raise TypeError('Group must be group')
         if element not in group.binary_operation.codomain:
-            raise TypeError('{} is not in group elements'.format(element))
+            raise NotInGroup(element)
 
         self.element = element
         self.group = group
@@ -156,7 +159,7 @@ class GroupElement:
         if isinstance(other, GroupElement):
             e = other.element
         if e not in self.group:
-            raise ValueError('{} is not in group domain')
+            raise NotInGroup(e)
 
         return GroupElement(self.group.binary_operation((self.element, e)), self.group)
 
@@ -209,9 +212,7 @@ class Group:
     - Closure (not checked here) ;
     - Associativity (not checked here) ;
     - (unique) Identity ;
-    - Inverse.
-
-    A group may also be Abelian.
+    - (unique) Inverse.
     """
 
     def __init__(self, binary_operation):
@@ -219,7 +220,17 @@ class Group:
             raise TypeError('binary_operation must be a BinaryOperation')
 
         self.binary_operation = binary_operation
-        self.G = [GroupElement(e, self) for e in binary_operation.codomain]
+        self.G = []
+        self._index_to_G = {}
+        self._G_to_index = {}
+
+        for g in binary_operation.codomain:
+            index = len(self.G)
+            self.G.append(GroupElement(g, self))
+            self._index_to_G[index] = self.G[index]
+            self._G_to_index[self.G[index]] = index
+
+        self.order = len(self.G)
 
         # get identity
         self.e = None
@@ -231,26 +242,45 @@ class Group:
         if self.e is None:
             raise RuntimeError('G does not contain an identity element')
 
-        # get inverses (and check if Abelian in the meantime)
-        self.inverses = {}
-        invs = []
+        # compute Caley table, get inverses (and check if Abelian in the meantime)
         self.abelian = True
-        for i in self.G:
-            inverse_found = False
-            for j in self.G:
-                if i * j == self.e:
-                    if j in invs:
-                        raise RuntimeError(
-                            '{} is already the inverse of an element, so cannot be the one of {} as well'.format(j, i))
+        self.cayley_table = numpy.ndarray((self.order, self.order), dtype=int)
+        self._index_to_inverse = {}
+        for i in range(self.order):
+            gi = self._index_to_G[i]
+            inverse_to_gi = False
+            for j in range(self.order):
+                gj = self._index_to_G[j]
+                g = gi * gj
+                self.cayley_table[i, j] = self._G_to_index[g]
+                if g == self.e:
+                    if not inverse_to_gi:
+                        self._index_to_inverse[i] = j
+                        inverse_to_gi = True
+                    else:
+                        raise ValueError('{} have two inverses'.format(gi))
+                if self.abelian and j <= i:
+                    self.abelian = self.cayley_table[i, j] == self.cayley_table[j, i]
 
-                    self.inverses[i] = j
-                    invs.append(j)
-                    inverse_found = True
-                    if j in self.inverses and self.inverses[j] != i:
-                        self.abelian = False
-                    break
-            if not inverse_found:
-                raise RuntimeError('{} does not have an inverse!'.format(i))
+        if len(self._index_to_inverse) != self.order:
+            raise ValueError('each element does not have an inverse')
+
+        # compute conjugacy classes
+        self.conjugacy_classes = []
+        self._index_to_conjugacy_class = {}
+        for i in range(self.order):
+            if i in self._index_to_conjugacy_class:
+                continue
+            else:
+                klass = []
+                for j in range(self.order):
+                    p = self.cayley_table[self.cayley_table[self._index_to_inverse[j], i], j]
+                    if p not in klass:
+                        self._index_to_conjugacy_class[p] = len(self.conjugacy_classes)
+                        klass.append(p)
+                self.conjugacy_classes.append(klass)
+
+        self.number_of_class = len(self.conjugacy_classes)
 
     def identity(self):
         """Get identity
@@ -267,16 +297,33 @@ class Group:
         :return: another element of G
         """
 
-        return self.inverses[element]
+        return self.G[self._index_to_inverse[self._G_to_index[element]]]
+
+    def conjugacy_class(self, g):
+        """Get the elements of the conjugacy class of ``g``
+
+        :param g: a group element
+        :type g: GroupElement
+        """
+
+        try:
+            index = self._G_to_index[g]
+        except KeyError:
+            raise NotInGroup(g)
+
+        if self.abelian:
+            return [g]
+        else:
+            return [self._index_to_G[i] for i in self.conjugacy_classes[self._index_to_conjugacy_class[index]]]
 
     def __contains__(self, item):
-        """is an element part of the group
+        """is an element part of the group ?
 
         :param item: the element
         :rtype: bool
         """
         if isinstance(item, GroupElement):
-            return item in self.G
+            return item in self._G_to_index
         else:
             return item in self.binary_operation.codomain
 
@@ -291,7 +338,7 @@ def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 7 * 9 * 11 * 13):
     """A fairly simple algorithm to get the fraction out of a floating number.
     Try to get as close as possible to ``x``.
 
-    Notice that the maximum denominator is chosen to be the multiplication of the primes (and their odd power)
+    Notice that the maximum denominator is chosen to be the multiplication of the primes (and their even power)
 
     :param x: the float
     :type x: float
@@ -618,19 +665,36 @@ class OperationDescription:
 
     @staticmethod
     def find_textual_axis(axis):
-        """Try to find the main axis (does not try a lot, though).
+        """Try to find the main axis:
+
+        - Find sole axis (x, y, z), which corresponds to :math:`\\sigma_h` and :math:`\\sigma_v` ;
+        - Find some :math:`\\sigma_d` (the one that are at 45° wrt axes: xy, x'y ... the prime indicate negative axis).
 
         :param axis: the axis
         :type axis: numpy.ndarray
         :rtype: str|None
         """
 
-        if numpy.allclose(axis, [0, 0, 1]):
-            return 'z'
-        if numpy.allclose(axis, [0, 1, 0]):
-            return 'y'
-        if numpy.allclose(axis, [1, 0, 0]):
-            return 'x'
+        s2 = math.sqrt(2) / 2
+
+        axes = {
+            'z': [0, 0, 1.],
+            'y': [0, 1., 0],
+            'x': [1., 0, 0],
+            'xy': [s2, s2, 0],
+            'xz': [s2, 0, s2],
+            'yz': [0, s2, s2],
+            'x\'y': [-s2, s2, 0],
+            'x\'z': [-s2, 0, s2],
+            'y\'z': [0, -s2, s2],
+            'xy\'': [s2, -s2, 0],
+            'xz\'': [s2, 0, -s2],
+            'yz\'': [0, s2, -s2]
+        }
+
+        for a, value in axes.items():
+            if numpy.allclose(value, axis):
+                return a
 
 
 class PointGroupType(str, Enum):
