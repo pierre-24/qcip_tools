@@ -97,6 +97,43 @@ class BinaryOperation:
             self((a, self((b, c)))) == self((self((a, b)), c))
             for a in self.codomain for b in self.codomain for c in self.codomain)
 
+    @classmethod
+    def generate(cls, generators, func):
+        """Create a complete set out of the generators.
+
+        Algorithm from https://physics.stackexchange.com/a/351400.
+
+        :param generators; the generators of the set
+        :type generators: list
+        :param func: function
+        :type func: function
+        :rtype: BinaryOperation
+        """
+
+        g = g1 = generators[0]
+        L = [g]
+        while True:
+            g = func((g, g1))
+            if g in L:
+                break
+            L.append(g)
+
+        for i in range(1, len(generators)):
+            C = [g1]
+            L1 = L.copy()
+            more = True
+            while more:
+                more = False
+                for g in C:
+                    for s in generators[:i + 1]:
+                        sg = s * g
+                        if sg not in L:
+                            C.append(sg)
+                            L.extend([func((sg, t)) for t in L1])
+                            more = True
+
+        return cls(Set(L), func)
+
 
 class GroupElement:
     """Syntaxic sugar
@@ -106,13 +143,13 @@ class GroupElement:
         if not isinstance(group, Group):
             raise TypeError('Group must be group')
         if element not in group.binary_operation.codomain:
-            raise TypeError('{} is not in group element'.format(element))
+            raise TypeError('{} is not in group elements'.format(element))
 
         self.element = element
         self.group = group
 
-    def __repr__(self):
-        return repr(self.element)
+    def __str__(self):
+        return str(self.element)
 
     def __mul__(self, other):
         e = other
@@ -243,6 +280,12 @@ class Group:
         else:
             return item in self.binary_operation.codomain
 
+    def __iter__(self):
+        yield self.e
+        for i in self.G:
+            if i != self.e:
+                yield i
+
 
 def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 7 * 9 * 11 * 13):
     """A fairly simple algorithm to get the fraction out of a floating number.
@@ -281,6 +324,7 @@ class Operation:
         self.q = q
         self.improper = improper
         self.description = description
+        self._hash = None
 
     def __mul__(self, other):
         if not isinstance(other, Operation):
@@ -304,11 +348,31 @@ class Operation:
         return quaternions.nearly_equivalent(self.q, other.q) and self.improper == other.improper
 
     def __hash__(self):
-        """TODO: I cannot base the construction of a group on its sole string representation.
-        """
-        return hash(str(self.get_description()))
+        """Hash based on the quaternion
 
-    def __repr__(self):
+        1. Set the quaternion to be positive ;
+        2. Take the fraction corresponding to the 4 components of the quaternion.
+        3. Add the improper variable.
+        4. Hash the corresponding tuple.
+        """
+
+        def _should_negate(q, thresh=.00001):
+            for i in range(4):
+                if math.fabs(q[i]) < thresh:
+                    continue
+
+                return q[i] < .0
+
+        if not self._hash:
+            q = self.q
+            if _should_negate(q):
+                q = -q
+
+            self._hash = hash((*(closest_fraction(x) for x in q), self.improper))
+
+        return self._hash
+
+    def __str__(self):
         return str(self.get_description())
 
     def apply(self, pin):
@@ -345,13 +409,20 @@ class Operation:
         :rtype: OperationDescription
         """
 
+        def _should_negate(axis, thresh=.001):
+            p = sorted(list(axis))
+            if math.fabs(p[0] - p[1]) < thresh:
+                return False
+            else:
+                return p[0] < .0
+
         if self.description is None or force:
             axis, angle = quaternions.quat2axangle(self.q)
 
             # treatment on angle:
             angle /= 2 * numpy.pi
 
-            if axis[2] < .0:  # return axis so that it always have a positive z
+            if _should_negate(axis):  # return axis so that it always have a positive z
                 axis = -axis
                 angle = 1 - angle
 
@@ -369,16 +440,16 @@ class Operation:
                 k %= n
 
             # find symbol
-            symbol = Symbol.improper_rotation if self.improper else Symbol.proper_rotation
+            symbol = OperationType.improper_rotation if self.improper else OperationType.proper_rotation
 
             if n == 1:
                 if not self.improper:
-                    symbol = Symbol.identity
+                    symbol = OperationType.identity
                 else:
-                    symbol = Symbol.reflexion_plane
+                    symbol = OperationType.reflexion_plane
 
             if n == 2 and self.improper:
-                symbol = Symbol.inversion
+                symbol = OperationType.inversion
 
             self.description = OperationDescription(symbol, axis, n, k)
 
@@ -417,7 +488,7 @@ class Operation:
 
         :rtype: Operation
         """
-        return cls(quaternions.qeye(), description=OperationDescription(Symbol.identity))
+        return cls(quaternions.qeye(), description=OperationDescription(OperationType.identity))
 
     @classmethod
     def C(cls, n, k=1, axis=numpy.array([0, 0, 1.])):
@@ -446,7 +517,7 @@ class Operation:
             k = int(k / g)
 
         return cls.from_axangle(
-            axis, 2 * numpy.pi / n * k, description=OperationDescription(Symbol.proper_rotation, axis, n, k))
+            axis, 2 * numpy.pi / n * k, description=OperationDescription(OperationType.proper_rotation, axis, n, k))
 
     @classmethod
     def S(cls, n, k=1, axis=numpy.array([0, 0, 1.])):
@@ -474,9 +545,9 @@ class Operation:
         if n % 2 == 0 and k % 2 == 0:
             return cls.C(k, n, axis=axis)
         else:
-            symbol = Symbol.improper_rotation
+            symbol = OperationType.improper_rotation
             if n == 1:
-                symbol = Symbol.reflexion_plane
+                symbol = OperationType.reflexion_plane
             elif n == 2:
                 symbol = symbol.inversion
 
@@ -502,7 +573,7 @@ class Operation:
         return cls.S(1, axis=axis)
 
 
-class Symbol(str, Enum):
+class OperationType(str, Enum):
     """Symbol of the symmetry element, in `Schoenflies notation <https://en.wikipedia.org/wiki/Schoenflies_notation>`_.
 
     """
@@ -518,7 +589,7 @@ class OperationDescription:
     """
 
     def __init__(self, symbol, axis=numpy.zeros(3), n=1, k=1):
-        if symbol not in Symbol:
+        if symbol not in OperationType:
             raise ValueError('not an allowed symbol')
 
         self.symbol = symbol
@@ -536,13 +607,14 @@ class OperationDescription:
             self.n == other.n and self.k == other.k and numpy.allclose(self.axis, other.axis)
 
     def __str__(self):
-        if self.symbol in [Symbol.identity, Symbol.inversion]:
+        axis = ','.join('{:.3f}'.format(e) for e in self.axis)
+        if self.symbol in [OperationType.identity, OperationType.inversion]:
             return self.symbol.value
-        if self.symbol == Symbol.reflexion_plane:
-            return '{}({})'.format(self.symbol.value, self.textual_axis if self.textual_axis else self.axis)
+        if self.symbol == OperationType.reflexion_plane:
+            return '{}({})'.format(self.symbol.value, self.textual_axis if self.textual_axis else axis)
         else:
             return '{}({},{},{})'.format(
-                self.symbol.value, self.n, self.k, self.textual_axis if self.textual_axis else self.axis)
+                self.symbol.value, self.n, self.k, self.textual_axis if self.textual_axis else axis)
 
     @staticmethod
     def find_textual_axis(axis):
@@ -559,3 +631,120 @@ class OperationDescription:
             return 'y'
         if numpy.allclose(axis, [1, 0, 0]):
             return 'x'
+
+
+class PointGroupType(str, Enum):
+    cyclic = 'C_n'
+    pyramidal = 'C_nv'
+    prismatic = 'C_nh'
+    gyro_n_gonal = 'S_n'
+    dihedral = 'D_n'
+    ortho_n_gonal = 'D_nh'
+    antiprismatic = 'D_nd'
+    tetrahedral_chiral = 'T'
+    pyritohedral = 'T_h'
+    tetrahedral_achiral = 'T_d'
+    octahedral_chiral = 'O'
+    octahedral_achiral = 'O_h'
+    icosahedral_chiral = 'I'
+    icosahedral_achiral = 'I_h'
+
+
+class PointGroupDescription:
+    def __init__(self, symbol, n=0):
+        if symbol not in PointGroupType:
+            raise ValueError('unrecognized group type')
+
+        if symbol in [
+            PointGroupType.cyclic, PointGroupType.pyramidal, PointGroupType.prismatic,
+            PointGroupType.gyro_n_gonal, PointGroupType.dihedral, PointGroupType.ortho_n_gonal,
+                PointGroupType.antiprismatic]:
+
+            if n < 1:
+                    raise ValueError('order must be equal or superior to 1')
+        else:
+            if n > 0:
+                raise ValueError('order does not matter for point group {}'.format(symbol.value))
+
+        self.symbol = symbol
+        self.order = n
+
+    def __str__(self):
+        s = self.symbol.value
+        if 'n' in s:
+            s = s.replace('n', str(self.order))
+        return s
+
+
+class PointGroup(Group):
+
+    def __init__(self, func, description=None):
+        super().__init__(func)
+        self.description = description
+
+    def __str__(self):
+        return '{} <{}>'.format(
+            str(self.description) if self.description is not None else 'Point group',
+            ','.join(str(i) for i in self)
+        )
+
+    @staticmethod
+    def product(e):
+        return e[0] * e[1]
+
+    @classmethod
+    def generate(cls, generators, description=None):
+        return cls(BinaryOperation.generate(generators, PointGroup.product), description)
+
+    @classmethod
+    def C_n(cls, n=1):
+        """Create a cyclic group of order n
+
+        :param n; order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+        return cls.generate([Operation.C(n)], description=PointGroupDescription(PointGroupType.cyclic, n))
+
+    @classmethod
+    def C_nv(cls, n=1):
+        """Create a pyramidal group of order n
+
+        :param n; order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+        return cls.generate(
+            [Operation.C(n), Operation.sigma(axis=numpy.array([1., 0, 0]))],
+            description=PointGroupDescription(PointGroupType.pyramidal, n))
+
+    @classmethod
+    def S_n(cls, n=1):
+        """Create a prismatic (odd n) or gyro-n-gonal (even n) point group of order n
+
+        :param n; order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+
+        if n % 2 == 0:
+            type_ = PointGroupType.gyro_n_gonal
+        else:
+            type_ = PointGroupType.prismatic
+
+        return cls.generate(
+            [Operation.S(n)],
+            description=PointGroupDescription(type_, n))
+
+    @classmethod
+    def C_nh(cls, n=1):
+        """Create a prismatic point group of order n
+
+        :param n; order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+
+        return cls.generate(
+            [Operation.C(n), Operation.sigma()],
+            description=PointGroupDescription(PointGroupType.prismatic, n))

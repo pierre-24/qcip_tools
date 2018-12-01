@@ -128,11 +128,23 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(t.get_description(), C4z.get_description())
         self.assertArraysAlmostEqual(t.apply(p), C4z.apply(p))
 
-    def test_point_group(self):
-        f = symmetry.BinaryOperation(
-            symmetry.Set(symmetry.Operation.C(4, i + 1) for i in range(4)), lambda e: e[0] * e[1])
+    def test_point_groups(self):
 
-        self.assertTrue(f.check_surjectivity())
-        self.assertTrue(f.check_associativity())
+        # checked against http://gernot-katzers-spice-pages.com/character_tables/index.html
+        groups = [
+            (symmetry.PointGroup.C_n(4), 4),
+            (symmetry.PointGroup.C_nv(2), 4),
+            (symmetry.PointGroup.C_nv(3), 6),
+            (symmetry.PointGroup.C_nh(1), 2),  # = C_s
+            (symmetry.PointGroup.C_nh(2), 4),  # != S_2
+            (symmetry.PointGroup.C_nh(3), 6),
+            (symmetry.PointGroup.C_nh(4), 8),  # != S_4
+            (symmetry.PointGroup.S_n(2), 2),  # = C_i
+            (symmetry.PointGroup.S_n(4), 4),
+        ]
 
-        symmetry.Group(f)
+        for g, n_elements in groups:
+            print(g)
+            self.assertEqual(len(g.G), n_elements)
+            self.assertTrue(g.binary_operation.check_surjectivity())
+            self.assertTrue(g.binary_operation.check_associativity())
