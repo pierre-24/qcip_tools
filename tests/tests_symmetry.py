@@ -7,6 +7,10 @@ from qcip_tools import symmetry
 
 class SymmetryTestCase(QcipToolsTestCase):
 
+    def test_closest_fraction(self):
+        self.assertEqual(symmetry.closest_fraction(-.499999, max_denominator=1000), (-1, 2))
+        self.assertEqual(symmetry.closest_fraction(.499999, max_denominator=1000), (1, 2))
+
     def test_group(self):
         f = symmetry.BinaryOperation(symmetry.Set(range(4)), lambda e: (e[0] + e[1]) % 4)
         self.assertTrue(f.check_surjectivity())
@@ -133,6 +137,8 @@ class SymmetryTestCase(QcipToolsTestCase):
         # checked against http://gernot-katzers-spice-pages.com/character_tables/index.html
         groups = [
             (symmetry.PointGroup.C_n(4), 4, True, 4),
+            (symmetry.PointGroup.S_n(2), 2, True, 2),  # = C_i
+            (symmetry.PointGroup.S_n(4), 4, True, 4),
             (symmetry.PointGroup.C_nv(2), 4, True, 4),
             (symmetry.PointGroup.C_nv(3), 6, False, 3),
             (symmetry.PointGroup.C_nv(4), 8, False, 5),
@@ -140,8 +146,11 @@ class SymmetryTestCase(QcipToolsTestCase):
             (symmetry.PointGroup.C_nh(2), 4, True, 4),  # != S_2
             (symmetry.PointGroup.C_nh(3), 6, True, 6),
             (symmetry.PointGroup.C_nh(4), 8, True, 8),  # != S_4
-            (symmetry.PointGroup.S_n(2), 2, True, 2),  # = C_i
-            (symmetry.PointGroup.S_n(4), 4, True, 4),
+            (symmetry.PointGroup.D_n(4), 8, False, 5),
+            (symmetry.PointGroup.D_nh(3), 12, False, 6),
+            (symmetry.PointGroup.D_nh(4), 16, False, 10),
+            (symmetry.PointGroup.D_nd(2), 8, False, 5),
+            (symmetry.PointGroup.D_nd(3), 12, False, 6),
         ]
 
         for g, n_elements, is_abelian, number_of_class in groups:

@@ -131,6 +131,7 @@ class BinaryOperation:
                             L.extend([func((sg, t)) for t in L1])
                             more = True
 
+        # print([str(l) for l in L])
         return cls(Set(L), func)
 
 
@@ -347,8 +348,11 @@ def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 7 * 9 * 11 * 13):
     :rtype: tuple(int, int)
     """
     e = int(x * max_denominator)
-    if abs((e + 1) / max_denominator - x) <= abs(e / max_denominator - x):
+    u = math.fabs(e / max_denominator - x)
+    if math.fabs((e + 1) / max_denominator - x) <= u:
         e += 1
+    elif math.fabs((e - 1) / max_denominator - x) <= u:
+        e -= 1
     g = math.gcd(e, max_denominator)
     return e // g, max_denominator // g
 
@@ -360,7 +364,7 @@ class Operation:
 
     .. math::
 
-        \\hat{S}^k_n = \\hat{R}(\\pi + \\frac{2\\pi}{n}),
+        S^k_n = \\hat{R}\\left(\\pi + \\frac{2\\,k\\,\\pi}{n}\\right),
 
     where :math:`\\hat{R}` is the normal rotation operator.
     To use this operator on a point, the opposite of the sandwich product must be taken, so that the conjugate of the
@@ -398,8 +402,8 @@ class Operation:
         """Hash based on the quaternion
 
         1. Set the quaternion to be positive ;
-        2. Take the fraction corresponding to the 4 components of the quaternion.
-        3. Add the improper variable.
+        2. Take the fraction corresponding to the 4 components of the quaternion ;
+        3. Add the improper variable ;
         4. Hash the corresponding tuple.
         """
 
@@ -416,6 +420,8 @@ class Operation:
                 q = -q
 
             self._hash = hash((*(closest_fraction(x) for x in q), self.improper))
+
+            # print(self, *(closest_fraction(x) for x in q), self._hash)
 
         return self._hash
 
@@ -689,7 +695,10 @@ class OperationDescription:
             'y\'z': [0, -s2, s2],
             'xy\'': [s2, -s2, 0],
             'xz\'': [s2, 0, -s2],
-            'yz\'': [0, s2, -s2]
+            'yz\'': [0, s2, -s2],
+            'x\'y\'': [-s2, -s2, 0],
+            'x\'z\'': [-s2, 0, -s2],
+            'y\'z\'': [0, -s2, -s2]
         }
 
         for a, value in axes.items():
@@ -698,18 +707,24 @@ class OperationDescription:
 
 
 class PointGroupType(str, Enum):
+    # cyclic (https://en.wikipedia.org/wiki/Cyclic_symmetry_in_three_dimensions):
     cyclic = 'C_n'
     pyramidal = 'C_nv'
-    prismatic = 'C_nh'
-    gyro_n_gonal = 'S_n'
+    reflexion = 'C_nh'
+    improper_rotation = 'S_n'
+    # dihedral (https://en.wikipedia.org/wiki/Dihedral_symmetry_in_three_dimensions)
     dihedral = 'D_n'
-    ortho_n_gonal = 'D_nh'
+    prismatic = 'D_nh'
     antiprismatic = 'D_nd'
+    # cubic:
+    # - tetrahedral (https://en.wikipedia.org/wiki/Tetrahedral_symmetry),
+    # - octahedral (https://en.wikipedia.org/wiki/Octahedral_symmetry).
     tetrahedral_chiral = 'T'
     pyritohedral = 'T_h'
     tetrahedral_achiral = 'T_d'
     octahedral_chiral = 'O'
     octahedral_achiral = 'O_h'
+    # icosahedral (https://en.wikipedia.org/wiki/Icosahedral_symmetry)
     icosahedral_chiral = 'I'
     icosahedral_achiral = 'I_h'
 
@@ -720,8 +735,8 @@ class PointGroupDescription:
             raise ValueError('unrecognized group type')
 
         if symbol in [
-            PointGroupType.cyclic, PointGroupType.pyramidal, PointGroupType.prismatic,
-            PointGroupType.gyro_n_gonal, PointGroupType.dihedral, PointGroupType.ortho_n_gonal,
+            PointGroupType.cyclic, PointGroupType.pyramidal, PointGroupType.reflexion,
+                PointGroupType.improper_rotation, PointGroupType.dihedral, PointGroupType.prismatic,
                 PointGroupType.antiprismatic]:
 
             if n < 1:
@@ -764,51 +779,124 @@ class PointGroup(Group):
     def C_n(cls, n=1):
         """Create a cyclic group of order n
 
-        :param n; order of the group
+        :param n: order of the group
         :type n: int
         :rtype: PointGroup
         """
         return cls.generate([Operation.C(n)], description=PointGroupDescription(PointGroupType.cyclic, n))
 
     @classmethod
-    def C_nv(cls, n=1):
-        """Create a pyramidal group of order n
-
-        :param n; order of the group
-        :type n: int
-        :rtype: PointGroup
-        """
-        return cls.generate(
-            [Operation.C(n), Operation.sigma(axis=numpy.array([1., 0, 0]))],
-            description=PointGroupDescription(PointGroupType.pyramidal, n))
-
-    @classmethod
     def S_n(cls, n=1):
-        """Create a prismatic (odd n) or gyro-n-gonal (even n) point group of order n
+        """Create a reflexion (odd n) or improper rotation (even n) point group of order n.
 
-        :param n; order of the group
+        Note that :math:`S_{2}` is usually noted :math:`C_i`.
+
+        :param n: order of the group
         :type n: int
         :rtype: PointGroup
         """
 
         if n % 2 == 0:
-            type_ = PointGroupType.gyro_n_gonal
+            type_ = PointGroupType.improper_rotation
         else:
-            type_ = PointGroupType.prismatic
+            type_ = PointGroupType.reflexion
 
         return cls.generate(
             [Operation.S(n)],
             description=PointGroupDescription(type_, n))
 
     @classmethod
-    def C_nh(cls, n=1):
-        """Create a prismatic point group of order n
+    def C_nv(cls, n=2):
+        """Create a pyramidal group of order n:
 
-        :param n; order of the group
+        .. math::
+
+            C_{nv} = C_n \\times \\{E, \\sigma_v \\}.
+
+        :param n: order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+        if n < 2:
+            raise ValueError('minimum order is 2')
+
+        return cls.generate(
+            [Operation.C(n), Operation.sigma(axis=numpy.array([1., 0, 0]))],
+            description=PointGroupDescription(PointGroupType.pyramidal, n))
+
+    @classmethod
+    def C_nh(cls, n=1):
+        """Create a reflexion point group of order n:
+
+        .. math::
+
+            C_{nv} = C_n \\times \\{E, \\sigma_h \\}.
+
+        Note that :math:`C_{1h}` is usually noted :math:`C_s`.
+
+        :param n: order of the group
         :type n: int
         :rtype: PointGroup
         """
 
         return cls.generate(
             [Operation.C(n), Operation.sigma()],
+            description=PointGroupDescription(PointGroupType.reflexion, n))
+
+    @classmethod
+    def D_n(cls, n=2):
+        """Create a dihedral point group of order n:
+
+        .. math::
+
+            D_{n} = C_n(z) \\times \\{E,  C_2(x) \\}.
+
+        :param n: order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+        if n < 2:
+            raise ValueError('minimum order is 2')
+
+        return cls.generate(
+            [Operation.C(n), Operation.C(2, axis=numpy.array([1., 0, 0]))],
+            description=PointGroupDescription(PointGroupType.dihedral, n))
+
+    @classmethod
+    def D_nh(cls, n=2):
+        """Create a prismatic point group of order n:
+
+        .. math::
+
+            D_{nh} &= D_n \\times \\{E, \\sigma_h\\} \\\\
+            &= C_n(z) \\times \\{E,  C_2(x)\\} \\times \\{E, \\sigma_h\\}.
+
+        :param n: order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+        if n < 2:
+            raise ValueError('minimum order is 2')
+
+        return cls.generate(
+            [Operation.C(n), Operation.C(2, axis=numpy.array([1., 0, 0])), Operation.sigma()],
             description=PointGroupDescription(PointGroupType.prismatic, n))
+
+    @classmethod
+    def D_nd(cls, n=2):
+        """Create an anti prismatic point group of order n:
+
+        .. math::
+
+            D_{nd} = S_{2n}(z) \\times \\{E,  C_2(x) \\}.
+
+        :param n: order of the group
+        :type n: int
+        :rtype: PointGroup
+        """
+        if n < 2:
+            raise ValueError('minimum order is 2')
+
+        return cls.generate(
+            [Operation.S(2 * n), Operation.C(2, axis=numpy.array([1., 0, 0]))],
+            description=PointGroupDescription(PointGroupType.antiprismatic, n))
