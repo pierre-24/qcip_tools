@@ -673,8 +673,31 @@ class OperationDescription:
     def find_textual_axis(axis):
         """Try to find the main axis:
 
-        - Find sole axis (x, y, z), which corresponds to :math:`\\sigma_h` and :math:`\\sigma_v` ;
-        - Find some :math:`\\sigma_d` (the one that are at 45° wrt axes: xy, x'y ... the prime indicate negative axis).
+        - Find sole axis (x, y, z) ;
+        - Find the axis at 45° with respect to two axis ;
+        - Find the axis at 45° with respect to three axis (the 8 apexes of a cube).
+
+        .. code-block:: text
+
+            Some example of the different axis:
+
+                (x'yz') +------*-------+ (xyz')
+                       /              /|
+                (x'y) *      o (y)   * |
+                     /              /  * (xz')
+             (x'yz) +------*-------+   |
+                    |              | o |
+                    |              |   + (xy',z')    y
+              (x'z) *      o (z)   *  /              |
+                    |              | * (y'z)         +--- x
+                    |              |/               /
+            (x'y'z) +------*-------+ (xy'z)        z
+
+            with
+
+            o : single axis,
+            * : double axis,
+            + : triple axis.
 
         :param axis: the axis
         :type axis: numpy.ndarray
@@ -682,23 +705,35 @@ class OperationDescription:
         """
 
         s2 = math.sqrt(2) / 2
+        s3 = math.sqrt(3) / 3
 
         axes = {
+            # single (3)
             'z': [0, 0, 1.],
             'y': [0, 1., 0],
             'x': [1., 0, 0],
-            'xy': [s2, s2, 0],
-            'xz': [s2, 0, s2],
-            'yz': [0, s2, s2],
-            'x\'y': [-s2, s2, 0],
-            'x\'z': [-s2, 0, s2],
-            'y\'z': [0, -s2, s2],
-            'xy\'': [s2, -s2, 0],
-            'xz\'': [s2, 0, -s2],
-            'yz\'': [0, s2, -s2],
-            'x\'y\'': [-s2, -s2, 0],
-            'x\'z\'': [-s2, 0, -s2],
-            'y\'z\'': [0, -s2, -s2]
+            # double (8)
+            '[xy]': [s2, s2, 0],
+            '[xz]': [s2, 0, s2],
+            '[yz]': [0, s2, s2],
+            '[x\'y]': [-s2, s2, 0],
+            '[x\'z]': [-s2, 0, s2],
+            '[y\'z]': [0, -s2, s2],
+            '[xy\']': [s2, -s2, 0],
+            '[xz\']': [s2, 0, -s2],
+            '[yz\']': [0, s2, -s2],
+            '[x\'y\']': [-s2, -s2, 0],
+            '[x\'z\']': [-s2, 0, -s2],
+            '[y\'z\']': [0, -s2, -s2],
+            # triple (8)
+            '[xyz]': [s3, s3, s3],
+            '[xy\'z]': [s3, -s3, s3],
+            '[x\'yz]': [-s3, s3, s3],
+            '[x\'y\'z]': [-s3, -s3, s3],
+            '[xyz\']': [s3, s3, -s3],
+            '[xy\'z\']': [s3, -s3, -s3],
+            '[x\'yz\']': [-s3, s3, -s3],
+            '[x\'y\'z\']': [-s3, -s3, -s3],
         }
 
         for a, value in axes.items():
@@ -811,7 +846,7 @@ class PointGroup(Group):
 
         .. math::
 
-            C_{nv} = C_n \\times \\{E, \\sigma_v \\}.
+            C_{nv} = C_n \\times \\sigma_v.
 
         :param n: order of the group
         :type n: int
@@ -830,7 +865,7 @@ class PointGroup(Group):
 
         .. math::
 
-            C_{nv} = C_n \\times \\{E, \\sigma_h \\}.
+            C_{nv} = C_n \\times \\sigma_h.
 
         Note that :math:`C_{1h}` is usually noted :math:`C_s`.
 
@@ -849,7 +884,7 @@ class PointGroup(Group):
 
         .. math::
 
-            D_{n} = C_n(z) \\times \\{E,  C_2(x) \\}.
+            D_{n} = C_n(z) \\times C_2(x).
 
         :param n: order of the group
         :type n: int
@@ -868,8 +903,8 @@ class PointGroup(Group):
 
         .. math::
 
-            D_{nh} &= D_n \\times \\{E, \\sigma_h\\} \\\\
-            &= C_n(z) \\times \\{E,  C_2(x)\\} \\times \\{E, \\sigma_h\\}.
+            D_{nh} &= D_n \\times \\sigma_h \\\\
+            &= C_n(z) \\times C_2(x) \\times\\sigma_h.
 
         :param n: order of the group
         :type n: int
@@ -888,7 +923,7 @@ class PointGroup(Group):
 
         .. math::
 
-            D_{nd} = S_{2n}(z) \\times \\{E,  C_2(x) \\}.
+            D_{nd} = S_{2n}(z) \\times C_2(x).
 
         :param n: order of the group
         :type n: int
@@ -900,3 +935,90 @@ class PointGroup(Group):
         return cls.generate(
             [Operation.S(2 * n), Operation.C(2, axis=numpy.array([1., 0, 0]))],
             description=PointGroupDescription(PointGroupType.antiprismatic, n))
+
+    @classmethod
+    def T(cls):
+        """Create the chiral tetrahedral group
+
+        .. math::
+
+            T = C_2(z) \\times C_3(1, 1, 1).
+
+        :rtype: PointGroup
+        """
+
+        return cls.generate(
+            [
+                Operation.C(2),
+                Operation.C(3, axis=numpy.array([1., 1., 1.]))],
+            description=PointGroupDescription(PointGroupType.tetrahedral_chiral))
+
+    @classmethod
+    def T_h(cls):
+        """Create the pyritohedral group
+
+        .. math::
+
+            T_h = C_2 \\times \\sigma_h \\times C_3(1, 1, 1).
+
+        :rtype: PointGroup
+        """
+
+        return cls.generate(
+            [
+                Operation.C(2),
+                Operation.sigma(),
+                Operation.C(3, axis=numpy.array([1., 1., 1.]))],
+            description=PointGroupDescription(PointGroupType.pyritohedral))
+
+    @classmethod
+    def T_d(cls):
+        """Create the achiral tetrahedral group
+
+        .. math::
+
+            T_d = S_4 \\times C_3(1, 1, 1).
+
+        :rtype: PointGroup
+        """
+
+        return cls.generate(
+            [
+                Operation.S(4),
+                Operation.C(3, axis=numpy.array([1., 1., 1.]))],
+            description=PointGroupDescription(PointGroupType.tetrahedral_achiral))
+
+    @classmethod
+    def O(cls):  # noqa
+        """Create the chiral octahedral group
+
+        .. math::
+
+            O = C_4(z) \\times C_3(1, 1, 1).
+
+        :rtype: PointGroup
+        """
+
+        return cls.generate(
+            [
+                Operation.C(4),
+                Operation.C(3, axis=numpy.array([1., 1., 1.]))],
+            description=PointGroupDescription(PointGroupType.octahedral_chiral))
+
+    @classmethod
+    def O_h(cls):
+        """Create the achiral octahedral group
+
+        .. math::
+
+            O_h = C_4 \\times \\sigma_h \\times C_3(1, 1, 1).
+
+        :rtype: PointGroup
+        """
+
+        return cls.generate(
+            [
+                Operation.C(4),
+                Operation.sigma(),
+                Operation.C(3, axis=numpy.array([1., 1., 1.]))],
+            description=PointGroupDescription(PointGroupType.octahedral_achiral))

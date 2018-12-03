@@ -151,6 +151,11 @@ class SymmetryTestCase(QcipToolsTestCase):
             (symmetry.PointGroup.D_nh(4), 16, False, 10),
             (symmetry.PointGroup.D_nd(2), 8, False, 5),
             (symmetry.PointGroup.D_nd(3), 12, False, 6),
+            (symmetry.PointGroup.T(), 12, False, 4),
+            (symmetry.PointGroup.T_h(), 24, False, 8),
+            (symmetry.PointGroup.T_d(), 24, False, 5),
+            (symmetry.PointGroup.O(), 24, False, 5),
+            (symmetry.PointGroup.O_h(), 48, False, 10),
         ]
 
         for g, n_elements, is_abelian, number_of_class in groups:
@@ -158,5 +163,6 @@ class SymmetryTestCase(QcipToolsTestCase):
             self.assertEqual(len(g.G), n_elements)
             self.assertEqual(g.abelian, is_abelian)
             self.assertEqual(g.number_of_class, number_of_class)
-            self.assertTrue(g.binary_operation.check_surjectivity())
-            self.assertTrue(g.binary_operation.check_associativity())
+            if len(g.G) <= 12:
+                self.assertTrue(g.binary_operation.check_surjectivity())  # O(n²)
+                self.assertTrue(g.binary_operation.check_associativity())  # O(n³)
