@@ -787,7 +787,7 @@ def compute_numerical_derivative_of_tensor(
             if not dry_run:
                 trig = numerical_differentiation.RombergTriangle(values_per_k, ratio=ratio, r=2)
                 romberg_triangles[derivative_coo][basis_coo] = trig
-                val = trig.find_best_value()
+                val = trig()  # find best values and save them
 
                 for inv_derivative_coo in inv_derivative_coos:
                     for inv_basis_coo in basis.inverse_smart_iterator(basis_coo):
