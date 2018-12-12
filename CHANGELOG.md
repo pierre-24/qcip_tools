@@ -13,6 +13,7 @@
 + Upgrade to the latest version of h5py, remove warning (!50)
 + Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants, !51)
 + Use pipenv (!52)
++ Store best values in Romberg object (!54)
 
 ## Version 0.5
 
