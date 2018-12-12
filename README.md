@@ -8,6 +8,7 @@ Current release: [release-v0.5.4.1](https://gitlab.unamur.be/chimie/lct/qcip_too
 Previous releases (see [the changelog](./CHANGELOG.md)):
 
 <!-- PREVIOUS: -->
++  [release-v0.5.4.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4.1) (December 12, 2018)
 +  [release-v0.5.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4) (November 13, 2018)
 +  [release-v0.5.3.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3.2) (June 29, 2018)
 +  [release-v0.5.3.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3.1) (April 11, 2018)
