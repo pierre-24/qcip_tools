@@ -241,7 +241,7 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
 
         .. math::
 
-            E_i = \\sum_{ij\\ldot}^{x,y,z} \chi_{ij\\ldots}\\,F_i\,F_j\\,\\ldots
+            E_i = \\sum_{ij\\ldot}^{x,y,z} \\chi_{ij\\ldots}\\,F_i\\,F_j\\,\\ldots
 
         :param field: The electric field
         :type field: numpy.array
@@ -722,8 +722,8 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         """
 
         return _sqrt_or_neg_sqrt(
-            self.octupolar_contribution_squared(old_version=old_version) /
-            self.dipolar_contribution_squared(old_version=old_version))
+            self.octupolar_contribution_squared(
+                old_version=old_version) / self.dipolar_contribution_squared(old_version=old_version))
 
     def beta_vector(self):
         """return the hyperpolarizability vector
@@ -805,7 +805,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            \\beta^K = \\frac{3}{2}\,(\\beta_{||}-\\beta_{\\perp})
+            \\beta^K = \\frac{3}{2}\\,(\\beta_{||}-\\beta_{\\perp})
 
         :param dipole: dipole moment
         :type dipole: numpy.ndarray
@@ -933,7 +933,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
         .. math::
 
-            \\gamma^K = \\frac{3}{2}\,(\\gamma_{||}-\\gamma_{\\perp})
+            \\gamma^K = \\frac{3}{2}\\,(\\gamma_{||}-\\gamma_{\\perp})
 
         :rtype: float
         """

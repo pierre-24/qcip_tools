@@ -7,7 +7,7 @@ except ImportError:  # for pip <= 9.0.3
 
 pkgs = []
 dependency_links = []
-for pkg in parse_requirements('.install_require', session=False):
+for pkg in parse_requirements('requirements.txt', session=False):
     if pkg.link:
         dependency_links.append(str(pkg.link))
     else:
