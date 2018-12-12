@@ -14,6 +14,12 @@ To just use ``qcip_tools`` in your Python projects, simply use pip:
 Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://gitlab.unamur.be/chimie/lct/qcip_tools/blob/master/README.md>`_).
 
 Note that ``--user`` allow you to install the package without being superuser (see `here <https://pip.pypa.io/en/stable/user_guide/#user-installs>`_).
+You will probably need to add ``$HOME/.local/bin`` to ``$PATH`` for this to work:
+
+.. code-block:: bash
+
+  echo 'PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
+
 On the other hand, you can install it in a *virtualenv* (see below).
 
 
