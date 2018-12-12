@@ -224,6 +224,25 @@ class RombergTriangle:
                 self.romberg_triangle[index, m] = \
                     (mult_ * prev_iteration[index] - prev_iteration[index + 1]) / (mult_ - 1)
 
+        self.best_value = None
+
+    def __call__(self, force=False, threshold=1e-5, verbose=False, out=sys.stdout):
+        """Find best value and store it (see ``find_best_value()``).
+
+        :param force: force the computation of the best value
+        :rtype force: bool
+        :param threshold: threshold for maximum iteration error
+        :type threshold: float
+        :param verbose: get an insight of how the value was chosen
+        :type verbose: bool
+        :return: a tuple of 3 information: position (tuple), value (float), iteration error (float)
+        :rtype: tuple
+        """
+        if self.best_value is None or force:
+            self.best_value = self.find_best_value()
+
+        return self.best_value
+
     def amplitude_error(self, k=0, m=0):
         """Compute :math:`\\varepsilon_k(m) = H_{k+1,m} - H_{k,m}`
 

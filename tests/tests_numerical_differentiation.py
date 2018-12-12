@@ -266,7 +266,7 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
         self.assertEqual(t.iteration_error(0, 0), t.romberg_triangle[0, 1] - t.romberg_triangle[0, 0])
 
         # test best value:
-        position, value, iteration_error = t.find_best_value(threshold=1e-5)
+        position, value, iteration_error = t(threshold=1e-5)
         self.assertAlmostEqual(value, self.coefficients_of_univariate_polynom[1], places=5)
         self.assertTrue(position[1] > 0)  # it needed improvements !
         self.assertTrue(math.fabs(iteration_error) < 1e-5)
