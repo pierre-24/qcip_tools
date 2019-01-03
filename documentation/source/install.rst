@@ -9,11 +9,17 @@ To just use ``qcip_tools`` in your Python projects, simply use pip:
 
 .. code-block:: bash
 
-    pip3 install git+ssh://git@gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
+    pip3 install --user git+ssh://git@gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
 
 Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://gitlab.unamur.be/chimie/lct/qcip_tools/blob/master/README.md>`_).
 
 Note that ``--user`` allow you to install the package without being superuser (see `here <https://pip.pypa.io/en/stable/user_guide/#user-installs>`_).
+You will probably need to add ``$HOME/.local/bin`` to ``$PATH`` for this to work:
+
+.. code-block:: bash
+
+  echo 'PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc
+
 On the other hand, you can install it in a *virtualenv* (see below).
 
 
@@ -52,7 +58,7 @@ Installation for contributors
 To contribute to the project, you need to clone the repository:
 
 + Clone it: ``git clone git@git.pierrebeaujean.net:pierre/qcip_tools.git``.
-+ Install scipy dependencies : ``sudo apt-get install libopenblas-dev libatlas-dev build-essential libpng12-dev libfreetype6-dev libpython3.*-dev`` (or something like this).
++ Install scipy's (and other python's) dependencies : ``sudo apt-get install libopenblas-dev libatlas-dev build-essential libpng12-dev libfreetype6-dev libpython3.*-dev`` (or something like this).
 + Install pipenv: ``pip3 install pipenv``
 + Install virtualenv and dependencies: ``make init``.
 
