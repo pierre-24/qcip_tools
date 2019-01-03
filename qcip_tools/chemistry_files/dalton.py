@@ -398,7 +398,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             for index, split in enumerate(splits[1:]):
                 info.append(line[splits[index]:split].strip())
 
-            if not check_CC_calculation and info[5] != 'ENERGY':
+            if not check_CC_calculation and info[5] not in ['ENERGY', 'ALL_DONE']:
                 is_CC_calculation = info[3] in CC_methods
 
             derivative = int(info[2])
@@ -567,7 +567,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                         translate_diplens[l[6][0]],
                         translate_diplens[l[7][0]],
                         translate_diplens[l[8][0]]] \
-                    = float(l[4])
+                    = float(l[4]) * (-1 if is_CC_calculation else 1)
 
             electrical_derivatives.update(data)
 

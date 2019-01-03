@@ -14,6 +14,7 @@
 + Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants, !51)
 + Use pipenv (!52)
 + Store best values in Romberg object (!54)
++ Inverse the sign of gamma tensor components when computed via CC methods in Dalton (!55)
 
 ## Version 0.5
 
