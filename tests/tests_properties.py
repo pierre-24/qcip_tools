@@ -135,11 +135,12 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('FFF', 'static', (0, 0, 2), 0.073362),
             ('dDF', f, (0, 0, 2), 0.072835),
             ('XDD', f, (0, 0, 2), 0.073591),
-            ('FFFF', 'static', (0, 0, 0, 0), -0.351403),
-            ('dFFD', f, (0, 0, 0, 0), -0.35619),
-            ('XDDF', f, (0, 0, 0, 0), -0.36612),
-            ('dDDd', f, (0, 0, 0, 0), -0.36104),
-            ('XDDD', f, (0, 0, 0, 0), -0.382162)
+            # sign of gamma components are inverted in CC
+            ('FFFF', 'static', (0, 0, 0, 0), 0.351403),
+            ('dFFD', f, (0, 0, 0, 0), 0.35619),
+            ('XDDF', f, (0, 0, 0, 0), 0.36612),
+            ('dDDd', f, (0, 0, 0, 0), 0.36104),
+            ('XDDD', f, (0, 0, 0, 0), 0.382162)
         ]
 
         for(tensor, freq, coo, value) in tests_in_tensor:
