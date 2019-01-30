@@ -397,14 +397,14 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         for i in derivatives.COORDINATES_LIST:
             for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        tmp += numpy.dot(mat_angs.transpose(), [
-                            self.components[i, i, j] * self.components[j, k, k],
-                            self.components[i, i, j] * self.components[k, j, k],
-                            self.components[i, j, j] * self.components[i, k, k],
-                            self.components[i, j, k] ** 2,
-                            self.components[i, j, k] * self.components[j, i, k]
-                        ])
+                for k in derivatives.COORDINATES_LIST:
+                    tmp += numpy.dot(mat_angs.transpose(), [
+                        self.components[i, i, j] * self.components[j, k, k],
+                        self.components[i, i, j] * self.components[k, j, k],
+                        self.components[i, j, j] * self.components[i, k, k],
+                        self.components[i, j, k] ** 2,
+                        self.components[i, j, k] * self.components[j, i, k]
+                    ])
 
         return 1 / 105 * tmp
 
@@ -990,17 +990,17 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
         for i in derivatives.COORDINATES_LIST:
             for j in derivatives.COORDINATES_LIST:
-                    for k in derivatives.COORDINATES_LIST:
-                        for l in derivatives.COORDINATES_LIST:
-                            tmp += numpy.dot(mat_angs.transpose(), [
-                                self.components[i, i, j, j] * self.components[k, l, l, k],
-                                self.components[i, i, j, k] * self.components[j, l, l, k],
-                                self.components[i, i, j, k] * self.components[l, j, l, k],
-                                self.components[i, j, j, k] * self.components[i, k, l, l],
-                                self.components[i, j, k, l] ** 2,
-                                self.components[i, j, j, k] * self.components[k, i, l, l],
-                                self.components[i, j, k, l] * self.components[j, i, k, l]
-                            ])
+                for k in derivatives.COORDINATES_LIST:
+                    for l in derivatives.COORDINATES_LIST:
+                        tmp += numpy.dot(mat_angs.transpose(), [
+                            self.components[i, i, j, j] * self.components[k, l, l, k],
+                            self.components[i, i, j, k] * self.components[j, l, l, k],
+                            self.components[i, i, j, k] * self.components[l, j, l, k],
+                            self.components[i, j, j, k] * self.components[i, k, l, l],
+                            self.components[i, j, k, l] ** 2,
+                            self.components[i, j, j, k] * self.components[k, i, l, l],
+                            self.components[i, j, k, l] * self.components[j, i, k, l]
+                        ])
 
         return 1 / 630 * tmp
 
@@ -1295,9 +1295,9 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if old_version:
             for i in derivatives.COORDINATES_LIST:
                 for j in derivatives.COORDINATES_LIST:
-                        for k in derivatives.COORDINATES_LIST:
-                            for l in derivatives.COORDINATES_LIST:
-                                tmp += 1 / 5 * self.components[i, i, j, j] * self.components[k, k, l, l]
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += 1 / 5 * self.components[i, i, j, j] * self.components[k, k, l, l]
         else:
             tmp = self.spherical_J0_contribution_squared()
 
@@ -1319,10 +1319,10 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if old_version:
             for i in derivatives.COORDINATES_LIST:
                 for j in derivatives.COORDINATES_LIST:
-                        for k in derivatives.COORDINATES_LIST:
-                            for l in derivatives.COORDINATES_LIST:
-                                tmp += 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
-                                tmp -= 2 / 7 * self.components[i, i, j, j] * self.components[k, k, l, l]
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
+                            tmp -= 2 / 7 * self.components[i, i, j, j] * self.components[k, k, l, l]
         else:
             tmp = self.spherical_J2_contribution_squared()
 
@@ -1344,11 +1344,11 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if old_version:
             for i in derivatives.COORDINATES_LIST:
                 for j in derivatives.COORDINATES_LIST:
-                        for k in derivatives.COORDINATES_LIST:
-                            for l in derivatives.COORDINATES_LIST:
-                                tmp += self.components[i, j, k, l] ** 2
-                                tmp -= 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
-                                tmp += 3 / 35 * self.components[i, i, j, j] * self.components[k, k, l, l]
+                    for k in derivatives.COORDINATES_LIST:
+                        for l in derivatives.COORDINATES_LIST:
+                            tmp += self.components[i, j, k, l] ** 2
+                            tmp -= 6 / 7 * self.components[i, i, j, k] * self.components[j, k, l, l]
+                            tmp += 3 / 35 * self.components[i, i, j, j] * self.components[k, k, l, l]
         else:
             tmp = self.spherical_J4_contribution_squared()
 
