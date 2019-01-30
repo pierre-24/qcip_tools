@@ -15,6 +15,7 @@
 + Use pipenv (!52)
 + Store best values in Romberg object (!54)
 + Inverse the sign of gamma tensor components when computed via CC methods in Dalton (!55)
++ Extract gamma tensor from Gaussian FCHK (!56)
 
 ## Version 0.5
 
