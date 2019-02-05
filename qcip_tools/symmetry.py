@@ -140,7 +140,7 @@ class NotInGroup(Exception):
 
 
 class GroupElement:
-    """Syntaxic sugar
+    """Abstract group element: syntaxic sugar
     """
 
     def __init__(self, element, group):
@@ -151,8 +151,9 @@ class GroupElement:
 
         self.element = element
         self.group = group
+        self._hash = None
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.element)
 
     def __mul__(self, other):
@@ -203,11 +204,17 @@ class GroupElement:
             return (self * self) ** int(power / 2)
 
     def __hash__(self):
-        return hash(self.element)
+
+        if not self._hash:
+            self._hash = hash(self.element)
+
+        return self._hash
 
 
 class Group:
-    """A set :math:`G`, together with an operation :math:`\\star` (group law),
+    """Abstract group structure.
+
+    A set :math:`G`, together with an operation :math:`\\star` (group law),
     form a group :math:`(G, \\star)` if it satisfies 4 requirements:
 
     - Closure (not checked here) ;
@@ -221,15 +228,11 @@ class Group:
             raise TypeError('binary_operation must be a BinaryOperation')
 
         self.binary_operation = binary_operation
-        self.G = []
-        self._index_to_G = {}
-        self._G_to_index = {}
+        self.G = {}
 
         for g in binary_operation.codomain:
-            index = len(self.G)
-            self.G.append(GroupElement(g, self))
-            self._index_to_G[index] = self.G[index]
-            self._G_to_index[self.G[index]] = index
+            ge = GroupElement(g, self)
+            self.G[ge] = ge
 
         self.order = len(self.G)
 
@@ -245,41 +248,48 @@ class Group:
 
         # compute Caley table, get inverses (and check if Abelian in the meantime)
         self.abelian = True
-        self.cayley_table = numpy.ndarray((self.order, self.order), dtype=int)
-        self._index_to_inverse = {}
-        for i in range(self.order):
-            gi = self._index_to_G[i]
+        self.cayley_table = {}
+        self.inverses = {}
+        for gi in self.G:
+            self.cayley_table[gi] = {}
             inverse_to_gi = False
-            for j in range(self.order):
-                gj = self._index_to_G[j]
+            for gj in self.G:
                 g = gi * gj
-                self.cayley_table[i, j] = self._G_to_index[g]
+                try:
+                    self.cayley_table[gi][gj] = self.G[g]
+                except KeyError:
+                    raise NotInGroup(g)
                 if g == self.e:
                     if not inverse_to_gi:
-                        self._index_to_inverse[i] = j
+                        self.inverses[gi] = gj
                         inverse_to_gi = True
                     else:
                         raise ValueError('{} have two inverses'.format(gi))
-                if self.abelian and j <= i:
-                    self.abelian = self.cayley_table[i, j] == self.cayley_table[j, i]
 
-        if len(self._index_to_inverse) != self.order:
+                if self.abelian and gi != gj:
+                    try:
+                        self.abelian = self.cayley_table[gi][gj] == self.cayley_table[gj][gi]
+                    except KeyError:
+                        pass
+
+        if len(self.inverses) != self.order:
             raise ValueError('each element does not have an inverse')
 
-        # compute conjugacy classes
+        # find conjugacy classes:
+        # for each A and B, computes A⁻¹ * B * A and mix the result in the conjugacy class
         self.conjugacy_classes = []
-        self._index_to_conjugacy_class = {}
-        for i in range(self.order):
-            if i in self._index_to_conjugacy_class:
+        self.to_conjugacy_class = {}
+        for gi in self.G:
+            if gi in self.to_conjugacy_class:
                 continue
             else:
                 klass = []
-                for j in range(self.order):
-                    p = self.cayley_table[self.cayley_table[self._index_to_inverse[j], i], j]
+                for gj in self.G:
+                    p = self.cayley_table[self.cayley_table[self.inverse(gj)][gi]][gj]
                     if p not in klass:
-                        self._index_to_conjugacy_class[p] = len(self.conjugacy_classes)
+                        self.to_conjugacy_class[p] = len(self.conjugacy_classes)
                         klass.append(p)
-                self.conjugacy_classes.append(klass)
+                self.conjugacy_classes.append(set(klass))
 
         self.number_of_class = len(self.conjugacy_classes)
 
@@ -298,7 +308,10 @@ class Group:
         :return: another element of G
         """
 
-        return self.G[self._index_to_inverse[self._G_to_index[element]]]
+        try:
+            return self.inverses[element]
+        except KeyError:
+            return NotInGroup(element)
 
     def conjugacy_class(self, g):
         """Get the elements of the conjugacy class of ``g``
@@ -308,14 +321,14 @@ class Group:
         """
 
         try:
-            index = self._G_to_index[g]
+            index = self.to_conjugacy_class[g]
         except KeyError:
             raise NotInGroup(g)
 
         if self.abelian:
             return [g]
         else:
-            return [self._index_to_G[i] for i in self.conjugacy_classes[self._index_to_conjugacy_class[index]]]
+            return self.conjugacy_classes[index]
 
     def __contains__(self, item):
         """is an element part of the group ?
@@ -324,7 +337,7 @@ class Group:
         :rtype: bool
         """
         if isinstance(item, GroupElement):
-            return item in self._G_to_index
+            return item in self.G
         else:
             return item in self.binary_operation.codomain
 
@@ -452,7 +465,8 @@ class Operation:
            - if the axis have a negative z, take the opposite and set :math:`\\theta = 2\\pi-\\theta`,
            - if this is an improper rotation, set :math:`\\theta=\\theta-\\pi`,
            - Cast between 0 and :math:`4\\pi`,
-           - divide by :math:`2\\pi` (so that the result is between 0 and 2).
+           - divide by :math:`2\\pi` (so that the result is clamped between 0 and 2).
+
         3. Try to extract a simple fraction (thus :math:`k` and :math:`n`) out of this number ;
         4. Further reduce k to be smaller than :math:`n` if proper rotation or odd :math:`n` ;
         5. Recognize the specific :math:`n` cases (1 or 2).
@@ -712,7 +726,7 @@ class OperationDescription:
             'z': [0, 0, 1.],
             'y': [0, 1., 0],
             'x': [1., 0, 0],
-            # double (8)
+            # double (12)
             '[xy]': [s2, s2, 0],
             '[xz]': [s2, 0, s2],
             '[yz]': [0, s2, s2],
@@ -791,6 +805,7 @@ class PointGroupDescription:
 
 
 class PointGroup(Group):
+    """Concrete implementation of a point group"""
 
     def __init__(self, func, description=None):
         super().__init__(func)
