@@ -105,6 +105,22 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(electrical_derivatives['dD'][0.02].isotropic_value(), 0.835791e1, places=5)
         self.assertAlmostEqual(electrical_derivatives['XDD'][0.02].beta_hrs(), 6.2390, places=3)
 
+        fchk_file, path, electrical_derivatives = self.get_property(
+            gaussian.FCHK, 'electrical_derivatives/gaussian_output_gamma.fchk', 'electrical_derivatives')
+
+        self.assertIn('F', electrical_derivatives)
+        self.assertIn('FFFF', electrical_derivatives)
+        self.assertIn('dFFD', electrical_derivatives)
+        self.assertIn('XDDF', electrical_derivatives)
+
+        f = 0.0428226998
+
+        self.assertAlmostEqual(electrical_derivatives['FFFF']['static'].gamma_parallel(), 0.374817e2, places=4)
+        self.assertAlmostEqual(electrical_derivatives['FFFF']['static'].gamma_perpendicular(), 0.124939e2, places=4)
+
+        self.assertAlmostEqual(electrical_derivatives['dFFD'][f].gamma_parallel(), 0.380112e02, places=4)
+        self.assertAlmostEqual(electrical_derivatives['XDDF'][f].gamma_parallel(), 0.390957e2, places=4)
+
         # 2. In dalton archive:
         f = 0.0428226504
 
@@ -135,11 +151,12 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('FFF', 'static', (0, 0, 2), 0.073362),
             ('dDF', f, (0, 0, 2), 0.072835),
             ('XDD', f, (0, 0, 2), 0.073591),
-            ('FFFF', 'static', (0, 0, 0, 0), -0.351403),
-            ('dFFD', f, (0, 0, 0, 0), -0.35619),
-            ('XDDF', f, (0, 0, 0, 0), -0.36612),
-            ('dDDd', f, (0, 0, 0, 0), -0.36104),
-            ('XDDD', f, (0, 0, 0, 0), -0.382162)
+            # sign of gamma components are inverted in CC
+            ('FFFF', 'static', (0, 0, 0, 0), 0.351403),
+            ('dFFD', f, (0, 0, 0, 0), 0.35619),
+            ('XDDF', f, (0, 0, 0, 0), 0.36612),
+            ('dDDd', f, (0, 0, 0, 0), 0.36104),
+            ('XDDD', f, (0, 0, 0, 0), 0.382162)
         ]
 
         for(tensor, freq, coo, value) in tests_in_tensor:

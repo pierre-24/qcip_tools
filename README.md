@@ -3,11 +3,13 @@
 Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
 
 <!-- STABLE: -->
-Current release: [release-v0.5.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4) (November 13, 2018)
+Current release: [release-v0.5.4.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4.2) (January 03, 2019)
 
 Previous releases (see [the changelog](./CHANGELOG.md)):
 
 <!-- PREVIOUS: -->
++  [release-v0.5.4.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4.1) (December 12, 2018)
++  [release-v0.5.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4) (November 13, 2018)
 +  [release-v0.5.3.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3.2) (June 29, 2018)
 +  [release-v0.5.3.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3.1) (April 11, 2018)
 +  [release-v0.5.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3) (April 11, 2018)
@@ -36,23 +38,16 @@ Previous releases (see [the changelog](./CHANGELOG.md)):
 + Handle and post-analyze results of calculations (currently, electrical and geometrical derivatives of the energy) ;
 + Retrieve data from quantum chemistry package and create input files (currently Gaussian, Dalton and GAMESS).
 
-## Installation
 
-With pip:
+## Documentation
 
-```bash
-pip install git+ssh://git@gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
-```
+To access the online documentation of the latest release, login is `doc` and password is `doc`.
 
-where `release-vXX` is the release you want (see above).
+**For the installation procedure, see [this page](http://perso.unamur.be/~pbeaujea/qcip_tools/html/install.html).**
 
-See the [installation page](./documentation/source/install.rst) for more information.
+The latest API documentation is available [here](http://perso.unamur.be/~pbeaujea/qcip_tools/html/).
 
-## API documentation
-
-The documentation of the latest version is available online at [this address](http://perso.unamur.be/~pbeaujea/qcip_tools/html/) (login is `doc` and password is `doc`).
-
-Build the documentation with `make doc`.
+If you download the package sources, build the documentation with `make doc`.
 
 ## Contributing
 

@@ -775,7 +775,7 @@ class PointGroupDescription:
                 PointGroupType.antiprismatic]:
 
             if n < 1:
-                    raise ValueError('order must be equal or superior to 1')
+                raise ValueError('order must be equal or superior to 1')
         else:
             if n > 0:
                 raise ValueError('order does not matter for point group {}'.format(symbol.value))
