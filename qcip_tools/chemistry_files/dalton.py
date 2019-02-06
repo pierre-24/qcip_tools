@@ -153,7 +153,7 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         else:
             for symbol in self.molecule.symbols_contained:
                 atms = self.molecule.atoms(symbol_in=[symbol])
-                r += 'Charge={:.1f} Atoms={}\n'.format(atom.Definition[symbol][0], len(atms))
+                r += 'Charge={:.1f} Atoms={}\n'.format(atom.SymbolToAtomicNumber[symbol], len(atms))
 
                 for i in atms:
                     a = self.molecule[i]

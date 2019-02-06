@@ -1,6 +1,7 @@
 import math
 
 import numpy
+import mendeleev
 
 from qcip_tools import bounding
 from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
@@ -420,10 +421,10 @@ class Molecule:
         connectivities = {}
         for i, a1 in enumerate(self):
             tmp = []
-            covalent_radius1 = qcip_atom.CovalentRadii[a1.symbol][0]  # assume single bond
+            covalent_radius1 = mendeleev.element(a1.symbol).covalent_radius_pyykko / 100  # radius are in pm !!
             for j, a2 in enumerate(self):
                 if i is not j:  # an atom cannot bond with himself
-                    covalent_radius2 = qcip_atom.CovalentRadii[a2.symbol][0]  # assume single bond
+                    covalent_radius2 = mendeleev.element(a2.symbol).covalent_radius_pyykko / 100
                     if distances[i, j] < (covalent_radius1 + covalent_radius2 + threshold):
                         tmp.append(j + 1)  # there is a bond
             connectivities[i + 1] = tmp

@@ -11,6 +11,7 @@ requests = "*"
 "h5py" = "*"
 Pint = "*"
 transforms3d = "*"
+mendeleev = "*"
 
 [dev-packages]
 "flake8" = "*"

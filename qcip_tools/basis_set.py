@@ -216,9 +216,9 @@ class BasisSet:
     @classmethod
     def to_key(cls, key):
         if type(key) is str:
-            if key not in qcip_atom.Definition:
+            if key not in qcip_atom.SymbolToAtomicNumber:
                 raise KeyError(key)
-            return qcip_atom.Definition[key][0]
+            return qcip_atom.SymbolToAtomicNumber[key]
         elif type(key) is int:
             try:
                 assert_in_domain(key, 1, 92, 'atomic number')
