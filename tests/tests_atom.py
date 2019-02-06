@@ -80,3 +80,11 @@ class AtomTestCase(QcipToolsTestCase):
             ax = qcip_atom.Atom(symbol=atm[0])
             self.assertEqual(ax.number_of_core_electrons(), atm[1], atm[0])
             self.assertEqual(ax.number_of_valence_electrons(), atm[2], atm[0])
+
+    def test_atom_transformation(self):
+        a1 = qcip_atom.Atom(symbol='H')
+
+        t = [1, 2, 3]
+        self.assertTrue(numpy.array_equal(a1.position, [.0, .0, .0]))
+        a1.translate_self(*t)
+        self.assertTrue(numpy.array_equal(a1.position, t))

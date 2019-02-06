@@ -1,6 +1,8 @@
 import numpy
 import mendeleev
 
+from qcip_tools import transformations
+
 AtomicNumberToSymbol = {
     0: 'Xx',  # dummy atom
     1: 'H',
@@ -100,9 +102,11 @@ AtomicNumberToSymbol = {
 SymbolToAtomicNumber = dict((b, a) for a, b in AtomicNumberToSymbol.items())
 
 
-class Atom:
+class Atom(transformations.MutableTranslatable):
     """
     Create an atom. You must gives either symbol or atomic_number.
+
+    The object is mutable.
 
     :param atomic_number: the atomic number
     :type atomic_number: int
@@ -211,3 +215,12 @@ class Atom:
         :rtype: int
         """
         return self.number_of_protons() - self.num_of_electrons
+
+    def _apply_transformation_self(self, transformation):
+        """Appply transformation to atom
+
+        :param transformation: the transformation
+        :type transformation: numpy.ndarray
+        """
+
+        self.position = transformation.dot([*self.position, 1.])[:3]

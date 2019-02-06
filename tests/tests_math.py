@@ -11,36 +11,13 @@ class MathTestCase(QcipToolsTestCase):
         pass
 
     def test_vector_manipulation(self):
-        """Test the behavior of vector manipularion functions"""
+        """Test the behavior of vector functions"""
 
         # test basic stuffs:
-        self.assertArraysAlmostEqual(qcip_math.rodrigues_rotation([1, 0, 0], [0, 0, 1], 90), [0, 1, 0])
-        self.assertArraysAlmostEqual(qcip_math.rodrigues_rotation([1, 0, 0], [0, 1, 0], 90), [0, 0, -1])
-
         self.assertTrue(numpy.array_equal(qcip_math.normalize([-3, 0, 0]), [-1, 0, 0.]))
         self.assertEqual(qcip_math.distance([-1, 0, 0], [.5, 0, 0]), 1.5)
         self.assertEqual(qcip_math.angle([2, 0, 0], [0, 0, 0], [0, 1, 0]), 90.0)
         self.assertEqual(qcip_math.torsion_angle([2, 0, 0], [0, 0, 0], [0, 1, 0], [-2, 1, 0]), -180.0)
-
-        # test euler angles
-        rot = qcip_math.euler_rotation_matrix(0, 0, 0)  # identity matrix
-        self.assertTrue(numpy.all(rot == numpy.identity(3)))
-        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
-        self.assertArraysAlmostEqual(rot.dot([1, 1, 0]), [1, 1, 0])
-        self.assertArraysAlmostEqual(rot.dot([1, 2, 1]), [1, 2, 1])
-
-        rot = qcip_math.euler_rotation_matrix(360, 360, 360)  # identity matrix as well
-        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
-        self.assertArraysAlmostEqual(rot.dot([1, 1, 0]), [1, 1, 0])
-        self.assertArraysAlmostEqual(rot.dot([1, 2, 1]), [1, 2, 1])
-
-        rot = qcip_math.euler_rotation_matrix(180, 0, 0)  # rotation around z axis
-        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [-1, 0, 0])
-        self.assertArraysAlmostEqual(rot.dot([1, 1, 0]), [-1, -1, 0])
-
-        rot = qcip_math.euler_rotation_matrix(180, 180, 0)  # rotation around z axis, followed by y'
-        self.assertArraysAlmostEqual(rot.dot([1, 0, 0]), [1, 0, 0])
-        self.assertArraysAlmostEqual(rot.dot([1, 1, 1]), [1, -1, -1])
 
     def test_bla(self):
         """Test the BLA definition"""

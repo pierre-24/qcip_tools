@@ -6,106 +6,6 @@ import operator
 import itertools
 
 
-def rodrigues_rotation(v, rot_axis, angle):
-    """
-    Rotate vector `v` around rotation axis `rot_axis`, of an angle `angle`
-    Note: `v` and `rot_axis` must be defined via the same origin.
-
-    :param v: rotated vector
-    :type v: list|numpy.ndarray
-    :param rot_axis: axis of rotation (SHOULD BE NORMALIZED !!)
-    :type rot_axis: list|numpy.ndarray
-    :param angle: angle (in degree)
-    :type angle: float
-    :return: the rotated vector
-    :rtype: numpy.ndarray
-    """
-
-    ang_ = numpy.radians(angle)
-    ra_ = numpy.array(rot_axis)
-    v_ = numpy.array(v)
-
-    v_rot = v_ * math.cos(ang_) + numpy.cross(ra_, v_) * math.sin(ang_) + \
-        ra_ * numpy.dot(ra_, v) * (1 - math.cos(ang_))
-
-    return v_rot
-
-
-def euler_rotation_matrix(psi, theta, chi):
-    """Return the Euler rotaion (direction cosine) matrix.
-
-    :param psi: Rotation around the Z axis (in degree)
-    :type psi: float
-    :param theta: rotation around the x' axis (in degree)
-    :type theta: float
-    :param chi: Rotation around the z'' axis (in degree)
-    :type chi: float
-    :rtype: numpy.ndarray
-    """
-
-    theta = numpy.radians(theta % 360)
-    psi = numpy.radians(psi % 360)
-    chi = numpy.radians(chi % 360)
-
-    if psi == theta == chi == .0:
-        return numpy.identity(3)
-
-    from math import cos as c
-    from math import sin as s
-
-    return numpy.array(
-        [
-            [
-                c(psi) * c(theta) * c(chi) - s(psi) * s(chi),
-                s(psi) * c(theta) * c(chi) + c(psi) * s(chi),
-                - s(theta) * c(chi)
-            ],
-            [
-                - c(psi) * c(theta) * s(chi) - s(psi) * c(chi),
-                - s(psi) * c(theta) * s(chi) + c(psi) * c(chi),
-                s(theta) * s(chi)
-            ],
-            [
-                c(psi) * s(theta),
-                s(psi) * s(theta),
-                c(theta)
-            ]
-        ]
-    )
-
-
-def tensor_rotate(tensor, psi, theta, chi):
-    """Return a rotated tensor
-
-    :param tensor: the tensor to be rotated
-    :type tensor: numpy.ndarray
-    :param psi: Rotation around the Z axis (in degree)
-    :type psi: float
-    :param theta: rotation around the y' axis (in degree)
-    :type theta: float
-    :param chi: Rotation around the z'' axis (in degree)
-    :type chi: float
-    :rtype: numpy.ndarray
-    """
-
-    new_tensor = numpy.zeros(tensor.shape)
-    order = len(tensor.shape)
-
-    rotation_matrix = euler_rotation_matrix(psi, theta, chi)
-
-    for i in itertools.product(range(3), repeat=order):
-        tmp = .0
-        for j in itertools.product(range(3), repeat=order):
-            product = 1
-            for k in range(order):
-                product *= rotation_matrix[i[k], j[k]]
-            tmp += product * tensor[j]
-
-        new_tensor[i] = tmp
-
-    return new_tensor
-
-
 def normalize(c):
     """Normalize and return the vector
 
@@ -217,6 +117,9 @@ def conjugate(z):
     :return: the conjugate
     :rtype: complex
     """
+    if type(z) is not complex:
+        raise TypeError(z)
+
     if z.imag != 0:
         return z.real - z.imag * 1j
     else:

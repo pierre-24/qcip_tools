@@ -3,7 +3,7 @@ import math
 import numpy
 import mendeleev
 
-from qcip_tools import bounding
+from qcip_tools import bounding, transformations
 from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
 
 
@@ -51,12 +51,15 @@ class ShiftedIndexError(ValueOutsideDomain):
         super().__init__(val, 1, len(mol))
 
 
-class Molecule:
+class Molecule(transformations.MutableTranslatable, transformations.MutableRotatable):
     """
     Class to define a molecule (basically a list of atoms).
 
+    This object is mutable.
+
     .. note ::
         Each time a function requires a ``shifted_index``, indexing starts at 1 instead of 0.
+
     """
 
     def __init__(self, atom_list=None, charge=0):
@@ -101,6 +104,16 @@ class Molecule:
             return True
         else:
             return False
+
+    def _apply_transformation_self(self, transformation):
+        """Appply transformation to the molecule (broadcast to each atom)
+
+        :param transformation: the transformation
+        :type transformation: numpy.ndarray
+        """
+
+        for a in self.atom_list:
+            a._apply_transformation_self(transformation)
 
     def insert(self, atom, position=None):
         """
@@ -285,29 +298,17 @@ class Molecule:
             all_atomic_numbers += a.atomic_number
         return 1 / all_atomic_numbers * com
 
-    def translate(self, coordinates):
-        """
-        Translate the molecule (each of its atom).
-
-        :param coordinates: new position of the molecule
-        :type coordinates: list|numpy.ndarray
-        """
-
-        coordinates = numpy.array(coordinates)
-        for a in self:
-            a.position = a.position + coordinates
-
-    def translate_to_center_of_mass(self):
+    def translate_self_to_center_of_mass(self):
         """
         Translate the molecule to the center of mass
         """
-        self.translate(-self.center_of_mass())
+        self.translate_self(*[-i for i in self.center_of_mass()])
 
-    def translate_to_center_of_charges(self):
+    def translate_self_to_center_of_charges(self):
         """
         Translate the molecule to the center of charge
         """
-        self.translate(-self.center_of_charges())
+        self.translate_self(*[-i for i in self.center_of_charges()])
 
     def moments_of_inertia(self):
         """Get the moment of inertia tensor.
@@ -349,43 +350,17 @@ class Molecule:
         Ip, C = numpy.linalg.eig(inertia_tensor)
         indices = numpy.argsort(Ip)
         Ip = Ip[indices]
-        C = C.T[indices]
-        return Ip, C
+        Cx = numpy.eye(4)
+        Cx[:3, :3] = C.T[indices]
+        return Ip, Cx
 
     def set_to_inertia_axes(self):
         """Translate and rotate molecule to its principal inertia axes
         """
 
-        self.translate_to_center_of_mass()
-        rot = self.principal_axes()[1]
-        for atom in self:
-            atom.position = numpy.dot(rot, atom.position)
-
-    def reorient(self, origin, start_vector, end_vector):
-        """
-        Move and reorient all the atoms in the molecule so that the starting vector becomes the ending vector.
-
-        :param origin: origin of the two vectors
-        :param start_vector: starting vector
-        :param end_vector: ending vector
-        :raise: ValueError if the two vectors have a 180° angle
-        """
-
-        if numpy.array_equal(start_vector, end_vector):
-            return
-
-        rot_angle = math.acos(
-            numpy.dot(end_vector, start_vector) / numpy.linalg.norm(end_vector) / numpy.linalg.norm(start_vector))
-
-        if math.fabs(math.pi - rot_angle) < 1e-3:
-            raise ValueError('180° angle between vectors, cannot reorient()')
-
-        rot_axis = qcip_math.normalize(numpy.cross(end_vector, start_vector))
-
-        for atom in self:
-            v = atom.position - origin
-            v_rot = qcip_math.rodrigues_rotation(v, rot_axis, -numpy.degrees(rot_angle))
-            atom.position = v_rot + origin
+        self.translate_self_to_center_of_mass()
+        _, rot = self.principal_axes()
+        self._apply_transformation_self(rot)
 
     def distances(self):
         """
