@@ -41,12 +41,18 @@ class SymmetryTestCase(QcipToolsTestCase):
         # basic elements
         E = symmetry.Operation.E()
         self.assertArraysAlmostEqual(E.apply(p), p)
+        self.assertArraysAlmostEqual(numpy.dot(E.matrix_representation(), p), p)
 
         i = symmetry.Operation.i()
         self.assertArraysAlmostEqual(i.apply(p), -p)
+        self.assertArraysAlmostEqual(numpy.dot(i.matrix_representation(), p), -p)
 
         Oz = symmetry.Operation.sigma()
         self.assertArraysAlmostEqual(Oz.apply(p), numpy.array([*p[:2], -p[2]]))
+        self.assertArraysAlmostEqual(numpy.dot(Oz.matrix_representation(), p), numpy.array([*p[:2], -p[2]]))
+
+        S52z = symmetry.Operation.S(5, 2, axis=numpy.array([1, 1., 0.]))
+        self.assertArraysAlmostEqual(S52z.apply(p), numpy.dot(S52z.matrix_representation(), p))
 
         # test identity
         t = Oz * Oz
@@ -170,3 +176,24 @@ class SymmetryTestCase(QcipToolsTestCase):
         # check conjugacy classes on a real exemple
         C_3v = symmetry.PointGroup.C_nv(3)
         self.assertTrue(set(len(x) for x in C_3v.conjugacy_classes) == {3, 2, 1})  # ... Which gives 6 elements in total
+
+    def test_symmetry_finder(self):
+        """Test if one is able to detect symmetry"""
+
+        class S(symmetry.SymmetryFinder):
+            def group_by_type_and_distance(self, obj):
+                return obj
+
+        # D4h (and subgroups) geometry
+        e = S(numpy.array([
+            (3., 0, 0, 0),
+            (1., 1, 0, 0),
+            (1., -1, 0, 0),
+            (1., 0, 1, 0),
+            (1., 0, -1, 0),
+        ]))
+
+        D_4h = symmetry.PointGroup.D_nh(4)
+
+        for i in D_4h:
+            self.assertTrue(e.symmetric_for(i.element), msg='not symmetric for {}'.format(i))

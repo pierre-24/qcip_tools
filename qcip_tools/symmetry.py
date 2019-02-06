@@ -456,6 +456,16 @@ class Operation:
         qe = quaternions.qmult(self.q, quaternions.qmult(qp, quaternions.qconjugate(self.q)))
         return qe[1:]
 
+    def matrix_representation(self):
+        """Get a 3x3 matrix representation of the symmetry operation
+        """
+
+        mat = quaternions.quat2mat(self.q)
+        if self.improper:
+            mat = -mat
+
+        return mat
+
     def get_description(self, force=False):
         """Try to recognize the transformation:
 
@@ -1037,3 +1047,94 @@ class PointGroup(Group):
                 Operation.sigma(),
                 Operation.C(3, axis=numpy.array([1., 1., 1.]))],
             description=PointGroupDescription(PointGroupType.octahedral_achiral))
+
+
+class SymmetryFinder:
+    """Find the symmetry
+
+    Inspired by https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py
+
+    :param points: an Nx4 array of N points with ``(Z, x, y, z)`` for each point. ``Z`` is a label for points
+        that are equivalent.
+    :type points: numpy.ndarray
+    :param tol: tolerance threshold
+    :type tol: float
+    """
+
+    def __init__(self, points, tol=1e-5):
+        self.points = points
+        self.tol = tol
+
+        # find center and translate
+        tot_Z = .0
+        tot_coord = numpy.zeros(3)
+
+        for i in range(len(points)):
+            tot_coord += points[i, 1:]
+            tot_Z = points[i, 0]
+
+        self.center = tot_coord / tot_Z
+        self.points[:, 1:] -= self.center
+
+        # group points
+        self.group_points_per_distance = []
+        all_indexes = numpy.asarray(range(len(points)))
+
+        decimals = int(-numpy.log10(tol)) - 1
+
+        uniques, indexes = numpy.unique(points[:, 0], return_inverse=True)
+        for u, _ in enumerate(uniques):  # group per label
+            sub_indexes = all_indexes[indexes == u]
+            sub_points = self.points[sub_indexes, 1:]
+
+            uniques_2, indexes_2 = numpy.unique(
+                numpy.around(numpy.linalg.norm(sub_points, axis=1), decimals), return_inverse=True)
+
+            for u2, _ in enumerate(uniques_2):  # group per distance
+                self.group_points_per_distance.append(sub_indexes[indexes_2 == u2])
+
+    @staticmethod
+    def vec_in_vecs(vec, vecs, tol):
+        """Check if ``vec`` is in the set of ``vecs``
+
+        :param vec: vector to find
+        :param vec: numpy.ndarray
+        :param vecs: set of vectors
+        :type vecs: numpy.ndarray
+        :param tol: tolerence threshold
+        :type tol: float
+        :rtype: bool
+        """
+        return min(numpy.sum(numpy.abs(v - vec)) for v in vecs) < tol
+
+    def _symetric_for(self, op):
+        """Check if symmetric for a given operation
+
+        :param op: the operation
+        :type op: numpy.ndarray
+        """
+
+        for lst in self.group_points_per_distance:
+            p = self.points[lst, 1:]
+            yield all(SymmetryFinder.vec_in_vecs(x, p, self.tol) for x in numpy.dot(p, op))
+
+    def symmetric_for(self, op):
+        """Check if symmetric for a given operation
+
+        :param op: the operation
+        :type op: Operation
+        """
+
+        return all(self._symetric_for(op.matrix_representation()))
+
+    def has_inversion(self):
+        return self.symmetric_for(Operation.i())
+
+    def has_rotation(self, axis, n):
+        return self.symmetric_for(Operation.C(n, axis=axis))
+
+    def has_mirror(self, axis):
+        return self.symmetric_for(Operation.sigma(axis))
+
+    def has_improper_rotation(self, n, axis):
+        return self.symmetric_for(Operation.S(n, axis=axis))

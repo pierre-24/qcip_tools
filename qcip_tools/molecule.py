@@ -350,9 +350,8 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         Ip, C = numpy.linalg.eig(inertia_tensor)
         indices = numpy.argsort(Ip)
         Ip = Ip[indices]
-        Cx = numpy.eye(4)
-        Cx[:3, :3] = C.T[indices]
-        return Ip, Cx
+        Cp = C.T[indices]
+        return Ip, Cp
 
     def set_to_inertia_axes(self):
         """Translate and rotate molecule to its principal inertia axes
@@ -360,7 +359,9 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
 
         self.translate_self_to_center_of_mass()
         _, rot = self.principal_axes()
-        self._apply_transformation_self(rot)
+        r = numpy.eye(4)
+        r[:3, :3] = rot
+        self._apply_transformation_self(r)
 
     def distances(self):
         """
