@@ -1066,14 +1066,7 @@ class SymmetryFinder:
         self.tol = tol
 
         # find center and translate
-        tot_Z = .0
-        tot_coord = numpy.zeros(3)
-
-        for i in range(len(points)):
-            tot_coord += points[i, 1:]
-            tot_Z = points[i, 0]
-
-        self.center = tot_coord / tot_Z
+        self.center = numpy.einsum('i,ij->j', points[:, 0], points[:, 1:]) / points[:, 0].sum()
         self.points[:, 1:] -= self.center
 
         # group points
@@ -1092,6 +1085,28 @@ class SymmetryFinder:
 
             for u2, _ in enumerate(uniques_2):  # group per distance
                 self.group_points_per_distance.append(sub_indexes[indexes_2 == u2])
+
+    @staticmethod
+    def cartesian_tensor(tensor, n):
+        """Compute cartesian tensor of order ``n`` (at order one, compute inertia moments)
+        and get its principal components.
+
+        :param tensor: tensor
+        :type tensor: numpy.ndarray
+        :param n: order
+        :type n: int
+        :return: eigenvalue and eigenvectors of the tensor
+        """
+
+        z = tensor[:, 0]
+        r = tensor[:, 1:]
+        ncart = (n + 1) * (n + 2) // 2
+        t = numpy.sqrt(numpy.copy(z).reshape(len(z), -1)) / z.sum()
+        for i in range(n):
+            t = numpy.einsum('zi,zj->zij', t, r).reshape(len(z), -1)
+
+        e, c = numpy.linalg.eigh(numpy.dot(t.T, t))
+        return e[-ncart:], c[:, -ncart:]
 
     @staticmethod
     def vec_in_vecs(vec, vecs, tol):
