@@ -37,7 +37,6 @@ class MoleculeTestCase(QcipToolsTestCase):
         self.assertEqual(m2.multiplicity, 1)
 
         self.assertTrue(numpy.array_equal(m2.center_of_mass(), [0, 0, 0]))
-        self.assertTrue(numpy.array_equal(m2.center_of_charges(), [0, 0, 0]))
 
         # Test shifted index:
         self.assertTrue(numpy.array_equal(m2.atom(1).position, [-.5, 0, 0]))

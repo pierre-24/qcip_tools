@@ -225,6 +225,27 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
 
         return atom_indexes
 
+    def position_matrix(self, with_='Z'):
+        """Get position matrix
+
+        :param with_: extra first column, either ``Z``, ``masss`` or ``charge``
+        :type with_: str
+        :rtype: numpy.ndarray
+        """
+
+        m = []
+        for a in self:
+            if with_ == 'Z':
+                m.append([a.atomic_number, *a.position])
+            elif with_ == 'mass':
+                m.append([a.mass, *a.position])
+            elif with_ == 'charge':
+                m.append([a.charge(), *a.position])
+            else:
+                m.append(a.position)
+
+        return numpy.vstack(m)
+
     def number_of_electrons(self):
         """
         :return: The number of electrons in the molecule
@@ -280,10 +301,8 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         :rtype: numpy.ndarray
         """
 
-        com = numpy.array([0, 0, 0])
-        for a in self:
-            com = com + a.mass * a.position
-        return 1 / self.mass() * com
+        m = self.position_matrix(with_='mass')
+        return numpy.einsum('i,ij->j', m[:, 0], m[:, 1:]) / m[:, 0].sum()
 
     def center_of_charges(self):
         """Position of the center of charge
@@ -291,12 +310,11 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         :rtype: numpy.ndarray
         """
 
-        com = numpy.array([0, 0, 0])
-        all_atomic_numbers = 0
-        for a in self:
-            com = com + a.atomic_number * a.position
-            all_atomic_numbers += a.atomic_number
-        return 1 / all_atomic_numbers * com
+        m = self.position_matrix(with_='charge')
+        if m[:, 0].sum() == .0:
+            raise RuntimeError('charge is null')
+
+        return numpy.einsum('i,ij->j', m[:, 0], m[:, 1:]) / m[:, 0].sum()
 
     def translate_self_to_center_of_mass(self):
         """
