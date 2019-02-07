@@ -197,3 +197,5 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         for i in D_4h:
             self.assertTrue(e.symmetric_for(i.element), msg='not symmetric for {}'.format(i))
+
+        e.find_symm()

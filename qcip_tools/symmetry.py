@@ -1053,6 +1053,7 @@ class SymmetryFinder:
     """Find the symmetry
 
     Inspired by https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py
+    and http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html
 
     :param points: an Nx4 array of N points with ``(Z, x, y, z)`` for each point. ``Z`` is a label for points
         that are equivalent.
@@ -1064,6 +1065,7 @@ class SymmetryFinder:
     def __init__(self, points, tol=1e-5):
         self.points = points
         self.tol = tol
+        self.decimals = int(-numpy.log10(tol)) - 1
 
         # find center and translate
         self.center = numpy.einsum('i,ij->j', points[:, 0], points[:, 1:]) / points[:, 0].sum()
@@ -1073,23 +1075,23 @@ class SymmetryFinder:
         self.group_points_per_distance = []
         all_indexes = numpy.asarray(range(len(points)))
 
-        decimals = int(-numpy.log10(tol)) - 1
-
         uniques, indexes = numpy.unique(points[:, 0], return_inverse=True)
         for u, _ in enumerate(uniques):  # group per label
             sub_indexes = all_indexes[indexes == u]
             sub_points = self.points[sub_indexes, 1:]
 
             uniques_2, indexes_2 = numpy.unique(
-                numpy.around(numpy.linalg.norm(sub_points, axis=1), decimals), return_inverse=True)
+                numpy.around(numpy.linalg.norm(sub_points, axis=1), self.decimals), return_inverse=True)
 
             for u2, _ in enumerate(uniques_2):  # group per distance
                 self.group_points_per_distance.append(sub_indexes[indexes_2 == u2])
 
     @staticmethod
     def cartesian_tensor(tensor, n):
-        """Compute cartesian tensor of order ``n`` (at order one, compute inertia moments)
-        and get its principal components.
+        """Compute multipole expansion of cartesian tensor of order ``n`` (what you find in the right column of a
+        character table) and get its principal components.
+
+        https://en.wikipedia.org/wiki/Multipole_expansion
 
         :param tensor: tensor
         :type tensor: numpy.ndarray
@@ -1107,6 +1109,31 @@ class SymmetryFinder:
 
         e, c = numpy.linalg.eigh(numpy.dot(t.T, t))
         return e[-ncart:], c[:, -ncart:]
+
+    @staticmethod
+    def inertia_tensor_moments(tensor):
+        """Get inertia egeinvalue and egeinvectors, sorted
+        (smallest first, so the main axis is the last eigenvector, if any).
+
+        :param tensor: carthesian tensor
+        :type tensor: numpy.ndarray
+        :rtype: tuple
+        """
+        w = tensor[:, 0]
+
+        t = numpy.zeros((3, 3))
+        for i in range(3):
+            t[i, i] = numpy.sum(w * (tensor[:, 1 + (i + 1) % 3] ** 2 + tensor[:, 1 + (i + 2) % 3] ** 2))
+
+        for i, j in [(0, 1), (0, 2), (1, 2)]:
+            x = -numpy.sum(w * tensor[:, 1 + i] * tensor[:, 1 + j])
+            t[i, j] = t[j, i] = x
+
+        e, c = numpy.linalg.eigh(t)
+        indices = numpy.argsort(e)
+        e = e[indices]
+        c = c.T[indices]
+        return e, c
 
     @staticmethod
     def vec_in_vecs(vec, vecs, tol):
@@ -1141,6 +1168,51 @@ class SymmetryFinder:
         """
 
         return all(self._symetric_for(op.matrix_representation()))
+
+    @staticmethod
+    def degeneracies(e, decimals=-5):
+        e = numpy.around(e, decimals)
+        u, idx = numpy.unique(e, return_inverse=True)
+        return [(numpy.count_nonzero(idx == i), u[i]) for i in range(len(u))]
+
+    def find_symm(self):
+        """(Try to) find symmetry.
+
+        Algorithm is inspired by http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html (and actually any
+        book on group theory):
+
+        1. Find inertia tensor, its eigenvalues and eigenvectors (axes)
+        2. Based on the eigenvalues:
+
+          a. Linear molecules have one zero egeinvalue, and belongs to :math:`C_{\\infty v}`
+             or :math:`D_{\\infty h}` ;
+          b. Spherical top molecules have three equal (nonzero) eigenvalues, which corresponds to :math:`T`,
+             :math:`I` or :math:`O` groups ;
+          c. Asymmetric top molecules have all different (non zero) eigenvalues, which corresponds to groups with
+             at most rotation axis of order 2 (:math:`D_{2d}` or subgroups) ;
+          d. Symmetric top molecules have two equals eigenvalues, thus corresponding to axial point group with (maybe)
+             a unique principal rotation axis. To discriminate a little bit more,
+
+             - Either there is perpendicular :math:`C_2` axes, and the group is a dihedral one
+               (depending on the presence or not of mirror planes, :math:`D_{nh}`, :math:`D_{nd}` or :math:`D_n`) ;
+             - There is a main axis: depending on the presence of mirror plane, one can discriminate between
+               the different cyclic groups (:math:`C_{nh}`, :math:`C_{nv}`, :math:`S_{2n}` or :math:`C_n`) ;
+             - There is no main axis, and the group can be either :math:`C_s`, :math:`C_i` or :math:`C_1`.
+        """
+
+        e, v = SymmetryFinder.inertia_tensor_moments(self.points)
+        degeneracies = SymmetryFinder.degeneracies(e, self.decimals)
+
+        if len(degeneracies) == 1 and degeneracies[0][1] < self.tol:
+            print('spherical SO3 stuff')
+        elif degeneracies[0][1] < self.tol:  # linear
+            print('linear stuff')
+        elif len(degeneracies) == 1:  # spherical top
+            print('spherical top stuff')
+        elif len(degeneracies) == 3:  # asymmetric top
+            print('assymmetric top stuff')
+        else:  # symmetric top
+            print('symmetric top stuff')
 
     def has_inversion(self):
         return self.symmetric_for(Operation.i())

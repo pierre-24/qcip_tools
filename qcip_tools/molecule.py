@@ -334,27 +334,19 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         :rtype: numpy.ndarray
         """
 
-        tensor = numpy.zeros((3, 3))
+        m = self.position_matrix(with_='mass')
+        w = m[:, 0]
+        m[:, 1:] -= self.center_of_mass()
 
-        coordinates, masses, r = \
-            numpy.zeros((len(self), 3)), \
-            numpy.zeros(len(self)), \
-            numpy.zeros(len(self))
+        t = numpy.zeros((3, 3))
+        for i in range(3):
+            t[i, i] = numpy.sum(w * (m[:, 1 + (i + 1) % 3] ** 2 + m[:, 1 + (i + 2) % 3] ** 2))
 
-        for index, atm in enumerate(self):
-            coordinates[index] = atm.position
-            r[index] = numpy.linalg.norm(atm.position)
-            masses[index] = atm.mass
+        for i, j in [(0, 1), (0, 2), (1, 2)]:
+            x = -numpy.sum(w * m[:, 1 + i] * m[:, 1 + j])
+            t[i, j] = t[j, i] = x
 
-        for i in [0, 1, 2]:
-            for j in [0, 1, 2]:
-                tmp = 0
-                for k in range(0, len(self)):
-                    delta = i == j
-                    tmp += masses[k] * (delta * r[k] ** 2 - coordinates[k][i] * coordinates[k][j])
-                tensor[i, j] = tmp
-
-        return tensor
+        return t
 
     def principal_axes(self):
         """Return the moment of inertia
@@ -365,11 +357,11 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         """
 
         inertia_tensor = self.moments_of_inertia()
-        Ip, C = numpy.linalg.eig(inertia_tensor)
-        indices = numpy.argsort(Ip)
-        Ip = Ip[indices]
-        Cp = C.T[indices]
-        return Ip, Cp
+        e, t = numpy.linalg.eigh(inertia_tensor)
+        indices = numpy.argsort(e)
+        e = e[indices]
+        t = t.T[indices]
+        return e, t
 
     def set_to_inertia_axes(self):
         """Translate and rotate molecule to its principal inertia axes
