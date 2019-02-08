@@ -14,6 +14,8 @@ from enum import Enum
 
 from transforms3d import quaternions
 
+from qcip_tools import math as qcip_math
+
 
 class Set(set):
     """Define a (finite) set of (unique) elements
@@ -1207,12 +1209,96 @@ class SymmetryFinder:
             print('spherical SO3 stuff')
         elif degeneracies[0][1] < self.tol:  # linear
             print('linear stuff')
+            if self.has_inversion():
+                print('Dooh')
+            else:
+                print('Coov')
         elif len(degeneracies) == 1:  # spherical top
             print('spherical top stuff')
         elif len(degeneracies) == 3:  # asymmetric top
             print('assymmetric top stuff')
+            self.find_rotations()
         else:  # symmetric top
             print('symmetric top stuff')
+            self.find_rotations()
+
+    def find_rotations(self, parallel_to=None):
+        """Find rotations
+
+        Inspired by https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py !
+
+        The idea is to find, for each set of equidistant points, the ones that are at equal distance from the
+        first point, which means that a rotation axis may pass by those points.
+
+        :param parallel_to: get only the rotation axis parallel to a given axis (should be normalized)
+        :type parallel_to: numpy.ndarray|list
+        """
+
+        # find possible C_n
+        maybe_cn = []
+        for lst in self.group_points_per_distance:
+            if len(lst) < 2:
+                continue
+
+            # find C_2
+            coords = self.points[lst, 1:]
+            for i in range(1, len(lst)):
+                if abs(coords[0] + coords[i]).sum() > self.tol:
+                    maybe_cn.append((2, coords[0] + coords[i]))
+                else:  # abs(coords[0] - coords[i]).sum() > self.tol
+                    maybe_cn.append((2, coords[0] - coords[i]))
+
+            # Find C_n n > 2
+            r0 = coords - coords[0]
+            distances = numpy.linalg.norm(r0, axis=1)
+            d = abs(distances[:, None] - distances) < self.tol
+            for i in range(2, len(lst)):
+                for j in numpy.where(d[i, :i])[0]:
+                    ang = qcip_math.angle_vector(r0[i], r0[j])
+                    n = 2 * numpy.pi / ang
+                    if abs(int(n) - n) < self.tol:
+                        maybe_cn.append((int(n), numpy.cross(r0[i], r0[j])))
+
+        # remove null vectors
+        v = numpy.vstack([x[1] for x in maybe_cn])
+        ns = numpy.hstack([x[0] for x in maybe_cn])
+        indexes = numpy.linalg.norm(v, axis=1) > self.tol  # no more zero length
+        v = v[indexes] / numpy.linalg.norm(v[indexes], axis=1).reshape(-1, 1)  # normalize
+        ns = ns[indexes]
+
+        # remove non-parallel (dot product with parallel axis is 1 or -1)
+        if parallel_to:
+            d = numpy.dot(v, parallel_to)
+            indexes = (abs(d + 1.) < self.tol) | (abs(d - 1.) < self.tol)
+            v = v[indexes]
+            ns = ns[indexes]
+
+        # remove duplicates (opposite direction), if any
+        probable_cn = []
+        seen = numpy.zeros(len(v), dtype=bool)
+        for kx, vx in enumerate(v):
+            if not seen[kx]:
+                w1 = numpy.where(numpy.einsum('ij->i', abs(v[kx:] - vx)) < self.tol)[0] + kx
+                w2 = numpy.where(numpy.einsum('ij->i', abs(v[kx:] + vx)) < self.tol)[0] + kx
+                seen[w1] = True
+                seen[w2] = True
+                e = numpy.einsum('ix->x', v[w1]) - numpy.einsum('ix->x', v[w2])  # average axis
+                e /= numpy.linalg.norm(e)
+                for n in set(ns[w1]) | set(ns[w2]):
+                    probable_cn.append((n, e))
+
+        return probable_cn
+
+    def find_c_highest(self, parallel_to=None):
+        probable_cn = self.find_rotations(parallel_to)
+        n_max = 1
+        axis_max = numpy.array([0, 0, 1.])
+        for n, axis in probable_cn:
+            if n > n_max and self.has_rotation(axis, n):
+                n_max = n
+                axis_max = axis
+
+        return n_max, axis_max
 
     def has_inversion(self):
         return self.symmetric_for(Operation.i())
