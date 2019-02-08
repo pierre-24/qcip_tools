@@ -173,29 +173,38 @@ class SymmetryTestCase(QcipToolsTestCase):
                 self.assertTrue(g.binary_operation.check_surjectivity())  # O(n²)
                 self.assertTrue(g.binary_operation.check_associativity())  # O(n³)
 
-        # check conjugacy classes on a real exemple
+        # check conjugacy classes on a real example
         C_3v = symmetry.PointGroup.C_nv(3)
         self.assertTrue(set(len(x) for x in C_3v.conjugacy_classes) == {3, 2, 1})  # ... Which gives 6 elements in total
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
 
-        class S(symmetry.SymmetryFinder):
-            def group_by_type_and_distance(self, obj):
-                return obj
+        def s(points, tol=1e-5):
+            return symmetry.SymmetryFinder(points, tol).find_symm()[0]
 
-        # D4h (and subgroups) geometry
-        e = S(numpy.array([
+        """O_h geometry:
+
+           1 1
+           |/
+        1--3--1
+          /|
+         1 1
+        """
+
+        p = numpy.array([
             (3., 0, 0, 0),
             (1., 1, 0, 0),
             (1., -1, 0, 0),
             (1., 0, 1, 0),
             (1., 0, -1, 0),
-        ]))
+            (1., 0, 0, 1),
+            (1., 0, 0, -1),
+        ])
 
-        D_4h = symmetry.PointGroup.D_nh(4)
-
-        for i in D_4h:
-            self.assertTrue(e.symmetric_for(i.element), msg='not symmetric for {}'.format(i))
-
-        e.find_symm()
+        self.assertEqual(s(p), (symmetry.PointGroupType.octahedral_achiral, 0))
+        self.assertEqual(s(p[:-1]), (symmetry.PointGroupType.pyramidal, 4))
+        self.assertEqual(s(p[:-2]), (symmetry.PointGroupType.prismatic, 4))
+        self.assertEqual(s(p[:-3]), (symmetry.PointGroupType.pyramidal, 2))
+        self.assertEqual(s(p[:-4]), (symmetry.PointGroupType.prismatic, -1))
+        self.assertEqual(s(p[:-5]), (symmetry.PointGroupType.pyramidal, -1))

@@ -1051,6 +1051,10 @@ class PointGroup(Group):
             description=PointGroupDescription(PointGroupType.octahedral_achiral))
 
 
+class SymmetryFinderError(Exception):
+    pass
+
+
 class SymmetryFinder:
     """Find the symmetry
 
@@ -1191,7 +1195,8 @@ class SymmetryFinder:
           b. Spherical top molecules have three equal (nonzero) eigenvalues, which corresponds to :math:`T`,
              :math:`I` or :math:`O` groups ;
           c. Asymmetric top molecules have all different (non zero) eigenvalues, which corresponds to groups with
-             at most rotation axis of order 2 (:math:`D_{2d}` or subgroups) ;
+             at most rotation axis of order 2 (:math:`D_{2d}` or subgroups), and here they are treated
+             like symmetric top (since it is essentially the same thing) ;
           d. Symmetric top molecules have two equals eigenvalues, thus corresponding to axial point group with (maybe)
              a unique principal rotation axis. To discriminate a little bit more,
 
@@ -1200,29 +1205,87 @@ class SymmetryFinder:
              - There is a main axis: depending on the presence of mirror plane, one can discriminate between
                the different cyclic groups (:math:`C_{nh}`, :math:`C_{nv}`, :math:`S_{2n}` or :math:`C_n`) ;
              - There is no main axis, and the group can be either :math:`C_s`, :math:`C_i` or :math:`C_1`.
+
+        TODO: deal with orientation (main axis versus others), check against real molecules
+
+        :return: the point group, the center and the rotational matrix
+        :rtype: tuple(tuple, numpy.ndarray, numpy.ndarray)
         """
 
         e, v = SymmetryFinder.inertia_tensor_moments(self.points)
         degeneracies = SymmetryFinder.degeneracies(e, self.decimals)
 
-        if len(degeneracies) == 1 and degeneracies[0][1] < self.tol:
-            print('spherical SO3 stuff')
-        elif degeneracies[0][1] < self.tol:  # linear
-            print('linear stuff')
-            if self.has_inversion():
-                print('Dooh')
-            else:
-                print('Coov')
-        elif len(degeneracies) == 1:  # spherical top
-            print('spherical top stuff')
-        elif len(degeneracies) == 3:  # asymmetric top
-            print('assymmetric top stuff')
-            self.find_rotations()
-        else:  # symmetric top
-            print('symmetric top stuff')
-            self.find_rotations()
+        group = (PointGroupType.cyclic, 1)
 
-    def find_rotations(self, parallel_to=None):
+        if len(degeneracies) == 1 and degeneracies[0][1] < self.tol:
+            raise SymmetryFinderError('belongs to SO(3) rotation group')
+        elif degeneracies[0][1] < self.tol:  # linear
+            if self.has_inversion():
+                group = (PointGroupType.prismatic, -1)  # Dooh
+            else:
+                group = (PointGroupType.pyramidal, -1)  # Coov
+
+        elif len(degeneracies) == 1:  # spherical top
+            probable_cn = self.find_probable_rotations()
+
+            if len(probable_cn) == 0:
+                raise SymmetryFinderError('accidentally spherical top, no rotation')
+
+            n, main_axis = self.find_c_highest(probable_cn)
+            other_axes = v.T[numpy.where(abs(numpy.dot(v.T, main_axis)) < self.tol)]
+
+            if n < 3:
+                raise SymmetryFinderError('accidentally spherical top, n < 3')
+            elif n == 3:
+                group = (PointGroupType.tetrahedral_chiral, 0)  # T
+                if self.has_inversion():
+                    group = (PointGroupType.pyritohedral, 0)  # T_h
+                elif self.find_parallel_mirror_types(main_axis, other_axes):
+                    group = (PointGroupType.tetrahedral_achiral, 0)  # T_d
+            elif n == 4:
+                group = (PointGroupType.octahedral_chiral, 0)  # O
+                if self.has_inversion():
+                    group = (PointGroupType.octahedral_achiral, 0)  # O_h
+            elif n == 5:
+                group = (PointGroupType.icosahedral_chiral, 0)  # I
+                if self.has_inversion():
+                    group = (PointGroupType.icosahedral_achiral, 0)  # I_h
+            else:
+                raise SymmetryFinderError('spherical top molecule with n>5')
+
+        else:  # (a)symmetric top
+            probable_cn = self.find_probable_rotations()
+            if len(probable_cn) == 0:
+                if self.has_inversion():
+                    group = (PointGroupType.improper_rotation, 2)  # C_i = S_2
+                else:
+                    for j in range(3):
+                        if self.has_mirror(v.T[j]):
+                            group = (PointGroupType.reflexion, 1)  # C_s = C_1h
+                            break
+            else:
+                n, main_axis = self.find_c_highest(probable_cn)
+                other_axes = v.T[numpy.where(abs(numpy.dot(v.T, main_axis)) < self.tol)]
+                if len(probable_cn) >= 2 and self.found_perpendicular_C2(main_axis, probable_cn):
+                    if self.has_mirror(main_axis):
+                        group = (PointGroupType.prismatic, n)  # D_nh
+                    elif len(self.find_parallel_mirror_types(main_axis, other_axes)) != 0:
+                        group = (PointGroupType.antiprismatic, n)  # D_nd
+                    else:
+                        group = (PointGroupType.dihedral, n)  # D_n
+                else:
+                    if self.has_mirror(main_axis):
+                        group = (PointGroupType.reflexion, n)  # C_nh
+                    elif len(self.find_parallel_mirror_types(main_axis, other_axes)) != 0:
+                        group = (PointGroupType.pyramidal, n)  # C_nv
+                    elif self.has_improper_rotation(axis=main_axis, n=2 * n):
+                        group = (PointGroupType.improper_rotation, 2 * n)  # S_2n
+                    else:
+                        group = (PointGroupType.cyclic, n)  # C_n
+
+        return group, self.center, v
+
+    def find_probable_rotations(self, parallel_to=None):
         """Find rotations
 
         Inspired by https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py !
@@ -1276,10 +1339,10 @@ class SymmetryFinder:
         # remove duplicates (opposite direction), if any
         probable_cn = []
         seen = numpy.zeros(len(v), dtype=bool)
-        for kx, vx in enumerate(v):
-            if not seen[kx]:
-                w1 = numpy.where(numpy.einsum('ij->i', abs(v[kx:] - vx)) < self.tol)[0] + kx
-                w2 = numpy.where(numpy.einsum('ij->i', abs(v[kx:] + vx)) < self.tol)[0] + kx
+        for ki, vi in enumerate(v):
+            if not seen[ki]:
+                w1 = numpy.where(numpy.einsum('ij->i', abs(v[ki:] - vi)) < self.tol)[0] + ki
+                w2 = numpy.where(numpy.einsum('ij->i', abs(v[ki:] + vi)) < self.tol)[0] + ki
                 seen[w1] = True
                 seen[w2] = True
                 e = numpy.einsum('ix->x', v[w1]) - numpy.einsum('ix->x', v[w2])  # average axis
@@ -1289,8 +1352,12 @@ class SymmetryFinder:
 
         return probable_cn
 
-    def find_c_highest(self, parallel_to=None):
-        probable_cn = self.find_rotations(parallel_to)
+    def find_c_highest(self, probable_cn):
+        """Among all rotation axis, find highest.
+
+        :param probable_cn: list of rotation axis ``(order, axis)``
+        :type probable_cn: list(tuple)
+        """
         n_max = 1
         axis_max = numpy.array([0, 0, 1.])
         for n, axis in probable_cn:
@@ -1299,6 +1366,92 @@ class SymmetryFinder:
                 axis_max = axis
 
         return n_max, axis_max
+
+    def found_perpendicular_C2(self, perpendicular_to, probable_cn):
+        """Check if a perpendicular :math:`C_2` actually exists
+
+        :param probable_cn: list of rotation axis ``(order, axis)``
+        :type probable_cn: list(tuple)
+        :param perpendicular_to: main axis
+        :type perpendicular_to: numpy.ndarray
+        """
+        cn = numpy.vstack([x[1] for x in probable_cn if x[0] == 2.])  # keep C_2
+        cn = cn[numpy.where(abs(numpy.einsum('ij,j->i', cn, perpendicular_to)) < self.tol)]  # keep perpendicular
+        for i in range(len(cn)):
+            if self.has_rotation(cn[i], 2):
+                return True
+        return False
+
+    def find_probable_parallel_mirrors(self, parallel_to):
+        """Find possible mirrors parallel to a given axis (so that the normal is perpendicular).
+
+        For each combination of points, find if the corresponding normal is perpendicular
+        to the axis (dot product is null), then remove duplicates.
+
+        Returns a list of normal.
+
+        :param parallel_to: axis to which the plane should be parallel to
+        :type parallel_to: numpy.ndarray|list
+        """
+        possible_mirrors = []
+
+        for lst in self.group_points_per_distance:
+            if len(lst) < 2:
+                continue
+
+            r = self.points[lst, 1:]
+            for i in range(1, len(lst)):
+                re = r - r[i]
+                w = abs(numpy.einsum('ij,j->i', re, parallel_to)) < self.tol
+                for j in numpy.where(w)[0]:
+                    if i == j:
+                        continue
+                    possible_mirrors.append(re[j])
+
+        v = numpy.vstack(possible_mirrors)
+        v /= numpy.linalg.norm(v, axis=1).reshape(-1, 1)  # normalize
+
+        # remove duplicates
+        probable_mirrors = []
+        seen = numpy.zeros(len(v), dtype=bool)
+        for ki, vi in enumerate(v):
+            if not seen[ki]:
+                w1 = numpy.where(numpy.einsum('ij->i', abs(v[ki:] - vi)) < self.tol)[0] + ki
+                w2 = numpy.where(numpy.einsum('ij->i', abs(v[ki:] + vi)) < self.tol)[0] + ki
+                seen[w1] = True
+                seen[w2] = True
+                e = numpy.einsum('ix->x', v[w1]) - numpy.einsum('ix->x', v[w2])  # average axis
+                probable_mirrors.append(e / numpy.linalg.norm(e))
+
+        return probable_mirrors
+
+    def find_parallel_mirror_types(self, parallel_to, other_axes):
+        """Find the different mirror types
+
+        :param parallel_to: principal axis
+        :type parallel_to: numpy.ndarray
+        :param other_axes: list of other axis (to determine whether the mirror is "v" or "d")
+        """
+
+        mirror_types = []
+
+        # find vertical/diagonal
+        probable_mirrors = self.find_probable_parallel_mirrors(parallel_to)
+        for m in probable_mirrors:
+            if 'v' in mirror_types and 'd' in mirror_types:
+                break
+
+            if self.has_mirror(m):
+                mirror_type = 'd'
+                for axis in other_axes:
+                    if numpy.dot(m, axis) < self.tol and 'v' not in mirror_types:
+                        mirror_type = 'v'
+                        break
+
+                if mirror_type not in mirror_types:
+                    mirror_types.append(mirror_type)
+
+        return mirror_types
 
     def has_inversion(self):
         return self.symmetric_for(Operation.i())
@@ -1309,5 +1462,5 @@ class SymmetryFinder:
     def has_mirror(self, axis):
         return self.symmetric_for(Operation.sigma(axis))
 
-    def has_improper_rotation(self, n, axis):
+    def has_improper_rotation(self, axis, n):
         return self.symmetric_for(Operation.S(n, axis=axis))
