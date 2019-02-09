@@ -800,7 +800,7 @@ class PointGroupDescription:
                 PointGroupType.improper_rotation, PointGroupType.dihedral, PointGroupType.prismatic,
                 PointGroupType.antiprismatic]:
 
-            if n < 1:
+            if n < 1 and n != -1:
                 raise ValueError('order must be equal or superior to 1')
         else:
             if n > 0:
@@ -812,7 +812,10 @@ class PointGroupDescription:
     def __str__(self):
         s = self.symbol.value
         if 'n' in s:
-            s = s.replace('n', str(self.order))
+            if self.order > 0:
+                s = s.replace('n', str(self.order))
+            else:
+                s = s.replace('n', 'oo')
         return s
 
 
@@ -1209,21 +1212,21 @@ class SymmetryFinder:
         TODO: deal with orientation (main axis versus others), check against real molecules
 
         :return: the point group, the center and the rotational matrix
-        :rtype: tuple(tuple, numpy.ndarray, numpy.ndarray)
+        :rtype: tuple(PointGroupDescription, numpy.ndarray, numpy.ndarray)
         """
 
         e, v = SymmetryFinder.inertia_tensor_moments(self.points)
         degeneracies = SymmetryFinder.degeneracies(e, self.decimals)
 
-        group = (PointGroupType.cyclic, 1)
+        group = PointGroupDescription(PointGroupType.cyclic, 1)
 
         if len(degeneracies) == 1 and degeneracies[0][1] < self.tol:
             raise SymmetryFinderError('belongs to SO(3) rotation group')
         elif degeneracies[0][1] < self.tol:  # linear
             if self.has_inversion():
-                group = (PointGroupType.prismatic, -1)  # Dooh
+                group = PointGroupDescription(PointGroupType.prismatic, -1)  # Dooh
             else:
-                group = (PointGroupType.pyramidal, -1)  # Coov
+                group = PointGroupDescription(PointGroupType.pyramidal, -1)  # Coov
 
         elif len(degeneracies) == 1:  # spherical top
             probable_cn = self.find_probable_rotations()
@@ -1237,19 +1240,19 @@ class SymmetryFinder:
             if n < 3:
                 raise SymmetryFinderError('accidentally spherical top, n < 3')
             elif n == 3:
-                group = (PointGroupType.tetrahedral_chiral, 0)  # T
+                group = PointGroupDescription(PointGroupType.tetrahedral_chiral)  # T
                 if self.has_inversion():
-                    group = (PointGroupType.pyritohedral, 0)  # T_h
+                    group = PointGroupDescription(PointGroupType.pyritohedral)  # T_h
                 elif self.has_mirror_type(main_axis, other_axes, 'd'):
-                    group = (PointGroupType.tetrahedral_achiral, 0)  # T_d
+                    group = PointGroupDescription(PointGroupType.tetrahedral_achiral)  # T_d
             elif n == 4:
-                group = (PointGroupType.octahedral_chiral, 0)  # O
+                group = (PointGroupType.octahedral_chiral)  # O
                 if self.has_inversion():
-                    group = (PointGroupType.octahedral_achiral, 0)  # O_h
+                    group = PointGroupDescription(PointGroupType.octahedral_achiral)  # O_h
             elif n == 5:
-                group = (PointGroupType.icosahedral_chiral, 0)  # I
+                group = PointGroupDescription(PointGroupType.icosahedral_chiral)  # I
                 if self.has_inversion():
-                    group = (PointGroupType.icosahedral_achiral, 0)  # I_h
+                    group = PointGroupDescription(PointGroupType.icosahedral_achiral)  # I_h
             else:
                 raise SymmetryFinderError('spherical top molecule with n>5')
 
@@ -1257,31 +1260,31 @@ class SymmetryFinder:
             probable_cn = self.find_probable_rotations()
             if len(probable_cn) == 0:
                 if self.has_inversion():
-                    group = (PointGroupType.improper_rotation, 2)  # C_i = S_2
+                    group = PointGroupDescription(PointGroupType.improper_rotation, 2)  # C_i = S_2
                 else:
                     for j in range(3):
                         if self.has_mirror(v.T[j]):
-                            group = (PointGroupType.reflexion, 1)  # C_s = C_1h
+                            group = PointGroupDescription(PointGroupType.reflexion, 1)  # C_s = C_1h
                             break
             else:
                 n, main_axis = self.find_c_highest(probable_cn)
                 other_axes = v.T[numpy.where(abs(numpy.dot(v.T, main_axis)) < self.tol)]
                 if len(probable_cn) >= 2 and self.has_perpendicular_C2(main_axis, probable_cn):
                     if self.has_mirror(main_axis):
-                        group = (PointGroupType.prismatic, n)  # D_nh
+                        group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
                     elif self.has_mirror_type(main_axis, other_axes, 'd'):
-                        group = (PointGroupType.antiprismatic, n)  # D_nd
+                        group = PointGroupDescription(PointGroupType.antiprismatic, n)  # D_nd
                     else:
-                        group = (PointGroupType.dihedral, n)  # D_n
+                        group = PointGroupDescription(PointGroupType.dihedral, n)  # D_n
                 else:
                     if self.has_mirror(main_axis):
-                        group = (PointGroupType.reflexion, n)  # C_nh
+                        group = PointGroupDescription(PointGroupType.reflexion, n)  # C_nh
                     elif self.has_mirror_type(main_axis, other_axes, 'v'):
-                        group = (PointGroupType.pyramidal, n)  # C_nv
+                        group = PointGroupDescription(PointGroupType.pyramidal, n)  # C_nv
                     elif self.has_improper_rotation(axis=main_axis, n=2 * n):
-                        group = (PointGroupType.improper_rotation, 2 * n)  # S_2n
+                        group = PointGroupDescription(PointGroupType.improper_rotation, 2 * n)  # S_2n
                     else:
-                        group = (PointGroupType.cyclic, n)  # C_n
+                        group = PointGroupDescription(PointGroupType.cyclic, n)  # C_n
 
         return group, self.center, v
 
