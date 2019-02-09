@@ -162,10 +162,11 @@ class SymmetryTestCase(QcipToolsTestCase):
             (symmetry.PointGroup.T_d(), 24, False, 5),
             (symmetry.PointGroup.O(), 24, False, 5),
             (symmetry.PointGroup.O_h(), 48, False, 10),
+            (symmetry.PointGroup.I(), 60, False, 5),  # ~2 seconds
+            (symmetry.PointGroup.I_h(), 120, False, 10),  # ~ 5 seconds
         ]
 
         for g, n_elements, is_abelian, number_of_class in groups:
-            print(g)
             self.assertEqual(len(g.G), n_elements)
             self.assertEqual(g.abelian, is_abelian)
             self.assertEqual(g.number_of_class, number_of_class)

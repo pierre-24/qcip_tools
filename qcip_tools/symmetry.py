@@ -102,7 +102,8 @@ class BinaryOperation:
     def generate(cls, generators, func):
         """Create a complete set out of the generators.
 
-        Algorithm from https://physics.stackexchange.com/a/351400.
+        Algorithm from https://physics.stackexchange.com/a/351400j, simplified version of
+        http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html
 
         :param generators; the generators of the set
         :type generators: list
@@ -111,30 +112,14 @@ class BinaryOperation:
         :rtype: BinaryOperation
         """
 
-        g = g1 = generators[0]
-        L = [g]
-        while True:
-            g = func((g, g1))
-            if g in L:
-                break
-            L.append(g)
+        full = list(generators)
+        for g in full:
+            for s in generators:
+                op = g * s
+                if op not in full:
+                    full.append(op)
 
-        for i in range(1, len(generators)):
-            C = [g1]
-            L1 = L.copy()
-            more = True
-            while more:
-                more = False
-                for g in C:
-                    for s in generators[:i + 1]:
-                        sg = s * g
-                        if sg not in L:
-                            C.append(sg)
-                            L.extend([func((sg, t)) for t in L1])
-                            more = True
-
-        # print([str(l) for l in L])
-        return cls(Set(L), func)
+        return cls(Set(full), func)
 
 
 class NotInGroup(Exception):
@@ -1024,6 +1009,46 @@ class PointGroup(Group):
                 Operation.C(3, axis=numpy.array([1., 1., 1.]))],
             description=PointGroupDescription(PointGroupType.octahedral_achiral))
 
+    @classmethod
+    def I(cls):  # noqa
+        """Create the chiral octahedral group
+
+        .. math::
+
+            I = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(z), \\text{ with }
+            \\phi = \\frac{1+\\sqrt(5)}{2}.
+
+        :rtype: PointGroup
+        """
+        golden = (1 + 5 ** 0.5) / 2
+        return cls.generate(
+            [
+                Operation.C(2),
+                Operation.C(3, axis=numpy.array([1., 1., 1.])),
+                Operation.C(5, axis=numpy.array([1, 0, golden]))
+            ],
+            description=PointGroupDescription(PointGroupType.icosahedral_chiral))
+
+    @classmethod
+    def I_h(cls):
+        """Create the chiral octahedral group
+
+        .. math::
+
+            I_h = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times \\sigma_h, \\text{ with }
+            \\phi = \\frac{1+\\sqrt(5)}{2}.
+
+        :rtype: PointGroup
+        """
+        golden = (1 + 5 ** 0.5) / 2
+        return cls.generate(
+            [
+                Operation.sigma(),
+                Operation.C(3, axis=numpy.array([1., 1., 1.])),
+                Operation.C(5, axis=numpy.array([1, 0, golden]))
+            ],
+            description=PointGroupDescription(PointGroupType.icosahedral_achiral))
+
 
 class PointGroupError(Exception):
     pass
@@ -1057,11 +1082,14 @@ class PointGroupDescription:
                 s = s.replace('n', 'oo')
         return s
 
-    def gen_point_group(self):
+    def gen_point_group(self, lowers_infinite=-1):
         """Generate the point group out of the description.
 
-        Not able to generate :math:`I`, :math:`I_h`, :math:`D_{\\infty h}`, or :math:`C_{\\infty v}`.
+        Not able to generate infinite groups :math:`D_{\\infty h}` or :math:`C_{\\infty v}`, except
+        if ``lowers_infinite`` is set.
 
+        :param lowers_infinite: axis order used instead of :math:`\\infty`.
+        :type lowers_infinite: int
         :rtype: PointGroup
         """
         mapping = {
@@ -1079,13 +1107,18 @@ class PointGroupDescription:
             PointGroupType.tetrahedral_achiral: PointGroup.T_d,
             PointGroupType.octahedral_chiral: PointGroup.O,
             PointGroupType.octahedral_achiral: PointGroup.O_h,
+            PointGroupType.icosahedral_chiral: PointGroup.I,
+            PointGroupType.icosahedral_achiral: PointGroup.I_h,
         }
 
         if self.symbol not in mapping:
             raise PointGroupError('cannot generate {}'.format(self.symbol))
 
         if self.order < 0:
-            raise PointGroupError('cannot generate infinite groups')
+            if lowers_infinite < 2:
+                raise PointGroupError('cannot generate infinite groups')
+            else:
+                mapping[self.symbol](lowers_infinite)
         elif self.order == 0:
             return mapping[self.symbol]()
         else:
