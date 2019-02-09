@@ -790,35 +790,6 @@ class PointGroupType(str, Enum):
     icosahedral_achiral = 'I_h'
 
 
-class PointGroupDescription:
-    def __init__(self, symbol, n=0):
-        if symbol not in PointGroupType:
-            raise ValueError('unrecognized group type')
-
-        if symbol in [
-            PointGroupType.cyclic, PointGroupType.pyramidal, PointGroupType.reflexion,
-                PointGroupType.improper_rotation, PointGroupType.dihedral, PointGroupType.prismatic,
-                PointGroupType.antiprismatic]:
-
-            if n < 1 and n != -1:
-                raise ValueError('order must be equal or superior to 1')
-        else:
-            if n > 0:
-                raise ValueError('order does not matter for point group {}'.format(symbol.value))
-
-        self.symbol = symbol
-        self.order = n
-
-    def __str__(self):
-        s = self.symbol.value
-        if 'n' in s:
-            if self.order > 0:
-                s = s.replace('n', str(self.order))
-            else:
-                s = s.replace('n', 'oo')
-        return s
-
-
 class PointGroup(Group):
     """Concrete implementation of a point group"""
 
@@ -1052,6 +1023,73 @@ class PointGroup(Group):
                 Operation.sigma(),
                 Operation.C(3, axis=numpy.array([1., 1., 1.]))],
             description=PointGroupDescription(PointGroupType.octahedral_achiral))
+
+
+class PointGroupError(Exception):
+    pass
+
+
+class PointGroupDescription:
+    def __init__(self, symbol, n=0):
+        if symbol not in PointGroupType:
+            raise ValueError('unrecognized group type')
+
+        if symbol in [
+            PointGroupType.cyclic, PointGroupType.pyramidal, PointGroupType.reflexion,
+                PointGroupType.improper_rotation, PointGroupType.dihedral, PointGroupType.prismatic,
+                PointGroupType.antiprismatic]:
+
+            if n < 1 and n != -1:
+                raise ValueError('order must be equal or superior to 1')
+        else:
+            if n > 0:
+                raise ValueError('order does not matter for point group {}'.format(symbol.value))
+
+        self.symbol = symbol
+        self.order = n
+
+    def __str__(self):
+        s = self.symbol.value
+        if 'n' in s:
+            if self.order > 0:
+                s = s.replace('n', str(self.order))
+            else:
+                s = s.replace('n', 'oo')
+        return s
+
+    def gen_point_group(self):
+        """Generate the point group out of the description.
+
+        Not able to generate :math:`I`, :math:`I_h`, :math:`D_{\\infty h}`, or :math:`C_{\\infty v}`.
+
+        :rtype: PointGroup
+        """
+        mapping = {
+            # with order:
+            PointGroupType.cyclic: PointGroup.C_n,
+            PointGroupType.pyramidal: PointGroup.C_nv,
+            PointGroupType.reflexion: PointGroup.C_nh,
+            PointGroupType.improper_rotation: PointGroup.S_n,
+            PointGroupType.dihedral: PointGroup.D_n,
+            PointGroupType.prismatic: PointGroup.D_nh,
+            PointGroupType.antiprismatic: PointGroup.D_nd,
+            # no order:
+            PointGroupType.tetrahedral_chiral: PointGroup.T,
+            PointGroupType.pyritohedral: PointGroup.T_h,
+            PointGroupType.tetrahedral_achiral: PointGroup.T_d,
+            PointGroupType.octahedral_chiral: PointGroup.O,
+            PointGroupType.octahedral_achiral: PointGroup.O_h,
+        }
+
+        if self.symbol not in mapping:
+            raise PointGroupError('cannot generate {}'.format(self.symbol))
+
+        if self.order < 0:
+            raise PointGroupError('cannot generate infinite groups')
+        elif self.order == 0:
+            return mapping[self.symbol]()
+        else:
+            return mapping[self.symbol](self.order)
 
 
 class SymmetryFinderError(Exception):
