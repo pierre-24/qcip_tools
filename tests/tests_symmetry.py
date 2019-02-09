@@ -181,7 +181,7 @@ class SymmetryTestCase(QcipToolsTestCase):
         """Test if one is able to detect symmetry"""
 
         def s(points, tol=1e-5):
-            return symmetry.SymmetryFinder(points, tol).find_symm()[0]
+            return symmetry.SymmetryFinder(points, tol).find_symmetry()[0]
 
         """O_h geometry:
 

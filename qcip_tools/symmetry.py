@@ -1181,7 +1181,7 @@ class SymmetryFinder:
         u, idx = numpy.unique(e, return_inverse=True)
         return [(numpy.count_nonzero(idx == i), u[i]) for i in range(len(u))]
 
-    def find_symm(self):
+    def find_symmetry(self):
         """(Try to) find symmetry.
 
         Algorithm is inspired by http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html (and actually any
@@ -1240,7 +1240,7 @@ class SymmetryFinder:
                 group = (PointGroupType.tetrahedral_chiral, 0)  # T
                 if self.has_inversion():
                     group = (PointGroupType.pyritohedral, 0)  # T_h
-                elif self.find_parallel_mirror_types(main_axis, other_axes):
+                elif self.has_mirror_type(main_axis, other_axes, 'd'):
                     group = (PointGroupType.tetrahedral_achiral, 0)  # T_d
             elif n == 4:
                 group = (PointGroupType.octahedral_chiral, 0)  # O
@@ -1266,17 +1266,17 @@ class SymmetryFinder:
             else:
                 n, main_axis = self.find_c_highest(probable_cn)
                 other_axes = v.T[numpy.where(abs(numpy.dot(v.T, main_axis)) < self.tol)]
-                if len(probable_cn) >= 2 and self.found_perpendicular_C2(main_axis, probable_cn):
+                if len(probable_cn) >= 2 and self.has_perpendicular_C2(main_axis, probable_cn):
                     if self.has_mirror(main_axis):
                         group = (PointGroupType.prismatic, n)  # D_nh
-                    elif len(self.find_parallel_mirror_types(main_axis, other_axes)) != 0:
+                    elif self.has_mirror_type(main_axis, other_axes, 'd'):
                         group = (PointGroupType.antiprismatic, n)  # D_nd
                     else:
                         group = (PointGroupType.dihedral, n)  # D_n
                 else:
                     if self.has_mirror(main_axis):
                         group = (PointGroupType.reflexion, n)  # C_nh
-                    elif len(self.find_parallel_mirror_types(main_axis, other_axes)) != 0:
+                    elif self.has_mirror_type(main_axis, other_axes, 'v'):
                         group = (PointGroupType.pyramidal, n)  # C_nv
                     elif self.has_improper_rotation(axis=main_axis, n=2 * n):
                         group = (PointGroupType.improper_rotation, 2 * n)  # S_2n
@@ -1367,7 +1367,7 @@ class SymmetryFinder:
 
         return n_max, axis_max
 
-    def found_perpendicular_C2(self, perpendicular_to, probable_cn):
+    def has_perpendicular_C2(self, perpendicular_to, probable_cn):
         """Check if a perpendicular :math:`C_2` actually exists
 
         :param probable_cn: list of rotation axis ``(order, axis)``
@@ -1425,33 +1425,34 @@ class SymmetryFinder:
 
         return probable_mirrors
 
-    def find_parallel_mirror_types(self, parallel_to, other_axes):
+    def has_mirror_type(self, parallel_to, other_axes, mirror_type):
         """Find the different mirror types
 
         :param parallel_to: principal axis
         :type parallel_to: numpy.ndarray
         :param other_axes: list of other axis (to determine whether the mirror is "v" or "d")
+        :type other_axes: numpy.ndarray
+        :param mirror_type: mirror_type
+        :type mirror_type: str
         """
 
-        mirror_types = []
+        if mirror_type == 'h':
+            return self.has_mirror(parallel_to)
 
         # find vertical/diagonal
         probable_mirrors = self.find_probable_parallel_mirrors(parallel_to)
         for m in probable_mirrors:
-            if 'v' in mirror_types and 'd' in mirror_types:
-                break
-
             if self.has_mirror(m):
-                mirror_type = 'd'
+                mirror_type_found = 'd'
                 for axis in other_axes:
-                    if numpy.dot(m, axis) < self.tol and 'v' not in mirror_types:
-                        mirror_type = 'v'
+                    if numpy.dot(m, axis) < self.tol:
+                        mirror_type_found = 'v'
                         break
 
-                if mirror_type not in mirror_types:
-                    mirror_types.append(mirror_type)
+                if mirror_type_found == mirror_type:
+                    return True
 
-        return mirror_types
+        return False
 
     def has_inversion(self):
         return self.symmetric_for(Operation.i())
