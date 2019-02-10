@@ -174,9 +174,11 @@ class SymmetryTestCase(QcipToolsTestCase):
                 self.assertTrue(g.binary_operation.check_surjectivity())  # O(n²)
                 self.assertTrue(g.binary_operation.check_associativity())  # O(n³)
 
-        # check conjugacy classes on a real example
+    def test_conjugacy_classes(self):
+
         C_3v = symmetry.PointGroup.C_nv(3)
-        self.assertTrue(set(len(x) for x in C_3v.conjugacy_classes) == {3, 2, 1})  # ... Which gives 6 elements in total
+        self.assertTrue(
+            list(len(x) for x in C_3v.conjugacy_classes) == [1, 2, 3])  # ... Which gives 6 elements in total
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""

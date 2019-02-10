@@ -265,20 +265,31 @@ class Group:
         # find conjugacy classes:
         # for each A and B, computes A⁻¹ * B * A and mix the result in the conjugacy class
         self.conjugacy_classes = []
+        meet = {}
         self.to_conjugacy_class = {}
         for gi in self.G:
-            if gi in self.to_conjugacy_class:
+            if gi in meet:
                 continue
             else:
-                klass = []
+                klass = {}
                 for gj in self.G:
                     p = self.cayley_table[self.cayley_table[self.inverse(gj)][gi]][gj]
                     if p not in klass:
-                        self.to_conjugacy_class[p] = len(self.conjugacy_classes)
-                        klass.append(p)
-                self.conjugacy_classes.append(set(klass))
+                        meet[p] = klass[p] = True
+                self.conjugacy_classes.append(set(klass.keys()))
 
+        self._sort_classes()
         self.number_of_class = len(self.conjugacy_classes)
+
+        for i, elmts in enumerate(self.conjugacy_classes):
+            for e in elmts:
+                self.to_conjugacy_class[e] = i
+
+    def _sort_classes(self):
+        """Sort the conjugacy classes, if needed
+        """
+
+        pass
 
     def identity(self):
         """Get identity
@@ -788,9 +799,59 @@ class PointGroup(Group):
             ','.join(str(i) for i in self)
         )
 
+    def _sort_classes(self):
+        """Reimplemented to sort the different class in a given order:
+
+        1. :math:`E` comes first,
+        2. Then comes proper rotations,
+
+            a. Proper rotation around z axis comes first, sorted by reverse order ;
+            b. Then comes other rotation.
+
+        3. Then comes improper rotations,
+
+            a. :math:`i` comes first ;
+            b. Then comes rotoreflexion axis of order :math:`n >2` ;
+            c. Finally, reflexion plane, in the order :math:`\\sigma_h`, :math:`\\sigma_v`, :math:`\\sigma_d`.
+
+        Since the order is arbitrary in character tables,
+        **this will probably not correspond to the usual "textbook" order**.
+        """
+
+        def s(a):
+            if self.e in a:  # E is first
+                return 0, 0, 0, 0
+            else:
+                i = iter(a)
+                x = next(i).element
+                d = x.get_description()
+                if not x.improper:
+                    return 1, numpy.around(-d.axis[-1], 2), -d.n, d.k
+                else:
+                    t = 0
+                    e = 0
+                    if d.n > 2:
+                        t = -d.n
+                        e = d.k
+                        if len(a) > 1 and d.k > d.n - d.k:
+                            e = d.n - d.k
+                    elif d.n == 1:
+                        t = 100
+                        e = 0 if d.textual_axis in ['x', 'y'] else 1
+
+                    return 2, t, numpy.around(-d.axis[-1], 2), e
+
+        self.conjugacy_classes.sort(key=lambda a: s(a))
+
     @staticmethod
     def product(e):
         return e[0] * e[1]
+
+    def gen_character_table(self):
+        """Try to generate the character table
+        """
+
+        pass
 
     @classmethod
     def generate(cls, generators, description=None):
@@ -808,7 +869,9 @@ class PointGroup(Group):
 
     @classmethod
     def S_n(cls, n=1):
-        """Create a reflexion (odd n) or improper rotation (even n) point group of order n.
+        """Create a reflexion (odd n, :math:`C_{(2k+1)h}`)
+        or improper rotation (even n, :math:`S_{2k}`) point group of
+        order n.
 
         Note that :math:`S_{2}` is usually noted :math:`C_i`.
 
@@ -1016,7 +1079,7 @@ class PointGroup(Group):
         .. math::
 
             I = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(z), \\text{ with }
-            \\phi = \\frac{1+\\sqrt(5)}{2}.
+            \\phi = \\frac{1+\\sqrt 5}{2}.
 
         :rtype: PointGroup
         """
@@ -1035,17 +1098,18 @@ class PointGroup(Group):
 
         .. math::
 
-            I_h = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times \\sigma_h, \\text{ with }
-            \\phi = \\frac{1+\\sqrt(5)}{2}.
+            I_h = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(z) \\times \\sigma_h, \\text{ with }
+            \\phi = \\frac{1+\\sqrt 5}{2}.
 
         :rtype: PointGroup
         """
         golden = (1 + 5 ** 0.5) / 2
         return cls.generate(
             [
-                Operation.sigma(),
+                Operation.C(2),
                 Operation.C(3, axis=numpy.array([1., 1., 1.])),
-                Operation.C(5, axis=numpy.array([1, 0, golden]))
+                Operation.C(5, axis=numpy.array([1, 0, golden])),
+                Operation.sigma(),
             ],
             description=PointGroupDescription(PointGroupType.icosahedral_achiral))
 
