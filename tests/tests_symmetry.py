@@ -180,6 +180,10 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertTrue(
             list(len(x) for x in C_3v.conjugacy_classes) == [1, 2, 3])  # ... Which gives 6 elements in total
 
+    def test_character_table(self):
+
+        symmetry.PointGroup.T()
+
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
 

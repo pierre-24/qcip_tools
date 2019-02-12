@@ -328,6 +328,30 @@ class Group:
         else:
             return self.conjugacy_classes[index]
 
+    def get_class_matrices(self):
+        """Compute class matrix: given the :math:`k` classes :math:`C_i` (:math:`0\\leq i < k`),
+
+        For each :math:`x\\in C_r`, compute :math:`y=x^{-1}z`, with `z\\in C_t` and :math:`y\\in C_s`.
+        Add 1 to the :math:`(s,t)` component of :math:`M^r`, a :math:`k\\times k` matrix.
+
+        This results in a matrix where each component is the number of solution :math:`(y,z)` to which :math:`xy=z`.
+
+        :rtype: numpy.ndarray
+        """
+
+        matrices = numpy.zeros((self.number_of_class, self.number_of_class, self.number_of_class), dtype=int)
+        matrices[0, :, :] = numpy.eye(self.number_of_class)  # identity is always identity matrix
+
+        for r in range(1, self.number_of_class):
+            for x in self.conjugacy_classes[r]:
+                einvx = self.inverse(x)
+                for t in range(self.number_of_class):
+                    et = next(iter(self.conjugacy_classes[t]))
+                    c = self.to_conjugacy_class[einvx * et]
+                    matrices[r, c, t] += 1
+
+        return matrices
+
     def __contains__(self, item):
         """is an element part of the group ?
 
