@@ -175,14 +175,50 @@ class SymmetryTestCase(QcipToolsTestCase):
                 self.assertTrue(g.binary_operation.check_associativity())  # O(n³)
 
     def test_conjugacy_classes(self):
+        """Tests if the conjugacy classes comes in order"""
 
         C_3v = symmetry.PointGroup.C_nv(3)
         self.assertTrue(
             list(len(x) for x in C_3v.conjugacy_classes) == [1, 2, 3])  # ... Which gives 6 elements in total
 
-    def test_character_table(self):
+        self.assertEqual(C_3v.conjugacy_classes[0], {C_3v.e})  # first class is always identity
+        self.assertEqual(
+            {e.element for e in C_3v.conjugacy_classes[1]}, {symmetry.Operation.C(3), symmetry.Operation.C(3, 2)})
 
-        symmetry.PointGroup.T()
+    def test_character_table(self):
+        """Try to generate the character table"""
+
+        g = symmetry.PointGroup.T()
+
+        class_inverses = numpy.zeros(g.number_of_class, dtype=int)
+        class_sizes = numpy.zeros(g.number_of_class, dtype=int)
+        for i, c in enumerate(g.conjugacy_classes):
+            e = next(iter(c))
+            class_inverses[i] = g.to_conjugacy_class[g.inverse(e)]
+            class_sizes[i] = len(c)
+
+        for i in range(1, g.number_of_class):
+            print('-----')
+            final_eigenvectors = []
+            class_matrix = g.class_matrix(i)
+            eigenvalues, eigenvectors = numpy.linalg.eig(class_matrix)
+            uniques, indexes, inverses, counts = numpy.unique(
+                numpy.around(eigenvalues, 5), return_inverse=True, return_counts=True, return_index=True)
+            for ic in range(len(counts)):
+                count = counts[ic]
+                if count == 1:  # save eigenvector
+                    print('saved one')
+                    final_eigenvectors.append(
+                        eigenvectors[:, indexes[ic]] / eigenvectors[0, indexes[ic]])
+                else:
+                    print('nope', counts[ic])
+
+            if len(final_eigenvectors) == g.number_of_class:
+                print('yeah!!')
+                for j in range(g.number_of_class):
+                    v = final_eigenvectors[j]
+                    print('degree', numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes)))
+                break
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""

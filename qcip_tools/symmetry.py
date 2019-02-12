@@ -289,7 +289,14 @@ class Group:
         """Sort the conjugacy classes, if needed
         """
 
-        pass
+        def s(a):
+            e = next(iter(a))
+            if e == self.e:
+                return -1
+            else:
+                return len(a)
+
+        self.conjugacy_classes.sort(key=lambda a: s(a))
 
     def identity(self):
         """Get identity
@@ -328,29 +335,39 @@ class Group:
         else:
             return self.conjugacy_classes[index]
 
-    def get_class_matrices(self):
+    def class_matrix(self, class_number):
         """Compute class matrix: given the :math:`k` classes :math:`C_i` (:math:`0\\leq i < k`),
 
         For each :math:`x\\in C_r`, compute :math:`y=x^{-1}z`, with `z\\in C_t` and :math:`y\\in C_s`.
         Add 1 to the :math:`(s,t)` component of :math:`M^r`, a :math:`k\\times k` matrix.
+        Here, ``class_number`` gives the value of :math:`r`.
 
-        This results in a matrix where each component is the number of solution :math:`(y,z)` to which :math:`xy=z`.
+        This results in a matrix where each component is the number of solution :math:`(y,z)` for which :math:`xy=z`.
 
+        :param class_number: class id
+        :type class_number: int
         :rtype: numpy.ndarray
         """
 
-        matrices = numpy.zeros((self.number_of_class, self.number_of_class, self.number_of_class), dtype=int)
-        matrices[0, :, :] = numpy.eye(self.number_of_class)  # identity is always identity matrix
+        if class_number < 0:
+            raise ValueError(class_number)
 
-        for r in range(1, self.number_of_class):
-            for x in self.conjugacy_classes[r]:
-                einvx = self.inverse(x)
-                for t in range(self.number_of_class):
-                    et = next(iter(self.conjugacy_classes[t]))
-                    c = self.to_conjugacy_class[einvx * et]
-                    matrices[r, c, t] += 1
+        if class_number >= self.number_of_class:
+            raise ValueError(class_number)
 
-        return matrices
+        m = numpy.zeros((self.number_of_class, self.number_of_class), dtype=int)
+
+        if class_number == 0:
+            return numpy.eye(self.number_of_class)  # identity is always identity matrix
+
+        for x in self.conjugacy_classes[class_number]:
+            einvx = self.inverse(x)
+            for t in range(self.number_of_class):
+                et = next(iter(self.conjugacy_classes[t]))
+                c = self.to_conjugacy_class[einvx * et]
+                m[c, t] += 1
+
+        return m
 
     def __contains__(self, item):
         """is an element part of the group ?
