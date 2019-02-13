@@ -25,7 +25,10 @@ def simdiags(ops, tol=1e-14, in_vecs=None):
     zipped.sort()
     ds, perm = zip(*zipped)
     ds = -numpy.real(numpy.array(ds))
-    perm = numpy.array(perm)
+
+    print(eigvals[numpy.argsort(eigvals)][::-1], perm)
+    perm = numpy.array(perm)  # numpy.argsort(eigvals)
+    print(eigvals[perm])
 
     if in_vecs is not None:
         vecsperm = numpy.zeros(eigvecs.shape, dtype=complex)
