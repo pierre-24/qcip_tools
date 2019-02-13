@@ -1,5 +1,6 @@
 import numpy
 import random
+import unittest
 
 from tests import QcipToolsTestCase
 from qcip_tools import symmetry
@@ -185,39 +186,99 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(
             {e.element for e in C_3v.conjugacy_classes[1]}, {symmetry.Operation.C(3), symmetry.Operation.C(3, 2)})
 
+    @unittest.skip('not working, issues to find simultaneoous eigenvectors')
     def test_character_table(self):
         """Try to generate the character table"""
 
-        g = symmetry.PointGroup.T()
+        def normalize_evec(evec):
+            if abs(evec[0]) > 1e-5:
+                evec /= evec[0]
+            else:
+                evec /= numpy.min(evec[numpy.where(abs(evec) > 1e-5)])
+
+            return evec
+
+        def normalize_evecs(evecs):
+            for i_ in range(len(evecs)):
+                if abs(evecs[i_][0]) > 1e-5:
+                    evecs[i_] /= evecs[i_, 0]
+                else:
+                    evecs[i_] /= numpy.min(evecs[i_][numpy.where(abs(evecs[i_]) > 1e-5)])
+
+            return evecs
+
+        g = symmetry.PointGroup.C_nv(2)
 
         class_inverses = numpy.zeros(g.number_of_class, dtype=int)
         class_sizes = numpy.zeros(g.number_of_class, dtype=int)
+
+        matrices = {}
+
         for i, c in enumerate(g.conjugacy_classes):
             e = next(iter(c))
             class_inverses[i] = g.to_conjugacy_class[g.inverse(e)]
             class_sizes[i] = len(c)
 
-        for i in range(1, g.number_of_class):
+        for i in range(0, g.number_of_class):
             print('-----')
             final_eigenvectors = []
-            class_matrix = g.class_matrix(i)
-            eigenvalues, eigenvectors = numpy.linalg.eig(class_matrix)
+            if i not in matrices:
+                matrices[i] = g.class_matrix(i)
+            evals, evecs = numpy.linalg.eig(matrices[i])
             uniques, indexes, inverses, counts = numpy.unique(
-                numpy.around(eigenvalues, 5), return_inverse=True, return_counts=True, return_index=True)
+                numpy.around(evals, 5), return_inverse=True, return_counts=True, return_index=True)
+
+            evecs = normalize_evecs(evecs.T)
             for ic in range(len(counts)):
                 count = counts[ic]
+                pos_vecs = numpy.where(inverses == ic)
                 if count == 1:  # save eigenvector
-                    print('saved one')
-                    final_eigenvectors.append(
-                        eigenvectors[:, indexes[ic]] / eigenvectors[0, indexes[ic]])
+                    if abs(evecs[pos_vecs][0][0]) > 1e-5:
+                        print('***', uniques[ic], 'saved one', evecs[pos_vecs][0])
+                        final_eigenvectors.append(evecs[pos_vecs][0])
                 else:
-                    print('nope', counts[ic])
+                    degenerated_evecs = evecs[pos_vecs]
+                    print('***', uniques[ic], 'tries to extract', count)
+                    for j in range(1, g.number_of_class):
+                        if i == j:
+                            continue
+                        espace_mat = numpy.zeros((count, count))
+                        if j not in matrices:
+                            matrices[j] = g.class_matrix(j)
+                        for k in range(count):
+                            t = numpy.dot(matrices[j], degenerated_evecs[k])
+                            for l in range(count):
+                                espace_mat[k, l] = numpy.dot(t, degenerated_evecs[l])
+                        # print(espace_mat)
+                        espace_evals, espace_evecs = numpy.linalg.eig(espace_mat)
+                        if not numpy.all(numpy.around(espace_evals, 5).astype(int) == numpy.around(espace_evals, 1)):
+                            print(espace_evals, 'not integer evals, skipping')
+                            continue
+                        if len(numpy.unique(numpy.around(espace_evals, 5))) == count:
+                            print('evals', espace_evals)
+                            for k in range(count):
+                                n_eigenvector = numpy.zeros(g.number_of_class)
+                                for l in range(count):
+                                    n_eigenvector += espace_evecs[k, l] * degenerated_evecs[l]
+
+                                if abs(numpy.around(n_eigenvector[0], 5)) > 1e-5:
+                                    print('extracted', normalize_evec(n_eigenvector))
+                                    final_eigenvectors.append(normalize_evec(n_eigenvector))
+                                else:
+                                    print('got 0 as first component, it is not possible')
+                            break
+
+            # print(final_eigenvectors)
 
             if len(final_eigenvectors) == g.number_of_class:
-                print('yeah!!')
+                print('-------\n')
+                print(g.conjugacy_classes)
+                print(class_sizes)
                 for j in range(g.number_of_class):
                     v = final_eigenvectors[j]
-                    print('degree', numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes)))
+                    degree = numpy.around(numpy.real(
+                        numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes))), 1).astype(int)
+                    print(numpy.around(v * degree / class_sizes, 2))
                 break
 
     def test_symmetry_finder(self):

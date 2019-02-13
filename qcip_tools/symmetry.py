@@ -355,18 +355,17 @@ class Group:
         if class_number >= self.number_of_class:
             raise ValueError(class_number)
 
-        m = numpy.zeros((self.number_of_class, self.number_of_class), dtype=int)
-
         if class_number == 0:
             return numpy.eye(self.number_of_class)  # identity is always identity matrix
+
+        m = numpy.zeros((self.number_of_class, self.number_of_class), dtype=int)
 
         for x in self.conjugacy_classes[class_number]:
             einvx = self.inverse(x)
             for t in range(self.number_of_class):
-                et = next(iter(self.conjugacy_classes[t]))
-                c = self.to_conjugacy_class[einvx * et]
+                z = next(iter(self.conjugacy_classes[t]))
+                c = self.to_conjugacy_class[einvx * z]
                 m[c, t] += 1
-
         return m
 
     def __contains__(self, item):
