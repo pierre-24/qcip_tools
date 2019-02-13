@@ -1,75 +1,12 @@
 import numpy
 import random
-import unittest
-
-import scipy.linalg as la
+# import unittest
 
 from tests import QcipToolsTestCase
 from qcip_tools import symmetry
 
 
-def simdiag(ops, evals=False):
-    """Simulateous diagonalization of communting Hermitian matrices..
-
-    Source: http://qutip.org/docs/latest/modules/qutip/simdiag.html
-    """
-    tol = 1e-14
-    start_flag = 0
-    if not isinstance(ops, (list, numpy.ndarray)):
-        ops = numpy.array([ops])
-    num_ops = len(ops)
-    for jj in range(num_ops):
-        A = ops[jj]
-        shape = A.shape
-        if shape[0] != shape[1]:
-            raise TypeError('Matricies must be square.')
-        if start_flag == 0:
-            s = shape[0]
-        if s != shape[0]:
-            raise TypeError('All matrices. must be the same shape')
-        for kk in range(jj):
-            B = ops[kk]
-            if numpy.linalg.norm(A * B - B * A) > tol:
-                raise TypeError('Matricies must commute.')
-
-    A = ops[0]
-    eigvals, eigvecs = numpy.linalg.eig(A)
-    zipped = list(zip(-eigvals, range(len(eigvals))))
-    zipped.sort()
-    ds, perm = zip(*zipped)
-    ds = -numpy.real(numpy.array(ds))
-    perm = numpy.array(perm)
-    eigvecs_array = numpy.array(
-        [numpy.zeros((A.shape[0], 1), dtype=complex) for k in range(A.shape[0])])
-
-    for kk in range(len(perm)):  # matrix with sorted eigvecs in columns
-        eigvecs_array[kk][:, 0] = eigvecs[:, perm[kk]]
-    k = 0
-    rng = numpy.arange(len(eigvals))
-    while k < len(ds):
-        # find degenerate eigenvalues, get indicies of degenerate eigvals
-        inds = numpy.array(abs(ds - ds[k]) < max(tol, tol * abs(ds[k])))
-        inds = rng[inds]
-        if len(inds) > 1:  # if at least 2 eigvals are degenerate
-            eigvecs_array[inds] = degen(
-                tol, eigvecs_array[inds],
-                numpy.array([ops[kk] for kk in range(1, num_ops)]))
-        k = max(inds) + 1
-    eigvals_out = numpy.zeros((num_ops, len(ds)), dtype=float)
-    kets_out = numpy.array([(eigvecs_array[j] / la.norm(eigvecs_array[j]))
-                            for j in range(len(ds))])
-    if not evals:
-        return kets_out
-    else:
-        for kk in range(num_ops):
-            for j in range(len(ds)):
-                eigvals_out[kk, j] = numpy.real(numpy.dot(
-                    eigvecs_array[j].conj().T,
-                    ops[kk].data * eigvecs_array[j]))
-        return eigvals_out, kets_out
-
-
-def degen(tol, in_vecs, ops):
+def simdiags(ops, tol=1e-14, in_vecs=None):
     """
     Private function that finds eigen vals and vecs for degenerate matrices..
     """
@@ -77,31 +14,45 @@ def degen(tol, in_vecs, ops):
     if n == 0:
         return in_vecs
     A = ops[0]
-    vecs = numpy.column_stack(in_vecs)
-    eigvals, eigvecs = numpy.linalg.eig(numpy.dot(vecs.conj().T, numpy.dot(A, vecs)))
+
+    if in_vecs is not None:
+        vecs = numpy.column_stack(in_vecs)
+        eigvals, eigvecs = numpy.linalg.eig(numpy.dot(vecs.conj().T, numpy.dot(A, vecs)))
+    else:
+        eigvals, eigvecs = numpy.linalg.eig(A)
+
     zipped = list(zip(-eigvals, range(len(eigvals))))
     zipped.sort()
     ds, perm = zip(*zipped)
     ds = -numpy.real(numpy.array(ds))
     perm = numpy.array(perm)
-    vecsperm = numpy.zeros(eigvecs.shape, dtype=complex)
-    for kk in range(len(perm)):  # matrix with sorted eigvecs in columns
-        vecsperm[:, kk] = eigvecs[:, perm[kk]]
-    vecs_new = numpy.dot(vecs, vecsperm)
-    vecs_out = numpy.array(
-        [numpy.zeros((A.shape[0], 1), dtype=complex) for k in range(len(ds))])
-    for kk in range(len(perm)):  # matrix with sorted eigvecs in columns
-        vecs_out[kk][:, 0] = vecs_new[:, kk]
+
+    if in_vecs is not None:
+        vecsperm = numpy.zeros(eigvecs.shape, dtype=complex)
+        for kk in range(len(perm)):  # matrix with sorted eigvecs in columns
+            vecsperm[:, kk] = eigvecs[:, perm[kk]]
+        vecs_new = numpy.dot(vecs, vecsperm)
+        vecs_out = numpy.array(
+            [numpy.zeros((A.shape[0], 1), dtype=complex) for k in range(len(ds))])
+        for kk in range(len(perm)):  # matrix with sorted eigvecs in columns
+            vecs_out[kk][:, 0] = vecs_new[:, kk]
+    else:
+        vecs_out = numpy.array(
+            [numpy.zeros((A.shape[0], 1), dtype=complex) for k in range(A.shape[0])])
+
+        for kk in range(len(perm)):  # matrix with sorted eigvecs in columns
+            vecs_out[kk][:, 0] = eigvecs[:, perm[kk]]
+
     k = 0
     rng = numpy.arange(len(ds))
     while k < len(ds):
         inds = numpy.array(abs(ds - ds[k]) < max(
-            tol, tol * abs(ds[k])))  # get indicies of degenerate eigvals
+            tol, tol * abs(ds[k])))  # get indices of degenerate eigvals
         inds = rng[inds]
         if len(inds) > 1:  # if at least 2 eigvals are degenerate
-            vecs_out[inds] = degen(tol, vecs_out[inds],
-                                   numpy.array([ops[jj] for jj in range(1, n)]))
+            vecs_out[inds] = simdiags(numpy.array([ops[jj] for jj in range(1, n)]), tol, vecs_out[inds])
         k = max(inds) + 1
+
     return vecs_out
 
 
@@ -285,7 +236,7 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(
             {e.element for e in C_3v.conjugacy_classes[1]}, {symmetry.Operation.C(3), symmetry.Operation.C(3, 2)})
 
-    @unittest.skip('not working, issues to find simultaneoous eigenvectors')
+    # @unittest.skip('not working, issues to find simultaneoous eigenvectors')
     def test_character_table(self):
         """Try to generate the character table"""
 
@@ -297,16 +248,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             return evec
 
-        def normalize_evecs(evecs):
-            for i_ in range(len(evecs)):
-                if abs(evecs[i_][0]) > 1e-5:
-                    evecs[i_] /= evecs[i_, 0]
-                else:
-                    evecs[i_] /= numpy.min(evecs[i_][numpy.where(abs(evecs[i_]) > 1e-5)])
-
-            return evecs
-
-        g = symmetry.PointGroup.O()
+        g = symmetry.PointGroup.D_nd(7)
 
         class_inverses = numpy.zeros(g.number_of_class, dtype=int)
         class_sizes = numpy.zeros(g.number_of_class, dtype=int)
@@ -321,7 +263,7 @@ class SymmetryTestCase(QcipToolsTestCase):
         for i in range(0, g.number_of_class):
             matrices.append(g.class_matrix(i))
 
-        e = simdiag(matrices)
+        e = simdiags(matrices, 1e-14)
 
         final_eigenvectors = []
         for i in range(g.number_of_class):
@@ -388,7 +330,7 @@ class SymmetryTestCase(QcipToolsTestCase):
                 v = final_eigenvectors[j]
                 degree = numpy.around(numpy.real(
                     numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes))), 1).astype(int)
-                print(numpy.around(v * degree / class_sizes, 2))
+                print(numpy.around(v * degree / class_sizes, 3))
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
