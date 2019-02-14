@@ -309,7 +309,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             .. warning::
 
-                For unknown reasons, fails for :math:`D_{4h}`.
+                For unknown reasons, fails for :math:`D_{4h}`, :math:`O_{h}`, :math:`T_{h}` and :math:`I_{h}`.
 
             :param matrices: list of matrices
             :type matrices: list
@@ -365,7 +365,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             return evec
 
-        g = symmetry.PointGroup.D_nh(3)
+        g = symmetry.PointGroup.I()
 
         class_inverses = numpy.zeros(g.number_of_class, dtype=int)
         class_sizes = numpy.zeros(g.number_of_class, dtype=int)
@@ -381,21 +381,20 @@ class SymmetryTestCase(QcipToolsTestCase):
             matrices.append(g.class_matrix(i))
 
         e = simultaneous_diagonalization(matrices)
-
-        # print(e)
         # ed = old_simdiag(matrices)
-        # print(ed)
 
         final_eigenvectors = []
         for i in range(g.number_of_class):
+            # final_eigenvectors.append(normalize_evec(ed[i].T[0]))
             final_eigenvectors.append(normalize_evec(e[i]))
 
         if len(final_eigenvectors) == g.number_of_class:
             print(g.conjugacy_classes)
             for j in range(g.number_of_class):
                 v = final_eigenvectors[j]
-                degree = numpy.around(
-                    numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes)), 1)
+                degree = numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes))
+                print('* d', degree)
+                print('* v', numpy.around(v, 3))
                 print(numpy.around(v * degree / class_sizes, 3))
 
     def test_symmetry_finder(self):
