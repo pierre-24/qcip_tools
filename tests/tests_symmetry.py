@@ -305,11 +305,18 @@ class SymmetryTestCase(QcipToolsTestCase):
             Original source: http://qutip.org/docs/latest/modules/qutip/simdiag.html.
             Also check
             https://ocw.mit.edu/courses/physics/8-05-quantum-physics-ii-fall-2013/lecture-notes/MIT8_05F13_Chap_05.pdf
-            (which is the closest explanation I found to this implementation)
+            (which is the closest explanation I found of this implementation, which is not common).
 
             .. warning::
 
                 For unknown reasons, fails for :math:`D_{4h}`, :math:`O_{h}`, :math:`T_{h}` and :math:`I_{h}`.
+
+                + For :math:`D_{4h}` use ``del mat[1]`` ;
+                + For :math:`T_{h}` use ``del mat[0]`` and ``del mat[3]`` (T representations need to be rescaled) ;
+                + For :math:`O_{h}` use ``del mat[0]`` and ``del mat[4]`` (T representations need to be rescaled) :
+                + For :math:`I_{h}` use ``del mat[2]`` (H representations need to be rescaled).
+
+                That's the best I can do for the moment ;)
 
             :param matrices: list of matrices
             :type matrices: list
@@ -365,7 +372,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             return evec
 
-        g = symmetry.PointGroup.I()
+        g = symmetry.PointGroup.T_d()
 
         class_inverses = numpy.zeros(g.number_of_class, dtype=int)
         class_sizes = numpy.zeros(g.number_of_class, dtype=int)
@@ -380,6 +387,8 @@ class SymmetryTestCase(QcipToolsTestCase):
         for i in range(0, g.number_of_class):
             matrices.append(g.class_matrix(i))
 
+        # del matrices[0]
+        # del matrices[3]
         e = simultaneous_diagonalization(matrices)
         # ed = old_simdiag(matrices)
 
@@ -390,12 +399,15 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         if len(final_eigenvectors) == g.number_of_class:
             print(g.conjugacy_classes)
+            table = numpy.zeros((g.number_of_class, g.number_of_class), dtype=complex)
             for j in range(g.number_of_class):
                 v = final_eigenvectors[j]
                 degree = numpy.sqrt(g.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes))
-                print('* d', degree)
-                print('* v', numpy.around(v, 3))
-                print(numpy.around(v * degree / class_sizes, 3))
+                # print('* d', degree)
+                # print('* v', numpy.around(v, 3))
+                table[j] = v * degree / class_sizes
+
+            print(numpy.around(table, 2))
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
