@@ -311,10 +311,13 @@ class SymmetryTestCase(QcipToolsTestCase):
 
                 For unknown reasons, fails for :math:`D_{4h}`, :math:`O_{h}`, :math:`T_{h}` and :math:`I_{h}`.
 
-                + For :math:`D_{4h}` use ``del mat[1]`` ;
-                + For :math:`T_{h}` use ``del mat[0]`` and ``del mat[3]`` (T representations need to be rescaled) ;
-                + For :math:`O_{h}` use ``del mat[0]`` and ``del mat[4]`` (T representations need to be rescaled) :
-                + For :math:`I_{h}` use ``del mat[2]`` (H representations need to be rescaled).
+                + For :math:`D_{4h}` use ``del mat[1]``, or ``list(reversed(matrices))`` ;
+                + For :math:`T_{h}` use ``del mat[0]`` and ``del mat[3]`` (T representations need to be rescaled),
+                  or ``list(reversed(matrices))`` ;
+                + For :math:`O_{h}` use ``del mat[0]`` and ``del mat[4]`` (T representations need to be rescaled),
+                  or ``list(reversed(matrices))`` with ``del mat[-1]`` ;
+                + For :math:`I_{h}` use ``del mat[2]`` (H representations need to be rescaled),
+                  or ``list(reversed(matrices))`` with ``del mat[-1]`` and  ``del mat[-2]``.
 
                 That's the best I can do for the moment ;)
 
@@ -372,7 +375,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             return evec
 
-        g = symmetry.PointGroup.T_d()
+        g = symmetry.PointGroup.O_h()
 
         class_inverses = numpy.zeros(g.number_of_class, dtype=int)
         class_sizes = numpy.zeros(g.number_of_class, dtype=int)
@@ -389,7 +392,9 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         # del matrices[0]
         # del matrices[3]
-        e = simultaneous_diagonalization(matrices)
+        del matrices[-1]
+        del matrices[-2]
+        e = simultaneous_diagonalization(list(reversed(matrices)))
         # ed = old_simdiag(matrices)
 
         final_eigenvectors = []
