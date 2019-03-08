@@ -17,6 +17,65 @@ from transforms3d import quaternions
 from qcip_tools import math as qcip_math
 
 
+def simultaneous_diagonalization(matrices, tol=1e-14, in_vecs=None):
+    """
+    Simulateous diagonalization of (communting Hermitian) matrices.
+
+    Seems to works by computing a *basis* for the first matrix, then by diagonalizing the different
+    blocks (organized by the degeneracy of the eigenvalues).
+
+    Original source: http://qutip.org/docs/latest/modules/qutip/simdiag.html.
+    Also check
+    https://ocw.mit.edu/courses/physics/8-05-quantum-physics-ii-fall-2013/lecture-notes/MIT8_05F13_Chap_05.pdf
+    (which is the closest explanation I found of this implementation, which is not common).
+
+    :param matrices: list of matrices
+    :type matrices: list
+    :param tol: tolerance on the eigenvalue (to check if they are degenerate or not)
+    :type tol: float
+    :param in_vecs: previously computed eigenvectors
+    :type in_vecs: numpy.ndarray
+    """
+
+    n = len(matrices)
+    if n == 0:
+        return in_vecs
+
+    A = matrices[0]
+    if in_vecs is not None:
+        vecs = numpy.column_stack(in_vecs)
+        eigvals, eigvecs = numpy.linalg.eig(numpy.dot(vecs.conj().T, numpy.dot(A, vecs)))
+    else:
+        eigvals, eigvecs = numpy.linalg.eig(A)
+
+    perm = numpy.argsort(-eigvals)  # sort in reverse order (largest first)
+    ds = eigvals[perm]
+
+    if in_vecs is not None:
+        vecsperm = numpy.zeros(eigvecs.shape, dtype=complex)
+        for kk in range(len(perm)):
+            vecsperm[:, kk] = eigvecs[:, perm[kk]]
+        vecs_new = numpy.dot(vecs, vecsperm)
+        vecs_out = numpy.zeros((len(ds), A.shape[0]), dtype=complex)
+        for kk in range(len(perm)):
+            vecs_out[kk] = vecs_new[:, kk]
+    else:
+        vecs_out = numpy.zeros(A.shape, dtype=complex)
+        for kk in range(len(perm)):
+            vecs_out[kk] = eigvecs[:, perm[kk]]
+
+    k = 0
+    rng = numpy.arange(len(ds))
+
+    while k < len(ds):
+        indices = rng[numpy.where(abs(ds - ds[k]) < max(tol, tol * abs(ds[k])))]
+        if len(indices) > 1:  # two (or more) degenerate eigenvalues
+            vecs_out[indices] = simultaneous_diagonalization(matrices[1:], tol, vecs_out[indices])
+        k = max(indices) + 1
+
+    return vecs_out
+
+
 class Set(set):
     """Define a (finite) set of (unique) elements
     """
@@ -367,6 +426,50 @@ class Group:
                 c = self.to_conjugacy_class[einvx * z]
                 m[c, t] += 1
         return m
+
+    def class_matrices(self):
+        """Get all the class matrices
+
+        :rtype: list
+        """
+        m = []
+
+        for i in range(0, self.number_of_class):
+            m.append(self.class_matrix(i))
+
+        return m
+
+    def gen_character_table(self, tweak_matrices_func=lambda a: a):
+        """Generate a character table for the group.
+
+        :param tweak_matrices_func: function to alter the list of class matrices (if needed): takes a list of matrices
+            as input and returns the new list. Useful in some cases (especially if the classes are sorted).
+        :type tweak_matrices_func: function
+        :return: the character table, with the column ordered as the different class, and the line in a random order
+        :type: numpy.ndarray
+        """
+
+        matrices = self.class_matrices()
+        class_inverses = numpy.zeros(self.number_of_class, dtype=int)
+        class_sizes = numpy.zeros(self.number_of_class, dtype=int)
+
+        for i, c in enumerate(self.conjugacy_classes):
+            e = next(iter(c))
+            class_inverses[i] = self.to_conjugacy_class[self.inverse(e)]
+            class_sizes[i] = len(c)
+
+        matrices = tweak_matrices_func(matrices)
+
+        e = simultaneous_diagonalization(matrices)
+        e /= e[:, 0, None]  # normalization, so that first element is 1
+
+        table = numpy.zeros((self.number_of_class, self.number_of_class), dtype=complex)
+        for j in range(self.number_of_class):
+            v = e[j]
+            degree = numpy.sqrt(self.order / numpy.einsum('i,i->', v, v[class_inverses] / class_sizes))
+            table[j] = v * degree / class_sizes
+
+        return table
 
     def __contains__(self, item):
         """is an element part of the group ?
@@ -854,6 +957,8 @@ class PointGroup(Group):
             b. Then comes rotoreflexion axis of order :math:`n >2` ;
             c. Finally, reflexion plane, in the order :math:`\\sigma_h`, :math:`\\sigma_v`, :math:`\\sigma_d`.
 
+        **Normally**, that should give the same order at each run.
+
         Since the order is arbitrary in character tables,
         **this will probably not correspond to the usual "textbook" order**.
         """
@@ -883,15 +988,51 @@ class PointGroup(Group):
 
         self.conjugacy_classes.sort(key=lambda a: s(a))
 
+    def character_table(self):
+        """Generate a character table for the group.
+
+        .. warning::
+
+            This uses the ``simultaneous_diagonalization()`` function, but
+            for unknown reasons, it "fails" for :math:`D_{4h}`, :math:`O_{h}`, :math:`T_{h}` and :math:`I_{h}`
+            (it generates eigenvectors that are not representations, but are probably orthogonal with each other).
+
+            Thus, with the ``tweak_matrices_func`` parameter,
+
+            + For :math:`D_{4h}` it uses ``list(reversed(matrices))`` ;
+            + For :math:`T_{h}` it uses ``list(reversed(matrices))`` ;
+            + For :math:`O_{h}` it uses `list(reversed(matrices))`` with ``del mat[0]`` ;
+            + For :math:`I_{h}` it uses ``list(reversed(matrices))`` with ``del mat[0]`` and  ``del mat[1]``.
+
+            That's the best I can do for the moment ;)
+        """
+
+        def tm(matrices):
+            if self.description.symbol in \
+                    [PointGroupType.pyritohedral,
+                     PointGroupType.octahedral_achiral,
+                     PointGroupType.icosahedral_achiral] \
+                    or (self.description.symbol == PointGroupType.prismatic and self.description.order == 4):
+
+                matrices = list(reversed(matrices))
+
+                if self.description.symbol == PointGroupType.octahedral_achiral:
+                    del matrices[0]
+
+                if self.description.symbol == PointGroupType.icosahedral_achiral:
+                    del matrices[0]
+                    del matrices[1]
+
+            return matrices
+
+        t = self.gen_character_table(tweak_matrices_func=tm)
+        # print(numpy.around(t, 2))
+
+        return t
+
     @staticmethod
     def product(e):
         return e[0] * e[1]
-
-    def gen_character_table(self):
-        """Try to generate the character table
-        """
-
-        pass
 
     @classmethod
     def generate(cls, generators, description=None):
