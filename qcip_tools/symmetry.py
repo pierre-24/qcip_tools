@@ -262,7 +262,7 @@ class RepresentationError(Exception):
 
 
 class IrreducibleRepresentation:
-    """An irreducible representation
+    """An irreducible representation (*irrep.*)
     """
 
     def __init__(self, characters, table, label=None):
@@ -276,7 +276,7 @@ class IrreducibleRepresentation:
 
     @property
     def degree(self):
-        return self.characters[0]
+        return qcip_math.closest_int(self.characters[0].real)
 
     def __add__(self, other):
         """Computes :math:`\\oplus`
@@ -288,7 +288,7 @@ class IrreducibleRepresentation:
         if type(other) is IrreducibleRepresentation:
             if id(self.table) != id(other.table):
                 raise RepresentationError('not issued from the same character table')
-            return ReducibleRepresentation(self.table, irreducible_representations=[self, other])
+            return ReducibleRepresentation(self.table, characters=self.characters + other.characters)
         elif type(other) is ReducibleRepresentation:
             return other + self
         else:
@@ -298,7 +298,7 @@ class IrreducibleRepresentation:
         """Computes :math:`\\otimes` between two irreducible representations
 
         :param other: other irreducible representation
-        :type other: IrreducibleRepresentation
+        :type other: IrreducibleRepresentation|ReducibleRepresentation
         :rtype: ReducibleRepresentation
         """
         if type(other) is IrreducibleRepresentation:
@@ -306,6 +306,8 @@ class IrreducibleRepresentation:
                 raise RepresentationError('not issued from the same character table')
 
             return ReducibleRepresentation(self.table, characters=self.characters * other.characters)
+        if type(other) is ReducibleRepresentation:
+            return other * self
         else:
             raise TypeError(other)
 
@@ -315,7 +317,7 @@ class IrreducibleRepresentation:
 
         .. math::
 
-            \\sum_{r\\in \\mathcal G} [\\chi^\\lambda(r)]^\\star \\chi^\\mu(r).
+            \\frac{1}{\\#\\mathcal G}\\sum_{r\\in \\mathcal G} [\\chi^\\lambda(r)]^\\star \\chi^\\mu(r).
 
         :param other: other irreducible representation
         :type other: IrreducibleRepresentation
@@ -327,13 +329,35 @@ class IrreducibleRepresentation:
                 raise RepresentationError('not issued from the same character table')
 
             num_elements = numpy.array([len(c) for c in self.table.group.conjugacy_classes])
-            return numpy.dot((self.characters * num_elements).conjugate(), other.characters)
+            return numpy.dot((self.characters).conjugate() / self.table.group.order, other.characters * num_elements)
         else:
             raise TypeError(other)
 
+    def __eq__(self, other):
+        try:
+            return math.fabs(self.dot(other).real - 1) < CharacterTable.LIMIT
+        except (TypeError, RepresentationError):
+            return False
+
+    def __str__(self):
+        return '{}{}'.format(
+            self.label if self.label else '',
+            ' '.join('{: .2f}{}'.format(
+                i.real,
+                '{:+.2f}j'.format(i.imag) if math.fabs(i.imag) > CharacterTable.LIMIT else '') for i in self.characters)
+        )
+
 
 class ReducibleRepresentation:
-    """Sum of irreducible representation"""
+    """Sum of irreducible representation
+
+    Reduction of :math:`\\chi^{(red)}` into a sum of irreducible representation of :math:`n^\\lambda` times
+    a irreducible representation :math:`\\chi^\\lambda` is performed using
+
+    .. math::
+
+        n^\\lambda = \\frac{1}{\\#\\mathcal G} \\sum_{r\\in\\mathcal G} [\\chi^{(red)}(r)]^\\star \\chi^\\lambda(r)
+    """
 
     def __init__(self, table, irreducible_representations=None, characters=None):
         self.table = table
@@ -344,26 +368,108 @@ class ReducibleRepresentation:
                 'you can create a reducible representation either from characters or representations!')
 
         if irreducible_representations is not None:
+            if len(irreducible_representations) != self.table.group.number_of_class:
+                raise RepresentationError('size of representation must be number of class')
             self.irreducible_representations = irreducible_representations
-            self.characters = sum(r.characters for r in irreducible_representations)
+
         else:
-            pass  # TODO: reduce
+            if characters.shape != (self.table.size, ):
+                raise RepresentationError('size of characters must be number of class')
+
+            num_elements = numpy.array([len(c) for c in self.table.group.conjugacy_classes])
+            norm = qcip_math.closest_int(numpy.dot(characters.conjugate(), characters * num_elements).real)
+            n_irreps = norm // table.group.order
+
+            if n_irreps * table.group.order != norm:
+                raise RepresentationError('characters does not correspond to an integer number of irreps')
+
+            self.irreducible_representations = [0] * self.table.size
+            for i in range(self.table.size):
+                n = qcip_math.closest_int(
+                    numpy.einsum(
+                        'i,i->',
+                        characters.conjugate() / self.table.group.order,
+                        num_elements * self.table.irreducible_representations[i].characters).real)
+
+                self.irreducible_representations[i] = n
+
+    @property
+    def characters(self):
+        characters = numpy.zeros(self.table.size)
+        for i in range(self.table.group.number_of_class):
+            characters += self.irreducible_representations[i] * self.table.irreducible_representations[i].characters
+
+        return characters
+
+    @property
+    def size(self):
+        return sum(self.irreducible_representations)
+
+    def _find_irrep_index(self, other):
+        """Among all irreps in the character table, find the id of the one that matches ``other``.
+
+        :param other: other irrep
+        :type other: IrreducibleRepresentation
+        :rtype: int
+        """
+
+        if id(self.table) != id(other.table):
+            raise RepresentationError('not issued from the same character table')
+
+        for i, irrep in enumerate(self.table.irreducible_representations):
+            if irrep == other:
+                return i
+
+        raise RepresentationError('{} is not a valid irrep.'.format(other))
 
     def __add__(self, other):
         if type(other) is IrreducibleRepresentation:
             if id(self.table) != id(other.table):
                 raise RepresentationError('not issued from the same character table')
+
             r = self.irreducible_representations.copy()
-            r.append(other)
+            r[self._find_irrep_index(other)] += 1
             return ReducibleRepresentation(self.table, irreducible_representations=r)
+
         elif type(other) is ReducibleRepresentation:
             if id(self.table) != id(other.table):
                 raise RepresentationError('not issued from the same character table')
             r = self.irreducible_representations.copy()
-            r.extend(other.irreducible_representations)
+            for i in range(self.table.size):
+                r[i] += other.irreducible_representations[i]
+
             return ReducibleRepresentation(self.table, irreducible_representations=r)
         else:
             raise TypeError(other)
+
+    def __mul__(self, other):
+        if type(other) in [IrreducibleRepresentation, ReducibleRepresentation]:
+
+            if id(self.table) != id(other.table):
+                raise RepresentationError('not issued from the same character table')
+
+            return ReducibleRepresentation(self.table, characters=self.characters * other.characters)
+
+        else:
+            raise TypeError(other)
+
+    def __str__(self):
+        return ' + '.join(
+            '{}'.format(
+                '{}{}'.format('{} '.format(n) if n > 1 else '', self.table.irreducible_representations[i].label))
+            for i, n in enumerate(self.irreducible_representations) if n > 0
+        )
+
+    def __contains__(self, item):
+        if type(item) is IrreducibleRepresentation:
+
+            try:
+                index = self._find_irrep_index(item)
+            except RepresentationError:
+                return False
+
+            return self.irreducible_representations[index] > 0
+        return False
 
 
 class CharacterTableError(Exception):
@@ -403,6 +509,19 @@ class CharacterTable:
 
         # further sorting and labeling
         self.irreducible_representations = group._label_and_sort_representation(self.irreducible_representations)
+
+    @property
+    def size(self):
+        return self.group.number_of_class
+
+
+DEG2NAME = {
+    1: 'A',
+    2: 'E',
+    3: 'T',
+    4: 'G',
+    5: 'H'
+}
 
 
 class Group:
@@ -513,9 +632,34 @@ class Group:
         :rtype: list
         """
 
+        # find trivial representation
+        trivial = None
+        for i, r in enumerate(representations):
+            if numpy.allclose(r.characters, numpy.ones(self.number_of_class)):
+                trivial = r
+                del representations[i]
+                break
+
+        if not trivial:
+            raise RepresentationError('no trivial representation')
+
+        trivial.label = 'A0'
+
         # sort by degree
-        representations.sort(key=lambda a: a.characters[0])
-        return representations
+        representations.sort(key=lambda a: (
+            qcip_math.closest_int(a.characters[0].real), qcip_math.closest_int(-a.characters[1].real)))
+
+        prev_deg = 0
+        iter = 1
+        for r in representations:
+            if r.degree != prev_deg:
+                iter = 1
+
+            r.label = '{}{}'.format(DEG2NAME[r.degree], iter)
+            prev_deg = r.degree
+            iter += 1
+
+        return [trivial] + representations  # trivial representation is first
 
     def identity(self):
         """Get identity
@@ -662,28 +806,6 @@ class Group:
                 yield i
 
 
-def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 7 * 9 * 11 * 13):
-    """A fairly simple algorithm to get the fraction out of a floating number.
-    Try to get as close as possible to ``x``.
-
-    Notice that the maximum denominator is chosen to be the multiplication of the primes (and their even power)
-
-    :param x: the float
-    :type x: float
-    :param max_denominator: the maximum denominator
-    :type max_denominator: int
-    :rtype: tuple(int, int)
-    """
-    e = int(x * max_denominator)
-    u = math.fabs(e / max_denominator - x)
-    if math.fabs((e + 1) / max_denominator - x) <= u:
-        e += 1
-    elif math.fabs((e - 1) / max_denominator - x) <= u:
-        e -= 1
-    g = math.gcd(e, max_denominator)
-    return e // g, max_denominator // g
-
-
 class Operation:
     """Define a symmetry element (fully based on quaternion).
 
@@ -746,7 +868,7 @@ class Operation:
             if _should_negate(q):
                 q = -q
 
-            self._hash = hash((*(closest_fraction(x) for x in q), self.improper))
+            self._hash = hash((*(qcip_math.closest_fraction(x) for x in q), self.improper))
 
             # print(self, *(closest_fraction(x) for x in q), self._hash)
 
@@ -825,7 +947,7 @@ class Operation:
             else:
                 angle %= 1
 
-            k, n = closest_fraction(angle)
+            k, n = qcip_math.closest_fraction(angle)
 
             if not self.improper or n % 2 == 0:
                 k %= n
@@ -1174,7 +1296,7 @@ class PointGroup(Group):
 
             + For :math:`D_{4h}` it uses ``list(reversed(matrices))`` ;
             + For :math:`T_{h}` it uses ``list(reversed(matrices))`` ;
-            + For :math:`O_{h}` it uses `list(reversed(matrices))`` with ``del mat[0]`` ;
+            + For :math:`O_{h}` it uses ``list(reversed(matrices))`` with ``del mat[0]`` ;
             + For :math:`I_{h}` it uses ``list(reversed(matrices))`` with ``del mat[0]`` and  ``del mat[1]``.
 
             That's the best I can do for the moment ;)

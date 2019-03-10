@@ -205,3 +205,40 @@ def unique_everseen(iterable, key=None):
             if k not in seen:
                 seen_add(k)
                 yield element
+
+
+def closest_fraction(x, max_denominator=2 * 3 * 4 * 5 * 7 * 9 * 11 * 13):
+    """A fairly simple algorithm to get the fraction out of a floating number.
+    Try to get as close as possible to ``x``.
+
+    Notice that the maximum denominator is chosen to be the multiplication of the primes (and their even power)
+
+    :param x: the float
+    :type x: float
+    :param max_denominator: the maximum denominator
+    :type max_denominator: int
+    :rtype: tuple(int, int)
+    """
+    e = int(x * max_denominator)
+    u = math.fabs(e / max_denominator - x)
+    if math.fabs((e + 1) / max_denominator - x) <= u:
+        e += 1
+    elif math.fabs((e - 1) / max_denominator - x) <= u:
+        e -= 1
+    g = math.gcd(e, max_denominator)
+    return e // g, max_denominator // g
+
+
+def closest_int(x):
+    """Compute the closest integer
+
+    :param x: a float
+    :type x: float
+    :rtype: int
+    """
+    c = math.ceil(x)
+    f = math.floor(x)
+    if math.fabs(x - c) < math.fabs(x - f):
+        return int(c)
+    else:
+        return int(f)

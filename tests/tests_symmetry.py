@@ -1,6 +1,7 @@
 import numpy
 import random
 
+import qcip_tools.math
 from tests import QcipToolsTestCase
 from qcip_tools import symmetry
 
@@ -8,8 +9,8 @@ from qcip_tools import symmetry
 class SymmetryTestCase(QcipToolsTestCase):
 
     def test_closest_fraction(self):
-        self.assertEqual(symmetry.closest_fraction(-.499999, max_denominator=1000), (-1, 2))
-        self.assertEqual(symmetry.closest_fraction(.499999, max_denominator=1000), (1, 2))
+        self.assertEqual(qcip_tools.math.closest_fraction(-.499999, max_denominator=1000), (-1, 2))
+        self.assertEqual(qcip_tools.math.closest_fraction(.499999, max_denominator=1000), (1, 2))
 
     def test_group(self):
         f = symmetry.BinaryOperation(symmetry.Set(range(4)), lambda e: (e[0] + e[1]) % 4)
@@ -186,15 +187,64 @@ class SymmetryTestCase(QcipToolsTestCase):
             {e.element for e in C_3v.conjugacy_classes[1]}, {symmetry.Operation.C(3), symmetry.Operation.C(3, 2)})
 
     def test_character_table(self):
-        """Try to generate the character table"""
+        """Generate the character table"""
 
-        g = symmetry.PointGroup.T_h()
+        # a few groups to check
+        groups = [
+            symmetry.PointGroup.C_nv(2),
+            symmetry.PointGroup.C_nh(4),
+            symmetry.PointGroup.D_nd(3),
+            symmetry.PointGroup.T_h(),
+            symmetry.PointGroup.I()
+        ]
+
+        for g in groups:
+            t = g.character_table()
+
+            # check orthogonality of the lines
+            for i in range(g.number_of_class):
+                for j in range(i + 1, g.number_of_class):
+                    self.assertAlmostEqual(t.irreducible_representations[i].dot(t.irreducible_representations[j]), .0)
+
+    def test_representations(self):
+        """Check the direct representation sum and product"""
+
+        g = symmetry.PointGroup.C_nv(6)
         t = g.character_table()
 
-        # check orthogonality
-        for i in range(g.order):
-            for j in range(i + 1, g.number_of_class):
-                self.assertAlmostEqual(t.irreducible_representations[i].dot(t.irreducible_representations[j]), .0)
+        # linear characters
+        r_trivial = t.irreducible_representations[0]
+        r2 = t.irreducible_representations[1]
+        r3 = t.irreducible_representations[2]
+        # second order ones:
+        r_alast = t.irreducible_representations[-2]
+        r_last = t.irreducible_representations[-1]
+
+        # test direct sum:
+        r = r_trivial + r2 + r_last
+        self.assertEqual(r.size, 3)
+        self.assertEqual(r.irreducible_representations[0], 1)
+        self.assertIn(r_trivial, r)
+        self.assertEqual(r.irreducible_representations[1], 1)
+        self.assertIn(r2, r)
+        self.assertEqual(r.irreducible_representations[-1], 1)
+        self.assertIn(r_last, r)
+
+        self.assertEqual(r.irreducible_representations[-2], 0)
+        self.assertNotIn(r_alast, r)
+
+        # test direct product
+        for ri in [r_trivial, r2, r3, r_alast, r_last]:
+            r = r_trivial * ri  # trivial product gives the same irrep
+            self.assertEqual(r.size, 1)
+            self.assertIn(ri, r)
+
+        r = r_alast * r_last
+        self.assertNotIn(r_trivial, r)
+        self.assertNotIn(r2, r)
+        self.assertIn(r3, r)
+        self.assertIn(r_alast, r)
+        self.assertNotIn(r_last, r)
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
