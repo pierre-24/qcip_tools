@@ -273,6 +273,7 @@ class IrreducibleRepresentation:
 
         self.characters = characters
         self.label = label
+        self.imag = any(characters[i].imag > CharacterTable.LIMIT for i in range(table.size))
 
     @property
     def degree(self):
@@ -508,7 +509,7 @@ class CharacterTable:
             raise CharacterTableError('sum of squared degree is not equal to order')
 
         # further sorting and labeling
-        self.irreducible_representations = group._label_and_sort_representation(self.irreducible_representations)
+        self.irreducible_representations = group._label_and_sort_representations(self.irreducible_representations)
 
     @property
     def size(self):
@@ -624,10 +625,10 @@ class Group:
 
         self.conjugacy_classes.sort(key=lambda a: s(a))
 
-    def _label_and_sort_representation(self, representations):
+    def _label_and_sort_representations(self, representations):
         """Label representations
 
-        :param representations: lits of representation
+        :param representations: list of representation
         :type representations: list
         :rtype: list
         """
@@ -659,7 +660,7 @@ class Group:
             prev_deg = r.degree
             iter += 1
 
-        return [trivial] + representations  # trivial representation is first
+        return [trivial] + representations  # trivial representation comes first
 
     def identity(self):
         """Get identity
@@ -1282,6 +1283,84 @@ class PointGroup(Group):
                     return 2, t, numpy.around(-d.axis[-1], 2), e
 
         self.conjugacy_classes.sort(key=lambda a: s(a))
+
+    def _label_and_sort_representations(self, representations):
+        """Sort the different representations, as in character tables:
+
+        + Separate ``g`` and ``u`` representations (positive or negative character for :math:`i`, respectively),
+          if any ;
+        + Order by degree ;
+        + Separate ``A`` and ``B`` representations (positive or negative character for largest :math:`C_n`,
+          respectively) ;
+        + Separate ``'`` and ``"`` representation (positive or negative character for :math:`\\sigma_h`, respectively),
+          if any and only if there is no inversion center (:math:`i`) in the point group ;
+        + Add number to differentiate the label if needed.
+
+        **Normally**, that should gives the same as in character tables in the literature.
+        """
+
+        # find where classes are
+        class_largest_c = -1
+        class_inversion = -1
+        class_sigma_h = -1
+
+        for i, c in enumerate(self.conjugacy_classes):
+            element = next(iter(c)).element
+            description = element.get_description()
+            if class_largest_c < 0 and description.symbol == OperationType.proper_rotation:
+                class_largest_c = i
+            if class_inversion < 0 and description.symbol == OperationType.inversion:
+                class_inversion = i
+            if class_sigma_h < 0 and (
+                    description.symbol == OperationType.reflexion_plane and description.textual_axis == 'z'):
+                class_sigma_h = i
+
+        # sort
+        def _sort(a):
+            return 0 if class_inversion < 0 else a.characters[class_inversion] <= 0, \
+                a.degree, \
+                0 if class_largest_c < 0 else a.characters[class_largest_c] <= 0, \
+                0 if class_sigma_h < 0 else a.characters[class_sigma_h] <= 0
+
+        representations.sort(key=lambda a: _sort(a))
+
+        # label
+        def _get_label(r, n=None, add_imag=False):
+            label = DEG2NAME[r.degree]
+            if r.degree == 1 and class_largest_c > 0 and r.characters[class_largest_c] < 0:
+                label = 'B'
+
+            if n:
+                label += str(n)
+
+            if class_inversion > 0:
+                label += 'g' if r.characters[class_inversion] >= 0 else 'u'
+            elif class_sigma_h > 0:
+                label += '\'' if r.characters[class_sigma_h] >= 0 else '"'
+
+            if add_imag and r.imag:
+                label += '*'
+
+            return label
+
+        iter_ = 0
+        for i, r in enumerate(representations):
+            use_iter = False
+
+            c1 = i < len(representations) - 1 and _get_label(r) == _get_label(representations[i + 1])
+            c2 = i > 0 and _get_label(r) == _get_label(representations[i - 1])
+
+            if c1 or c2:
+                use_iter = True
+
+                if c2:
+                    iter_ += 1
+                else:
+                    iter_ = 1
+
+            r.label = _get_label(r, n=iter_ if use_iter else None, add_imag=True)
+
+        return representations
 
     def character_table(self, table=None):
         """Generate a character table for the group.

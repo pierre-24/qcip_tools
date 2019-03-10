@@ -192,6 +192,7 @@ class SymmetryTestCase(QcipToolsTestCase):
         # a few groups to check
         groups = [
             symmetry.PointGroup.C_nv(2),
+            symmetry.PointGroup.C_nh(3),
             symmetry.PointGroup.C_nh(4),
             symmetry.PointGroup.D_nd(3),
             symmetry.PointGroup.T_h(),
@@ -200,51 +201,76 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         for g in groups:
             t = g.character_table()
+            # print('----')
 
             # check orthogonality of the lines
             for i in range(g.number_of_class):
+                # print(t.irreducible_representations[i])
                 for j in range(i + 1, g.number_of_class):
                     self.assertAlmostEqual(t.irreducible_representations[i].dot(t.irreducible_representations[j]), .0)
 
     def test_representations(self):
-        """Check the direct representation sum and product"""
+        """Check the direct representation sum and product
+
+        Checked against http://gernot-katzers-spice-pages.com/character_tables/C6v.html
+        """
 
         g = symmetry.PointGroup.C_nv(6)
         t = g.character_table()
 
         # linear characters
-        r_trivial = t.irreducible_representations[0]
-        r2 = t.irreducible_representations[1]
-        r3 = t.irreducible_representations[2]
+        A1 = t.irreducible_representations[0]  # A1
+        A2 = t.irreducible_representations[1]  # A2
+        B1 = t.irreducible_representations[2]  # B1
+        B2 = t.irreducible_representations[3]  # B2
         # second order ones:
-        r_alast = t.irreducible_representations[-2]
-        r_last = t.irreducible_representations[-1]
+        E1 = t.irreducible_representations[4]
+        E2 = t.irreducible_representations[5]
 
         # test direct sum:
-        r = r_trivial + r2 + r_last
+        r = A1 + A2 + E2
         self.assertEqual(r.size, 3)
-        self.assertEqual(r.irreducible_representations[0], 1)
-        self.assertIn(r_trivial, r)
-        self.assertEqual(r.irreducible_representations[1], 1)
-        self.assertIn(r2, r)
-        self.assertEqual(r.irreducible_representations[-1], 1)
-        self.assertIn(r_last, r)
 
-        self.assertEqual(r.irreducible_representations[-2], 0)
-        self.assertNotIn(r_alast, r)
+        self.assertEqual(r.irreducible_representations[0], 1)
+        self.assertIn(A1, r)
+        self.assertEqual(r.irreducible_representations[1], 1)
+        self.assertIn(A2, r)
+        self.assertEqual(r.irreducible_representations[2], 0)
+        self.assertNotIn(B1, r)
+        self.assertEqual(r.irreducible_representations[3], 0)
+        self.assertNotIn(B2, r)
+        self.assertEqual(r.irreducible_representations[4], 0)
+        self.assertNotIn(E1, r)
+        self.assertEqual(r.irreducible_representations[5], 1)
+        self.assertIn(E2, r)
 
         # test direct product
-        for ri in [r_trivial, r2, r3, r_alast, r_last]:
-            r = r_trivial * ri  # trivial product gives the same irrep
+        for ri in [A1, A2, B1, B2, E1, E2]:
+            r = A1 * ri  # trivial product gives the same irrep
             self.assertEqual(r.size, 1)
             self.assertIn(ri, r)
 
-        r = r_alast * r_last
-        self.assertNotIn(r_trivial, r)
-        self.assertNotIn(r2, r)
-        self.assertIn(r3, r)
-        self.assertIn(r_alast, r)
-        self.assertNotIn(r_last, r)
+        r = E1 * B2  # = E2
+        self.assertEqual(r.size, 1)
+        self.assertIn(E2, r)
+
+        r = E1 * E2  # = B1 + B2 + E1
+        self.assertEqual(r.size, 3)
+        self.assertNotIn(A1, r)
+        self.assertNotIn(A2, r)
+        self.assertIn(B1, r)
+        self.assertIn(B2, r)
+        self.assertIn(E1, r)
+        self.assertNotIn(E2, r)
+
+        r = E1 * E1  # = A1 + A2 + E2
+        self.assertEqual(r.size, 3)
+        self.assertIn(A1, r)
+        self.assertIn(A2, r)
+        self.assertNotIn(B1, r)
+        self.assertNotIn(B2, r)
+        self.assertNotIn(E1, r)
+        self.assertIn(E2, r)
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
