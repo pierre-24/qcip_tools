@@ -201,6 +201,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         for g in groups:
             t = g.character_table()
+            print(t)
             # print('----')
 
             # check orthogonality of the lines

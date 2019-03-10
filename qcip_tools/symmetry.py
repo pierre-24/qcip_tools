@@ -515,6 +515,59 @@ class CharacterTable:
     def size(self):
         return self.group.number_of_class
 
+    def __str__(self):
+
+        def class_repr(c):
+            i = iter(c)
+            s = ''
+            if len(c) > 1:
+                s += str(len(c)) + ' '
+
+            for e in i:
+                element = e.element
+                description = element.get_description()
+                if description.symbol == OperationType.inversion:
+                    s += 'i'
+                    break
+                elif description.symbol == OperationType.reflexion_plane:
+                    s += 'σ_'
+                    if description.textual_axis == 'z':
+                        s += 'h'
+                    elif description.textual_axis in ['x', 'y']:
+                        s += 'v'
+                    else:
+                        s += 'd'
+                    break
+                elif description.symbol == OperationType.identity:
+                    s += 'E'
+                    break
+                else:
+                    s += 'C' if description.symbol == OperationType.proper_rotation else 'S'
+                    if description.textual_axis != 'z':
+                        s += '\''
+                    s += '_' + str(description.n)
+                    if len(c) != description.n - 1:
+                        s += '^' + str(description.k)
+                    break
+
+            return s
+
+        r = str(self.group.description) + ' (h=' + str(self.group.order) + ')\n'
+        dashes = '-' * 6 + ('-' * 12) * self.size + '\n'
+
+        r += dashes
+        r += ' ' * 6 + ' '.join(' {:10}'.format(class_repr(c)) for c in self.group.conjugacy_classes) + '\n'
+        r += dashes
+
+        for i in self.irreducible_representations:
+            r += '{:5} '.format(i.label) + \
+                ' '.join('{: .2f}{}'.format(
+                    c.real, '{:+.2f}j'.format(c.imag) if math.fabs(c.imag) > CharacterTable.LIMIT else ' ' * 6)
+                    for c in i.characters) + '\n'
+        r += dashes
+
+        return r
+
 
 DEG2NAME = {
     1: 'A',
@@ -1271,14 +1324,16 @@ class PointGroup(Group):
                 else:
                     t = 0
                     e = 0
+                    if d.symbol == OperationType.inversion:
+                        t = -500
                     if d.n > 2:
                         t = -d.n
                         e = d.k
                         if len(a) > 1 and d.k > d.n - d.k:
                             e = d.n - d.k
                     elif d.n == 1:
-                        t = 100
-                        e = 0 if d.textual_axis in ['x', 'y'] else 1
+                        t = 500
+                        e = 0 if d.textual_axis in ['x', 'y'] else 1  # TODO: sigma_v is not simply that
 
                     return 2, t, numpy.around(-d.axis[-1], 2), e
 
