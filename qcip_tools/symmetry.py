@@ -257,6 +257,154 @@ class GroupElement:
         return self._hash
 
 
+class RepresentationError(Exception):
+    pass
+
+
+class IrreducibleRepresentation:
+    """An irreducible representation
+    """
+
+    def __init__(self, characters, table, label=None):
+        self.table = table
+
+        if characters.shape != (table.group.number_of_class, ):
+            raise RepresentationError('number of character != number of class')
+
+        self.characters = characters
+        self.label = label
+
+    @property
+    def degree(self):
+        return self.characters[0]
+
+    def __add__(self, other):
+        """Computes :math:`\\oplus`
+
+        :param other: other (ir)reducible representation
+        :type other: ReducibleRepresentation|IrreducibleRepresentation
+        :rtype: ReducibleRepresentation
+        """
+        if type(other) is IrreducibleRepresentation:
+            if id(self.table) != id(other.table):
+                raise RepresentationError('not issued from the same character table')
+            return ReducibleRepresentation(self.table, irreducible_representations=[self, other])
+        elif type(other) is ReducibleRepresentation:
+            return other + self
+        else:
+            raise TypeError(other)
+
+    def __mul__(self, other):
+        """Computes :math:`\\otimes` between two irreducible representations
+
+        :param other: other irreducible representation
+        :type other: IrreducibleRepresentation
+        :rtype: ReducibleRepresentation
+        """
+        if type(other) is IrreducibleRepresentation:
+            if id(self.table) != id(other.table):
+                raise RepresentationError('not issued from the same character table')
+
+            return ReducibleRepresentation(self.table, characters=self.characters * other.characters)
+        else:
+            raise TypeError(other)
+
+    def dot(self, other):
+        """Compute the scalar product between two representations, :math:`\\chi^\\lambda` (``self``) and
+        :math:`\\chi^\\mu` (``other``), as
+
+        .. math::
+
+            \\sum_{r\\in \\mathcal G} [\\chi^\\lambda(r)]^\\star \\chi^\\mu(r).
+
+        :param other: other irreducible representation
+        :type other: IrreducibleRepresentation
+        :return: scalar product
+        :rtype: complex
+        """
+        if type(other) is IrreducibleRepresentation:
+            if id(self.table) != id(other.table):
+                raise RepresentationError('not issued from the same character table')
+
+            num_elements = numpy.array([len(c) for c in self.table.group.conjugacy_classes])
+            return numpy.dot((self.characters * num_elements).conjugate(), other.characters)
+        else:
+            raise TypeError(other)
+
+
+class ReducibleRepresentation:
+    """Sum of irreducible representation"""
+
+    def __init__(self, table, irreducible_representations=None, characters=None):
+        self.table = table
+
+        if (irreducible_representations is None and characters is None) or \
+                (irreducible_representations is not None and characters is not None):
+            raise RepresentationError(
+                'you can create a reducible representation either from characters or representations!')
+
+        if irreducible_representations is not None:
+            self.irreducible_representations = irreducible_representations
+            self.characters = sum(r.characters for r in irreducible_representations)
+        else:
+            pass  # TODO: reduce
+
+    def __add__(self, other):
+        if type(other) is IrreducibleRepresentation:
+            if id(self.table) != id(other.table):
+                raise RepresentationError('not issued from the same character table')
+            r = self.irreducible_representations.copy()
+            r.append(other)
+            return ReducibleRepresentation(self.table, irreducible_representations=r)
+        elif type(other) is ReducibleRepresentation:
+            if id(self.table) != id(other.table):
+                raise RepresentationError('not issued from the same character table')
+            r = self.irreducible_representations.copy()
+            r.extend(other.irreducible_representations)
+            return ReducibleRepresentation(self.table, irreducible_representations=r)
+        else:
+            raise TypeError(other)
+
+
+class CharacterTableError(Exception):
+    pass
+
+
+class CharacterTable:
+    """List of irreducible representations
+    """
+
+    LIMIT = 1e-5
+
+    def __init__(self, group, table):
+        self.group = group
+
+        if table.shape != (self.group.number_of_class, self.group.number_of_class):
+            raise CharacterTableError('number of representation is not equals to number of class')
+
+        self.irreducible_representations = []
+
+        num_elements = numpy.array([len(c) for c in group.conjugacy_classes])
+        total_size = 0
+
+        for i in range(group.number_of_class):
+            dot = numpy.einsum('i,i->', table[i].conjugate(), table[i] * num_elements)
+
+            # check orthogonality
+            if math.fabs(dot.real - group.order) > CharacterTable.LIMIT:
+                raise RepresentationError('representation {} is not irreducible'.format(table[i]))
+
+            self.irreducible_representations.append(IrreducibleRepresentation(table[i], self))
+            total_size += table[i][0] ** 2
+
+        # check size
+        if math.fabs(total_size.real - group.order) > CharacterTable.LIMIT:
+            raise CharacterTableError('sum of squared degree is not equal to order')
+
+        # further sorting and labeling
+        self.irreducible_representations = group._label_and_sort_representation(self.irreducible_representations)
+
+
 class Group:
     """Abstract group structure.
 
@@ -322,7 +470,7 @@ class Group:
             raise ValueError('each element does not have an inverse')
 
         # find conjugacy classes:
-        # for each A and B, computes A⁻¹ * B * A and mix the result in the conjugacy class
+        # for each A and B, computes `A⁻¹ * B * A` and mix the result in the conjugacy class
         self.conjugacy_classes = []
         meet = {}
         self.to_conjugacy_class = {}
@@ -356,6 +504,18 @@ class Group:
                 return len(a)
 
         self.conjugacy_classes.sort(key=lambda a: s(a))
+
+    def _label_and_sort_representation(self, representations):
+        """Label representations
+
+        :param representations: lits of representation
+        :type representations: list
+        :rtype: list
+        """
+
+        # sort by degree
+        representations.sort(key=lambda a: a.characters[0])
+        return representations
 
     def identity(self):
         """Get identity
@@ -470,6 +630,19 @@ class Group:
             table[j] = v * degree / class_sizes
 
         return table
+
+    def character_table(self, table=None):
+        """Compute the character table
+
+        :param table: character table
+        :type table: numpy.ndarray
+        :rtype: CharacterTable
+        """
+
+        if table is None:
+            table = self.gen_character_table()
+
+        return CharacterTable(self, table)
 
     def __contains__(self, item):
         """is an element part of the group ?
@@ -988,7 +1161,7 @@ class PointGroup(Group):
 
         self.conjugacy_classes.sort(key=lambda a: s(a))
 
-    def character_table(self):
+    def character_table(self, table=None):
         """Generate a character table for the group.
 
         .. warning::
@@ -1005,6 +1178,8 @@ class PointGroup(Group):
             + For :math:`I_{h}` it uses ``list(reversed(matrices))`` with ``del mat[0]`` and  ``del mat[1]``.
 
             That's the best I can do for the moment ;)
+
+        :rtype: CharacterTable
         """
 
         def tm(matrices):
@@ -1025,10 +1200,10 @@ class PointGroup(Group):
 
             return matrices
 
-        t = self.gen_character_table(tweak_matrices_func=tm)
-        # print(numpy.around(t, 2))
+        if table is None:
+            table = self.gen_character_table(tweak_matrices_func=tm)
 
-        return t
+        return super().character_table(table)
 
     @staticmethod
     def product(e):

@@ -191,14 +191,10 @@ class SymmetryTestCase(QcipToolsTestCase):
         g = symmetry.PointGroup.T_h()
         t = g.character_table()
 
-        self.assertAlmostEqual(numpy.sum(t[:, 0] ** 2).real, g.order)
-
-        num_elements = numpy.zeros(g.number_of_class)
-        num_elements[:] = [len(c) for c in g.conjugacy_classes]
-
+        # check orthogonality
         for i in range(g.order):
             for j in range(i + 1, g.number_of_class):
-                self.assertAlmostEqual(numpy.dot(t[i] * num_elements, t[j].conjugate()).real, .0)
+                self.assertAlmostEqual(t.irreducible_representations[i].dot(t.irreducible_representations[j]), .0)
 
     def test_symmetry_finder(self):
         """Test if one is able to detect symmetry"""
