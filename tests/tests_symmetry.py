@@ -3,7 +3,9 @@ import random
 
 import qcip_tools.math
 from tests import QcipToolsTestCase
-from qcip_tools import symmetry
+from qcip_tools import symmetry, molecule
+
+from qcip_tools.chemistry_files import xyz
 
 
 class SymmetryTestCase(QcipToolsTestCase):
@@ -305,3 +307,49 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(s(p[:-3]), (symmetry.PointGroupType.pyramidal, 2))
         self.assertEqual(s(p[:-4]), (symmetry.PointGroupType.prismatic, -1))
         self.assertEqual(s(p[:-5]), (symmetry.PointGroupType.pyramidal, -1))
+
+    def test_molecular_symmetry_finder(self):
+        """Test if one can find the symmetry of the different (randomly oriented) molecules
+
+        Inspired by https://en.wikipedia.org/wiki/Molecular_symmetry
+        """
+
+        def find(path, tol=1e-4):
+            fx = xyz.File()
+            with open(self.copy_to_temporary_directory(path)) as f:
+                fx.read(f)
+
+            m = molecule.MolecularSymmetryFinder(fx.molecule, tol=tol)
+            return m.find_symmetry()[0]
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.antiprismatic, 2),
+            find('symmetry/allene_D2d.xyz'))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.pyramidal, 3),
+            find('symmetry/ammonia_C3v.xyz', tol=1e-3))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.pyramidal, 2),
+            find('symmetry/water_C2v.xyz', tol=1e-3))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.dihedral, 2),
+            find('symmetry/biphenyl_D2.xyz'))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.prismatic, 6),
+            find('symmetry/benzene_D6h.xyz'))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.antiprismatic, 5),
+            find('symmetry/ferocene_D5d.xyz'))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.tetrahedral_achiral, 0),
+            find('symmetry/methane_Td.xyz'))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.octahedral_achiral, 0),
+            find('symmetry/cubane_Oh.xyz'))

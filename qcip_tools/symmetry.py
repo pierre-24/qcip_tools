@@ -1758,6 +1758,9 @@ class PointGroupDescription:
                 s = s.replace('n', 'oo')
         return s
 
+    def __repr__(self):
+        return 'PointGroupDescription({},{})'.format(repr(self.symbol), self.order)
+
     def gen_point_group(self, lowers_infinite=-1):
         """Generate the point group out of the description.
 
@@ -1799,6 +1802,12 @@ class PointGroupDescription:
             return mapping[self.symbol]()
         else:
             return mapping[self.symbol](self.order)
+
+    def __eq__(self, other):
+        if type(other) is not PointGroupDescription:
+            return False
+
+        return self.symbol == other.symbol and self.order == other.order
 
 
 class SymmetryFinderError(Exception):
@@ -1885,7 +1894,7 @@ class SymmetryFinder:
             x = -numpy.sum(w * tensor[:, 1 + i] * tensor[:, 1 + j])
             t[i, j] = t[j, i] = x
 
-        e, c = numpy.linalg.eigh(t)
+        e, c = numpy.linalg.eig(t)
         indices = numpy.argsort(e)
         e = e[indices]
         c = c.T[indices]
@@ -1922,7 +1931,6 @@ class SymmetryFinder:
         :param op: the operation
         :type op: Operation
         """
-
         return all(self._symetric_for(op.matrix_representation()))
 
     @staticmethod
@@ -1956,7 +1964,7 @@ class SymmetryFinder:
                the different cyclic groups (:math:`C_{nh}`, :math:`C_{nv}`, :math:`S_{2n}` or :math:`C_n`) ;
              - There is no main axis, and the group can be either :math:`C_s`, :math:`C_i` or :math:`C_1`.
 
-        TODO: deal with orientation (main axis versus others), check against real molecules
+        TODO: deal with orientation (main axis versus others)
 
         :return: the point group, the center and the rotational matrix
         :rtype: tuple(PointGroupDescription, numpy.ndarray, numpy.ndarray)
@@ -1990,7 +1998,7 @@ class SymmetryFinder:
                 group = PointGroupDescription(PointGroupType.tetrahedral_chiral)  # T
                 if self.has_inversion():
                     group = PointGroupDescription(PointGroupType.pyritohedral)  # T_h
-                elif self.has_mirror_type(main_axis, other_axes, 'd'):
+                elif self.has_mirror_type(main_axis, other_axes, ['v', 'd']):
                     group = PointGroupDescription(PointGroupType.tetrahedral_achiral)  # T_d
             elif n == 4:
                 group = (PointGroupType.octahedral_chiral)  # O
@@ -2015,18 +2023,18 @@ class SymmetryFinder:
                             break
             else:
                 n, main_axis = self.find_c_highest(probable_cn)
-                other_axes = v.T[numpy.where(abs(numpy.dot(v.T, main_axis)) < self.tol)]
+                other_axes = v[numpy.where(abs(numpy.dot(v, main_axis)) < self.tol)]
                 if len(probable_cn) >= 2 and self.has_perpendicular_C2(main_axis, probable_cn):
                     if self.has_mirror(main_axis):
                         group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
-                    elif self.has_mirror_type(main_axis, other_axes, 'd'):
+                    elif self.has_mirror_type(main_axis, other_axes, ['v', 'd']):
                         group = PointGroupDescription(PointGroupType.antiprismatic, n)  # D_nd
                     else:
                         group = PointGroupDescription(PointGroupType.dihedral, n)  # D_n
                 else:
                     if self.has_mirror(main_axis):
                         group = PointGroupDescription(PointGroupType.reflexion, n)  # C_nh
-                    elif self.has_mirror_type(main_axis, other_axes, 'v'):
+                    elif self.has_mirror_type(main_axis, other_axes, ['v', 'd']):
                         group = PointGroupDescription(PointGroupType.pyramidal, n)  # C_nv
                     elif self.has_improper_rotation(axis=main_axis, n=2 * n):
                         group = PointGroupDescription(PointGroupType.improper_rotation, 2 * n)  # S_2n
@@ -2068,9 +2076,10 @@ class SymmetryFinder:
             for i in range(2, len(lst)):
                 for j in numpy.where(d[i, :i])[0]:
                     ang = qcip_math.angle_vector(r0[i], r0[j])
-                    n = 2 * numpy.pi / ang
-                    if abs(int(n) - n) < self.tol:
-                        maybe_cn.append((int(n), numpy.cross(r0[i], r0[j])))
+                    n = 2 * numpy.pi / (numpy.pi - ang)
+                    int_n = qcip_math.closest_int(n)
+                    if abs(int_n - n) < self.tol:
+                        maybe_cn.append((int_n, numpy.cross(r0[i], r0[j])))
 
         # remove null vectors
         v = numpy.vstack([x[1] for x in maybe_cn])
@@ -2138,7 +2147,7 @@ class SymmetryFinder:
         For each combination of points, find if the corresponding normal is perpendicular
         to the axis (dot product is null), then remove duplicates.
 
-        Returns a list of normal.
+        Returns a list of normals.
 
         :param parallel_to: axis to which the plane should be parallel to
         :type parallel_to: numpy.ndarray|list
@@ -2183,23 +2192,26 @@ class SymmetryFinder:
         :param other_axes: list of other axis (to determine whether the mirror is "v" or "d")
         :type other_axes: numpy.ndarray
         :param mirror_type: mirror_type
-        :type mirror_type: str
+        :type mirror_type: list
         """
 
-        if mirror_type == 'h':
+        if 'h' in mirror_type:
             return self.has_mirror(parallel_to)
 
         # find vertical/diagonal
         probable_mirrors = self.find_probable_parallel_mirrors(parallel_to)
         for m in probable_mirrors:
             if self.has_mirror(m):
-                mirror_type_found = 'd'
-                for axis in other_axes:
-                    if numpy.dot(m, axis) < self.tol:
-                        mirror_type_found = 'v'
-                        break
+                if len(other_axes) != 0:
+                    mirror_type_found = 'd'
+                    for axis in other_axes:
+                        if numpy.dot(m, axis) < self.tol:
+                            mirror_type_found = 'v'
+                            break
+                else:
+                    mirror_type_found = 'v'
 
-                if mirror_type_found == mirror_type:
+                if mirror_type_found in mirror_type:
                     return True
 
         return False

@@ -3,7 +3,7 @@ import math
 import numpy
 import mendeleev
 
-from qcip_tools import bounding, transformations
+from qcip_tools import bounding, transformations, symmetry
 from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
 
 
@@ -58,6 +58,7 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
     This object is mutable.
 
     .. note ::
+
         Each time a function requires a ``shifted_index``, indexing starts at 1 instead of 0.
 
     """
@@ -74,6 +75,8 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         self.atom_list = []
         self.symbols_contained = []
         self.charge = charge
+
+        self.point_group = symmetry.PointGroup.C_n(1)
 
         if atom_list is not None:
             for a in atom_list:
@@ -643,3 +646,26 @@ class AtomsGroup:
 
     def __contains__(self, item):
         return item in self.atom_list
+
+
+class MolecularSymmetryFinder(symmetry.SymmetryFinder):
+    """High-level symmetry finder on the molecule
+
+    :param molecule: the molecule
+    :type molecule: Molecule
+    :param with_: used to differentiate atoms
+    :type with_: str
+    :param tol: tolerance
+    :type tol: float
+    """
+
+    def __init__(self, molecule, with_='Z', tol=1e-5):
+        self.molecule = molecule
+
+        super().__init__(self.molecule.position_matrix(with_=with_), tol=tol)
+
+    def orient_molecule(self):
+        """Find the symmetry of the molecule, then symmetrize it
+        """
+
+        pass
