@@ -42,8 +42,6 @@ class AtomTestCase(QcipToolsTestCase):
         with self.assertRaises(ValueError):
             qcip_atom.Atom(symbol='xxx')
         with self.assertRaises(ValueError):
-            qcip_atom.Atom(atomic_number=-2)
-        with self.assertRaises(ValueError):
             qcip_atom.Atom(atomic_number=185)
 
         # test with position:

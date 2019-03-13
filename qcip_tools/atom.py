@@ -99,7 +99,11 @@ AtomicNumberToSymbol = {
     92: 'U'
 }
 
+DUMMY_SYMBOLS = ['Xx', 'X', 'x']
+
 SymbolToAtomicNumber = dict((b, a) for a, b in AtomicNumberToSymbol.items())
+
+_mendeleev_cache = {}
 
 
 class Atom(transformations.MutableTranslatable):
@@ -122,28 +126,35 @@ class Atom(transformations.MutableTranslatable):
 
         if symbol is not None:
 
-            if symbol not in SymbolToAtomicNumber:
+            if symbol not in SymbolToAtomicNumber and symbol not in DUMMY_SYMBOLS:
                 raise ValueError('{} is not a chemical element'.format(symbol))
 
-            self.symbol = symbol
+            self.symbol = symbol if symbol not in DUMMY_SYMBOLS else 'Xx'
             self.atomic_number = SymbolToAtomicNumber[symbol]
 
         elif atomic_number is not None:
 
-            if atomic_number < 0 or atomic_number > 92:
+            if atomic_number > 92:
                 raise ValueError('{} is not an allowed Z'.format(atomic_number))
 
-            self.atomic_number = atomic_number
+            self.atomic_number = atomic_number if atomic_number > 0 else 0
             self.symbol = AtomicNumberToSymbol[self.atomic_number]
 
         else:
             raise Exception('either atomic_number or symbol must be defined')
 
-        mendeleev_element = mendeleev.element(self.symbol)
+        self.num_of_electrons = 0
+        self.mass_number = 0
+        self.mass = 0
 
-        self.num_of_electrons = self.atomic_number
-        self.mass_number = mendeleev_element.mass_number
-        self.mass = mendeleev_element.atomic_weight if mass is None else mass
+        if self.atomic_number > 0:
+            if self.symbol not in _mendeleev_cache:  # otherwise, needs to read the data every f*** time
+                _mendeleev_cache[self.symbol] = mendeleev.element(self.symbol)
+
+            mendeleev_element = _mendeleev_cache[self.symbol]
+            self.num_of_electrons = self.atomic_number
+            self.mass_number = mendeleev_element.mass_number
+            self.mass = mendeleev_element.atomic_weight if mass is None else mass
 
         if position is not None:
             if len(position) != 3:
