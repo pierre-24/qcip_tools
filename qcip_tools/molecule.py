@@ -2,6 +2,7 @@ import math
 
 import numpy
 import mendeleev
+import random
 
 from qcip_tools import bounding, transformations, symmetry
 from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
@@ -228,24 +229,30 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
 
         return atom_indexes
 
-    def position_matrix(self, with_='Z'):
+    def position_matrix(self, with_='Z', randomise_dummy=True):
         """Get position matrix
 
         :param with_: extra first column, either ``Z``, ``masss`` or ``charge``
         :type with_: str
+        :param randomise_dummy: use a random number, outside of range, for dummy atoms
+        :type randomise_dummy: bool
         :rtype: numpy.ndarray
         """
 
         m = []
         for a in self:
+            i = .0
             if with_ == 'Z':
-                m.append([a.atomic_number, *a.position])
+                i = a.atomic_number
             elif with_ == 'mass':
-                m.append([a.mass, *a.position])
+                i = a.mass
             elif with_ == 'charge':
-                m.append([a.charge(), *a.position])
-            else:
-                m.append(a.position)
+                i = a.charge()
+
+            if randomise_dummy and a.is_dummy():
+                i = random.randrange(0, 200.)
+
+            m.append([i, *a.position])
 
         return numpy.vstack(m)
 
@@ -655,14 +662,16 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
     :type molecule: Molecule
     :param with_: used to differentiate atoms
     :type with_: str
+    :param randomise_dummy: randomise dummy atoms so that they are all different
+    :type randomise_dummy: bool
     :param tol: tolerance
     :type tol: float
     """
 
-    def __init__(self, molecule, with_='Z', tol=1e-5):
+    def __init__(self, molecule, with_='Z', randomise_dummy=True, tol=1e-5):
         self.molecule = molecule
 
-        super().__init__(self.molecule.position_matrix(with_=with_), tol=tol)
+        super().__init__(self.molecule.position_matrix(with_=with_, randomise_dummy=randomise_dummy), tol=tol)
 
     def orient_molecule(self):
         """Find the symmetry of the molecule, then symmetrize it

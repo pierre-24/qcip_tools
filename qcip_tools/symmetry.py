@@ -1942,8 +1942,8 @@ class SymmetryFinder:
     def find_symmetry(self):
         """(Try to) find symmetry.
 
-        Algorithm is inspired by http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html (and actually any
-        book on group theory):
+        Algorithm is inspired by http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html
+        (and actually any book on group theory):
 
         1. Find inertia tensor, its eigenvalues and eigenvectors (axes)
         2. Based on the eigenvalues:

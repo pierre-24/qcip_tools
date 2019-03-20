@@ -319,7 +319,14 @@ class SymmetryTestCase(QcipToolsTestCase):
             with open(self.copy_to_temporary_directory(path)) as f:
                 fx.read(f)
 
-            m = molecule.MolecularSymmetryFinder(fx.molecule, tol=tol)
+            mol = fx.molecule
+
+            # modify angle and position:
+            mol.rotate_euler_self(random.randint(-60, 60), random.randint(-60, 60), random.randint(-60, 60))
+            mol.translate_self(random.randrange(-1, 1), random.randrange(-1, 1), random.randrange(-1, 1))
+
+            # find symmetry
+            m = molecule.MolecularSymmetryFinder(mol, tol=tol)
             return m.find_symmetry()[0]
 
         self.assertEqual(
