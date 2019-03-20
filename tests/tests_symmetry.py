@@ -327,7 +327,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             # find symmetry
             m = molecule.MolecularSymmetryFinder(mol, tol=tol)
-            return m.find_symmetry()[0]
+            return m.get_symmetry()[0]
 
         self.assertEqual(
             symmetry.PointGroupDescription(symmetry.PointGroupType.antiprismatic, 2),
@@ -360,3 +360,19 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(
             symmetry.PointGroupDescription(symmetry.PointGroupType.octahedral_achiral, 0),
             find('symmetry/cubane_Oh.xyz'))
+
+    def test_symmetrize(self):
+        """Test symmetrisation
+        """
+
+        def get_molecule(path):
+            fx = xyz.File()
+            with open(self.copy_to_temporary_directory(path)) as f:
+                fx.read(f)
+
+            return fx.molecule
+
+        m = get_molecule('symmetry/allene_D2d.xyz')
+        sf = molecule.MolecularSymmetryFinder(m, tol=1e-3)
+
+        sf.orient_molecule()

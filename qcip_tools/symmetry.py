@@ -1851,6 +1851,8 @@ class SymmetryFinder:
             for u2, _ in enumerate(uniques_2):  # group per distance
                 self.group_points_per_distance.append(sub_indexes[indexes_2 == u2])
 
+        self._symmetry = None
+
     @staticmethod
     def cartesian_tensor(tensor, n):
         """Compute multipole expansion of cartesian tensor of order ``n`` (what you find in the right column of a
@@ -1885,16 +1887,17 @@ class SymmetryFinder:
         :rtype: tuple
         """
         w = tensor[:, 0]
+        c = tensor[:, 1:]
 
         t = numpy.zeros((3, 3))
         for i in range(3):
-            t[i, i] = numpy.sum(w * (tensor[:, 1 + (i + 1) % 3] ** 2 + tensor[:, 1 + (i + 2) % 3] ** 2))
+            t[i, i] = numpy.sum(w * (c[:, (i + 1) % 3] ** 2 + c[:, (i + 2) % 3] ** 2))
 
         for i, j in [(0, 1), (0, 2), (1, 2)]:
-            x = -numpy.sum(w * tensor[:, 1 + i] * tensor[:, 1 + j])
+            x = -numpy.sum(w * c[:, i] * c[:, j])
             t[i, j] = t[j, i] = x
 
-        e, c = numpy.linalg.eig(t)
+        e, c = numpy.linalg.eig(t / numpy.sum(numpy.dot(w * c.T, c)))  # normalize inertia tensor
         indices = numpy.argsort(e)
         e = e[indices]
         c = c.T[indices]
@@ -1990,7 +1993,7 @@ class SymmetryFinder:
                 raise SymmetryFinderError('accidentally spherical top, no rotation')
 
             n, main_axis = self.find_c_highest(probable_cn)
-            other_axes = v.T[numpy.where(abs(numpy.dot(v.T, main_axis)) < self.tol)]
+            other_axes = v[numpy.where(abs(numpy.dot(v, main_axis)) < self.tol)]
 
             if n < 3:
                 raise SymmetryFinderError('accidentally spherical top, n < 3')
@@ -2024,6 +2027,11 @@ class SymmetryFinder:
             else:
                 n, main_axis = self.find_c_highest(probable_cn)
                 other_axes = v[numpy.where(abs(numpy.dot(v, main_axis)) < self.tol)]
+
+                # main axis is Z:
+                v[:2] = other_axes
+                v[2] = main_axis
+
                 if len(probable_cn) >= 2 and self.has_perpendicular_C2(main_axis, probable_cn):
                     if self.has_mirror(main_axis):
                         group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
@@ -2042,6 +2050,18 @@ class SymmetryFinder:
                         group = PointGroupDescription(PointGroupType.cyclic, n)  # C_n
 
         return group, self.center, v
+
+    def get_symmetry(self, force=False):
+        """Find symmetry and store it, so that it is not computed next time (except if ``force``)
+
+        :param force: force new search
+        :type force: bool
+        :rtype: tuple(PointGroupDescription, numpy.ndarray, numpy.ndarray)
+        """
+        if self._symmetry is None or force:
+            self._symmetry = self.find_symmetry()
+
+        return self._symmetry
 
     def find_probable_rotations(self, parallel_to=None):
         """Find rotations

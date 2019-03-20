@@ -347,13 +347,14 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         m = self.position_matrix(with_='mass')
         w = m[:, 0]
         m[:, 1:] -= self.center_of_mass()
+        c = m[:, 1:]
 
         t = numpy.zeros((3, 3))
         for i in range(3):
-            t[i, i] = numpy.sum(w * (m[:, 1 + (i + 1) % 3] ** 2 + m[:, 1 + (i + 2) % 3] ** 2))
+            t[i, i] = numpy.sum(w * (c[:, (i + 1) % 3] ** 2 + c[:, (i + 2) % 3] ** 2))
 
         for i, j in [(0, 1), (0, 2), (1, 2)]:
-            x = -numpy.sum(w * m[:, 1 + i] * m[:, 1 + j])
+            x = -numpy.sum(w * c[:, i] * c[:, j])
             t[i, j] = t[j, i] = x
 
         return t
@@ -677,4 +678,12 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
         """Find the symmetry of the molecule, then symmetrize it
         """
 
-        pass
+        description, com, rot = self.get_symmetry()
+        # group = description.gen_point_group()
+
+        self.molecule.translate_self(*[-i for i in com])
+        nrot = numpy.eye(4)
+        nrot[:3, :3] = rot
+        self.molecule._apply_transformation_self(nrot)
+
+        print(self.molecule.output_atoms())
