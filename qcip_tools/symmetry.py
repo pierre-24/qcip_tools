@@ -1967,7 +1967,16 @@ class SymmetryFinder:
                the different cyclic groups (:math:`C_{nh}`, :math:`C_{nv}`, :math:`S_{2n}` or :math:`C_n`) ;
              - There is no main axis, and the group can be either :math:`C_s`, :math:`C_i` or :math:`C_1`.
 
-        TODO: deal with orientation (main axis versus others)
+        3. Find best orientation: for (a)symmetric, tetrahedral and octahedral molecules,
+
+          a. :math:`\\vec{e}_z` is the main axis for (a)symmetric top molecules, as well as for octahedral ones.
+             For tetrahedral ones, the main axis is any :math:`C_2`.
+          b. The :math:`\\vec{e}_x` axis is either parallel to a reflexion plane, or a symmetry axis perpendicular
+             to the main one if there is no reflexion plane in the case. If there is none of those, the inertia
+             tensor is used.
+          c. :math:`\\vec{e}_y = \\vec{e}_z \\times \\vec{e}_x`.
+
+          In the other case, the orientation is taken from the inertia tensor.
 
         :return: the point group, the center and the rotational matrix
         :rtype: tuple(PointGroupDescription, numpy.ndarray, numpy.ndarray)
@@ -1993,7 +2002,8 @@ class SymmetryFinder:
                 raise SymmetryFinderError('accidentally spherical top, no rotation')
 
             n, main_axis = self.find_c_highest(probable_cn)
-            other_axes = v[numpy.where(abs(numpy.dot(v, main_axis)) < self.tol)]
+            other_axes = v[numpy.where(numpy.abs(numpy.dot(v, main_axis)) < self.tol)]
+            mirrors = self.get_mirrors(main_axis, other_axes)
 
             if n < 3:
                 raise SymmetryFinderError('accidentally spherical top, n < 3')
@@ -2001,12 +2011,33 @@ class SymmetryFinder:
                 group = PointGroupDescription(PointGroupType.tetrahedral_chiral)  # T
                 if self.has_inversion():
                     group = PointGroupDescription(PointGroupType.pyritohedral)  # T_h
-                elif self.has_mirror_type(main_axis, other_axes, ['v', 'd']):
+                elif any(m[1] in ['v', 'd'] for m in mirrors):
                     group = PointGroupDescription(PointGroupType.tetrahedral_achiral)  # T_d
+
+                # Select main axis (NOT a C3)
+                n, main_axis = self.find_c_highest(c for c in probable_cn if c[0] < 3)
+                x_axis = self.find_best_x_axis(
+                    main_axis,
+                    [c[1] for c in probable_cn if numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
+                    are_mirrors=False)
+                v[0] = x_axis
+                v[1] = numpy.cross(main_axis, x_axis)
+                v[2] = main_axis
+
             elif n == 4:
-                group = (PointGroupType.octahedral_chiral)  # O
+                group = PointGroupDescription(PointGroupType.octahedral_chiral)  # O
                 if self.has_inversion():
                     group = PointGroupDescription(PointGroupType.octahedral_achiral)  # O_h
+
+                # select main axis
+                x_axis = self.find_best_x_axis(
+                    main_axis,
+                    [c[1] for c in probable_cn if numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
+                    are_mirrors=False)
+                v[0] = x_axis
+                v[1] = numpy.cross(main_axis, x_axis)
+                v[2] = main_axis
+
             elif n == 5:
                 group = PointGroupDescription(PointGroupType.icosahedral_chiral)  # I
                 if self.has_inversion():
@@ -2026,24 +2057,36 @@ class SymmetryFinder:
                             break
             else:
                 n, main_axis = self.find_c_highest(probable_cn)
-                other_axes = v[numpy.where(abs(numpy.dot(v, main_axis)) < self.tol)]
+                other_axes = v[numpy.where(numpy.abs(numpy.dot(v, main_axis)) < self.tol)]
 
-                # main axis is Z:
+                # main axis is Z anyway:
                 v[:2] = other_axes
                 v[2] = main_axis
 
-                if len(probable_cn) >= 2 and self.has_perpendicular_C2(main_axis, probable_cn):
+                perpendicular_C2 = self.get_perpendicular_C2(main_axis, probable_cn)
+                mirrors = self.get_mirrors(main_axis, other_axes)
+
+                if len(probable_cn) >= 2 and len(perpendicular_C2) != 0:
                     if self.has_mirror(main_axis):
+                        x_axis = self.find_best_x_axis(main_axis, perpendicular_C2, are_mirrors=False)
                         group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
-                    elif self.has_mirror_type(main_axis, other_axes, ['v', 'd']):
+                    elif any(m[1] in ['v', 'd'] for m in mirrors):
+                        x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
                         group = PointGroupDescription(PointGroupType.antiprismatic, n)  # D_nd
                     else:
+                        x_axis = self.find_best_x_axis(main_axis, perpendicular_C2, are_mirrors=False)
                         group = PointGroupDescription(PointGroupType.dihedral, n)  # D_n
+
+                    v[0] = x_axis
+                    v[1] = numpy.cross(main_axis, x_axis)
                 else:
                     if self.has_mirror(main_axis):
                         group = PointGroupDescription(PointGroupType.reflexion, n)  # C_nh
-                    elif self.has_mirror_type(main_axis, other_axes, ['v', 'd']):
+                    elif any(m[1] in ['v', 'd'] for m in mirrors):
                         group = PointGroupDescription(PointGroupType.pyramidal, n)  # C_nv
+                        x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
+                        v[0] = x_axis
+                        v[1] = numpy.cross(main_axis, x_axis)
                     elif self.has_improper_rotation(axis=main_axis, n=2 * n):
                         group = PointGroupDescription(PointGroupType.improper_rotation, 2 * n)  # S_2n
                     else:
@@ -2146,20 +2189,25 @@ class SymmetryFinder:
 
         return n_max, axis_max
 
-    def has_perpendicular_C2(self, perpendicular_to, probable_cn):
-        """Check if a perpendicular :math:`C_2` actually exists
+    def get_perpendicular_C2(self, perpendicular_to, probable_cn):
+        """Get perpendicular :math:`C_2` (if they actually exist)
 
         :param probable_cn: list of rotation axis ``(order, axis)``
         :type probable_cn: list(tuple)
         :param perpendicular_to: main axis
         :type perpendicular_to: numpy.ndarray
+        :rtype: list
         """
         cn = numpy.vstack([x[1] for x in probable_cn if x[0] == 2.])  # keep C_2
         cn = cn[numpy.where(abs(numpy.einsum('ij,j->i', cn, perpendicular_to)) < self.tol)]  # keep perpendicular
+
+        perpendicular_C2 = []
+
         for i in range(len(cn)):
             if self.has_rotation(cn[i], 2):
-                return True
-        return False
+                perpendicular_C2.append(cn[i])
+
+        return perpendicular_C2
 
     def find_probable_parallel_mirrors(self, parallel_to):
         """Find possible mirrors parallel to a given axis (so that the normal is perpendicular).
@@ -2204,37 +2252,86 @@ class SymmetryFinder:
 
         return probable_mirrors
 
-    def has_mirror_type(self, parallel_to, other_axes, mirror_type):
-        """Find the different mirror types
+    def get_mirrors(self, parallel_to, other_axes):
+        """Find the different mirror types (if they actually exists)
 
         :param parallel_to: principal axis
         :type parallel_to: numpy.ndarray
-        :param other_axes: list of other axis (to determine whether the mirror is "v" or "d")
-        :type other_axes: numpy.ndarray
-        :param mirror_type: mirror_type
-        :type mirror_type: list
+        :param other_axes: the other rotation axes
+        :type other_axes: list
+        :rtype: list
         """
 
-        if 'h' in mirror_type:
-            return self.has_mirror(parallel_to)
+        mirrors = []
+
+        if self.has_mirror(parallel_to):
+            mirrors.append((parallel_to, 'h'))
 
         # find vertical/diagonal
         probable_mirrors = self.find_probable_parallel_mirrors(parallel_to)
         for m in probable_mirrors:
             if self.has_mirror(m):
                 if len(other_axes) != 0:
-                    mirror_type_found = 'd'
+                    mirror_type = 'd'
                     for axis in other_axes:
-                        if numpy.dot(m, axis) < self.tol:
-                            mirror_type_found = 'v'
+                        if numpy.abs(numpy.dot(m, axis)) < self.tol:
+                            mirror_type = 'v'
                             break
                 else:
-                    mirror_type_found = 'v'
+                    mirror_type = 'v'
 
-                if mirror_type_found in mirror_type:
-                    return True
+                mirrors.append((m, mirror_type))
 
-        return False
+        return mirrors
+
+    def pass_trough(self, principal_axis, axis, is_mirror=False):
+        """Determine by how much atoms the plane or the plane formed by the rotation axis pass trough
+
+        :param principal_axis: main axis
+        :type principal_axis: numpy.ndarray
+        :param axis: axis to check
+        :type axis: numpy.ndarray
+        :param is_mirror: is axis the one of a mirror ?
+        :type is_mirror: bool
+        :rtype: int
+        """
+
+        n = 0
+
+        check_axis = axis
+        if not is_mirror:
+            check_axis = numpy.cross(axis, principal_axis)
+
+        for lst in self.group_points_per_distance:
+            r = self.points[lst, 1:]
+            for i in range(len(lst)):
+                if numpy.abs(numpy.dot(check_axis, r[i])) < self.tol:
+                    n += 1
+        return n
+
+    def find_best_x_axis(self, principal_axis, mirrors_or_C2, are_mirrors=False):
+        """Find best x axis among the list of mirrors or C2: the one that goes by the largest number of atoms
+
+        :param principal_axis: main axis
+        :type principal_axis: numpy.ndarray
+        :param mirrors_or_C2: axes to check
+        :type mirrors_or_C2: list
+        :param are_mirrors: is axis the one of a mirror ?
+        :type are_mirrors: bool
+        """
+
+        x_axis_found = numpy.array([1., 0., 0.])
+        trough = -1
+        for a in mirrors_or_C2:
+            n = self.pass_trough(principal_axis, a, is_mirror=are_mirrors)
+            if n > trough:
+                x_axis_found = a
+                trough = n
+
+        if are_mirrors:
+            return numpy.cross(principal_axis, x_axis_found)  # I need the perpendicular to the normal of the plane !
+        else:
+            return x_axis_found
 
     def has_inversion(self):
         return self.symmetric_for(Operation.i())

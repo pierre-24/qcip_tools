@@ -1273,7 +1273,7 @@ class InputCard:
 class Input(ChemistryFile, WithOutputMixin, WithIdentificationMixin):
     """Dalton dal input file.
 
-    Do NOT contains a molecule!
+    Does NOT contain a molecule!
 
     .. note::
 

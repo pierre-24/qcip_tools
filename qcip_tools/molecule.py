@@ -675,7 +675,7 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
         super().__init__(self.molecule.position_matrix(with_=with_, randomise_dummy=randomise_dummy), tol=tol)
 
     def orient_molecule(self):
-        """Find the symmetry of the molecule, then symmetrize it
+        """Find the symmetry of the molecule, then orient it
         """
 
         description, com, rot = self.get_symmetry()
@@ -685,5 +685,3 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
         nrot = numpy.eye(4)
         nrot[:3, :3] = rot
         self.molecule._apply_transformation_self(nrot)
-
-        print(self.molecule.output_atoms())
