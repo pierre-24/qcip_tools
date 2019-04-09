@@ -83,8 +83,8 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
         self.title = f.readline().strip()
         count = 0
 
-        while True:
-            info = f.readline().split()
+        for line in f:
+            info = line.split()
 
             if len(info) == 0:
                 break
@@ -93,6 +93,7 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
                 raise XYZFormatError('wrong number of data in {}'.format(info))
 
             position = [float(a) for a in info[1:]]
+
             if info[0].isnumeric():
                 self.molecule.insert(atom.Atom(atomic_number=int(info[0]), position=position))
             else:

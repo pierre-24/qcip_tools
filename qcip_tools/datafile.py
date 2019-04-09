@@ -236,7 +236,7 @@ class TextDataFile(DataFile):
                     it = numpy.nditer(val, flags=('c_index',))
                     while not it.finished:
                         if it.index != 0 and it.index % 3 == 0:
-                                f.write('\n')
+                            f.write('\n')
                         f.write(' {: .15e}'.format(float(it[0])))
                         it.iternext()
                     f.write('\n')

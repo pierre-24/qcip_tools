@@ -10,6 +10,8 @@ requests = "*"
 "beautifulsoup4" = "*"
 "h5py" = "*"
 Pint = "*"
+transforms3d = "*"
+mendeleev = "*"
 
 [dev-packages]
 "flake8" = "*"

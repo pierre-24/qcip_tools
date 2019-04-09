@@ -540,6 +540,41 @@ def beta_EOP_from_fchk(compressed_tensor, offset=0):
     return tensor
 
 
+def gamma_from_gaussian(compressed_tensor, offset=0, exchange_23=False):
+    """gamma tensor in FCHK is (also) a bit messed up
+
+    :param offset: frequency offset
+    :type offset: int
+    :param exchange_23: exchange the third and the fourth component if True (second and third otherwise)
+    :type exchange_23: bool
+    :rtype: numpy.ndarray
+    """
+
+    to_consider = [
+        (0, 0, 0, 0), (0, 1, 0, 0), (0, 1, 1, 0), (0, 2, 0, 0), (0, 2, 1, 0), (0, 2, 2, 0),
+        (1, 0, 0, 0), (1, 1, 0, 0), (1, 1, 1, 0), (1, 2, 0, 0), (1, 2, 1, 0), (1, 2, 2, 0),
+        (2, 0, 0, 0), (2, 1, 0, 0), (2, 1, 1, 0), (2, 2, 0, 0), (2, 2, 1, 0), (2, 2, 2, 0),
+        (0, 0, 0, 1), (0, 1, 0, 1), (0, 1, 1, 1), (0, 2, 0, 1), (0, 2, 1, 1), (0, 2, 2, 1),
+        (1, 0, 0, 1), (1, 1, 0, 1), (1, 1, 1, 1), (1, 2, 0, 1), (1, 2, 1, 1), (1, 2, 2, 1),
+        (2, 0, 0, 1), (2, 1, 0, 1), (2, 1, 1, 1), (2, 2, 0, 1), (2, 2, 1, 1), (2, 2, 2, 1),
+        (0, 0, 0, 2), (0, 1, 0, 2), (0, 1, 1, 2), (0, 2, 0, 2), (0, 2, 1, 2), (0, 2, 2, 2),
+        (1, 0, 0, 2), (1, 1, 0, 2), (1, 1, 1, 2), (1, 2, 0, 2), (1, 2, 1, 2), (1, 2, 2, 2),
+        (2, 0, 0, 2), (2, 1, 0, 2), (2, 1, 1, 2), (2, 2, 0, 2), (2, 2, 1, 2), (2, 2, 2, 2),
+    ]
+
+    tensor = numpy.zeros((3, 3, 3, 3))
+
+    for index, components in enumerate(to_consider):
+        v = compressed_tensor[offset * 54 + index]
+        tensor[components] = v
+        if not exchange_23 and components[1] != components[2]:
+            tensor[components[0], components[2], components[1], components[3]] = v
+        if exchange_23 and components[2] != components[3]:
+            tensor[components[0], components[1], components[3], components[2]] = v
+
+    return tensor
+
+
 @FCHK.define_property('electrical_derivatives')
 def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
     """Get electrical derivatives in FCHK. Returns a dictionary of dictionary:
@@ -651,6 +686,43 @@ def gaussian__fchk__property__electrical_derivatives(obj, *args, **kwargs):
                 data[frequencies[i]] = o
 
             electrical_derivatives['dDF'] = data
+
+        if 'Derivative Beta(-w,w,0)' in obj:
+            compressed_tensor = obj.get('Derivative Beta(-w,w,0)')
+            num_of_frequencies = int(len(compressed_tensor) / 54)
+
+            if num_of_frequencies != len(frequencies):
+                raise Exception('not the right number of frequencies for gamma(-w;0,0,w)')
+
+            # catch static:
+            electrical_derivatives['FFFF'] = {'static': derivatives_e.SecondHyperpolarizabilityTensor()}
+            electrical_derivatives['FFFF']['static'].components = gamma_from_gaussian(compressed_tensor, 0)
+
+            # catch dynamic:
+            data = {}
+
+            for i in range(1, num_of_frequencies):
+                o = derivatives_e.SecondHyperpolarizabilityTensor(frequency=frequencies[i], input_fields=(1, 0, 0))
+                o.components = gamma_from_gaussian(compressed_tensor, i)
+                data[frequencies[i]] = o
+
+            electrical_derivatives['dFFD'] = data
+
+        if 'Derivative Beta(w,w,-2w)' in obj:
+            compressed_tensor = obj.get('Derivative Beta(w,w,-2w)')
+            num_of_frequencies = int(len(compressed_tensor) / 54)
+
+            if num_of_frequencies != len(frequencies):
+                raise Exception('not the right number of frequencies for gamma(-2w;w,w,0)')
+
+            data = {}
+
+            for i in range(1, num_of_frequencies):
+                o = derivatives_e.SecondHyperpolarizabilityTensor(frequency=frequencies[i], input_fields=(1, 1, 0))
+                o.components = gamma_from_gaussian(compressed_tensor, i)
+                data[frequencies[i]] = o
+
+            electrical_derivatives['XDDF'] = data
 
     if not electrical_derivatives:
         raise PropertyNotPresent('qs:electrical_derivatives')
