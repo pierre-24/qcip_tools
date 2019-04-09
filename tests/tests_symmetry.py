@@ -188,6 +188,8 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(
             {e.element for e in C_3v.conjugacy_classes[1]}, {symmetry.Operation.C(3), symmetry.Operation.C(3, 2)})
 
+        self.assertIn(symmetry.Operation.sigma(axis=numpy.array([0, 1., 0])), C_3v.conjugacy_classes[2])
+
     def test_character_table(self):
         """Generate the character table"""
 
