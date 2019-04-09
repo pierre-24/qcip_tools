@@ -1,7 +1,10 @@
 import math
 
 import numpy
+import mendeleev
+import random
 
+from qcip_tools import bounding, transformations, symmetry
 from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
 
 
@@ -49,12 +52,16 @@ class ShiftedIndexError(ValueOutsideDomain):
         super().__init__(val, 1, len(mol))
 
 
-class Molecule:
+class Molecule(transformations.MutableTranslatable, transformations.MutableRotatable):
     """
     Class to define a molecule (basically a list of atoms).
 
+    This object is mutable.
+
     .. note ::
+
         Each time a function requires a ``shifted_index``, indexing starts at 1 instead of 0.
+
     """
 
     def __init__(self, atom_list=None, charge=0):
@@ -69,6 +76,8 @@ class Molecule:
         self.atom_list = []
         self.symbols_contained = []
         self.charge = charge
+
+        self.point_group = symmetry.PointGroup.C_n(1)
 
         if atom_list is not None:
             for a in atom_list:
@@ -99,6 +108,16 @@ class Molecule:
             return True
         else:
             return False
+
+    def _apply_transformation_self(self, transformation):
+        """Appply transformation to the molecule (broadcast to each atom)
+
+        :param transformation: the transformation
+        :type transformation: numpy.ndarray
+        """
+
+        for a in self.atom_list:
+            a._apply_transformation_self(transformation)
 
     def insert(self, atom, position=None):
         """
@@ -210,6 +229,33 @@ class Molecule:
 
         return atom_indexes
 
+    def position_matrix(self, with_='Z', randomise_dummy=True):
+        """Get position matrix
+
+        :param with_: extra first column, either ``Z``, ``masss`` or ``charge``
+        :type with_: str
+        :param randomise_dummy: use a random number, outside of range, for dummy atoms
+        :type randomise_dummy: bool
+        :rtype: numpy.ndarray
+        """
+
+        m = []
+        for a in self:
+            i = .0
+            if with_ == 'Z':
+                i = a.atomic_number
+            elif with_ == 'mass':
+                i = a.mass
+            elif with_ == 'charge':
+                i = a.charge()
+
+            if randomise_dummy and a.is_dummy():
+                i = random.randrange(0, 200.)
+
+            m.append([i, *a.position])
+
+        return numpy.vstack(m)
+
     def number_of_electrons(self):
         """
         :return: The number of electrons in the molecule
@@ -265,10 +311,8 @@ class Molecule:
         :rtype: numpy.ndarray
         """
 
-        com = numpy.array([0, 0, 0])
-        for a in self:
-            com = com + a.mass * a.position
-        return 1 / self.mass() * com
+        m = self.position_matrix(with_='mass')
+        return numpy.einsum('i,ij->j', m[:, 0], m[:, 1:]) / m[:, 0].sum()
 
     def center_of_charges(self):
         """Position of the center of charge
@@ -276,36 +320,23 @@ class Molecule:
         :rtype: numpy.ndarray
         """
 
-        com = numpy.array([0, 0, 0])
-        all_atomic_numbers = 0
-        for a in self:
-            com = com + a.atomic_number * a.position
-            all_atomic_numbers += a.atomic_number
-        return 1 / all_atomic_numbers * com
+        m = self.position_matrix(with_='charge')
+        if m[:, 0].sum() == .0:
+            raise RuntimeError('charge is null')
 
-    def translate(self, coordinates):
-        """
-        Translate the molecule (each of its atom).
+        return numpy.einsum('i,ij->j', m[:, 0], m[:, 1:]) / m[:, 0].sum()
 
-        :param coordinates: new position of the molecule
-        :type coordinates: list|numpy.ndarray
-        """
-
-        coordinates = numpy.array(coordinates)
-        for a in self:
-            a.position = a.position + coordinates
-
-    def translate_to_center_of_mass(self):
+    def translate_self_to_center_of_mass(self):
         """
         Translate the molecule to the center of mass
         """
-        self.translate(-self.center_of_mass())
+        self.translate_self(*[-i for i in self.center_of_mass()])
 
-    def translate_to_center_of_charges(self):
+    def translate_self_to_center_of_charges(self):
         """
         Translate the molecule to the center of charge
         """
-        self.translate(-self.center_of_charges())
+        self.translate_self(*[-i for i in self.center_of_charges()])
 
     def moments_of_inertia(self):
         """Get the moment of inertia tensor.
@@ -313,27 +344,20 @@ class Molecule:
         :rtype: numpy.ndarray
         """
 
-        tensor = numpy.zeros((3, 3))
+        m = self.position_matrix(with_='mass')
+        w = m[:, 0]
+        m[:, 1:] -= self.center_of_mass()
+        c = m[:, 1:]
 
-        coordinates, masses, r = \
-            numpy.zeros((len(self), 3)), \
-            numpy.zeros(len(self)), \
-            numpy.zeros(len(self))
+        t = numpy.zeros((3, 3))
+        for i in range(3):
+            t[i, i] = numpy.sum(w * (c[:, (i + 1) % 3] ** 2 + c[:, (i + 2) % 3] ** 2))
 
-        for index, atm in enumerate(self):
-            coordinates[index] = atm.position
-            r[index] = numpy.linalg.norm(atm.position)
-            masses[index] = atm.mass
+        for i, j in [(0, 1), (0, 2), (1, 2)]:
+            x = -numpy.sum(w * c[:, i] * c[:, j])
+            t[i, j] = t[j, i] = x
 
-        for i in [0, 1, 2]:
-            for j in [0, 1, 2]:
-                tmp = 0
-                for k in range(0, len(self)):
-                    delta = i == j
-                    tmp += masses[k] * (delta * r[k] ** 2 - coordinates[k][i] * coordinates[k][j])
-                tensor[i, j] = tmp
-
-        return tensor
+        return t
 
     def principal_axes(self):
         """Return the moment of inertia
@@ -344,46 +368,21 @@ class Molecule:
         """
 
         inertia_tensor = self.moments_of_inertia()
-        Ip, C = numpy.linalg.eig(inertia_tensor)
-        indices = numpy.argsort(Ip)
-        Ip = Ip[indices]
-        C = C.T[indices]
-        return Ip, C
+        e, t = numpy.linalg.eigh(inertia_tensor)
+        indices = numpy.argsort(e)
+        e = e[indices]
+        t = t.T[indices]
+        return e, t
 
     def set_to_inertia_axes(self):
         """Translate and rotate molecule to its principal inertia axes
         """
 
-        self.translate_to_center_of_mass()
-        rot = self.principal_axes()[1]
-        for atom in self:
-            atom.position = numpy.dot(rot, atom.position)
-
-    def reorient(self, origin, start_vector, end_vector):
-        """
-        Move and reorient all the atoms in the molecule so that the starting vector becomes the ending vector.
-
-        :param origin: origin of the two vectors
-        :param start_vector: starting vector
-        :param end_vector: ending vector
-        :raise: ValueError if the two vectors have a 180° angle
-        """
-
-        if numpy.array_equal(start_vector, end_vector):
-            return
-
-        rot_angle = math.acos(
-            numpy.dot(end_vector, start_vector) / numpy.linalg.norm(end_vector) / numpy.linalg.norm(start_vector))
-
-        if math.fabs(math.pi - rot_angle) < 1e-3:
-            raise ValueError('180° angle between vectors, cannot reorient()')
-
-        rot_axis = qcip_math.normalize(numpy.cross(end_vector, start_vector))
-
-        for atom in self:
-            v = atom.position - origin
-            v_rot = qcip_math.rodrigues_rotation(v, rot_axis, -numpy.degrees(rot_angle))
-            atom.position = v_rot + origin
+        self.translate_self_to_center_of_mass()
+        _, rot = self.principal_axes()
+        r = numpy.eye(4)
+        r[:3, :3] = rot
+        self._apply_transformation_self(r)
 
     def distances(self):
         """
@@ -419,10 +418,10 @@ class Molecule:
         connectivities = {}
         for i, a1 in enumerate(self):
             tmp = []
-            covalent_radius1 = qcip_atom.CovalentRadii[a1.symbol][0]  # assume single bond
+            covalent_radius1 = mendeleev.element(a1.symbol).covalent_radius_pyykko / 100  # radius are in pm !!
             for j, a2 in enumerate(self):
                 if i is not j:  # an atom cannot bond with himself
-                    covalent_radius2 = qcip_atom.CovalentRadii[a2.symbol][0]  # assume single bond
+                    covalent_radius2 = mendeleev.element(a2.symbol).covalent_radius_pyykko / 100
                     if distances[i, j] < (covalent_radius1 + covalent_radius2 + threshold):
                         tmp.append(j + 1)  # there is a bond
             connectivities[i + 1] = tmp
@@ -455,7 +454,7 @@ class Molecule:
         :param extra_space: Add some space around the box
         :type extra_space: float
         :return: Bounding box
-        :rtype: qcip_tools.math.AABoundingBox
+        :rtype: qcip_tools.bounding.AABoundingBox
         """
 
         origin = numpy.array([1e14, 1e14, 1e14])
@@ -468,7 +467,7 @@ class Molecule:
                 if coo[i] > maximum[i]:
                     maximum[i] = coo[i]
 
-        return qcip_math.AABoundingBox([i - extra_space for i in origin], maximum=[i + extra_space for i in maximum])
+        return bounding.AABoundingBox([i - extra_space for i in origin], maximum=[i + extra_space for i in maximum])
 
     def formula(self, enhanced=False):
         """Get the formula, based on self.formula_holder and self. symbols_contained.
@@ -655,3 +654,147 @@ class AtomsGroup:
 
     def __contains__(self, item):
         return item in self.atom_list
+
+
+class MolecularSymmetryError(Exception):
+    pass
+
+
+class MolecularSymmetryFinder(symmetry.SymmetryFinder):
+    """High-level symmetry finder on the molecule
+
+    :param molecule: the molecule
+    :type molecule: Molecule
+    :param with_: used to differentiate atoms
+    :type with_: str
+    :param randomise_dummy: randomise dummy atoms so that they are all different
+    :type randomise_dummy: bool
+    :param tol: tolerance
+    :type tol: float
+    """
+
+    def __init__(self, molecule, with_='Z', randomise_dummy=True, tol=1e-5):
+        self.molecule = molecule
+        self._prms = (with_, randomise_dummy)
+
+        super().__init__(self.molecule.position_matrix(with_=with_, randomise_dummy=randomise_dummy), tol=tol)
+
+    def _group_points(self):
+        """Re generate points and group them
+        """
+
+        self.points = self.molecule.position_matrix(*self._prms)
+        self.group_points_per_distance = symmetry.SymmetryFinder.group_points(self.points, self.decimals)
+
+    def orient_molecule(self):
+        """Find the symmetry of the molecule, then orient it
+        (just translation, then rotation).
+
+        :rtype: qcip_tools.symmetry.PointGroupDescription
+        """
+
+        description, com, rot = self.get_symmetry()
+
+        self.molecule.translate_self(*[-i for i in com])
+        nrot = numpy.eye(4)
+        nrot[:3, :3] = rot
+        self.molecule._apply_transformation_self(nrot)
+
+        self._group_points()
+
+        return description
+
+    def symmetrise_molecule(self, lowers_infinite=-1):
+        """After ```orient_molecule()``, and among the unique positions
+
+        - Find the set of unique atoms: apply the symmetry elements and groups atoms together ;
+        - Compute an average position by using the inverse of the symmetry elements on the position of the first atom ;
+        - Set components that are almost zero (wrt ``self.tol``) to zero ;
+        - Generate back the other positions using the symmetry elements on the average position.
+
+        .. warning::
+
+            + It needs to generate all the group elements first, so that may take time ;
+            + This will therefore slightly change the geometry by moving the atoms.
+
+        :return: the point group and a list of uniques atoms indexes
+        :rtype: qcip_tools.symmetry.PointGroup, list
+        """
+
+        def pos_vec_in_vecs(vec, vecs):
+            p = min((numpy.sum(numpy.abs(v - vec)), i) for i, v in enumerate(vecs))
+            if p[0] > self.tol:
+                raise MolecularSymmetryError('no position matches !')
+
+            return p[1]
+
+        description = self.orient_molecule()
+        g = description.gen_point_group(lowers_infinite=lowers_infinite)
+
+        uniques_atoms = []
+
+        for lst in self.group_points_per_distance:
+            r = self.points[lst, 1:]
+            saw = {}
+
+            for i in range(len(lst)):
+
+                if i in saw:
+                    continue
+
+                # compute the set of unique positions:
+                set_of_unique = set()
+                transformations_between = {}
+
+                ri = r[i]
+                for e in g:
+                    npoint = e.element.apply(ri)
+                    index_2 = pos_vec_in_vecs(npoint, r)
+                    if index_2 not in saw:
+                        saw[index_2] = True
+                        set_of_unique.add(index_2)
+                        transformations_between[index_2] = e
+
+                # compute average position
+                average_position = \
+                    sum(g.inverse(transformations_between[j]).element.apply(r[j]) for j in set_of_unique) / \
+                    len(set_of_unique)
+
+                # set "almost zero" to zero
+                for j in range(3):
+                    if numpy.abs(average_position[j]) < self.tol:
+                        average_position[j] = .0
+
+                # compute back position and set atoms
+                for j in set_of_unique:
+                    index = lst[j]
+                    self.molecule[index].position = transformations_between[j].element.apply(average_position)
+
+                # choose an unique atom among the set
+                uniques_atoms.append(lst[min((sum(numpy.abs(r[j])), j) for j in set_of_unique)[1]])
+
+        self._group_points()
+        return g, uniques_atoms
+
+
+def gen_molecule_from_unique_atoms(unique_atoms, group, tol=1e-3):
+    """Generate a molecule out of the uniques atoms and the symmetry group
+
+    :param unique_atoms: set of unique atoms (please use unique ones !!)
+    :type unique_atoms: list
+    :param group: point group
+    :type group: qcip_tools.symmetry.PointGroup
+    :rtype: Molecule
+    """
+
+    final_list = []
+    for a in unique_atoms:
+        positions = []
+        p = a.position
+        for e in group:
+            np = e.element.apply(p)
+            if not positions or not symmetry.SymmetryFinder.vec_in_vecs(np, positions, tol):
+                positions.append(np)
+                final_list.append(qcip_atom.Atom(atomic_number=a.atomic_number, position=np))
+
+    return Molecule(atom_list=final_list)

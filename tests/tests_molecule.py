@@ -37,7 +37,6 @@ class MoleculeTestCase(QcipToolsTestCase):
         self.assertEqual(m2.multiplicity, 1)
 
         self.assertTrue(numpy.array_equal(m2.center_of_mass(), [0, 0, 0]))
-        self.assertTrue(numpy.array_equal(m2.center_of_charges(), [0, 0, 0]))
 
         # Test shifted index:
         self.assertTrue(numpy.array_equal(m2.atom(1).position, [-.5, 0, 0]))
@@ -147,11 +146,11 @@ class MoleculeTestCase(QcipToolsTestCase):
         self.assertTrue(m1.linear())
 
         # test translate
-        m1.translate([1, 0, 0])
+        m1.translate_self(*[1, 0, 0])
         self.assertTrue(numpy.array_equal(m1.atom(1).position, [.5, 0, 0]))
         self.assertTrue(numpy.array_equal(m1.atom(2).position, [1.5, 0, 0]))
 
-        m1.translate_to_center_of_mass()
+        m1.translate_self_to_center_of_mass()
         self.assertTrue(numpy.array_equal(m1.atom(1).position, [-.5, 0, 0]))
         self.assertTrue(numpy.array_equal(m1.atom(2).position, [.5, 0, 0]))
 
@@ -163,7 +162,7 @@ class MoleculeTestCase(QcipToolsTestCase):
         ]
 
         m2 = qcip_molecule.Molecule(atom_list=atom_list)
-        m2.translate_to_center_of_mass()  # X has the largest moment of inertia, then Z, then Y
+        m2.translate_self_to_center_of_mass()  # X has the largest moment of inertia, then Z, then Y
         m2_copy = copy.deepcopy(m2)
 
         self.assertFalse(m2.linear())
@@ -177,7 +176,7 @@ class MoleculeTestCase(QcipToolsTestCase):
 
         # reorient
         m2_copy = copy.deepcopy(m2)
-        m2.reorient([0, 0, 0], [1, 0, 0], [0, 1, 0])  # rotation of 90° around Z
+        m2.rotate_around_axis_self(numpy.array([0, 0, 1.]), 90, in_degree=True)  # rotation of 90° around Z
 
         for i in range(3):  # X and -Y where exchanged
             good_position = -m2_copy[i].position[1], m2_copy[i].position[0], m2_copy[i].position[2]

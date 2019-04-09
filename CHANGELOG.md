@@ -2,20 +2,21 @@
 
 ## Current version
 
-"Have you ever eared about graphs?"
+"I'm not dead!"
 
 + Add this changelog (#38)
 + Handle the patched version of dalton if needed (!41)
 + Correct gamma perpendicular
 + Add excitation: `!` and `#` (!46), and extract from Dalton (archive) and Gaussian (FCHK)
 + Upgrade numpy and scipy version, remove matplotlib
-+ Correct charge transfert (!48)
++ Correct charge transfer (!48)
 + Upgrade to the latest version of h5py, remove warning (!50)
 + Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants, !51)
 + Use pipenv (!52)
 + Store best values in Romberg object (!54)
 + Inverse the sign of gamma tensor components when computed via CC methods in Dalton (!55)
 + Extract gamma tensor from Gaussian FCHK (!56)
++ Handle symmetry (!53)
 
 ## Version 0.5
 

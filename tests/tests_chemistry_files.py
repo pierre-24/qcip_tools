@@ -7,7 +7,7 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase, factories
-from qcip_tools import math as qcip_math, molecule as qcip_molecule, atom as qcip_atom, basis_set_esml, derivatives
+from qcip_tools import molecule as qcip_molecule, atom as qcip_atom, basis_set_esml, derivatives, bounding
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -399,10 +399,10 @@ class GaussianTestCase(QcipToolsTestCase):
         Note that due to the low resolution of the cube file, results are approximates"""
 
         sets = {
-            'almost_everything': qcip_math.BoundingSet(),
-            'almost_nothing': qcip_math.BoundingSet(),
-            'lithium_atom': qcip_math.BoundingSet(),
-            'hydrogen_atom': qcip_math.BoundingSet()
+            'almost_everything': bounding.BoundingSet(),
+            'almost_nothing': bounding.BoundingSet(),
+            'lithium_atom': bounding.BoundingSet(),
+            'hydrogen_atom': bounding.BoundingSet()
         }
 
         fc = gaussian.Cube()
@@ -410,12 +410,12 @@ class GaussianTestCase(QcipToolsTestCase):
         with open(self.cube_file3) as f:
             fc.read(f)
 
-        sets['almost_everything'].include(qcip_math.AABoundingBox(
+        sets['almost_everything'].include(bounding.AABoundingBox(
             fc.origin * 0.52917165, maximum=(fc.origin + fc.records_per_direction * fc.increments) * 0.52917165))
 
-        sets['almost_nothing'].include(qcip_math.AABoundingBox(fc.origin * 0.52917165, size=[.1, .1, .1]))
-        sets['lithium_atom'].include(qcip_math.BoundingSphere(fc.molecule[0].position, radius=1.28))
-        sets['hydrogen_atom'].include(qcip_math.BoundingSphere(fc.molecule[1].position, radius=0.31))
+        sets['almost_nothing'].include(bounding.AABoundingBox(fc.origin * 0.52917165, size=[.1, .1, .1]))
+        sets['lithium_atom'].include(bounding.BoundingSphere(fc.molecule[0].position, radius=1.28))
+        sets['hydrogen_atom'].include(bounding.BoundingSphere(fc.molecule[1].position, radius=0.31))
 
         results = fc.sum_density_of_sets(sets)
         self.assertAlmostEqual(results['almost_everything'], fc.molecule.number_of_electrons(), delta=.5)
