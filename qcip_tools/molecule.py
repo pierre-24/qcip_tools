@@ -656,6 +656,10 @@ class AtomsGroup:
         return item in self.atom_list
 
 
+class MolecularSymmetryError(Exception):
+    pass
+
+
 class MolecularSymmetryFinder(symmetry.SymmetryFinder):
     """High-level symmetry finder on the molecule
 
@@ -671,8 +675,16 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
 
     def __init__(self, molecule, with_='Z', randomise_dummy=True, tol=1e-5):
         self.molecule = molecule
+        self._prms = (with_, randomise_dummy)
 
         super().__init__(self.molecule.position_matrix(with_=with_, randomise_dummy=randomise_dummy), tol=tol)
+
+    def _group_points(self):
+        """Re generate points and group them
+        """
+
+        self.points = self.molecule.position_matrix(*self._prms)
+        self.group_points_per_distance = symmetry.SymmetryFinder.group_points(self.points, self.decimals)
 
     def orient_molecule(self):
         """Find the symmetry of the molecule, then orient it
@@ -688,4 +700,78 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
         nrot[:3, :3] = rot
         self.molecule._apply_transformation_self(nrot)
 
+        self._group_points()
+
         return description
+
+    def symmetrise_molecule(self, lowers_infinite=-1):
+        """After ```orient_molecule()``, and among the unique positions
+
+        - Find the set of unique atoms: apply the symmetry elements and groups atoms together ;
+        - Compute an average position by using the inverse of the symmetry elements on the position of the first atom ;
+        - Set components that are almost zero (wrt ``self.tol``) to zero ;
+        - Generate back the other positions using the symmetry elements on the average position.
+
+        .. warning::
+
+            + It needs to generate all the group elements first, so that may take time ;
+            + This will therefore slightly change the geometry by moving the atoms.
+
+        :return: the point group and a list of uniques atoms indexes
+        :rtype: qcip_tools.symmetry.PointGroup, list
+        """
+
+        def pos_vec_in_vecs(vec, vecs):
+            p = min((numpy.sum(numpy.abs(v - vec)), i) for i, v in enumerate(vecs))
+            if p[0] > self.tol:
+                raise MolecularSymmetryError('no position matches !')
+
+            return p[1]
+
+        description = self.orient_molecule()
+        g = description.gen_point_group(lowers_infinite=lowers_infinite)
+
+        uniques_atoms = []
+
+        for lst in self.group_points_per_distance:
+            r = self.points[lst, 1:]
+            saw = {}
+
+            for i in range(len(lst)):
+
+                if i in saw:
+                    continue
+
+                # compute the set of unique positions:
+                set_of_unique = set()
+                transformations_between = {}
+
+                ri = r[i]
+                for e in g:
+                    npoint = e.element.apply(ri)
+                    index_2 = pos_vec_in_vecs(npoint, r)
+                    if index_2 not in saw:
+                        saw[index_2] = True
+                        set_of_unique.add(index_2)
+                        transformations_between[index_2] = e
+
+                # compute average position
+                average_position = \
+                    sum(g.inverse(transformations_between[j]).element.apply(r[j]) for j in set_of_unique) / \
+                    len(set_of_unique)
+
+                # set "almost zero" to zero
+                for j in range(3):
+                    if numpy.abs(average_position[j]) < self.tol:
+                        average_position[j] = .0
+
+                # compute back position and set atoms
+                for j in set_of_unique:
+                    index = lst[j]
+                    self.molecule[index].position = transformations_between[j].element.apply(average_position)
+
+                # choose an unique atom among the set
+                uniques_atoms.append(lst[min((sum(numpy.abs(r[j])), j) for j in set_of_unique)[1]])
+
+        self._group_points()
+        return g, uniques_atoms

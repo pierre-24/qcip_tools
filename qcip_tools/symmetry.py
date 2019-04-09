@@ -19,12 +19,12 @@ from qcip_tools import math as qcip_math
 
 def simultaneous_diagonalization(matrices, tol=1e-14, in_vecs=None):
     """
-    Simulateous diagonalization of (communting Hermitian) matrices.
+    Simultaneous diagonalization of (**communting Hermitian**) matrices.
 
     Seems to works by computing a *basis* for the first matrix, then by diagonalizing the different
     blocks (organized by the degeneracy of the eigenvalues).
 
-    Original source: http://qutip.org/docs/latest/modules/qutip/simdiag.html.
+    Original source: http://qutip.org/docs/latest/modules/qutip/simdiag.html (I did a little bit of rewriting).
     Also check
     https://ocw.mit.edu/courses/physics/8-05-quantum-physics-ii-fall-2013/lecture-notes/MIT8_05F13_Chap_05.pdf
     (which is the closest explanation I found of this implementation, which is not common).
@@ -1690,7 +1690,7 @@ class PointGroup(Group):
 
         .. math::
 
-            I = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(z), \\text{ with }
+            I = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(x), \\text{ with }
             \\phi = \\frac{1+\\sqrt 5}{2}.
 
         :rtype: PointGroup
@@ -1698,7 +1698,7 @@ class PointGroup(Group):
         golden = (1 + 5 ** 0.5) / 2
         return cls.generate(
             [
-                Operation.C(2),
+                Operation.C(2, axis=numpy.array([1., 0., 0.])),
                 Operation.C(3, axis=numpy.array([1., 1., 1.])),
                 Operation.C(5, axis=numpy.array([1, 0, golden]))
             ],
@@ -1710,7 +1710,7 @@ class PointGroup(Group):
 
         .. math::
 
-            I_h = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(z) \\times \\sigma_h, \\text{ with }
+            I_h = C_5(1, 0, \\phi) \\times C_3(1, 1, 1) \\times C_2(x) \\times \\sigma_h, \\text{ with }
             \\phi = \\frac{1+\\sqrt 5}{2}.
 
         :rtype: PointGroup
@@ -1718,7 +1718,7 @@ class PointGroup(Group):
         golden = (1 + 5 ** 0.5) / 2
         return cls.generate(
             [
-                Operation.C(2),
+                Operation.C(2, axis=numpy.array([1., 0., 0.])),
                 Operation.C(3, axis=numpy.array([1., 1., 1.])),
                 Operation.C(5, axis=numpy.array([1, 0, golden])),
                 Operation.sigma(),
@@ -1837,21 +1837,35 @@ class SymmetryFinder:
         self.points[:, 1:] -= self.center
 
         # group points
-        self.group_points_per_distance = []
+        self.group_points_per_distance = SymmetryFinder.group_points(points, self.decimals)
+        self._symmetry = None
+
+    @staticmethod
+    def group_points(points, decimals):
+        """Group points per label and distances wrt center (within ``decimals``)
+
+        :param points: the points, with the first axis being the label
+        :type points: numpy.ndarray
+        :param decimals: precision
+        :type decimals: int
+        :rtype: list
+        """
+
+        group_points_per_distance = []
         all_indexes = numpy.asarray(range(len(points)))
 
         uniques, indexes = numpy.unique(points[:, 0], return_inverse=True)
         for u, _ in enumerate(uniques):  # group per label
             sub_indexes = all_indexes[indexes == u]
-            sub_points = self.points[sub_indexes, 1:]
+            sub_points = points[sub_indexes, 1:]
 
             uniques_2, indexes_2 = numpy.unique(
-                numpy.around(numpy.linalg.norm(sub_points, axis=1), self.decimals), return_inverse=True)
+                numpy.around(numpy.linalg.norm(sub_points, axis=1), decimals), return_inverse=True)
 
             for u2, _ in enumerate(uniques_2):  # group per distance
-                self.group_points_per_distance.append(sub_indexes[indexes_2 == u2])
+                group_points_per_distance.append(sub_indexes[indexes_2 == u2])
 
-        self._symmetry = None
+        return group_points_per_distance
 
     @staticmethod
     def cartesian_tensor(tensor, n):
@@ -2033,7 +2047,7 @@ class SymmetryFinder:
                 # select main axis
                 x_axis = self.find_best_x_axis(
                     main_axis,
-                    [c[1] for c in probable_cn if c[0] == 4 and numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
+                    [c[1] for c in probable_cn if c[0] == 4],
                     are_mirrors=False)
 
                 v[0] = x_axis
@@ -2045,11 +2059,10 @@ class SymmetryFinder:
                 if self.has_inversion():
                     group = PointGroupDescription(PointGroupType.icosahedral_achiral)  # I_h
 
-                # Select main axis (NOT a C5)
-                n, main_axis = self.find_c_highest(c for c in probable_cn if c[0] < 3)
+                # Select x axis (a C2)
                 x_axis = self.find_best_x_axis(
                     main_axis,
-                    [c[1] for c in probable_cn if numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
+                    [c[1] for c in probable_cn],
                     are_mirrors=False)
 
                 v[0] = x_axis
@@ -2339,6 +2352,8 @@ class SymmetryFinder:
         x_axis_found = numpy.array([1., 0., 0.])
         trough = -1
         for a in mirrors_or_C2:
+            if numpy.fabs(numpy.dot(a, principal_axis)) > self.tol:  # only axes that are perpendicular to the main one
+                continue
             n = self.pass_trough(principal_axis, a, is_mirror=are_mirrors)
             if n > trough:
                 x_axis_found = a

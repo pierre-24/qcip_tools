@@ -203,7 +203,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         for g in groups:
             t = g.character_table()
-            print(t)
+            # print(t)
             # print('----')
 
             # check orthogonality of the lines
@@ -375,14 +375,25 @@ class SymmetryTestCase(QcipToolsTestCase):
             symmetry.PointGroupDescription(symmetry.PointGroupType.icosahedral_achiral, 0),
             find('symmetry/dodecahedrane_Ih.xyz', tol=1e-3))
 
+    @staticmethod
+    def vec_in_vecs(vec, vecs, tol=1e-3):
+        return min(numpy.sum(numpy.abs(v - vec)) for v in vecs) < tol
+
+    def assertMoleculeFulfillPointGroup(self, molecule, group, tol=1e-3):
+        positions = molecule.position_matrix()[:, 1:]
+
+        for p in range(len(molecule)):
+            for e in group:
+                npoint = e.element.apply(positions[p])
+                self.assertTrue(
+                    self.vec_in_vecs(npoint, positions, tol),
+                    msg='{} on {} = {}'.format(e, positions[p], npoint))
+
     def test_orient(self):
-        """Test symmetrisation
+        """Test orientation
 
         A few geometry are due to http://symmetry.otterbein.edu/gallery/index.html
         """
-
-        def vec_in_vecs(vec, vecs, tol=1e-3):
-            return min(numpy.sum(numpy.abs(v - vec)) for v in vecs) < tol
 
         def test_molecule(path, tol=1e-3):
             fx = xyz.File()
@@ -391,16 +402,7 @@ class SymmetryTestCase(QcipToolsTestCase):
 
             sf = molecule.MolecularSymmetryFinder(fx.molecule, tol=tol)
             description = sf.orient_molecule()
-            # print(sf.molecule.output_atoms())
-            positions = sf.molecule.position_matrix()[:, 1:]
-
-            g = description.gen_point_group()
-            for p in range(len(sf.molecule)):
-                for e in g:
-                    npoint = e.element.apply(positions[p])
-                    self.assertTrue(
-                        vec_in_vecs(npoint, positions, tol),
-                        msg='{} on {} = {}'.format(e, positions[p], npoint))
+            self.assertMoleculeFulfillPointGroup(sf.molecule, description.gen_point_group())
 
         molecules = [
             'water_C2v',
@@ -413,7 +415,37 @@ class SymmetryTestCase(QcipToolsTestCase):
             'ferocene_D5d',
             'methane_Td',
             'cubane_Oh',
-            # TODO: 'dodecahedrane_Ih' (I knowk the way I generate the group is incorrect)
+            # TODO: 'dodecahedrane_Ih' (I know the way I generate the group is incorrect)
+        ]
+
+        for m in molecules:
+            test_molecule('symmetry/{}.xyz'.format(m))
+
+    def test_symmetrise(self):
+        """Test symmetrisation (which is a little stronger than just orientation)
+        """
+
+        def test_molecule(path, tol=1e-3):
+            fx = xyz.File()
+            with open(self.copy_to_temporary_directory(path)) as f:
+                fx.read(f)
+
+            sf = molecule.MolecularSymmetryFinder(fx.molecule, tol=tol)
+            g, _ = sf.symmetrise_molecule()
+            self.assertMoleculeFulfillPointGroup(sf.molecule, g)
+
+        molecules = [
+            'water_C2v',
+            'ammonia_C3v',
+            'boric_acid_C3h',
+            'allene_D2d',
+            'benzene_D6h',
+            'BH3_D3h',
+            'biphenyl_D2',
+            'ferocene_D5d',
+            'methane_Td',
+            'cubane_Oh',
+            # TODO: 'dodecahedrane_Ih' (same as above)
         ]
 
         for m in molecules:
