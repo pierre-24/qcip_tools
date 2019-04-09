@@ -1,6 +1,6 @@
 # Changelog
 
-## Current version
+## Version 0.6
 
 "I'm not dead!"
 
