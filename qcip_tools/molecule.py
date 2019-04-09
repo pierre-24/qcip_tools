@@ -676,12 +676,16 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
 
     def orient_molecule(self):
         """Find the symmetry of the molecule, then orient it
+        (just translation, then rotation).
+
+        :rtype: qcip_tools.symmetry.PointGroupDescription
         """
 
         description, com, rot = self.get_symmetry()
-        # group = description.gen_point_group()
 
         self.molecule.translate_self(*[-i for i in com])
         nrot = numpy.eye(4)
         nrot[:3, :3] = rot
         self.molecule._apply_transformation_self(nrot)
+
+        return description

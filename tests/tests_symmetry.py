@@ -312,6 +312,8 @@ class SymmetryTestCase(QcipToolsTestCase):
         """Test if one can find the symmetry of the different (randomly oriented) molecules
 
         Inspired by https://en.wikipedia.org/wiki/Molecular_symmetry
+
+        A few geometry are due to http://symmetry.otterbein.edu/gallery/index.html
         """
 
         def find(path, tol=1e-4):
@@ -338,6 +340,10 @@ class SymmetryTestCase(QcipToolsTestCase):
             find('symmetry/ammonia_C3v.xyz', tol=1e-3))
 
         self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.reflexion, 3),
+            find('symmetry/boric_acid_C3h.xyz', tol=1e-3))
+
+        self.assertEqual(
             symmetry.PointGroupDescription(symmetry.PointGroupType.pyramidal, 2),
             find('symmetry/water_C2v.xyz', tol=1e-3))
 
@@ -348,6 +354,10 @@ class SymmetryTestCase(QcipToolsTestCase):
         self.assertEqual(
             symmetry.PointGroupDescription(symmetry.PointGroupType.prismatic, 6),
             find('symmetry/benzene_D6h.xyz'))
+
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.prismatic, 3),
+            find('symmetry/BH3_D3h.xyz', tol=1e-3))
 
         self.assertEqual(
             symmetry.PointGroupDescription(symmetry.PointGroupType.antiprismatic, 5),
@@ -361,17 +371,50 @@ class SymmetryTestCase(QcipToolsTestCase):
             symmetry.PointGroupDescription(symmetry.PointGroupType.octahedral_achiral, 0),
             find('symmetry/cubane_Oh.xyz'))
 
+        self.assertEqual(
+            symmetry.PointGroupDescription(symmetry.PointGroupType.icosahedral_achiral, 0),
+            find('symmetry/dodecahedrane_Ih.xyz', tol=1e-3))
+
     def test_orient(self):
         """Test symmetrisation
+
+        A few geometry are due to http://symmetry.otterbein.edu/gallery/index.html
         """
 
-        def get_molecule(path):
+        def vec_in_vecs(vec, vecs, tol=1e-3):
+            return min(numpy.sum(numpy.abs(v - vec)) for v in vecs) < tol
+
+        def test_molecule(path, tol=1e-3):
             fx = xyz.File()
             with open(self.copy_to_temporary_directory(path)) as f:
                 fx.read(f)
 
-            return fx.molecule
+            sf = molecule.MolecularSymmetryFinder(fx.molecule, tol=tol)
+            description = sf.orient_molecule()
+            # print(sf.molecule.output_atoms())
+            positions = sf.molecule.position_matrix()[:, 1:]
 
-        m = get_molecule('symmetry/cubane_Oh.xyz')
-        sf = molecule.MolecularSymmetryFinder(m, tol=1e-3)
-        sf.orient_molecule()
+            g = description.gen_point_group()
+            for p in range(len(sf.molecule)):
+                for e in g:
+                    npoint = e.element.apply(positions[p])
+                    self.assertTrue(
+                        vec_in_vecs(npoint, positions, tol),
+                        msg='{} on {} = {}'.format(e, positions[p], npoint))
+
+        molecules = [
+            'water_C2v',
+            'ammonia_C3v',
+            'boric_acid_C3h',
+            'allene_D2d',
+            'benzene_D6h',
+            'BH3_D3h',
+            'biphenyl_D2',
+            'ferocene_D5d',
+            'methane_Td',
+            'cubane_Oh',
+            # TODO: 'dodecahedrane_Ih' (I knowk the way I generate the group is incorrect)
+        ]
+
+        for m in molecules:
+            test_molecule('symmetry/{}.xyz'.format(m))

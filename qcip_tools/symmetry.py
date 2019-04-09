@@ -1507,7 +1507,7 @@ class PointGroup(Group):
 
         .. math::
 
-            C_{nv} = C_n \\times \\sigma_v.
+            C_{nv} = C_n \\times \\sigma_v(y).
 
         :param n: order of the group
         :type n: int
@@ -1517,7 +1517,7 @@ class PointGroup(Group):
             raise ValueError('minimum order is 2')
 
         return cls.generate(
-            [Operation.C(n), Operation.sigma(axis=numpy.array([1., 0, 0]))],
+            [Operation.C(n), Operation.sigma(axis=numpy.array([0, 1., 0]))],
             description=PointGroupDescription(PointGroupType.pyramidal, n))
 
     @classmethod
@@ -1584,7 +1584,7 @@ class PointGroup(Group):
 
         .. math::
 
-            D_{nd} = S_{2n}(z) \\times C_2(x).
+            D_{nd} = S_{2n}(z) \\times \\sigma_d(y).
 
         :param n: order of the group
         :type n: int
@@ -1594,7 +1594,7 @@ class PointGroup(Group):
             raise ValueError('minimum order is 2')
 
         return cls.generate(
-            [Operation.S(2 * n), Operation.C(2, axis=numpy.array([1., 0, 0]))],
+            [Operation.S(2 * n), Operation.sigma(axis=numpy.array([0, 1., 0]))],
             description=PointGroupDescription(PointGroupType.antiprismatic, n))
 
     @classmethod
@@ -1973,7 +1973,7 @@ class SymmetryFinder:
              For tetrahedral ones, the main axis is any :math:`C_2`.
           b. The :math:`\\vec{e}_x` axis is either parallel to a reflexion plane, or a symmetry axis perpendicular
              to the main one if there is no reflexion plane in the case. If there is none of those, the inertia
-             tensor is used.
+             tensor is used. **Note:** for octahedral molecules, the :math:`C_4` are the axes, against any logic.
           c. :math:`\\vec{e}_y = \\vec{e}_z \\times \\vec{e}_x`.
 
           In the other case, the orientation is taken from the inertia tensor.
@@ -2020,6 +2020,7 @@ class SymmetryFinder:
                     main_axis,
                     [c[1] for c in probable_cn if numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
                     are_mirrors=False)
+
                 v[0] = x_axis
                 v[1] = numpy.cross(main_axis, x_axis)
                 v[2] = main_axis
@@ -2032,8 +2033,9 @@ class SymmetryFinder:
                 # select main axis
                 x_axis = self.find_best_x_axis(
                     main_axis,
-                    [c[1] for c in probable_cn if numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
+                    [c[1] for c in probable_cn if c[0] == 4 and numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
                     are_mirrors=False)
+
                 v[0] = x_axis
                 v[1] = numpy.cross(main_axis, x_axis)
                 v[2] = main_axis
@@ -2042,6 +2044,17 @@ class SymmetryFinder:
                 group = PointGroupDescription(PointGroupType.icosahedral_chiral)  # I
                 if self.has_inversion():
                     group = PointGroupDescription(PointGroupType.icosahedral_achiral)  # I_h
+
+                # Select main axis (NOT a C5)
+                n, main_axis = self.find_c_highest(c for c in probable_cn if c[0] < 3)
+                x_axis = self.find_best_x_axis(
+                    main_axis,
+                    [c[1] for c in probable_cn if numpy.abs(numpy.dot(main_axis, c[1])) < self.tol],
+                    are_mirrors=False)
+
+                v[0] = x_axis
+                v[1] = numpy.cross(main_axis, x_axis)
+                v[2] = main_axis
             else:
                 raise SymmetryFinderError('spherical top molecule with n>5')
 
@@ -2068,7 +2081,7 @@ class SymmetryFinder:
 
                 if len(probable_cn) >= 2 and len(perpendicular_C2) != 0:
                     if self.has_mirror(main_axis):
-                        x_axis = self.find_best_x_axis(main_axis, perpendicular_C2, are_mirrors=False)
+                        x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
                         group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
                     elif any(m[1] in ['v', 'd'] for m in mirrors):
                         x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
@@ -2234,6 +2247,9 @@ class SymmetryFinder:
                     if i == j:
                         continue
                     possible_mirrors.append(re[j])
+
+        if not possible_mirrors:
+            return []
 
         v = numpy.vstack(possible_mirrors)
         v /= numpy.linalg.norm(v, axis=1).reshape(-1, 1)  # normalize
