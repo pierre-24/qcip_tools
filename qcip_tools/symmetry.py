@@ -1924,7 +1924,7 @@ class SymmetryFinder:
         :param vec: vector to find
         :param vec: numpy.ndarray
         :param vecs: set of vectors
-        :type vecs: numpy.ndarray
+        :type vecs: numpy.ndarray|list
         :param tol: tolerence threshold
         :type tol: float
         :rtype: bool

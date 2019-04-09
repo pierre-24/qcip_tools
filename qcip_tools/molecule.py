@@ -775,3 +775,26 @@ class MolecularSymmetryFinder(symmetry.SymmetryFinder):
 
         self._group_points()
         return g, uniques_atoms
+
+
+def gen_molecule_from_unique_atoms(unique_atoms, group, tol=1e-3):
+    """Generate a molecule out of the uniques atoms and the symmetry group
+
+    :param unique_atoms: set of unique atoms (please use unique ones !!)
+    :type unique_atoms: list
+    :param group: point group
+    :type group: qcip_tools.symmetry.PointGroup
+    :rtype: Molecule
+    """
+
+    final_list = []
+    for a in unique_atoms:
+        positions = []
+        p = a.position
+        for e in group:
+            np = e.element.apply(p)
+            if not positions or not symmetry.SymmetryFinder.vec_in_vecs(np, positions, tol):
+                positions.append(np)
+                final_list.append(qcip_atom.Atom(atomic_number=a.atomic_number, position=np))
+
+    return Molecule(atom_list=final_list)

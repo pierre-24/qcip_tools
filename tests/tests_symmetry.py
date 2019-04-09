@@ -375,10 +375,6 @@ class SymmetryTestCase(QcipToolsTestCase):
             symmetry.PointGroupDescription(symmetry.PointGroupType.icosahedral_achiral, 0),
             find('symmetry/dodecahedrane_Ih.xyz', tol=1e-3))
 
-    @staticmethod
-    def vec_in_vecs(vec, vecs, tol=1e-3):
-        return min(numpy.sum(numpy.abs(v - vec)) for v in vecs) < tol
-
     def assertMoleculeFulfillPointGroup(self, molecule, group, tol=1e-3):
         positions = molecule.position_matrix()[:, 1:]
 
@@ -386,7 +382,7 @@ class SymmetryTestCase(QcipToolsTestCase):
             for e in group:
                 npoint = e.element.apply(positions[p])
                 self.assertTrue(
-                    self.vec_in_vecs(npoint, positions, tol),
+                    symmetry.SymmetryFinder.vec_in_vecs(npoint, positions, tol),
                     msg='{} on {} = {}'.format(e, positions[p], npoint))
 
     def test_orient(self):
@@ -431,7 +427,7 @@ class SymmetryTestCase(QcipToolsTestCase):
                 fx.read(f)
 
             sf = molecule.MolecularSymmetryFinder(fx.molecule, tol=tol)
-            g, _ = sf.symmetrise_molecule()
+            g, uniques = sf.symmetrise_molecule()
             self.assertMoleculeFulfillPointGroup(sf.molecule, g)
 
         molecules = [
@@ -450,3 +446,20 @@ class SymmetryTestCase(QcipToolsTestCase):
 
         for m in molecules:
             test_molecule('symmetry/{}.xyz'.format(m))
+
+    def test_gen_from_unique(self):
+        """Test generation out of uniques atoms, in the case of the benzene molecule."""
+
+        fx = xyz.File()
+        with open(self.copy_to_temporary_directory('symmetry/benzene_D6h.xyz')) as f:
+            fx.read(f)
+
+        sf = molecule.MolecularSymmetryFinder(fx.molecule, tol=1e-3)
+        g, uniques = sf.symmetrise_molecule()
+
+        self.assertEqual(len(uniques), 2)
+        n_molecule = molecule.gen_molecule_from_unique_atoms([sf.molecule[i] for i in uniques], g)
+
+        positions = sf.molecule.position_matrix()[:, 1:]
+        for a in n_molecule:
+            self.assertTrue(symmetry.SymmetryFinder.vec_in_vecs(a.position, positions, 1e-3))
