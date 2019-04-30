@@ -7,7 +7,8 @@ import numpy
 from unittest.mock import MagicMock, patch
 
 from tests import QcipToolsTestCase, factories
-from qcip_tools import molecule as qcip_molecule, atom as qcip_atom, basis_set_esml, derivatives, bounding
+from qcip_tools import molecule as qcip_molecule, atom as qcip_atom, basis_set_esml, derivatives, bounding, \
+    chemistry_files
 from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
 
 
@@ -73,6 +74,39 @@ class HelpersTestCase(QcipToolsTestCase):
             with self.assertRaises(SystemExit) as cm:
                 parser.parse_args(['-b', 'DALTON_MOL:' + self.input_file_2])  # not a correct possibility
             self.assertNotEqual(cm.exception.code, 0)
+
+    def test_extra_chemistry_files(self):
+        """Test extra chemistry file"""
+
+        name = 'x.tmp'
+        path = self.temporary_directory + '/' + name
+        into = 'xxx'
+
+        class DummyChemFile(chemistry_files.ChemistryFile, chemistry_files.WithIdentificationMixin):
+
+            @classmethod
+            def possible_file_extensions(cls):
+                return [name.split('.')[-1]]
+
+            @classmethod
+            def attempt_identification(cls, f):
+                return name in f.name
+
+            def __init__(self):
+                self.content = ''
+
+            def read(self, f):
+                self.content = f.read()
+
+        helpers.EXTRA_CHEMISTRY_FILES.append(DummyChemFile)
+
+        with open(path, 'w') as f:
+            f.write(into)
+
+        with open(path) as f:
+            x = helpers.open_chemistry_file(f)
+            self.assertIsInstance(x, DummyChemFile)
+            self.assertEqual(x.content, into)
 
 
 class ChemistryFileTestCase(QcipToolsTestCase):
