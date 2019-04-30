@@ -11,6 +11,9 @@ class ProbablyNotAChemistryFile(Exception):
     pass
 
 
+EXTRA_CHEMISTRY_FILES = []
+
+
 def identifiable_chemistry_file_objects(identifier_must_be=None):
     """Yield all objects with the ``WithIdentificationMixin``.
 
@@ -30,6 +33,13 @@ def identifiable_chemistry_file_objects(identifier_must_be=None):
                         yield obj
                 else:
                     yield obj
+
+        for obj in EXTRA_CHEMISTRY_FILES:
+            if identifier_must_be is not None:
+                if obj.file_type in identifier_must_be:
+                    yield obj
+            else:
+                yield obj
 
 
 def open_chemistry_file(f, must_be=None, trust_extension=False):
