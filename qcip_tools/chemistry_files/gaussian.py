@@ -1211,7 +1211,7 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
             num_of_atoms = - num_of_atoms
 
         # origin and increments
-        r += '{:5d} {:11f} {:11f} {:11f} {:5d}\n'.format(
+        r += '{:5d} {:11f} {:11f} {:11f} {:4d}\n'.format(
             num_of_atoms, self.origin[0], self.origin[1], self.origin[2], self.data_per_record)
 
         r += '{:5d} {:11f} {:11f} {:11f}\n'.format(self.records_per_direction[0], self.increments[0], 0.0, 0.0)
