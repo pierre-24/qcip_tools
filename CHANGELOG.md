@@ -1,5 +1,8 @@
 # Changelog
 
++ Extract TD excitation energies from gaussian logs (!59)
++ Remove ESML, since there is a new version (!60)
+
 ## Version 0.6
 
 "I'm not dead!"

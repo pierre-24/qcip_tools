@@ -133,6 +133,14 @@ class MoleculeTestCase(QcipToolsTestCase):
         self.assertArraysAlmostEqual(b2.size, [i + 2 * extra_space for i in b1.size])
         self.assertArraysAlmostEqual(b2.maximum(), [i + extra_space for i in b1.maximum()])
 
+        # spin and multiplicities
+        self.assertEqual(m3.square_of_spin_angular_moment(), .0)  # singlet
+        m3.multiplicity = 3
+        self.assertEqual(m3.square_of_spin_angular_moment(), 2)  # triplet
+        m3.charge = -1
+        m3.multiplicity = 2
+        self.assertEqual(m3.square_of_spin_angular_moment(), .75)  # doublet
+
     def test_molecule_modifications(self):
         """Test the manipulation of the atoms"""
 

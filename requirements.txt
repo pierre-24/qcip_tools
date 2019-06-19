@@ -5,3 +5,4 @@ requests>=2.19
 beautifulsoup4>=4.6.0
 h5py>=2.8.0
 transforms3d>=0.3
+mendeleev>=0.4
