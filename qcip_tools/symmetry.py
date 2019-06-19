@@ -544,7 +544,7 @@ class CharacterTable:
                 else:
                     s += 'C' if description.symbol == OperationType.proper_rotation else 'S'
                     if description.textual_axis != 'z':
-                        s += '\''
+                        s += "'"
                     s += '_' + str(description.n)
                     if len(c) != description.n - 1:
                         s += '^' + str(description.k)
@@ -1230,24 +1230,24 @@ class OperationDescription:
             '[xy]': [s2, s2, 0],
             '[xz]': [s2, 0, s2],
             '[yz]': [0, s2, s2],
-            '[x\'y]': [-s2, s2, 0],
-            '[x\'z]': [-s2, 0, s2],
-            '[y\'z]': [0, -s2, s2],
-            '[xy\']': [s2, -s2, 0],
-            '[xz\']': [s2, 0, -s2],
-            '[yz\']': [0, s2, -s2],
-            '[x\'y\']': [-s2, -s2, 0],
-            '[x\'z\']': [-s2, 0, -s2],
-            '[y\'z\']': [0, -s2, -s2],
+            "[x'y]": [-s2, s2, 0],
+            "[x'z]": [-s2, 0, s2],
+            "[y'z]": [0, -s2, s2],
+            "[xy']": [s2, -s2, 0],
+            "[xz']": [s2, 0, -s2],
+            "[yz']": [0, s2, -s2],
+            "[x'y']": [-s2, -s2, 0],
+            "[x'z']": [-s2, 0, -s2],
+            "[y'z']": [0, -s2, -s2],
             # triple (8)
             '[xyz]': [s3, s3, s3],
-            '[xy\'z]': [s3, -s3, s3],
-            '[x\'yz]': [-s3, s3, s3],
-            '[x\'y\'z]': [-s3, -s3, s3],
-            '[xyz\']': [s3, s3, -s3],
-            '[xy\'z\']': [s3, -s3, -s3],
-            '[x\'yz\']': [-s3, s3, -s3],
-            '[x\'y\'z\']': [-s3, -s3, -s3],
+            "[xy'z]": [s3, -s3, s3],
+            "[x'yz]": [-s3, s3, s3],
+            "[x'y'z]": [-s3, -s3, s3],
+            "[xyz']": [s3, s3, -s3],
+            "[xy'z']": [s3, -s3, -s3],
+            "[x'yz']": [-s3, s3, -s3],
+            "[x'y'z']": [-s3, -s3, -s3],
         }
 
         for a, value in axes.items():
@@ -1391,7 +1391,7 @@ class PointGroup(Group):
             if class_inversion > 0:
                 label += 'g' if r.characters[class_inversion] >= 0 else 'u'
             elif class_sigma_h > 0:
-                label += '\'' if r.characters[class_sigma_h] >= 0 else '"'
+                label += "'" if r.characters[class_sigma_h] >= 0 else '"'
 
             if add_imag and r.imag:
                 label += '*'

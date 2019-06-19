@@ -481,3 +481,14 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.assertAlmostEqual(derivatives_e.convert_energy_to(exci.transition_energy(1), 'eV'), 9.19565, places=5)
         self.assertAlmostEqual(exci.oscillator_strength(1), 0.0199271, places=5)
+
+        # 3. Test gaussian log
+        fchk_file, path, excitations = self.get_property(
+            gaussian.Output, 'excitations/gaussian_output.log', 'excitations')
+
+        exci = derivatives_exci.Excitations(excitations['!'], excitations['!F'])
+
+        self.assertAlmostEqual(derivatives_e.convert_energy_to(exci.transition_energy(1), 'eV'), 4.6202, places=4)
+        self.assertAlmostEqual(
+            derivatives_e.ElectricDipole(dipole=exci.transition_dipole(1)).norm(), 0.4886, places=4)
+        self.assertAlmostEqual(exci.oscillator_strength(3), 0.2831, places=4)

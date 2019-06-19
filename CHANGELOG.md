@@ -17,6 +17,7 @@
 + Inverse the sign of gamma tensor components when computed via CC methods in Dalton (!55)
 + Extract gamma tensor from Gaussian FCHK (!56)
 + Handle symmetry (!53)
++ Extract TD excitation energies from gaussian logs (!59)
 
 ## Version 0.5
 

@@ -963,6 +963,73 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         self.molecule.multiplicity = int(self.lines[charge_and_multiplicity_line][27:])
 
 
+@Output.define_property('excitations')
+def gaussian__output__property__excitations(obj, *args, **kwargs):
+    """Get excitation properties in FCHK. Returns a dictionary:
+
+    .. code-block:: text
+
+        + "!" : Tensor
+        + "!F" : Tensor
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.Output
+    :rtype: dict
+    """
+
+    excitations = {}
+
+    for l in obj.chunks:
+        if l.link == 914:
+
+            # get transition dipoles
+            s = obj.search(
+                'Ground to excited state transition electric dipole moments',
+                line_start=l.line_start,
+                line_end=l.line_end)
+
+            if s < 0:
+                continue
+
+            nstates = 0
+            dipoles = [[.0, .0, .0]]
+
+            for li in obj.lines[s + 2:]:
+                if 'Ground' in li:
+                    break
+                nstates += 1
+                dipoles.append(list(float(i) for i in li.split()[1:4]))
+
+            if nstates == 0:
+                continue
+
+            excitations['!F'] = derivatives.Tensor('!F', nstates=nstates + 1, components=numpy.vstack(dipoles))
+
+            # look for excitation energies
+            s = obj.search('Excitation energies and oscillator strengths:', line_start=s, line_end=l.line_end)
+            if s < 0:
+                del excitations['!F']
+                continue
+
+            excitations['!'] = derivatives.Tensor('!', nstates=nstates + 1)
+            excitations['_<S2>'] = [obj.molecule.square_of_spin_angular_moment()]
+            n = 1
+
+            for li in obj.lines[s + 2:l.line_end]:
+                if 'Excited State' in li:
+                    se = li.split()
+                    excitations['_<S2>'].append(float(se[-1][-4:]))
+                    excitations['!'].components[n] = float(se[4]) * quantities.convert(
+                        quantities.ureg.eV, quantities.ureg.hartree)
+
+                    n += 1
+
+    if not excitations:
+        raise PropertyNotPresent('excitations')
+
+    return excitations
+
+
 class ChargeTransferInformation:
     """Analyzed charge transfer.
 

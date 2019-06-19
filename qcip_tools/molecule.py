@@ -476,7 +476,7 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         does this. "enhanced" use "X_{i}" to indicate indice i instead of just "Xi".
         """
 
-        all_atoms = ''.join(a.symbol for a in self)
+        all_atoms = list(a.symbol for a in self)
 
         first_atoms = ['C', 'N', 'O', 'H']
         s = ''
@@ -542,6 +542,14 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
             return True
 
         return False
+
+    def square_of_spin_angular_moment(self):
+        """Return :math:`\\hat{S}_z^2=S\\,(S+1)`, where :math:`S` is the spin value
+
+        :rtype: float
+        """
+        m = (self.multiplicity - 1) / 2
+        return m * (m + 1)
 
 
 class GroupError(Exception):
