@@ -1018,7 +1018,7 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
             for li in obj.lines[s + 2:l.line_end]:
                 if 'Excited State' in li:
                     se = li.split()
-                    excitations['_<S2>'].append(float(se[-1][-4:]))
+                    excitations['_<S2>'].append(float(se[-1][-5:]))
                     excitations['!'].components[n] = float(se[4]) * quantities.convert(
                         quantities.ureg.eV, quantities.ureg.hartree)
 
