@@ -2085,38 +2085,39 @@ class SymmetryFinder:
                 n, main_axis = self.find_c_highest(probable_cn)
                 other_axes = v[numpy.where(numpy.abs(numpy.dot(v, main_axis)) < self.tol)]
 
-                # main axis is Z anyway:
-                v[:2] = other_axes
-                v[2] = main_axis
+                if n != 1:
+                    # main axis is Z anyway:
+                    v[:2] = other_axes
+                    v[2] = main_axis
 
-                perpendicular_C2 = self.get_perpendicular_C2(main_axis, probable_cn)
-                mirrors = self.get_mirrors(main_axis, other_axes)
+                    perpendicular_C2 = self.get_perpendicular_C2(main_axis, probable_cn)
+                    mirrors = self.get_mirrors(main_axis, other_axes)
 
-                if len(probable_cn) >= 2 and len(perpendicular_C2) != 0:
-                    if self.has_mirror(main_axis):
-                        x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
-                        group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
-                    elif any(m[1] in ['v', 'd'] for m in mirrors):
-                        x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
-                        group = PointGroupDescription(PointGroupType.antiprismatic, n)  # D_nd
-                    else:
-                        x_axis = self.find_best_x_axis(main_axis, perpendicular_C2, are_mirrors=False)
-                        group = PointGroupDescription(PointGroupType.dihedral, n)  # D_n
+                    if len(probable_cn) >= 2 and len(perpendicular_C2) != 0:
+                        if self.has_mirror(main_axis):
+                            x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
+                            group = PointGroupDescription(PointGroupType.prismatic, n)  # D_nh
+                        elif any(m[1] in ['v', 'd'] for m in mirrors):
+                            x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
+                            group = PointGroupDescription(PointGroupType.antiprismatic, n)  # D_nd
+                        else:
+                            x_axis = self.find_best_x_axis(main_axis, perpendicular_C2, are_mirrors=False)
+                            group = PointGroupDescription(PointGroupType.dihedral, n)  # D_n
 
-                    v[0] = x_axis
-                    v[1] = numpy.cross(main_axis, x_axis)
-                else:
-                    if self.has_mirror(main_axis):
-                        group = PointGroupDescription(PointGroupType.reflexion, n)  # C_nh
-                    elif any(m[1] in ['v', 'd'] for m in mirrors):
-                        group = PointGroupDescription(PointGroupType.pyramidal, n)  # C_nv
-                        x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
                         v[0] = x_axis
                         v[1] = numpy.cross(main_axis, x_axis)
-                    elif self.has_improper_rotation(axis=main_axis, n=2 * n):
-                        group = PointGroupDescription(PointGroupType.improper_rotation, 2 * n)  # S_2n
                     else:
-                        group = PointGroupDescription(PointGroupType.cyclic, n)  # C_n
+                        if self.has_mirror(main_axis):
+                            group = PointGroupDescription(PointGroupType.reflexion, n)  # C_nh
+                        elif any(m[1] in ['v', 'd'] for m in mirrors):
+                            group = PointGroupDescription(PointGroupType.pyramidal, n)  # C_nv
+                            x_axis = self.find_best_x_axis(main_axis, [m[0] for m in mirrors], are_mirrors=True)
+                            v[0] = x_axis
+                            v[1] = numpy.cross(main_axis, x_axis)
+                        elif self.has_improper_rotation(axis=main_axis, n=2 * n):
+                            group = PointGroupDescription(PointGroupType.improper_rotation, 2 * n)  # S_2n
+                        else:
+                            group = PointGroupDescription(PointGroupType.cyclic, n)  # C_n
 
         return group, self.center, v
 
