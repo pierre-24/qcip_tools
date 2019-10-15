@@ -2172,6 +2172,9 @@ class SymmetryFinder:
                         maybe_cn.append((int_n, numpy.cross(r0[i], r0[j])))
 
         # remove null vectors
+        if len(maybe_cn) == 0:  # no need to look further ;)
+            return maybe_cn
+
         v = numpy.vstack([x[1] for x in maybe_cn])
         ns = numpy.hstack([x[0] for x in maybe_cn])
         indexes = numpy.linalg.norm(v, axis=1) > self.tol  # no more zero length
