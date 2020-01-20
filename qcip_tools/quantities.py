@@ -37,4 +37,4 @@ def convert(from_, to_, value=1.0):
 #: Convert bohr to angstrom
 AuToAngstrom = convert(ureg.bohr, ureg.angstrom)
 #: Convert atomic mass units to electron mass
-AMUToElectronMass = convert(ureg.atomic_mass_unit, ureg.electron_mass)
+AMUToElectronMass = convert(ureg.atomic_mass_constant, ureg.electron_mass)

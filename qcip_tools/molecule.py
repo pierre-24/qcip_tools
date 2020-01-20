@@ -416,14 +416,28 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
 
         distances = self.distances()
         connectivities = {}
+
+        radius = {}
+
         for i, a1 in enumerate(self):
             tmp = []
-            covalent_radius1 = mendeleev.element(a1.symbol).covalent_radius_pyykko / 100  # radius are in pm !!
+
+            if a1.symbol not in radius:
+                radius[a1.symbol] = mendeleev.element(a1.symbol).covalent_radius_pyykko / 100  # radius are in pm !!
+
+            covalent_radius1 = radius[a1.symbol]
+
             for j, a2 in enumerate(self):
                 if i is not j:  # an atom cannot bond with himself
-                    covalent_radius2 = mendeleev.element(a2.symbol).covalent_radius_pyykko / 100
+
+                    if a2.symbol not in radius:
+                        radius[a2.symbol] = mendeleev.element(a2.symbol).covalent_radius_pyykko / 100
+
+                    covalent_radius2 = radius[a2.symbol]
+
                     if distances[i, j] < (covalent_radius1 + covalent_radius2 + threshold):
                         tmp.append(j + 1)  # there is a bond
+
             connectivities[i + 1] = tmp
 
         return connectivities
