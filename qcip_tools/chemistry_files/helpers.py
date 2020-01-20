@@ -79,7 +79,7 @@ def open_chemistry_file(f, must_be=None, trust_extension=False):
                     o = obj_()
                     o.read(f_in_good_mode)
                     return o
-            except NotImplementedError:
+            except (NotImplementedError, FileNotFoundError):
                 continue
 
         return None
