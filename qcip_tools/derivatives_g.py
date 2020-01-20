@@ -69,11 +69,11 @@ class MassWeightedHessian:
 
     #: Convert inertia from UMA*A² to kg*m²
     INERTIA_CONVERSION = quantities.convert(
-        quantities.ureg.atomic_mass_unit * quantities.ureg.angstrom ** 2,
+        quantities.ureg.atomic_mass_constant * quantities.ureg.angstrom ** 2,
         quantities.ureg.kilogram * quantities.ureg.meter ** 2)
     #: Convert mass from AMU to kg
     MASS_CONVERSION = quantities.convert(
-        quantities.ureg.atomic_mass_unit, quantities.ureg.kilogram)
+        quantities.ureg.atomic_mass_constant, quantities.ureg.kilogram)
     #: Convert hartree to hertz
     VIB_ENERGY_CONVERSION = quantities.convert(
         quantities.ureg.hartree / quantities.ureg.planck_constant, quantities.ureg.hertz)
