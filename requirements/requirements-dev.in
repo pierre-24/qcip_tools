@@ -1,0 +1,6 @@
+make-release @ git+ssh://git@git.pierrebeaujean.net/pierre/make-release.git@release-v0.4.2
+flake8
+flake8-quotes
+autopep8
+sphinxcontrib-autoprogram
+Sphinx

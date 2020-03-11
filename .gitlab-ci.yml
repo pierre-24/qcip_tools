@@ -3,7 +3,10 @@ before_script:
   - ssh-add <(echo "$SSH_PRIVATE_KEY")
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo "$SSH_SERVER_HOSTKEYS" > ~/.ssh/known_hosts'
-  - pip3 install pipenv
+  - pip3 install --upgrade pip
+  - pip3 --version
+  - pip3 install --upgrade setuptools
+  - pip3 install pip-tools
   - make init
 
 test_package:
