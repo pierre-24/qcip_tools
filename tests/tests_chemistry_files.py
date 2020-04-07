@@ -610,6 +610,7 @@ class DaltonTestCase(QcipToolsTestCase):
 
     def setUp(self):
         self.input_mol_file = self.copy_to_temporary_directory('dalton_molecule.mol')
+        self.input_mol_file2 = self.copy_to_temporary_directory('dalton_atombasis.mol')
         self.input_dal_file = self.copy_to_temporary_directory('dalton_input.dal')
         self.output_archive = self.copy_to_temporary_directory('dalton_archive.tar.gz')
         self.output_log = self.copy_to_temporary_directory('dalton_output.out')
@@ -639,6 +640,17 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertEqual(fm.molecule.charge, -2)
         self.assertEqual(fm.molecule.multiplicity, 1)
         self.assertEqual(fm.molecule.number_of_electrons(), 12)
+
+        # test atombasis input
+        fm2 = dalton.MoleculeInput()
+        self.assertFalse(fm2.from_read)
+
+        with open(self.input_mol_file2) as f:
+            fm2.read(f)
+
+        self.assertTrue(fm2.from_read)
+        self.assertEqual(fm2.atom_basis[0], 'lanl2tz')
+        self.assertEqual(fm2.atom_basis[1], '6-311G*')
 
         # test generation with no symmetry
         new_input = os.path.join(self.temporary_directory, 'new_mol.mol')

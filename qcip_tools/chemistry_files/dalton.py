@@ -38,6 +38,7 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         self.molecule = molecule.Molecule()
         self.title = ''
         self.basis_set = ''
+        self.atom_basis = {}
 
     @classmethod
     def possible_file_extensions(cls):
@@ -93,33 +94,56 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         if len(lines) < 6:
             raise InputFormatError('something wrong with dalton .mol: too short')
 
-        self.basis_set = lines[1].strip()
-        self.title = (lines[2] + '\n' + lines[3]).strip()
+        atom_basis = lines[0].lower()[:9] == 'atombasis'
+        ref = 0 if atom_basis else 1
 
-        info_line = lines[4].lower()
+        if not atom_basis:
+            self.basis_set = lines[1].strip()
+        else:
+            self.basis_set = '%atombasis'
+
+        self.title = (lines[ref + 1] + '\n' + lines[ref + 2]).strip()
+
+        info_line = lines[ref + 3].lower()
 
         in_angstrom = 'angstrom' in info_line
-        atomic_number = .0
+        atomic_number = 0
+        atom_number = 0
+        current_basis = self.basis_set
 
         charge = info_line.find('charge=')
-        if charge != -1:
+        if charge > 0:
             next_space = info_line.find(' ', charge + len('charge='))
             self.molecule.charge = int(info_line[charge + len('charge='):next_space])
-            self.molecule.multiplicity = 1 if self.molecule.charge % 2 == 0 else 1
 
-        for line in lines[5:]:
-            if 'charge=' in line.lower():
-                atomic_number = int(float(line[7:line.lower().find('atoms')]))
+        for line in lines[ref + 4:]:
+            lline = line.lower()
+            if 'charge=' in lline:
+                found = lline.find('charge=')
+                atomic_number = int(float(lline[found + 7:lline.find(' ', found + 7)]))
+
+                if atom_basis:
+                    found = lline.find('basis=')
+                    if found < 0:
+                        raise InputFormatError('atombasis, but no basis')
+
+                    current_basis = line[found+6:lline.find(' ', found+6)]
+
                 continue
 
             content = line.split()
             if len(content) != 4:
                 continue
 
+            self.atom_basis[atom_number] = current_basis
             self.molecule.insert(atom.Atom(
                 atomic_number=atomic_number,
                 position=[float(a) * (1 if in_angstrom else quantities.AuToAngstrom) for a in content[1:]])
             )
+
+            atom_number += 1
+
+        self.molecule.multiplicity = 1 if self.molecule.number_of_electrons() % 2 == 0 else 2
 
     def to_string(self, in_angstrom=True, nosym=False, group_atoms=False):
         """
