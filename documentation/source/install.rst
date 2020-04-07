@@ -9,7 +9,7 @@ To just use ``qcip_tools`` in your Python projects, simply use pip:
 
 .. code-block:: bash
 
-    pip3 install --user git+https://git@gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
+    pip3 install --user git+https://gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
 
 Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://gitlab.unamur.be/chimie/lct/qcip_tools/blob/master/README.md>`_).
 
