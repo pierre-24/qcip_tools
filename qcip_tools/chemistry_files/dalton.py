@@ -39,6 +39,8 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         self.title = ''
         self.basis_set = ''
         self.atom_basis = {}
+        self.ecp = {}
+        self.is_atom_basis = False
 
     @classmethod
     def possible_file_extensions(cls):
@@ -94,10 +96,10 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         if len(lines) < 6:
             raise InputFormatError('something wrong with dalton .mol: too short')
 
-        atom_basis = lines[0].lower()[:9] == 'atombasis'
-        ref = 0 if atom_basis else 1
+        self.is_atom_basis = lines[0].lower()[:9] == 'atombasis'
+        ref = 0 if self.is_atom_basis else 1
 
-        if not atom_basis:
+        if not self.is_atom_basis:
             self.basis_set = lines[1].strip()
         else:
             self.basis_set = '%atombasis'
@@ -110,6 +112,7 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         atomic_number = 0
         atom_number = 0
         current_basis = self.basis_set
+        current_ecp = ''
 
         charge = info_line.find('charge=')
         if charge > 0:
@@ -122,12 +125,25 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
                 found = lline.find('charge=')
                 atomic_number = int(float(lline[found + 7:lline.find(' ', found + 7)]))
 
-                if atom_basis:
+                if self.is_atom_basis:
                     found = lline.find('basis=')
-                    if found < 0:
+                    if found > 0:
+                        next_space = lline.find(' ', found+6)
+                        if next_space < 0:
+                            next_space = len(line) - 1
+
+                        current_basis = line[found+6:next_space]
+                    else:
                         raise InputFormatError('atombasis, but no basis')
 
-                    current_basis = line[found+6:lline.find(' ', found+6)]
+                    found = lline.find('ecp=')
+                    if found > 0:
+                        next_space = lline.find(' ', found+6)
+                        if next_space < 0:
+                            next_space = len(line) - 1
+                        current_ecp = line[found + 4:next_space]
+                    else:
+                        current_ecp = ''
 
                 continue
 
@@ -135,7 +151,12 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
             if len(content) != 4:
                 continue
 
+            # add information
             self.atom_basis[atom_number] = current_basis
+            if current_ecp != '':
+                self.ecp[atom_number] = current_ecp
+
+            # add atom:
             self.molecule.insert(atom.Atom(
                 atomic_number=atomic_number,
                 position=[float(a) * (1 if in_angstrom else quantities.AuToAngstrom) for a in content[1:]])
@@ -929,6 +950,8 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
 
         # fetch molecule
         coordinates_line = self.search('Cartesian Coordinates (a.u.)', into='START')
+        use_ecp = False
+
         if coordinates_line != -1:
             number_of_atoms = int(math.floor(int(self.lines[coordinates_line + 3][-5:]) / 3))
             for i in range(number_of_atoms):
@@ -951,6 +974,9 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
 
             self.molecule = copy.deepcopy(mol_file.molecule)
 
+            if len(mol_file.ecp) > 0:
+                use_ecp = True
+
         mass_line = self.search('Isotopic Masses', into='START')
         for i in range(len(self.molecule)):
             line = self.lines[mass_line + i + 3].split()
@@ -962,7 +988,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         self.molecule.charge = int(self.lines[charge_line][-6:])
         self.molecule.multiplicity = int(self.lines[charge_line + 2][45:55])
 
-        if self.molecule.number_of_electrons() != int(self.lines[charge_line - 2][-5:]):
+        if not use_ecp and self.molecule.number_of_electrons() != int(self.lines[charge_line - 2][-5:]):
             raise OutputFormatError(
                 'Not the right number of electron, is the charge (found {}) wrong?'.format(self.molecule.charge))
 

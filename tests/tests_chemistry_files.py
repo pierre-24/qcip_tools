@@ -651,6 +651,7 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertTrue(fm2.from_read)
         self.assertEqual(fm2.atom_basis[0], 'lanl2tz')
         self.assertEqual(fm2.atom_basis[1], '6-311G*')
+        self.assertEqual(fm2.ecp[0], 'lanl2tz')
 
         # test generation with no symmetry
         new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
