@@ -10,16 +10,17 @@ help:
 	@echo "  help                        to get this help"
 
 init:
-	pipenv install --dev --ignore-pipfile
+	pip3 install -e .
+	pip3 install qcip-tools[dev]
 
 sync:
-	pipenv sync --dev
+	pip-sync
 
 lint:
-	pipenv run flake8 qcip_tools tests --max-line-length=120 --ignore=N802
+	flake8 qcip_tools tests --max-line-length=120 --ignore=N802
 
 test:
-	pipenv run python -m unittest discover -s tests
+	python -m unittest discover -s tests
 
 doc:
-	cd documentation; pipenv run make html
+	cd documentation; make html
