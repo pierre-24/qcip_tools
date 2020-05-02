@@ -239,7 +239,8 @@ class ChemistryLogFile(ChemistryFile):
                     r = apply_over_list(
                         self.lines, func,
                         section_info.line_start if line_start < section_info.line_start else line_start,
-                        section_info.line_end if line_end is not None and line_end > section_info.line_end else line_end,
+                        section_info.line_end
+                        if line_end is not None and line_end > section_info.line_end else line_end,
                         **kwargs)
                     if r:
                         return True

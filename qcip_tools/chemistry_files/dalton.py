@@ -128,17 +128,17 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
                 if self.is_atom_basis:
                     found = lline.find('basis=')
                     if found > 0:
-                        next_space = lline.find(' ', found+6)
+                        next_space = lline.find(' ', found + 6)
                         if next_space < 0:
                             next_space = len(line) - 1
 
-                        current_basis = line[found+6:next_space]
+                        current_basis = line[found + 6:next_space]
                     else:
                         raise InputFormatError('atombasis, but no basis')
 
                     found = lline.find('ecp=')
                     if found > 0:
-                        next_space = lline.find(' ', found+6)
+                        next_space = lline.find(' ', found + 6)
                         if next_space < 0:
                             next_space = len(line) - 1
                         current_ecp = line[found + 4:next_space]
