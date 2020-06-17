@@ -1168,7 +1168,8 @@ class PDBTestCase(QcipToolsTestCase):
 
         dx = {
             'pdb_resSeq': '   5',
-            'pdb_name': 'N   ',
+            'pdb_name': ' N  ',
+            'pdb_altLoc': ' ',
             'pdb_resName': 'THR',
             'pdb_chainId': 'A',
             'pdb_iCode': ' ',

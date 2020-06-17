@@ -64,11 +64,12 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
 
         for l in lines:
             if l[:6].strip() in ['ATOM', 'HETATM']:
-                symbol = l[77:79].strip()
+                symbol = l[76:78].strip()
                 atm = atom.Atom(symbol=symbol)
                 atm.position = [float(x) for x in [l[30:38], l[38:46], l[46:54]]]
 
-                atm.extra['pdb_name'] = l[13:17]
+                atm.extra['pdb_name'] = l[12:16]
+                atm.extra['pdb_altLoc'] = l[16]
                 atm.extra['pdb_resName'] = l[17:20]
                 atm.extra['pdb_chainId'] = l[21]
                 atm.extra['pdb_resSeq'] = l[22:26]
@@ -100,10 +101,11 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
             if i - 1 in self.TERs:
                 r += 'TER\n'
 
-            r += '{:6}{:5}  {:4}{:4}{}{:3}{:1}   {:8.3f}{:8.3f}{:8.3f}{:6.3f}{:6.3f}           {:2}{:2}\n'.format(
+            r += '{:6}{:5} {:4}{:1}{:4}{}{:3}{:1}   {:8.3f}{:8.3f}{:8.3f}{:6.2f}{:6.2f}           {:2}{:2}\n'.format(
                 'ATOM',
                 i,
                 fx(a, 'pdb_name', 'UKN' + str(i)),
+                fx(a, 'pdb_altLoc', ''),
                 fx(a, 'pdb_resName', 'UKR' + str(i)),
                 fx(a, 'pdb_chainId', 1),
                 fx(a, 'pdb_resSeq', i),
