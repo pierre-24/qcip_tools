@@ -38,8 +38,8 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         self.molecule = molecule.Molecule()
         self.title = ''
         self.basis_set = ''
-        self.atom_basis = {}
-        self.ecp = {}
+        # self.atom_basis = {}
+        # self.ecp = {}
         self.is_atom_basis = False
 
     @classmethod
@@ -151,16 +151,18 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
             if len(content) != 4:
                 continue
 
-            # add information
-            self.atom_basis[atom_number] = current_basis
-            if current_ecp != '':
-                self.ecp[atom_number] = current_ecp
-
             # add atom:
-            self.molecule.insert(atom.Atom(
+            atm = atom.Atom(
                 atomic_number=atomic_number,
                 position=[float(a) * (1 if in_angstrom else quantities.AuToAngstrom) for a in content[1:]])
-            )
+
+            # add information
+            if current_basis != self.basis_set:
+                atm.extra['basis_set'] = current_basis
+            if current_ecp != '':
+                atm.extra['ecp'] = current_ecp
+
+            self.molecule.insert(atm)
 
             atom_number += 1
 
