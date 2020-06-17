@@ -976,7 +976,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
 
             self.molecule = copy.deepcopy(mol_file.molecule)
 
-            if len(mol_file.ecp) > 0:
+            if any('ecp' in a.extra for a in self.molecule) > 0:
                 use_ecp = True
 
         mass_line = self.search('Isotopic Masses', into='START')
