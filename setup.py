@@ -13,7 +13,7 @@ with open(path.join(here, 'requirements/requirements.in')) as f:
     requirements = f.readlines()
 
 with open(path.join(here, 'requirements/requirements-dev.in')) as f:
-    requirements_dev = f.readlines()
+    requirements_dev = f.readlines()[1:]
 
 setup(
     name='qcip_tools',

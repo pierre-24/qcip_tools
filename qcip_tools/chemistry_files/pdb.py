@@ -23,12 +23,12 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
         found = 0
         keywords = ['HEADER', 'TITLE', 'COMPND', 'REMARK', 'MODEL', 'ATOM', 'KEYWDS', 'AUTHOR']
 
-        for l in f.readlines():
+        for line in f.readlines():
             if count > 50:
                 break
 
             count += 1
-            if l[:6].strip() in keywords:
+            if line[:6].strip() in keywords:
                 found += 1
 
         return found > 30
@@ -62,26 +62,26 @@ class File(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
 
         i = 0
 
-        for l in lines:
-            if l[:6].strip() in ['ATOM', 'HETATM']:
-                symbol = l[76:78].strip()
+        for line in lines:
+            if line[:6].strip() in ['ATOM', 'HETATM']:
+                symbol = line[76:78].strip()
                 atm = atom.Atom(symbol=symbol)
-                atm.position = [float(x) for x in [l[30:38], l[38:46], l[46:54]]]
+                atm.position = [float(x) for x in [line[30:38], line[38:46], line[46:54]]]
 
-                atm.extra['pdb_name'] = l[12:16]
-                atm.extra['pdb_altLoc'] = l[16]
-                atm.extra['pdb_resName'] = l[17:20]
-                atm.extra['pdb_chainId'] = l[21]
-                atm.extra['pdb_resSeq'] = l[22:26]
-                atm.extra['pdb_iCode'] = l[26]
-                atm.extra['pdb_occupancy'] = float(l[54:60])
-                atm.extra['pdb_tempFactor'] = float(l[60:66])
-                atm.extra['pdb_charge'] = l[78:80]
+                atm.extra['pdb_name'] = line[12:16]
+                atm.extra['pdb_altLoc'] = line[16]
+                atm.extra['pdb_resName'] = line[17:20]
+                atm.extra['pdb_chainId'] = line[21]
+                atm.extra['pdb_resSeq'] = line[22:26]
+                atm.extra['pdb_iCode'] = line[26]
+                atm.extra['pdb_occupancy'] = float(line[54:60])
+                atm.extra['pdb_tempFactor'] = float(line[60:66])
+                atm.extra['pdb_charge'] = line[78:80]
 
                 self.molecule.insert(atm)
                 i += 1
 
-            elif l[:3] == 'TER':
+            elif line[:3] == 'TER':
                 self.TERs.append(i)
 
     def to_string(self):

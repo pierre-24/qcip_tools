@@ -54,10 +54,10 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         count = 0
         found_charge = 0
 
-        for l in f.readlines():
+        for line in f.readlines():
             count += 1
 
-            if 'charge=' in l.lower():
+            if 'charge=' in line.lower():
                 found_charge += 1
 
             if count > 50:
@@ -460,8 +460,8 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
             dipole = numpy.zeros(3)
 
-            for l in prop_sorted[1]:
-                dipole[translate_diplens[l[5][0]]] = float(l[4])
+            for line in prop_sorted[1]:
+                dipole[translate_diplens[line[5][0]]] = float(line[4])
 
             electrical_derivatives['F'] = {'static': derivatives_e.ElectricDipole(dipole=dipole)}
 
@@ -474,15 +474,15 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             found_frequencies = []
             data_per_frequencies = {}
 
-            for l in prop_sorted[2]:
-                freq = float(l[9])
+            for line in prop_sorted[2]:
+                freq = float(line[9])
                 if freq not in found_frequencies:
                     found_frequencies.append(freq)
                     if is_CC_calculation and len(found_frequencies) > num_of_tensors:
                         raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for alpha')
                     data_per_frequencies[freq] = derivatives_e.PolarisabilityTensor(frequency=freq)
 
-                c1, c2, v = translate_diplens[l[5][0]], translate_diplens[l[6][0]], float(l[4])
+                c1, c2, v = translate_diplens[line[5][0]], translate_diplens[line[6][0]], float(line[4])
                 data_per_frequencies[freq].components[c1, c2] = v
 
                 if not is_CC_calculation and c1 != c2:
@@ -509,13 +509,13 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             for x in found_frequencies.keys():
                 r_to_obj[x] = derivatives.Derivative(from_representation=x)
 
-            for l in prop_sorted[3]:
-                if len(l[9]) == 22:
-                    freq_1 = float(l[9])
-                    freq_2 = float(l[10])
+            for line in prop_sorted[3]:
+                if len(line[9]) == 22:
+                    freq_1 = float(line[9])
+                    freq_2 = float(line[10])
                 else:
-                    freq_1 = float(l[9][:22])
-                    freq_2 = float(l[9][22:45])
+                    freq_1 = float(line[9][:22])
+                    freq_2 = float(line[9][22:45])
 
                 if freq_1 == freq_2 and freq_1 == .0:
                     representation = 'FFF'
@@ -542,8 +542,8 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                         frequency=freq_1, input_fields=tuple(
                             derivatives_e.representation_to_field[x] for x in representation[1:]))
 
-                c1, c2, c3 = translate_diplens[l[5][0]], translate_diplens[l[6][0]], translate_diplens[l[7][0]]
-                v = float(l[4])
+                c1, c2, c3 = translate_diplens[line[5][0]], translate_diplens[line[6][0]], translate_diplens[line[7][0]]
+                v = float(line[4])
                 data[representation][freq_1].components[c1, c2, c3] = v
 
                 if not is_CC_calculation:
@@ -561,15 +561,15 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             found_frequencies = {'FFFF': [], 'dFFD': [], 'dDFF': [], 'XDDF': [], 'dDDd': [], 'XDDD': []}
             data = {}
 
-            for l in prop_sorted[4]:
-                freq_1 = float(l[9])
+            for line in prop_sorted[4]:
+                freq_1 = float(line[9])
 
-                if len(l[10]) == 22:
-                    freq_2 = float(l[10])
-                    freq_3 = float(l[11])
+                if len(line[10]) == 22:
+                    freq_2 = float(line[10])
+                    freq_3 = float(line[11])
                 else:
-                    freq_2 = float(l[10][:22])
-                    freq_3 = float(l[10][22:])
+                    freq_2 = float(line[10][:22])
+                    freq_3 = float(line[10][22:])
 
                 if freq_1 == freq_2 and freq_2 == freq_3 and freq_3 == .0:
                     representation = 'FFFF'
@@ -610,11 +610,11 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
                 data[representation][freq] \
                     .components[
-                        translate_diplens[l[5][0]],
-                        translate_diplens[l[6][0]],
-                        translate_diplens[l[7][0]],
-                        translate_diplens[l[8][0]]] \
-                    = float(l[4]) * (-1 if is_CC_calculation else 1)
+                        translate_diplens[line[5][0]],
+                        translate_diplens[line[6][0]],
+                        translate_diplens[line[7][0]],
+                        translate_diplens[line[8][0]]] \
+                    = float(line[4]) * (-1 if is_CC_calculation else 1)
 
             electrical_derivatives.update(data)
 
@@ -909,17 +909,17 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         found_dalton = 0
         countries = ['Norway', 'Denmark', 'Italy', 'Sweden', 'Germany']
 
-        for l in f.readlines():
+        for line in f.readlines():
             count += 1
 
-            if 'Dalton' in l or 'dalton' in l:
+            if 'Dalton' in line or 'dalton' in line:
                 found_dalton += 1
 
             if 60 < count < 150:
-                if 'University' in l:
+                if 'University' in line:
                     found_universities += 1
                 for c in countries:
-                    if c in l:
+                    if c in line:
                         found_countries += 1
                         break
             if count > 150:
