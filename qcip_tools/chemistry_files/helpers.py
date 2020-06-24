@@ -3,7 +3,7 @@ import argparse
 
 from qcip_tools import chemistry_files
 # Note: we need to explicitly import all modules, so that they are inspected!
-from qcip_tools.chemistry_files import gamess, gaussian, dalton, xyz, chemistry_datafile  # noqa
+from qcip_tools.chemistry_files import gamess, gaussian, dalton, xyz, chemistry_datafile, pdb  # noqa
 
 
 class ProbablyNotAChemistryFile(Exception):
