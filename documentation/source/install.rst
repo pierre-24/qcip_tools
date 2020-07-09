@@ -60,6 +60,7 @@ To contribute to the project, you need to clone the repository:
 + Clone it: ``git clone git@git.pierrebeaujean.net:pierre/qcip_tools.git``.
 + Install scipy's (and other python's) dependencies : ``sudo apt-get install libopenblas-dev libatlas-dev build-essential libpng12-dev libfreetype6-dev libpython3.*-dev`` (or something like this).
 + Create a virtualenv : ``python3 -m venv venv; source venv/bin/activate``
++ Install ``pip-tools``: ``pip3 install pip-tools`` ;
 + Install dependencies: ``make init``.
 
 You can launch the tests series with ``make test``
