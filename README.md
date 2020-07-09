@@ -10,6 +10,7 @@ Previous releases (see [the changelog](./CHANGELOG.md)):
 <!-- PREVIOUS: -->
 +  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
 +  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
++  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
 +  [release-v0.6.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.3) (April 07, 2020)
 +  [release-v0.6.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.2) (January 20, 2020)
 +  [release-v0.6.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.1) (June 19, 2019)
