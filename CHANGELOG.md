@@ -1,61 +1,62 @@
 # Changelog
 
-+ Extract TD excitation energies from gaussian logs (!59)
-+ Remove ESML, since there is a new version (!60)
++ Extract TD excitation energies from gaussian logs 
++ Remove ESML, since there is a new version (with an API)
++ Switch to pip-tools
++ Add PDB files
 
 ## Version 0.6
 
 "I'm not dead!"
 
-+ Add this changelog (#38)
-+ Handle the patched version of dalton if needed (!41)
++ Add this changelog 
++ Handle the patched version of dalton if needed 
 + Correct gamma perpendicular
-+ Add excitation: `!` and `#` (!46), and extract from Dalton (archive) and Gaussian (FCHK)
++ Add excitation: `!` and `#` , and extract from Dalton (archive) and Gaussian (FCHK)
 + Upgrade numpy and scipy version, remove matplotlib
-+ Correct charge transfer (!48)
-+ Upgrade to the latest version of h5py, remove warning (!50)
-+ Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants, !51)
-+ Use pipenv (!52)
-+ Store best values in Romberg object (!54)
-+ Inverse the sign of gamma tensor components when computed via CC methods in Dalton (!55)
-+ Extract gamma tensor from Gaussian FCHK (!56)
-+ Handle symmetry (!53)
++ Correct charge transfer 
++ Upgrade to the latest version of h5py, remove warning 
++ Add the latest formula for first and second hyperpolarizabilities (decomposition into spherical invariants)
++ Use pipenv 
++ Store best values in Romberg object 
++ Inverse the sign of gamma tensor components when computed via CC methods in Dalton 
++ Extract gamma tensor from Gaussian FCHK 
++ Handle symmetry 
 
 ## Version 0.5
 
 "Still working for nachos"
 
-+ Change the whole way to represent electrical properties (!40): checks that the fields sums up, fix the corresponding permutations
-+ Add geometrical derivatives from dalton (!39)
-+ Handle the number of electron for ECP in FCHK (!36)
++ Change the whole way to represent electrical properties : checks that the fields sums up, fix the corresponding permutations
++ Add geometrical derivatives from dalton 
++ Handle the number of electron for ECP in FCHK 
 
 ## Version 0.4
 
 "Working for nachos"
 
-+ Fix thermochemistry for atom alone (!30)
-+ Add the possibility to do full tensor differentiation (!33)
-+ Add the possibility to *update* a `.dal` file (!31)
++ Fix thermochemistry for atom alone 
++ Add the possibility to do full tensor differentiation 
++ Add the possibility to *update* a `.dal` file 
 + Improve ESML basis sets (!27 and !29)
 
 ## Version 0.3
 
-+ Improve permutations (!16) and electrical derivatives (#26 and !18 for gamma THS)
-+ Add properties for Gaussian and Dalton (!24)
-+ Add the "chemistry data files" (!21)
-+ Improve FCHK reading (!19)
-+ (*dev*) Add a release script (#25)
++ Improve permutations  and electrical derivatives
++ Add properties for Gaussian and Dalton 
++ Add the "chemistry data files" 
++ Improve FCHK reading 
++ (*dev*) Add a release script 
 
 ## Version 0.2
 
-+ Add GAMESS (#5) and XYZ (#3) files
-+ Add general basis sets objects and Gaussian type basis sets (#21)
-+ Allow to creat chemistry files from scratch (#19)
-+ Add binary data file (#2)
++ Add GAMESS  and XYZ  files
++ Add general basis sets objects and Gaussian type basis sets 
++ Allow to creat chemistry files from scratch 
++ Add binary data file 
 
 ## Version 0.1
 
-+ Everything was [migrated](https://git.pierrebeaujean.net/pierre/qcip_tools/issues/1) from the previous project.
-+ Add Dalton `.dal` files (#14)
-+ Add *helpers* (#4)
-+ Add the pint unit library (#12)
++ Add Dalton `.dal` files 
++ Add *helpers* 
++ Add the pint unit library 

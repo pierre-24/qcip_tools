@@ -27,16 +27,10 @@ class MathTestCase(QcipToolsTestCase):
         self.assertEqual(qcip_math.BLA(position_list_1), 0.0)  # bonds length are equal, BLA=0
 
         position_list_2 = [(0, 0, 0), (1, 0, 0), (1, .5, 0), (2, .5, 0)]
-        self.assertEqual(qcip_math.BLA(position_list_2), .5)  # first bond is long, so BLA > 0
+        self.assertEqual(qcip_math.BLA(position_list_2), -.5)  # first bond is long, so BLA < 0
 
         position_list_3 = [(0, 0, 0), (.5, 0, 0), (.5, 1, 0), (1, 1, 0)]
-        self.assertEqual(qcip_math.BLA(position_list_3), -.5)  # first bond is short, so BLA < 0
-
-        with self.assertRaises(Exception):
-            qcip_math.BLA([(0, 0, 0), (1, 0, 0)])  # not enough bonds
-
-        with self.assertRaises(Exception):
-            qcip_math.BLA([(0, 0, 0), (1, 0, 0), (1, 1, 0)])  # not enough bonds
+        self.assertEqual(qcip_math.BLA(position_list_3), .5)  # first bond is short, so BLA > 0
 
     def test_permutations(self):
         """Test the permutations function"""

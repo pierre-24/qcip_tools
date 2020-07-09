@@ -95,17 +95,14 @@ def BLA(lst):
     """
 
     number_of_bonds = len(lst) - 1
-    if number_of_bonds < 3:
-        raise Exception('not enought bonds')
+    if number_of_bonds < 2:
+        raise Exception('not enough bonds')
 
-    distances = []
-    previous = lst[0]
-    for i in lst[1:]:
-        distances.append(distance(previous, i))
-        previous = i
+    pos = numpy.vstack(lst)
+    distances = numpy.linalg.norm(pos[:-1] - pos[1:], axis=1)
     acc = 0
     for i in range(number_of_bonds - 1):
-        acc += (distances[i + 1] - distances[i]) * (-1) ** (i - 1)
+        acc += (distances[i + 1] - distances[i]) * (-1) ** i
     return (1 / (number_of_bonds - 1)) * acc
 
 

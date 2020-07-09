@@ -301,17 +301,17 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         found_gamess = 0
         states = ['IOWA', 'MICHIGAN', 'CALIFORNIA', 'PENNSYLVANIA', 'NEBRASKA']
 
-        for l in f.readlines():
+        for line in f.readlines():
             count += 1
 
-            if 'GAMESS' in l:
+            if 'GAMESS' in line:
                 found_gamess += 1
 
             if 10 < count < 100:
-                if 'UNIVERSITY' in l:
+                if 'UNIVERSITY' in line:
                     found_universities += 1
                 for c in states:
-                    if c in l:
+                    if c in line:
                         found_states += 1
                         break
             if count > 100:

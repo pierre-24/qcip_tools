@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 from tests import QcipToolsTestCase, factories
 from qcip_tools import molecule as qcip_molecule, atom as qcip_atom, derivatives, bounding, \
     chemistry_files
-from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile
+from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile, pdb
 
 
 class HelpersTestCase(QcipToolsTestCase):
@@ -610,6 +610,7 @@ class DaltonTestCase(QcipToolsTestCase):
 
     def setUp(self):
         self.input_mol_file = self.copy_to_temporary_directory('dalton_molecule.mol')
+        self.input_mol_file2 = self.copy_to_temporary_directory('dalton_atombasis.mol')
         self.input_dal_file = self.copy_to_temporary_directory('dalton_input.dal')
         self.output_archive = self.copy_to_temporary_directory('dalton_archive.tar.gz')
         self.output_log = self.copy_to_temporary_directory('dalton_output.out')
@@ -639,6 +640,18 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertEqual(fm.molecule.charge, -2)
         self.assertEqual(fm.molecule.multiplicity, 1)
         self.assertEqual(fm.molecule.number_of_electrons(), 12)
+
+        # test atombasis input
+        fm2 = dalton.MoleculeInput()
+        self.assertFalse(fm2.from_read)
+
+        with open(self.input_mol_file2) as f:
+            fm2.read(f)
+
+        self.assertTrue(fm2.from_read)
+        self.assertEqual(fm2.molecule[0].extra['basis_set'], 'lanl2tz')
+        self.assertEqual(fm2.molecule[1].extra['basis_set'], '6-311G*')
+        self.assertEqual(fm2.molecule[0].extra['ecp'], 'lanl2tz')
 
         # test generation with no symmetry
         new_input = os.path.join(self.temporary_directory, 'new_mol.mol')
@@ -1133,3 +1146,56 @@ class ChemistryDatafileTestCase(QcipToolsTestCase):
 
         with open(self.chemistry_data_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), chemistry_datafile.ChemistryDataFile)
+
+
+class PDBTestCase(QcipToolsTestCase):
+    """PDB stuffs"""
+
+    def setUp(self):
+        self.pdb_file = self.copy_to_temporary_directory('6g7h.pdb')
+
+    def test_pdb(self):
+        """Test the behavior of the pdb file"""
+
+        # test read
+        fi = pdb.File()
+        self.assertFalse(fi.from_read)
+
+        with open(self.pdb_file) as f:
+            fi.read(f)
+
+        self.assertTrue(fi.from_read)
+
+        dx = {
+            'pdb_resSeq': '   5',
+            'pdb_name': ' N  ',
+            'pdb_altLoc': ' ',
+            'pdb_resName': 'THR',
+            'pdb_chainId': 'A',
+            'pdb_iCode': ' ',
+            'pdb_occupancy': 1.,
+            'pdb_tempFactor': 79.36,
+            'pdb_charge': '  ',
+        }
+
+        self.assertDictEqual(dx, fi.molecule[0].extra)
+
+        # test write
+        other_input = os.path.join(self.temporary_directory, 'tmp.pdb')
+        with open(other_input, 'w') as f:
+            fi.write(f)
+
+        fxe = pdb.File()
+        with open(other_input) as f:
+            fxe.read(f)
+
+        self.assertEqual(len(fxe.molecule), len(fi.molecule))
+        self.assertEqual(fxe.TERs, fi.TERs)
+        self.assertEqual(fxe.molecule[0].position, fi.molecule[0].position)
+        self.assertDictEqual(fxe.molecule[0].extra, fi.molecule[0].extra)
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.pdb_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), pdb.File)

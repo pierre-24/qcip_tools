@@ -1,0 +1,25 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: test
+  image: pierreb24/my-python3-numpy:latest
+  environment:
+    SSH_KEY_GITEA:
+      from_secret: private_key_gitea
+  commands:
+  # ssh stuffs
+    - eval $(ssh-agent -s)
+    - mkdir $HOME/.ssh
+  # gitea key
+    - echo "$SSH_KEY_GITEA" > $HOME/.ssh/id_rsa.gitea
+    - chmod 600 $HOME/.ssh/id_rsa.gitea
+    - ssh-add $HOME/.ssh/id_rsa.gitea
+    - ssh-keyscan -H gitea.pierrebeaujean.net >> $HOME/.ssh/known_hosts
+  # install
+    - make init
+  # test
+    - make test
+    - make lint

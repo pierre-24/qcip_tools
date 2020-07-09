@@ -38,6 +38,9 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         self.molecule = molecule.Molecule()
         self.title = ''
         self.basis_set = ''
+        # self.atom_basis = {}
+        # self.ecp = {}
+        self.is_atom_basis = False
 
     @classmethod
     def possible_file_extensions(cls):
@@ -51,10 +54,10 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         count = 0
         found_charge = 0
 
-        for l in f.readlines():
+        for line in f.readlines():
             count += 1
 
-            if 'charge=' in l.lower():
+            if 'charge=' in line.lower():
                 found_charge += 1
 
             if count > 50:
@@ -93,33 +96,77 @@ class MoleculeInput(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdent
         if len(lines) < 6:
             raise InputFormatError('something wrong with dalton .mol: too short')
 
-        self.basis_set = lines[1].strip()
-        self.title = (lines[2] + '\n' + lines[3]).strip()
+        self.is_atom_basis = lines[0].lower()[:9] == 'atombasis'
+        ref = 0 if self.is_atom_basis else 1
 
-        info_line = lines[4].lower()
+        if not self.is_atom_basis:
+            self.basis_set = lines[1].strip()
+        else:
+            self.basis_set = '%atombasis'
+
+        self.title = (lines[ref + 1] + '\n' + lines[ref + 2]).strip()
+
+        info_line = lines[ref + 3].lower()
 
         in_angstrom = 'angstrom' in info_line
-        atomic_number = .0
+        atomic_number = 0
+        atom_number = 0
+        current_basis = self.basis_set
+        current_ecp = ''
 
         charge = info_line.find('charge=')
-        if charge != -1:
+        if charge > 0:
             next_space = info_line.find(' ', charge + len('charge='))
             self.molecule.charge = int(info_line[charge + len('charge='):next_space])
-            self.molecule.multiplicity = 1 if self.molecule.charge % 2 == 0 else 1
 
-        for line in lines[5:]:
-            if 'charge=' in line.lower():
-                atomic_number = int(float(line[7:line.lower().find('atoms')]))
+        for line in lines[ref + 4:]:
+            lline = line.lower()
+            if 'charge=' in lline:
+                found = lline.find('charge=')
+                atomic_number = int(float(lline[found + 7:lline.find(' ', found + 7)]))
+
+                if self.is_atom_basis:
+                    found = lline.find('basis=')
+                    if found > 0:
+                        next_space = lline.find(' ', found + 6)
+                        if next_space < 0:
+                            next_space = len(line) - 1
+
+                        current_basis = line[found + 6:next_space]
+                    else:
+                        raise InputFormatError('atombasis, but no basis')
+
+                    found = lline.find('ecp=')
+                    if found > 0:
+                        next_space = lline.find(' ', found + 6)
+                        if next_space < 0:
+                            next_space = len(line) - 1
+                        current_ecp = line[found + 4:next_space]
+                    else:
+                        current_ecp = ''
+
                 continue
 
             content = line.split()
             if len(content) != 4:
                 continue
 
-            self.molecule.insert(atom.Atom(
+            # add atom:
+            atm = atom.Atom(
                 atomic_number=atomic_number,
                 position=[float(a) * (1 if in_angstrom else quantities.AuToAngstrom) for a in content[1:]])
-            )
+
+            # add information
+            if current_basis != self.basis_set:
+                atm.extra['basis_set'] = current_basis
+            if current_ecp != '':
+                atm.extra['ecp'] = current_ecp
+
+            self.molecule.insert(atm)
+
+            atom_number += 1
+
+        self.molecule.multiplicity = 1 if self.molecule.number_of_electrons() % 2 == 0 else 2
 
     def to_string(self, in_angstrom=True, nosym=False, group_atoms=False):
         """
@@ -413,8 +460,8 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
             dipole = numpy.zeros(3)
 
-            for l in prop_sorted[1]:
-                dipole[translate_diplens[l[5][0]]] = float(l[4])
+            for line in prop_sorted[1]:
+                dipole[translate_diplens[line[5][0]]] = float(line[4])
 
             electrical_derivatives['F'] = {'static': derivatives_e.ElectricDipole(dipole=dipole)}
 
@@ -427,15 +474,15 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             found_frequencies = []
             data_per_frequencies = {}
 
-            for l in prop_sorted[2]:
-                freq = float(l[9])
+            for line in prop_sorted[2]:
+                freq = float(line[9])
                 if freq not in found_frequencies:
                     found_frequencies.append(freq)
                     if is_CC_calculation and len(found_frequencies) > num_of_tensors:
                         raise WrongNumberOfData(num_of_tensors + 1, 'possible tensor for alpha')
                     data_per_frequencies[freq] = derivatives_e.PolarisabilityTensor(frequency=freq)
 
-                c1, c2, v = translate_diplens[l[5][0]], translate_diplens[l[6][0]], float(l[4])
+                c1, c2, v = translate_diplens[line[5][0]], translate_diplens[line[6][0]], float(line[4])
                 data_per_frequencies[freq].components[c1, c2] = v
 
                 if not is_CC_calculation and c1 != c2:
@@ -462,13 +509,13 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             for x in found_frequencies.keys():
                 r_to_obj[x] = derivatives.Derivative(from_representation=x)
 
-            for l in prop_sorted[3]:
-                if len(l[9]) == 22:
-                    freq_1 = float(l[9])
-                    freq_2 = float(l[10])
+            for line in prop_sorted[3]:
+                if len(line[9]) == 22:
+                    freq_1 = float(line[9])
+                    freq_2 = float(line[10])
                 else:
-                    freq_1 = float(l[9][:22])
-                    freq_2 = float(l[9][22:45])
+                    freq_1 = float(line[9][:22])
+                    freq_2 = float(line[9][22:45])
 
                 if freq_1 == freq_2 and freq_1 == .0:
                     representation = 'FFF'
@@ -495,8 +542,8 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
                         frequency=freq_1, input_fields=tuple(
                             derivatives_e.representation_to_field[x] for x in representation[1:]))
 
-                c1, c2, c3 = translate_diplens[l[5][0]], translate_diplens[l[6][0]], translate_diplens[l[7][0]]
-                v = float(l[4])
+                c1, c2, c3 = translate_diplens[line[5][0]], translate_diplens[line[6][0]], translate_diplens[line[7][0]]
+                v = float(line[4])
                 data[representation][freq_1].components[c1, c2, c3] = v
 
                 if not is_CC_calculation:
@@ -514,15 +561,15 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
             found_frequencies = {'FFFF': [], 'dFFD': [], 'dDFF': [], 'XDDF': [], 'dDDd': [], 'XDDD': []}
             data = {}
 
-            for l in prop_sorted[4]:
-                freq_1 = float(l[9])
+            for line in prop_sorted[4]:
+                freq_1 = float(line[9])
 
-                if len(l[10]) == 22:
-                    freq_2 = float(l[10])
-                    freq_3 = float(l[11])
+                if len(line[10]) == 22:
+                    freq_2 = float(line[10])
+                    freq_3 = float(line[11])
                 else:
-                    freq_2 = float(l[10][:22])
-                    freq_3 = float(l[10][22:])
+                    freq_2 = float(line[10][:22])
+                    freq_3 = float(line[10][22:])
 
                 if freq_1 == freq_2 and freq_2 == freq_3 and freq_3 == .0:
                     representation = 'FFFF'
@@ -563,11 +610,11 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
                 data[representation][freq] \
                     .components[
-                        translate_diplens[l[5][0]],
-                        translate_diplens[l[6][0]],
-                        translate_diplens[l[7][0]],
-                        translate_diplens[l[8][0]]] \
-                    = float(l[4]) * (-1 if is_CC_calculation else 1)
+                        translate_diplens[line[5][0]],
+                        translate_diplens[line[6][0]],
+                        translate_diplens[line[7][0]],
+                        translate_diplens[line[8][0]]] \
+                    = float(line[4]) * (-1 if is_CC_calculation else 1)
 
             electrical_derivatives.update(data)
 
@@ -862,17 +909,17 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         found_dalton = 0
         countries = ['Norway', 'Denmark', 'Italy', 'Sweden', 'Germany']
 
-        for l in f.readlines():
+        for line in f.readlines():
             count += 1
 
-            if 'Dalton' in l or 'dalton' in l:
+            if 'Dalton' in line or 'dalton' in line:
                 found_dalton += 1
 
             if 60 < count < 150:
-                if 'University' in l:
+                if 'University' in line:
                     found_universities += 1
                 for c in countries:
-                    if c in l:
+                    if c in line:
                         found_countries += 1
                         break
             if count > 150:
@@ -905,6 +952,8 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
 
         # fetch molecule
         coordinates_line = self.search('Cartesian Coordinates (a.u.)', into='START')
+        use_ecp = False
+
         if coordinates_line != -1:
             number_of_atoms = int(math.floor(int(self.lines[coordinates_line + 3][-5:]) / 3))
             for i in range(number_of_atoms):
@@ -927,6 +976,9 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
 
             self.molecule = copy.deepcopy(mol_file.molecule)
 
+            if any('ecp' in a.extra for a in self.molecule) > 0:
+                use_ecp = True
+
         mass_line = self.search('Isotopic Masses', into='START')
         for i in range(len(self.molecule)):
             line = self.lines[mass_line + i + 3].split()
@@ -938,7 +990,7 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         self.molecule.charge = int(self.lines[charge_line][-6:])
         self.molecule.multiplicity = int(self.lines[charge_line + 2][45:55])
 
-        if self.molecule.number_of_electrons() != int(self.lines[charge_line - 2][-5:]):
+        if not use_ecp and self.molecule.number_of_electrons() != int(self.lines[charge_line - 2][-5:]):
             raise OutputFormatError(
                 'Not the right number of electron, is the charge (found {}) wrong?'.format(self.molecule.charge))
 

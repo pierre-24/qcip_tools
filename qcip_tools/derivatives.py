@@ -98,7 +98,7 @@ class Derivative:
                 self.basis = basis
                 if basis.spacial_dof:
                     if spacial_dof and basis.spacial_dof and spacial_dof != basis.spacial_dof:
-                        raise ValueError('basis and current does not have the same dof'.format(
+                        raise ValueError('basis and current does not have the same dof ({} != {})'.format(
                             spacial_dof, basis.spacial_dof))
                     if not spacial_dof and basis.spacial_dof:
                         self.spacial_dof = basis.spacial_dof
