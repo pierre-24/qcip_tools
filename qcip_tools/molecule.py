@@ -5,7 +5,7 @@ import mendeleev
 import random
 
 from qcip_tools import bounding, transformations, symmetry
-from qcip_tools import atom as qcip_atom, math as qcip_math, ValueOutsideDomain
+from qcip_tools import atom as qcip_atom, ValueOutsideDomain
 
 
 class Bond:
@@ -395,12 +395,10 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         """
 
         distance_matrix = numpy.zeros((len(self), len(self)))
-        for x, a1 in enumerate(self):
-            for y, a2 in enumerate(self):
-                if y < x:
-                    distance_matrix[x, y] = distance_matrix[y, x] = qcip_math.distance(a1.position, a2.position)
-                else:
-                    break
+        all_b = numpy.vstack(list(a.position for a in self))
+        for i, a in enumerate(self):
+            t = numpy.linalg.norm(all_b - a.position, axis=1)
+            distance_matrix[i] = t
 
         return distance_matrix
 
@@ -417,28 +415,28 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         distances = self.distances()
         connectivities = {}
 
+        for i in range(len(self)):
+            connectivities[i + 1] = []
+
         radius = {}
 
+        def get_radius(s):
+            if s not in radius:
+                radius[s] = mendeleev.element(s).covalent_radius_pyykko / 100  # radius are in pm !!
+
+            return radius[s]
+
         for i, a1 in enumerate(self):
-            tmp = []
+            covalent_radius1 = get_radius(a1.symbol)
 
-            if a1.symbol not in radius:
-                radius[a1.symbol] = mendeleev.element(a1.symbol).covalent_radius_pyykko / 100  # radius are in pm !!
+            for j in numpy.where(distances[i, i + 1:] < 3.0)[0]:
+                r_j = i + j + 1
+                a2 = self.atom_list[r_j]
+                covalent_radius2 = get_radius(a2.symbol)
 
-            covalent_radius1 = radius[a1.symbol]
-
-            for j, a2 in enumerate(self):
-                if i is not j:  # an atom cannot bond with himself
-
-                    if a2.symbol not in radius:
-                        radius[a2.symbol] = mendeleev.element(a2.symbol).covalent_radius_pyykko / 100
-
-                    covalent_radius2 = radius[a2.symbol]
-
-                    if distances[i, j] < (covalent_radius1 + covalent_radius2 + threshold):
-                        tmp.append(j + 1)  # there is a bond
-
-            connectivities[i + 1] = tmp
+                if distances[i, r_j] < (covalent_radius1 + covalent_radius2 + threshold):  # yup, there is a bond
+                    connectivities[i + 1].append(r_j + 1)
+                    connectivities[r_j + 1].append(i + 1)
 
         return connectivities
 

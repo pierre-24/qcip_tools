@@ -19,7 +19,6 @@ steps:
     - ssh-add $HOME/.ssh/id_rsa.gitea
     - ssh-keyscan -H gitea.pierrebeaujean.net >> $HOME/.ssh/known_hosts
   # install
-    - pip3 install pip-tools  # TODO: that should go in the image!
     - make init
   # test
     - make test

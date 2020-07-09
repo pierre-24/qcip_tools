@@ -52,14 +52,14 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificatio
         found_some_lines = 0
         found_input_line = False
 
-        for l in f.readlines():
-            if l.strip() == '':
+        for line in f.readlines():
+            if line.strip() == '':
                 break
-            if l[0] not in ['%', '#']:
+            if line[0] not in ['%', '#']:
                 if not found_some_lines:
                     return False
             else:
-                if l[0] == '#':
+                if line[0] == '#':
                     found_input_line = True
                 found_some_lines += 1
 
@@ -116,12 +116,12 @@ class Input(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentificatio
         raw_blocks = []
 
         temp = []
-        for l in lines:
-            if len(temp) > 0 and l.strip() == '':
+        for line in lines:
+            if len(temp) > 0 and line.strip() == '':
                 raw_blocks.append(temp)
                 temp = []
             else:
-                temp.append(l.strip())
+                temp.append(line.strip())
 
         # add last
         if len(temp) > 0:
@@ -305,12 +305,12 @@ class FCHK(ChemistryFile, WithMoleculeMixin, WithIdentificationMixin):
 
         i = 0
 
-        for l in f.readlines():
+        for line in f.readlines():
             if i == 2:
-                if 'Number of atoms' not in l:
+                if 'Number of atoms' not in line:
                     return False
             if i == 3:
-                if 'Info1-9' in l:
+                if 'Info1-9' in line:
                     return True
                 return False
             i += 1
@@ -902,10 +902,10 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         count = 0
         num_of_gaussian = 0
 
-        for l in f.readlines():
+        for line in f.readlines():
             if count > 100:
                 break
-            if 'Gaussian' in l or 'gaussian' in l:
+            if 'Gaussian' in line or 'gaussian' in line:
                 num_of_gaussian += 1
             count += 1
 
@@ -979,14 +979,14 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
 
     excitations = {}
 
-    for l in obj.chunks:
-        if l.link == 914:
+    for chunk in obj.chunks:
+        if chunk.link == 914:
 
             # get transition dipoles
             s = obj.search(
                 'Ground to excited state transition electric dipole moments',
-                line_start=l.line_start,
-                line_end=l.line_end)
+                line_start=chunk.line_start,
+                line_end=chunk.line_end)
 
             if s < 0:
                 continue
@@ -1006,7 +1006,7 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
             excitations['!F'] = derivatives.Tensor('!F', nstates=nstates + 1, components=numpy.vstack(dipoles))
 
             # look for excitation energies
-            s = obj.search('Excitation energies and oscillator strengths:', line_start=s, line_end=l.line_end)
+            s = obj.search('Excitation energies and oscillator strengths:', line_start=s, line_end=chunk.line_end)
             if s < 0:
                 del excitations['!F']
                 continue
@@ -1015,7 +1015,7 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
             excitations['_<S2>'] = [obj.molecule.square_of_spin_angular_moment()]
             n = 1
 
-            for li in obj.lines[s + 2:l.line_end]:
+            for li in obj.lines[s + 2:chunk.line_end]:
                 if 'Excited State' in li:
                     se = li.split()
                     excitations['_<S2>'].append(float(se[-1][-5:] if se[-1][-6] == '=' else se[-1][-6:]))
@@ -1110,11 +1110,11 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
         count = 0
         number_of_atoms = 0
 
-        for l in f.readlines():
+        for line in f.readlines():
             count += 1
             # line 3-6:
             if 7 > count > 2:
-                c = l.split()
+                c = line.split()
                 if 6 < len(c) < 4:
                     return False
 
@@ -1131,7 +1131,7 @@ class Cube(ChemistryFile, WithOutputMixin, WithMoleculeMixin, WithIdentification
                     number_of_atoms = abs(int(c[0]))
             # only numbers in scientific notation in records
             if count == 7 + number_of_atoms:
-                c = l.split()
+                c = line.split()
 
                 for i in c:
                     if 'E' not in i:

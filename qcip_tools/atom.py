@@ -164,6 +164,8 @@ class Atom(transformations.MutableTranslatable):
         else:
             self.position = numpy.zeros(3)
 
+        self.extra = {}
+
     def __str__(self):
         return '{} @ ({:.3f}, {:.3f}, {:.3f})'.format(self.symbol, *self.position)
 

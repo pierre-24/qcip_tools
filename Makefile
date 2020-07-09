@@ -10,8 +10,7 @@ help:
 	@echo "  help                        to get this help"
 
 init:
-	pip3 install -e .
-	pip3 install qcip-tools[dev]
+	pip-sync && pip3 install -e .
 
 sync:
 	pip-sync
