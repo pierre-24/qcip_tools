@@ -1034,7 +1034,7 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
                         if '->' not in li_e:
                             break
                         fr = li_e[:9].strip()
-                        to = li_e[12:20].strip()
+                        to = li_e[11:20].strip()
                         coef = float(li_e[20:].strip())
                         spin = None
 
