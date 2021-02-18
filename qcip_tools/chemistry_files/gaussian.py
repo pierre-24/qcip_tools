@@ -4,7 +4,8 @@ import re
 import numpy
 import copy
 
-from qcip_tools import molecule, atom, quantities, basis_set, derivatives, derivatives_e, derivatives_g
+from qcip_tools import molecule, atom, quantities, basis_set, derivatives, derivatives_e, derivatives_g, \
+    derivatives_exci
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
     FormatError, WithIdentificationMixin, PropertyNotPresent
 
@@ -1013,14 +1014,44 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
 
             excitations['!'] = derivatives.Tensor('!', nstates=nstates + 1)
             excitations['_<S2>'] = [obj.molecule.square_of_spin_angular_moment()]
+            excitations['_CSFs'] = [derivatives_exci.ConfigurationStateFunction([])]
             n = 1
 
-            for li in obj.lines[s + 2:chunk.line_end]:
+            number_of_e = obj.molecule.number_of_electrons()
+            homo_level = number_of_e // 2
+            is_closed_shell = number_of_e % 2 == 0
+
+            for index, li in enumerate(obj.lines[s + 2:chunk.line_end]):
                 if 'Excited State' in li:
                     se = li.split()
                     excitations['_<S2>'].append(float(se[-1][-5:] if se[-1][-6] == '=' else se[-1][-6:]))
                     excitations['!'].components[n] = float(se[4]) * quantities.convert(
                         quantities.ureg.eV, quantities.ureg.hartree)
+
+                    # get CSF
+                    configs = []
+                    for li_e in obj.lines[s + 2 + index + 1: chunk.line_end]:
+                        if '->' not in li_e:
+                            break
+                        fr = li_e[:9].strip()
+                        to = li_e[12:20].strip()
+                        coef = float(li_e[20:].strip())
+                        spin = None
+
+                        if not is_closed_shell:
+                            spin = fr[-1]
+                            fr = int(fr[:-1]) - homo_level - (1 if spin == 'A' else 0)
+                            to = int(to[:-1]) - homo_level - 1 - (1 if spin == 'A' else 0)
+                        else:
+                            fr = int(fr) - homo_level
+                            to = int(to) - homo_level - 1
+                            coef *= math.sqrt(2)
+
+                        configs.append((coef, derivatives_exci.Configuration(
+                            [(fr, to, spin)]
+                        )))
+
+                    excitations['_CSFs'].append(derivatives_exci.ConfigurationStateFunction(configs))
 
                     n += 1
 
