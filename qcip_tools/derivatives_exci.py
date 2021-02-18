@@ -73,3 +73,62 @@ class Excitations:
             raise ValueError(i)
 
         return self.dipoles.components[i]
+
+
+class Configuration:
+    """Define a determinant as an excitation of the ground state determinant
+    (with all electrons stored in the lowest energy MOs)
+
+    ``excitation`` is a list of tuple containing two integer and one string:
+    source MO wrt HOMO, destination MO wrt LUMO, spin. Thus,
+
+    + ``(0,0,None)`` is a HOMO→LUMO excitation of spin alpha,
+    + ``(-1,2,'a')`` is a HOMO-1→LUMO+2 excitation of spin alpha, etc.
+    """
+    def __init__(self, excitations):
+        self.excitations = excitations
+
+    def n(self):
+        """Return the number of excitations
+
+        :rtype: int
+        """
+        return len(self.excitations)
+
+    def __repr__(self):
+        r = ','.join('{s}H{f}→{s}L{t}'.format(**{
+            's': s if s is not None else '',
+            'f': '' if f == 0 else '{:+d}'.format(f),
+            't': '' if t == 0 else '{:+d}'.format(t),
+        }) for f, t, s in self.excitations)
+
+        return '({})'.format(r) if self.n() > 1 else r
+
+
+class ConfigurationStateFunction:
+    """(Symmetry-adapted) linear combination of Slater determinants (configuration).
+
+    ``configuration`` is a list of tuple of one float (weight) and one ``Configuration``.
+    """
+
+    def __init__(self, configurations):
+        self.configurations = sorted(configurations, key=lambda x: abs(x[0]), reverse=True)  # important configs first
+
+    def missing(self):
+        """Return the percentage of missing configurations
+        """
+
+        return 1 - sum(c[0] ** 2 for c in self.configurations)
+
+    def to_string(self, limit=.01):
+        """Text representation, only configurations above ``limit``
+        """
+        if len(self.configurations) == 0:
+            return 'GS'
+
+        return ';'.join(
+            '{:.1f}% of {}'.format(100 * coef ** 2, config)
+            for coef, config in self.configurations if coef ** 2 >= limit)
+
+    def __repr__(self):
+        return self.to_string()

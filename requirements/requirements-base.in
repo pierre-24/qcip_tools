@@ -1,5 +1,5 @@
 numpy
-scipy
+scipy>=1.5
 pint>=0.14
 requests
 beautifulsoup4

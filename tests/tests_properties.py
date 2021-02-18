@@ -492,3 +492,9 @@ class PropertiesTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(
             derivatives_e.ElectricDipole(dipole=exci.transition_dipole(1)).norm(), 0.4886, places=4)
         self.assertAlmostEqual(exci.oscillator_strength(3), 0.2831, places=4)
+
+        self.assertIn('_<S2>', excitations)
+        self.assertIn('_CSFs', excitations)
+
+        self.assertEqual(excitations['_CSFs'][1].configurations[0][1].excitations[0], (0, 0, None))  # H→L
+        self.assertEqual(excitations['_CSFs'][2].configurations[0][1].excitations[0], (0, 1, None))  # H→L+1
