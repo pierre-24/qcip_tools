@@ -1019,7 +1019,7 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
 
             number_of_e = obj.molecule.number_of_electrons()
             homo_level = number_of_e // 2
-            is_closed_shell = number_of_e % 2 == 0
+            is_closed_shell = obj.molecule.multiplicity == 1
 
             for index, li in enumerate(obj.lines[s + 2:chunk.line_end]):
                 if 'Excited State' in li:
@@ -1034,7 +1034,7 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
                         if '->' not in li_e:
                             break
                         fr = li_e[:9].strip()
-                        to = li_e[12:20].strip()
+                        to = li_e[11:20].strip()
                         coef = float(li_e[20:].strip())
                         spin = None
 
