@@ -632,7 +632,7 @@ def dalton__archive_output__property__electrical_derivatives(obj, *args, **kwarg
 
         if not beta_already_found:
             found_frequencies = {'FFF': [], 'dDF': [], 'FDd': [], 'XDD': []}
-            splits = [0, 10, 20, 29, 40, 48, 53, 59, 73]
+            splits = [0, 10, 20, 29, 40, 48, 53, 56, 73]
             is_optical_rectification_in_calculations = False
             is_EOP_in_calculations = False
             is_optical_rectification_use_later = []
