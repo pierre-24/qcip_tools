@@ -16,8 +16,6 @@ certifi==2019.11.28
     # via requests
 chardet==3.0.4
     # via requests
-click==7.1.2
-    # via pip-tools
 colorama==0.4.3
     # via mendeleev
 docutils==0.16
@@ -59,8 +57,6 @@ pandas==1.2.5
     #   mendeleev
 pint==0.14
     # via -r requirements/requirements-base.in
-pip-tools==5.2.1
-    # via -r requirements/requirements.in
 pycodestyle==2.6.0
     # via
     #   autopep8
@@ -93,7 +89,6 @@ six==1.14.0
     # via
     #   h5py
     #   packaging
-    #   pip-tools
     #   python-dateutil
     #   sphinxcontrib-autoprogram
 snowballstemmer==2.0.0
@@ -128,5 +123,4 @@ urllib3==1.25.8
     # via requests
 
 # The following packages are considered to be unsafe in a requirements file:
-# pip
 # setuptools

@@ -572,14 +572,14 @@ class DerivativesTestCase(QcipToolsTestCase):
             new_gamma = tensor_rotate(gamma, *angles)
             ng = derivatives_e.SecondHyperpolarizabilityTensor(tensor=new_gamma)
 
-            self.assertAlmostEqual(ng.gamma_parallel(), orig_g.gamma_parallel(), places=3)
-            self.assertAlmostEqual(ng.gamma_perpendicular(), orig_g.gamma_perpendicular(), places=3)
-            self.assertAlmostEqual(ng.gamma_kerr(), orig_g.gamma_kerr(), places=3)
+            self.assertAlmostEqual(ng.gamma_parallel(), orig_g.gamma_parallel(), places=2)
+            self.assertAlmostEqual(ng.gamma_perpendicular(), orig_g.gamma_perpendicular(), places=2)
+            self.assertAlmostEqual(ng.gamma_kerr(), orig_g.gamma_kerr(), places=2)
 
             self.assertAlmostEqual(ng.gamma_squared_zzzz(), orig_g.gamma_squared_zzzz(), delta=10)
             self.assertAlmostEqual(ng.gamma_squared_zxxx(), orig_g.gamma_squared_zxxx(), delta=10)
-            self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths(), places=3)
-            self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=3)
+            self.assertAlmostEqual(ng.gamma_ths(), orig_g.gamma_ths(), places=2)
+            self.assertAlmostEqual(ng.depolarization_ratio(), orig_g.depolarization_ratio(), places=2)
 
             self.assertAlmostEqual(
                 ng.isotropic_contribution_squared(old_version=True),
@@ -599,8 +599,8 @@ class DerivativesTestCase(QcipToolsTestCase):
                 places=4
             )
 
-            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=3)
-            self.assertAlmostEqual(ng.spherical_J3_contribution_squared(), .0, places=3)
+            self.assertAlmostEqual(ng.spherical_J1_contribution_squared(), .0, places=2)
+            self.assertAlmostEqual(ng.spherical_J3_contribution_squared(), .0, places=2)
 
         # static CH4, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array([
