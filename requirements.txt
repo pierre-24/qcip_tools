@@ -21,7 +21,9 @@ charset-normalizer==2.0.10
 colorama==0.4.4
     # via mendeleev
 docutils==0.17.1
-    # via sphinx
+    # via
+    #   sphinx
+    #   sphinx-rtd-theme
 flake8==4.0.1
     # via
     #   -r requirements/requirements.in
@@ -93,7 +95,6 @@ six==1.16.0
     # via
     #   mendeleev
     #   python-dateutil
-    #   sphinxcontrib-autoprogram
 snowballstemmer==2.2.0
     # via sphinx
 soupsieve==2.3.1
@@ -101,11 +102,11 @@ soupsieve==2.3.1
 sphinx==4.4.0
     # via
     #   -r requirements/requirements.in
-    #   sphinxcontrib-autoprogram
+    #   sphinx-rtd-theme
+sphinx-rtd-theme==1.0.0
+    # via -r requirements/requirements.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
-sphinxcontrib-autoprogram==0.1.7
-    # via -r requirements/requirements.in
 sphinxcontrib-devhelp==1.0.2
     # via sphinx
 sphinxcontrib-htmlhelp==2.0.0
