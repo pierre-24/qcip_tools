@@ -1,41 +1,111 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Dalton files (chemistry_files.dalton) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dalton files (chemistry_files.dalton) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="GAMESS files (chemistry_files.gamess)" href="gamess.html" />
-    <link rel="prev" title="Gaussian files (chemistry_files.gaussian)" href="gaussian.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Gaussian files (chemistry_files.gaussian)" href="gaussian.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../chemistry_files.html#concepts">Concepts</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../chemistry_files.html#api-documentation">API documentation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="xyz.html">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gaussian.html">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../code-documentation.html">API documentation</a> &raquo;</li>
+          <li><a href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a> &raquo;</li>
+      <li>Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/code-documentation/chemistry-files/dalton.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="dalton-files-chemistry-files-dalton">
-<h1>Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)<a class="headerlink" href="#dalton-files-chemistry-files-dalton" title="Permalink to this headline">¶</a></h1>
+<h1>Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)<a class="headerlink" href="#dalton-files-chemistry-files-dalton" title="Permalink to this headline"></a></h1>
 <p>Files from the <a class="reference external" href="http://daltonprogram.org/">Dalton software</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -65,13 +135,13 @@
 </div>
 <span class="target" id="module-qcip_tools.chemistry_files.dalton"></span><dl class="py data">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ALLOWED_LEVEL_0_MODULES">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">ALLOWED_LEVEL_0_MODULES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['**DALTON',</span> <span class="pre">'**INTEGRAL',</span> <span class="pre">'**WAVE</span> <span class="pre">F',</span> <span class="pre">'**START',</span> <span class="pre">'**EACH</span> <span class="pre">S',</span> <span class="pre">'**PROPERTIES',</span> <span class="pre">'**RESPONSE']</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ALLOWED_LEVEL_0_MODULES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">ALLOWED_LEVEL_0_MODULES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['**DALTON',</span> <span class="pre">'**INTEGRAL',</span> <span class="pre">'**WAVE</span> <span class="pre">F',</span> <span class="pre">'**START',</span> <span class="pre">'**EACH</span> <span class="pre">S',</span> <span class="pre">'**PROPERTIES',</span> <span class="pre">'**RESPONSE']</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ALLOWED_LEVEL_0_MODULES" title="Permalink to this definition"></a></dt>
 <dd><p>Name of the allowed modules in dalton (according to documentation)</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">ArchiveOutput</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">ArchiveOutput</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Archive output of Dalton. Contains lots of information for who can extract them.</p>
 <div class="class-members docutils container">
 <ul class="simple">
@@ -81,19 +151,19 @@
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A dalton archive does contain a lot of files name “DALTON”</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_ARCHIVE'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_ARCHIVE'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput.from_molecule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.from_molecule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.from_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Create an object out of a molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -107,7 +177,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput.get_file">
-<span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.get_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.get_file" title="Permalink to this definition"></a></dt>
 <dd><p>Get a <code class="docutils literal notranslate"><span class="pre">io.BufferedReader</span></code> from a filename, if exists. Note that you get <code class="docutils literal notranslate"><span class="pre">bytes</span></code> out of that kind of
 objects, so you need to <code class="docutils literal notranslate"><span class="pre">decode()</span></code> them.</p>
 <dl class="field-list simple">
@@ -122,7 +192,7 @@ objects, so you need to <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.possible_file_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the common extention of this kind of files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -133,7 +203,7 @@ objects, so you need to <code class="docutils literal notranslate"><span class="
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.ArchiveOutput.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.ArchiveOutput.read" title="Permalink to this definition"></a></dt>
 <dd><p>Expects <code class="docutils literal notranslate"><span class="pre">f</span></code> to be open on binary mode.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -151,7 +221,7 @@ given in <a class="reference external" href="https://brettbode.github.io/wxmacmo
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Input">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input" title="Permalink to this definition"></a></dt>
 <dd><p>Dalton dal input file.</p>
 <p>Does NOT contain a molecule!</p>
 <div class="admonition note">
@@ -167,19 +237,19 @@ the storage key is reduced to 5 characters.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Input.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>Very specific beginning (<code class="docutils literal notranslate"><span class="pre">**DALTON</span> <span class="pre">INPUT</span></code>) and end (<code class="docutils literal notranslate"><span class="pre">'*END</span> <span class="pre">OF</span> <span class="pre">INPUT</span></code>)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Input.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_DAL'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_DAL'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Input.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.possible_file_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the common extention of this kind of files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -190,7 +260,7 @@ the storage key is reduced to 5 characters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Input.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -200,7 +270,7 @@ the storage key is reduced to 5 characters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Input.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Input.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update the content from a given piece of string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -213,7 +283,7 @@ the storage key is reduced to 5 characters.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputCard">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputCard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputCard" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputCard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputCard" title="Permalink to this definition"></a></dt>
 <dd><p>Dalton input card</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -227,12 +297,12 @@ the storage key is reduced to 5 characters.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputModule">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_cards</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submodules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_cards</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submodules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule" title="Permalink to this definition"></a></dt>
 <dd><p>The dalton (sub)modules, with level indicating it they are module (level=0) or submodule (level=1)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -251,7 +321,7 @@ the storage key is reduced to that.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputModule.set_input_card">
-<span class="sig-name descname"><span class="pre">set_input_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_card</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule.set_input_card" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_input_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_card</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule.set_input_card" title="Permalink to this definition"></a></dt>
 <dd><p>Set an input card</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -265,7 +335,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputModule.set_submodule">
-<span class="sig-name descname"><span class="pre">set_submodule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submodule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule.set_submodule" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_submodule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submodule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule.set_submodule" title="Permalink to this definition"></a></dt>
 <dd><p>Set up a submodule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -279,7 +349,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputModule.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModule.update" title="Permalink to this definition"></a></dt>
 <dd><p>Update a module with respect to another</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -292,12 +362,12 @@ the storage key is reduced to that.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.InputModuleError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputModuleError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModuleError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">InputModuleError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.InputModuleError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">MoleculeInput</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">MoleculeInput</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput" title="Permalink to this definition"></a></dt>
 <dd><p>Dalton mol input file.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -312,19 +382,19 @@ the storage key is reduced to that.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A dalton molecule is quite unique (“charge=”)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_MOL'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_MOL'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.from_molecule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.from_molecule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.from_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Create a file from molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -342,7 +412,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.possible_file_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the common extention of this kind of files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -353,7 +423,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -363,7 +433,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_angstrom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nosym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_angstrom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nosym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.to_string" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -383,7 +453,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.MoleculeInput.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_angstrom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nosym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.write" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_angstrom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nosym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.MoleculeInput.write" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -403,7 +473,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Output">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output" title="Permalink to this definition"></a></dt>
 <dd><p>Output of Dalton.</p>
 <div class="class-members docutils container">
 <ul class="simple">
@@ -415,20 +485,20 @@ the storage key is reduced to that.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Output.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A dalton output … Does contains a lot of (european) countries and universities name at some point
 (and a little bit of “Dalton” as well)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Output.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_LOG'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DALTON_LOG'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Output.get_inputs">
-<span class="sig-name descname"><span class="pre">get_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.get_inputs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.get_inputs" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch the inputs from the log file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -439,7 +509,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.Output.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.Output.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -451,12 +521,12 @@ the storage key is reduced to that.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.OutputFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">OutputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.OutputFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">OutputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.OutputFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.OutputSection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">OutputSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.OutputSection" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">OutputSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.OutputSection" title="Permalink to this definition"></a></dt>
 <dd><p>Remind when a section is entered and exited</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -467,12 +537,12 @@ the storage key is reduced to that.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.WrongNumberOfData">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">WrongNumberOfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.WrongNumberOfData" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">WrongNumberOfData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.WrongNumberOfData" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.check_module">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.check_module" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.check_module" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the module name is allowed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -486,7 +556,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.dalton__archive_output__property__computed_energies">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__computed_energies" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__computed_energies" title="Permalink to this definition"></a></dt>
 <dd><p>Get the energies. Returns only the energy found on top of <code class="docutils literal notranslate"><span class="pre">DALTON.PROP</span></code> as the total energy (+labeled)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -500,7 +570,7 @@ the storage key is reduced to that.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.dalton__archive_output__property__electrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__electrical_derivatives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__electrical_derivatives" title="Permalink to this definition"></a></dt>
 <dd><p>Get electrical derivatives in Dalton archives. Returns a dictionary of dictionaries:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+ &quot;F&quot;
     + static : ElectricDipole
@@ -551,7 +621,7 @@ Note that the first frequency is non-null for dc-Kerr, while it is the last one 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.dalton__archive_output__property__excitations">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__excitations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__excitations" title="Permalink to this definition"></a></dt>
 <dd><p>Get excitations in Dalton archives. Returns a dictionary of tensor</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -569,7 +639,7 @@ Note that the first frequency is non-null for dc-Kerr, while it is the last one 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.dalton__archive_output__property__geometrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__geometrical_derivatives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__archive_output__property__geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__geometrical_derivatives" title="Permalink to this definition"></a></dt>
 <dd><p>Get geometrical derivatives in Dalton archives. Returns a dictionary of tensor</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -587,7 +657,7 @@ Note that the first frequency is non-null for dc-Kerr, while it is the last one 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.dalton__output__computed_energies">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__output__computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__output__computed_energies" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__output__computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__output__computed_energies" title="Permalink to this definition"></a></dt>
 <dd><p>Get the energies. Find the SCF/DFT energy, as well as the CCx one (which is given with MP2).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -608,7 +678,7 @@ Note that the first frequency is non-null for dc-Kerr, while it is the last one 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.dalton.dalton__output__get_geometrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__output__get_geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__output__get_geometrical_derivatives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.dalton.</span></span><span class="sig-name descname"><span class="pre">dalton__output__get_geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.dalton.dalton__output__get_geometrical_derivatives" title="Permalink to this definition"></a></dt>
 <dd><p>Get the cartesian gradient out of a dalton calculation output</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -623,76 +693,34 @@ Note that the first frequency is non-null for dc-Kerr, while it is the last one 
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gaussian.html" class="btn btn-neutral float-left" title="Gaussian files (chemistry_files.gaussian)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gamess.html" class="btn btn-neutral float-right" title="GAMESS files (chemistry_files.gamess)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing qcip_tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../code-documentation.html">API documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../chemistry_files.html#concepts">Concepts</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../chemistry_files.html#api-documentation">API documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
-</ul>
-</li>
-</ul>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/code-documentation/chemistry-files/dalton.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../../_sources/code-documentation/chemistry-files/dalton.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

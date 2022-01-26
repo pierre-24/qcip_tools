@@ -1,44 +1,114 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Gaussian files (chemistry_files.gaussian) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gaussian files (chemistry_files.gaussian) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Dalton files (chemistry_files.dalton)" href="dalton.html" />
-    <link rel="prev" title="XYZ files (chemistry_files.xyz)" href="xyz.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="XYZ files (chemistry_files.xyz)" href="xyz.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../chemistry_files.html#concepts">Concepts</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../chemistry_files.html#api-documentation">API documentation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="xyz.html">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../code-documentation.html">API documentation</a> &raquo;</li>
+          <li><a href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a> &raquo;</li>
+      <li>Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/code-documentation/chemistry-files/gaussian.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="gaussian-files-chemistry-files-gaussian">
-<h1>Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)<a class="headerlink" href="#gaussian-files-chemistry-files-gaussian" title="Permalink to this headline">¶</a></h1>
+<h1>Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)<a class="headerlink" href="#gaussian-files-chemistry-files-gaussian" title="Permalink to this headline"></a></h1>
 <p>Files from the <a class="reference external" href="http://gaussian.com/">Gaussian software</a>.</p>
 <span class="target" id="module-qcip_tools.chemistry_files.gaussian"></span><dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.BasisSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">BasisSet</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSet" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">BasisSet</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSet" title="Permalink to this definition"></a></dt>
 <dd><p>File containing a basis set in the gaussian format.</p>
 <p>This file format does not exists, but lets say that copy/paste from ESML basis set exchange should work.</p>
 <div class="class-members docutils container">
@@ -48,7 +118,7 @@
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.BasisSet.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_for_same_atom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSet.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail_for_same_atom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSet.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -61,7 +131,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.BasisSet.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">for_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSet.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">for_molecule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSet.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Give basis set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -77,12 +147,12 @@
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.BasisSetFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">BasisSetFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSetFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">BasisSetFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.BasisSetFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.ChargeTransferInformation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">ChargeTransferInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">charge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barycenter_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barycenter_p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.ChargeTransferInformation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">ChargeTransferInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">charge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barycenter_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barycenter_p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.ChargeTransferInformation" title="Permalink to this definition"></a></dt>
 <dd><p>Analyzed charge transfer.</p>
 <p>In it, <code class="docutils literal notranslate"><span class="pre">charge</span></code> is the amount of charge (in e) transfered from <code class="docutils literal notranslate"><span class="pre">barycenter_m</span></code> to <code class="docutils literal notranslate"><span class="pre">barycenter_p</span></code>,
 linked by <code class="docutils literal notranslate"><span class="pre">vector</span></code>, which lead to a certain charge transfer <code class="docutils literal notranslate"><span class="pre">distance</span></code>.</p>
@@ -99,7 +169,7 @@ linked by <code class="docutils literal notranslate"><span class="pre">vector</s
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">Cube</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">Cube</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube" title="Permalink to this definition"></a></dt>
 <dd><p>Gaussian cube.</p>
 <p>Documentation on that format can be found <a class="reference external" href="http://gaussian.com/cubegen/">here</a>.</p>
 <div class="admonition note">
@@ -122,7 +192,7 @@ linked by <code class="docutils literal notranslate"><span class="pre">vector</s
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.alike">
-<span class="sig-name descname"><span class="pre">alike</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.alike" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">alike</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.alike" title="Permalink to this definition"></a></dt>
 <dd><p>Compare two cubes to check if they have the same size</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -136,14 +206,14 @@ linked by <code class="docutils literal notranslate"><span class="pre">vector</s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A cube file contains, in line 3-6, quadruplets of numbers, the first one being an integer, then 3 floats.
 Then, after the different atoms, line should contains numbers in scientific notation.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.compute_charge_transfer">
-<span class="sig-name descname"><span class="pre">compute_charge_transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.compute_charge_transfer" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_charge_transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.compute_charge_transfer" title="Permalink to this definition"></a></dt>
 <dd><p>Analyse CT by computing:</p>
 <ul class="simple">
 <li><p>Transferred charge ;</p></li>
@@ -163,7 +233,7 @@ Then, after the different atoms, line should contains numbers in scientific nota
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.dV">
-<span class="sig-name descname"><span class="pre">dV</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.dV" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dV</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.dV" title="Permalink to this definition"></a></dt>
 <dd><p>Return the size of the smallest unit of volume in the cube, in angstrom**3.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -174,13 +244,13 @@ Then, after the different atoms, line should contains numbers in scientific nota
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_CUBE'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_CUBE'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.from_molecule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.from_molecule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.from_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Create an object out of a molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -194,7 +264,7 @@ Then, after the different atoms, line should contains numbers in scientific nota
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.number_of_data">
-<span class="sig-name descname"><span class="pre">number_of_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.number_of_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">number_of_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.number_of_data" title="Permalink to this definition"></a></dt>
 <dd><p>Number of points in the file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -205,7 +275,7 @@ Then, after the different atoms, line should contains numbers in scientific nota
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.number_of_records">
-<span class="sig-name descname"><span class="pre">number_of_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.number_of_records" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">number_of_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.number_of_records" title="Permalink to this definition"></a></dt>
 <dd><p>Number of records in the file</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -228,7 +298,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.positions">
-<span class="sig-name descname"><span class="pre">positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.positions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.positions" title="Permalink to this definition"></a></dt>
 <dd><p>Return an array with the position (in angstrom) of each point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -239,7 +309,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.possible_file_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the common extention of this kind of files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -250,7 +320,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.read" title="Permalink to this definition"></a></dt>
 <dd><div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The charge/multiplicity may be wrong !</p>
@@ -264,7 +334,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.slice">
-<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.slice" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.slice" title="Permalink to this definition"></a></dt>
 <dd><p>Get a specific part of the data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -278,7 +348,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.sum_density_of_sets">
-<span class="sig-name descname"><span class="pre">sum_density_of_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.sum_density_of_sets" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sum_density_of_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.sum_density_of_sets" title="Permalink to this definition"></a></dt>
 <dd><p>Sum the density in a given space, defined by the bounding boxes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -298,7 +368,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Cube.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Cube.to_string" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -310,12 +380,12 @@ running index).</div>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.CubeFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">CubeFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.CubeFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">CubeFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.CubeFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">FCHK</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">FCHK</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK" title="Permalink to this definition"></a></dt>
 <dd><p>A FCHK file. Based on the same principle as DataFile (split into chunks, interpret and store after).</p>
 <p>Most of the information are found in the “FChk file” part of the
 <a class="reference external" href="http://gaussian.com/interfacing/">“Interfacing” documentation of Gaussian</a>.</p>
@@ -333,19 +403,19 @@ running index).</div>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A gaussian fchk starts with two two line of info, then “Number of atoms”</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_FCHK'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_FCHK'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK.from_molecule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.from_molecule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.from_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Create an object out of a molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -359,7 +429,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.get" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.get" title="Permalink to this definition"></a></dt>
 <dd><p>Get the content from a given keyword</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -373,7 +443,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.possible_file_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the common extention of this kind of files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -384,7 +454,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHK.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHK.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -396,7 +466,7 @@ running index).</div>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHKChunkInformation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">FCHKChunkInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHKChunkInformation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">FCHKChunkInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHKChunkInformation" title="Permalink to this definition"></a></dt>
 <dd><p>Where to find a given keyword in the FCHK file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -414,12 +484,12 @@ running index).</div>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.FCHKFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">FCHKFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHKFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">FCHKFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.FCHKFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input" title="Permalink to this definition"></a></dt>
 <dd><p>Gaussian input file.</p>
 <div class="class-members docutils container">
 <ul class="simple">
@@ -435,19 +505,19 @@ running index).</div>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A gaussian input should contains ‘%’ or ‘#’ as the first character of the line of the “first block”</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_INP'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_INP'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.from_molecule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_card</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.from_molecule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_card</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_blocks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.from_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Create a file from molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -467,7 +537,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.possible_file_extensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the common extention of this kind of files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -478,7 +548,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -488,7 +558,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.to_string" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -504,7 +574,7 @@ running index).</div>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Input.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.write" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_chk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Input.write" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -516,12 +586,12 @@ running index).</div>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.InputFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">InputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.InputFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">InputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.InputFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.LinkCalled">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">LinkCalled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">link</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.LinkCalled" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">LinkCalled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">link</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.LinkCalled" title="Permalink to this definition"></a></dt>
 <dd><p>Remind when a link is called</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -532,7 +602,7 @@ running index).</div>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Output">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output" title="Permalink to this definition"></a></dt>
 <dd><p>Log file of Gaussian. Contains a lot of informations, but not well printed or located.
 If possible, rely on the FCHK rather than on the LOG file.</p>
 <div class="admonition note">
@@ -555,19 +625,19 @@ If possible, rely on the FCHK rather than on the LOG file.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Output.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output.attempt_identification" title="Permalink to this definition"></a></dt>
 <dd><p>A gaussian log … Contains a lot of “gaussian” in the beginning (limit to the 150 first lines)”</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Output.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_LOG'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output.file_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAUSSIAN_LOG'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output.file_type" title="Permalink to this definition"></a></dt>
 <dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.Output.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output.read" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.Output.read" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
@@ -579,12 +649,12 @@ If possible, rely on the FCHK rather than on the LOG file.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.OutputFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">OutputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.OutputFormatError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">OutputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.OutputFormatError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.beta_EOP_from_fchk">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">beta_EOP_from_fchk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compressed_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.beta_EOP_from_fchk" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">beta_EOP_from_fchk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compressed_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.beta_EOP_from_fchk" title="Permalink to this definition"></a></dt>
 <dd><p>EOP beta tensor in FCHK is a bit messed up</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -598,7 +668,7 @@ If possible, rely on the FCHK rather than on the LOG file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.beta_SHG_from_fchk">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">beta_SHG_from_fchk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compressed_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.beta_SHG_from_fchk" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">beta_SHG_from_fchk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compressed_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.beta_SHG_from_fchk" title="Permalink to this definition"></a></dt>
 <dd><p>SHG beta tensor in FCHK is a bit messed up</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -612,7 +682,7 @@ If possible, rely on the FCHK rather than on the LOG file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gamma_from_gaussian">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gamma_from_gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compressed_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exchange_23</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gamma_from_gaussian" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gamma_from_gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compressed_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exchange_23</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gamma_from_gaussian" title="Permalink to this definition"></a></dt>
 <dd><p>gamma tensor in FCHK is (also) a bit messed up</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -629,7 +699,7 @@ If possible, rely on the FCHK rather than on the LOG file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__computed_energies">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__computed_energies" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__computed_energies" title="Permalink to this definition"></a></dt>
 <dd><p>Get the energies. Returns a dictionary of the energies at different level of approximation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -643,7 +713,7 @@ If possible, rely on the FCHK rather than on the LOG file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__electrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__electrical_derivatives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__electrical_derivatives" title="Permalink to this definition"></a></dt>
 <dd><p>Get electrical derivatives in FCHK. Returns a dictionary of dictionary:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+ &quot;F&quot;
     + static : ElectricDipole
@@ -673,7 +743,7 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__excitations">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__excitations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__excitations" title="Permalink to this definition"></a></dt>
 <dd><p>Get excitation properties in FCHK. Returns a dictionary:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+ &quot;!&quot; : Tensor
 + &quot;!F&quot; : Tensor
@@ -691,7 +761,7 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__geometrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__geometrical_derivatives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__fchk__property__geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__geometrical_derivatives" title="Permalink to this definition"></a></dt>
 <dd><p>Get geometrical derivatives in FCHK. Returns a dictionary of dictionary:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+ &quot;G&quot;: BaseGeometricalDerivativeTensor
 + &quot;GG&quot;: BaseGeometricalDerivativeTensor
@@ -710,7 +780,7 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__output__property__excitations">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__output__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__output__property__excitations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__output__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__output__property__excitations" title="Permalink to this definition"></a></dt>
 <dd><p>Get excitation properties in FCHK. Returns a dictionary:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+ &quot;!&quot; : Tensor
 + &quot;!F&quot; : Tensor
@@ -728,7 +798,7 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.make_cartesian_hessian_from_fchk">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">make_cartesian_hessian_from_fchk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">half_cartesian_hessian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacial_dof</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.make_cartesian_hessian_from_fchk" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">make_cartesian_hessian_from_fchk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">half_cartesian_hessian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacial_dof</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.make_cartesian_hessian_from_fchk" title="Permalink to this definition"></a></dt>
 <dd><p>Half the hessian is stored in fchk, get full hessian back</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -746,76 +816,34 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="xyz.html" class="btn btn-neutral float-left" title="XYZ files (chemistry_files.xyz)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dalton.html" class="btn btn-neutral float-right" title="Dalton files (chemistry_files.dalton)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing qcip_tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../code-documentation.html">API documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../chemistry_files.html#concepts">Concepts</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../chemistry_files.html#api-documentation">API documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
-</ul>
-</li>
-</ul>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/code-documentation/chemistry-files/gaussian.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../../_sources/code-documentation/chemistry-files/gaussian.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

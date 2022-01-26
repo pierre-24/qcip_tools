@@ -1,46 +1,86 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Contributing &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API documentation" href="code-documentation.html" />
-    <link rel="prev" title="Installing qcip_tools" href="install.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Installing qcip_tools" href="install.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#design-rules">Design rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-note-about-units">A note about units</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code-documentation.html">API documentation</a></li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="contributing">
-<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
-<p>Please note that the code is not actually developed on the git server of the University of Namur (which only contains the releases) but on a personal protected git server (with CI activated and properly configured).
-Feel free to ask access if needed.</p>
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline"></a></h1>
 <p>You first need to <a class="reference external" href="./install.html">install</a> if you wan to contribute to the code.</p>
-<p>You may want to take a look into <a class="reference external" href="https://gitlab.unamur.be/pierre.beaujean/qcip_scripts">qcip_scripts</a>, a collection of scripts based on this library.</p>
 <section id="design-rules">
-<h2>Design rules<a class="headerlink" href="#design-rules" title="Permalink to this headline">¶</a></h2>
+<h2>Design rules<a class="headerlink" href="#design-rules" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>The code is written in Python 3, and follows the (in)famous <a class="reference external" href="http://legacy.python.org/dev/peps/pep-0008/">PEP-8</a>. You can check it by running <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">lint</span></code>, which launch the <code class="docutils literal notranslate"><span class="pre">flake</span></code> utility.</p></li>
 <li><p>Codes and comments are written in english.</p></li>
@@ -54,7 +94,7 @@ You may need test files to do so, but try to make them small (say, don’t use d
 </ul>
 </section>
 <section id="workflow">
-<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h2>
+<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline"></a></h2>
 <p>Adapted from the (in)famous <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Git flow</a>.</p>
 <ul class="simple">
 <li><p>Development is mad in <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch, while <code class="docutils literal notranslate"><span class="pre">master</span></code> contains the production version (and is protected from edition).</p></li>
@@ -72,13 +112,8 @@ You may need test files to do so, but try to make them small (say, don’t use d
 </ol>
 </div>
 </section>
-<section id="licence">
-<h2>Licence<a class="headerlink" href="#licence" title="Permalink to this headline">¶</a></h2>
-<p>This code belong to me, <a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">Pierre Beaujean</a>, and to the <a class="reference external" href="https://www.unamur.be">University of Namur</a> since it is developed and used in the frame of my PhD thesis.
-Of course, if you contribute, you will be added to this list ;)</p>
-</section>
 <section id="a-note-about-units">
-<h2>A note about units<a class="headerlink" href="#a-note-about-units" title="Permalink to this headline">¶</a></h2>
+<h2>A note about units<a class="headerlink" href="#a-note-about-units" title="Permalink to this headline"></a></h2>
 <p>Unless mentioned in the docstring, atomic units (Hartree) are used. The two exceptions are:</p>
 <ul class="simple">
 <li><p>Angstrom for distances, since it is widely used in day-to-day chemistry, and widely used by quantum chemistry packages (Gaussian and GAMESS, to name a few).</p></li>
@@ -92,61 +127,34 @@ Also, take a look in the <a class="reference external" href="./code-documentatio
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installing qcip_tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="code-documentation.html" class="btn btn-neutral float-right" title="API documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installing qcip_tools</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#design-rules">Design rules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#workflow">Workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#licence">Licence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#a-note-about-units">A note about units</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="code-documentation.html">API documentation</a></li>
-</ul>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/contributing.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/contributing.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

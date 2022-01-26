@@ -1,47 +1,108 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Derivatives w.r.t. electric field (qcip_tools.derivatives_e) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Derivatives w.r.t. electric field (qcip_tools.derivatives_e) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Excitations (qcip_tools.derivatives_exci)" href="derivatives_exci.html" />
-    <link rel="prev" title="Derivatives of the energy (qcip_tools.derivatives)" href="derivatives.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Derivatives of the energy (qcip_tools.derivatives)" href="derivatives.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sources">Sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.derivatives_e">API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
+      <li>Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code-documentation/derivatives_e.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="derivatives-w-r-t-electric-field-qcip-tools-derivatives-e">
-<h1>Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)<a class="headerlink" href="#derivatives-w-r-t-electric-field-qcip-tools-derivatives-e" title="Permalink to this headline">¶</a></h1>
+<h1>Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)<a class="headerlink" href="#derivatives-w-r-t-electric-field-qcip-tools-derivatives-e" title="Permalink to this headline"></a></h1>
 <p>Tools to help the manipulation of derivatives of the energy with respect to a static (<code class="docutils literal notranslate"><span class="pre">F</span></code>) or dynamic (<code class="docutils literal notranslate"><span class="pre">D</span></code>) electric field (though the first one is a special case of the second).</p>
 <div class="math notranslate nohighlight">
 \[\newcommand{\sbb}[2]{\beta_{#1}\,\beta_{#2}}
 \newcommand{\sgg}[2]{\gamma_{#1}\,\gamma_{#2}}\]</div>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline"></a></h2>
 <p>Light can be described as an electromagnetic radiation, with time and space varying components.
 Generally, only the phenomena associated with its electric components, because dominant, are considered.
 If the space-dependent term is left constant, the electric part of the field reads</p>
@@ -62,7 +123,7 @@ This leads to an oscillating induced dipole moment, or, at the macroscopic scale
 For small electric fields, the polarizability term is dominant, but the hyperpolarizability terms becomes non-negligible when the field gets large.</p>
 </section>
 <section id="sources">
-<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline">¶</a></h2>
+<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>R.W. Boyd,  « Nonlinear Optics (3rd edition) ». <em>Elsevier</em> (2008).</p></li>
 <li><p>F. Castet <em>et al</em>. <em>J. Chem. Phys.</em> <strong>136</strong>, 024506 (2012).</p></li>
@@ -70,14 +131,14 @@ For small electric fields, the polarizability term is dominant, but the hyperpol
 </ul>
 </section>
 <section id="module-qcip_tools.derivatives_e">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_e" title="Permalink to this headline">¶</a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_e" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.BaseElectricalDerivativeTensor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">BaseElectricalDerivativeTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">BaseElectricalDerivativeTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor" title="Permalink to this definition"></a></dt>
 <dd><p>Base for all derivatives of the energy with respect to the electric field.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.rank">
-<span class="sig-name descname"><span class="pre">rank</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.rank" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rank</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.rank" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for the order</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -88,7 +149,7 @@ For small electric fields, the polarizability term is dominant, but the hyperpol
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.response_to_electric_field">
-<span class="sig-name descname"><span class="pre">response_to_electric_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.response_to_electric_field" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">response_to_electric_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.response_to_electric_field" title="Permalink to this definition"></a></dt>
 <dd><p>Response to an electric field, located at the (0, 0, 0) position and for which the direction is given
 by <code class="docutils literal notranslate"><span class="pre">field</span></code>.</p>
 <div class="math notranslate nohighlight">
@@ -105,7 +166,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.to_name">
-<span class="sig-name descname"><span class="pre">to_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simplified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.to_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simplified</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.to_name" title="Permalink to this definition"></a></dt>
 <dd><p>Get the name of the tensor from its representation, by using <code class="docutils literal notranslate"><span class="pre">REPRESENTATION</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -116,7 +177,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Rewritten to get a better output with this kind of tensor</p>
 </dd></dl>
 
@@ -124,11 +185,11 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.ElectricDipole">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">ElectricDipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">ElectricDipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole" title="Permalink to this definition"></a></dt>
 <dd><p>Dipole moment, commonly written <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.ElectricDipole.norm">
-<span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole.norm" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole.norm" title="Permalink to this definition"></a></dt>
 <dd><p>Norm of the dipole</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -139,7 +200,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.ElectricDipole.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Rewritten to add information</p>
 </dd></dl>
 
@@ -147,11 +208,11 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">FirstHyperpolarisabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">FirstHyperpolarisabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor" title="Permalink to this definition"></a></dt>
 <dd><p>First hyperpolarisability  tensor, commonly written <span class="math notranslate nohighlight">\(\beta(-\omega_\sigma;\omega_1,\omega_2)\)</span>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_hrs">
-<span class="sig-name descname"><span class="pre">beta_hrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_hrs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_hrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_hrs" title="Permalink to this definition"></a></dt>
 <dd><p>Hyper-Rayleigh scattering quantity:</p>
 <div class="math notranslate nohighlight">
 \[\beta_{HRS}=\sqrt{\langle\beta^2_{ZZZ}\rangle + \langle\beta^2_{ZXX}\rangle}\]</div>
@@ -164,7 +225,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_kerr">
-<span class="sig-name descname"><span class="pre">beta_kerr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_kerr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_kerr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_kerr" title="Permalink to this definition"></a></dt>
 <dd><p>Measured quantity in a dc-Kerr <span class="math notranslate nohighlight">\(\beta(-\omega;\omega,0)\)</span> experiment.</p>
 <div class="math notranslate nohighlight">
 \[\beta^K = \frac{3}{2}\,(\beta_{||}-\beta_{\perp})\]</div>
@@ -183,7 +244,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_parallel">
-<span class="sig-name descname"><span class="pre">beta_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_parallel" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_parallel" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch beta value under parallel polarization of all fields:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -205,7 +266,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_perpendicular">
-<span class="sig-name descname"><span class="pre">beta_perpendicular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_perpendicular" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_perpendicular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_perpendicular" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch beta value under perpendicular polarization of optical and static field.</p>
 <div class="math notranslate nohighlight">
 \[\beta_{\perp} = \frac{1}{5}\,\sum_i
@@ -222,7 +283,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_squared_zxx">
-<span class="sig-name descname"><span class="pre">beta_squared_zxx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_squared_zxx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_squared_zxx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_squared_zxx" title="Permalink to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\langle\beta^2_{ZXX}\rangle\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -243,7 +304,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_squared_zzz">
-<span class="sig-name descname"><span class="pre">beta_squared_zzz</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_squared_zzz" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_squared_zzz</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_squared_zzz" title="Permalink to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\langle\beta^2_{ZZZ}\rangle\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -264,7 +325,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_vector">
-<span class="sig-name descname"><span class="pre">beta_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_vector" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">beta_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.beta_vector" title="Permalink to this definition"></a></dt>
 <dd><p>return the hyperpolarizability vector</p>
 <div class="math notranslate nohighlight">
 \[\beta_i = \frac{1}{3} \sum_j \beta_{ijj} + \beta_{jij} + \beta_{jji}\]</div>
@@ -277,7 +338,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.compute_sum">
-<span class="sig-name descname"><span class="pre">compute_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">what</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.compute_sum" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">what</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.compute_sum" title="Permalink to this definition"></a></dt>
 <dd><p>Shorthand to simplify the computation of invariant quantities.
 <code class="docutils literal notranslate"><span class="pre">what</span></code> is the list of quantities to compute:
 <code class="docutils literal notranslate"><span class="pre">beta_tensor.compute_sum([(2/5,</span> <span class="pre">'ijjikk'),</span> <span class="pre">(3/5,</span> <span class="pre">'iijkjk'])</span></code> is equivalent to</p>
@@ -295,7 +356,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.depolarization_ratio">
-<span class="sig-name descname"><span class="pre">depolarization_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.depolarization_ratio" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">depolarization_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.depolarization_ratio" title="Permalink to this definition"></a></dt>
 <dd><p>Hyper-Rayleigh depolarization ratio:</p>
 <div class="math notranslate nohighlight">
 \[DR = \frac{\langle\beta^2_{ZZZ}\rangle}{\langle\beta^2_{XZZ}\rangle}\]</div>
@@ -303,7 +364,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.dipolar_contribution">
-<span class="sig-name descname"><span class="pre">dipolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.dipolar_contribution" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dipolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.dipolar_contribution" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>old_version</strong> (<em>bool</em>) – Use the previous (with Kleinman’s conditions) version</p>
@@ -316,7 +377,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.dipolar_contribution_squared">
-<span class="sig-name descname"><span class="pre">dipolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.dipolar_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dipolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.dipolar_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the square of the dipolar contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -330,7 +391,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.is_shg">
-<span class="sig-name descname"><span class="pre">is_shg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.is_shg" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_shg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.is_shg" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the tensor correspond to a SHG one</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -341,7 +402,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.nonlinear_anisotropy">
-<span class="sig-name descname"><span class="pre">nonlinear_anisotropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.nonlinear_anisotropy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">nonlinear_anisotropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.nonlinear_anisotropy" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the nonlinear anisotropy:</p>
 <div class="math notranslate nohighlight">
 \[\rho_{3/1}^2 = \frac{|\beta_{J=3}|^2}{|\beta_{J=1}|^2}\]</div>
@@ -357,7 +418,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.octupolar_contribution">
-<span class="sig-name descname"><span class="pre">octupolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.octupolar_contribution" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">octupolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.octupolar_contribution" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>old_version</strong> (<em>bool</em>) – Use the previous (with Kleinman’s conditions) version</p>
@@ -370,7 +431,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.octupolar_contribution_squared">
-<span class="sig-name descname"><span class="pre">octupolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.octupolar_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">octupolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.octupolar_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the square of the octupolar contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -384,7 +445,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.polarization_angle_dependant_intensity">
-<span class="sig-name descname"><span class="pre">polarization_angle_dependant_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.polarization_angle_dependant_intensity" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">polarization_angle_dependant_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.polarization_angle_dependant_intensity" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the angle (<span class="math notranslate nohighlight">\(\Psi\)</span>) dependant intensity in the SHS setup.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\langle\beta^2\rangle = \frac{1}{105}\,\begin{pmatrix}
@@ -412,7 +473,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J1_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J1_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Compute the <span class="math notranslate nohighlight">\(|\beta_{J=1}|^2\)</span> contribution</p>
 </div></blockquote>
@@ -430,7 +491,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1a_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J1a_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1a_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J1a_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1a_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Compute the <span class="math notranslate nohighlight">\(|\beta_{J=1\alpha}|^2\)</span> contribution</p>
 </div></blockquote>
@@ -445,7 +506,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1ab_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J1ab_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1ab_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J1ab_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1ab_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Compute the <span class="math notranslate nohighlight">\(|\beta_{J=1\alpha\beta}|^2\)</span> contribution</p>
 </div></blockquote>
@@ -460,7 +521,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1b_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J1b_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1b_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J1b_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J1b_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Compute the <span class="math notranslate nohighlight">\(|\beta_{J=1\beta}|^2\)</span> contribution</p>
 </div></blockquote>
@@ -475,7 +536,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J2_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J2_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J2_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J2_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J2_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Compute the <span class="math notranslate nohighlight">\(|\beta_{J=2}|^2\)</span> contribution</p>
 </div></blockquote>
@@ -491,7 +552,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J3_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J3_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J3_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J3_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.spherical_J3_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Compute the <span class="math notranslate nohighlight">\(|\beta_{J=3}|^2\)</span> contribution</p>
 </div></blockquote>
@@ -508,7 +569,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Rewritten to add information</p>
 </dd></dl>
 
@@ -516,23 +577,23 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.NotSHG">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">NotSHG</span></span><a class="headerlink" href="#qcip_tools.derivatives_e.NotSHG" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">NotSHG</span></span><a class="headerlink" href="#qcip_tools.derivatives_e.NotSHG" title="Permalink to this definition"></a></dt>
 <dd><p>Raised when trying to compute a quantity from SHG experiment on a tensor which is not</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.NotTHG">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">NotTHG</span></span><a class="headerlink" href="#qcip_tools.derivatives_e.NotTHG" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">NotTHG</span></span><a class="headerlink" href="#qcip_tools.derivatives_e.NotTHG" title="Permalink to this definition"></a></dt>
 <dd><p>Raised when trying to compute a quantity from THG experiment on a tensor which is not</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.PolarisabilityTensor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">PolarisabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">PolarisabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor" title="Permalink to this definition"></a></dt>
 <dd><p>Polarisability  tensor, commonly written <span class="math notranslate nohighlight">\(\alpha(-\omega_\sigma;\omega_1)\)</span>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.PolarisabilityTensor.anisotropic_value">
-<span class="sig-name descname"><span class="pre">anisotropic_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.anisotropic_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">anisotropic_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.anisotropic_value" title="Permalink to this definition"></a></dt>
 <dd><p>Ansotropic value:</p>
 <div class="math notranslate nohighlight">
 \[\Delta\alpha=
@@ -546,7 +607,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.PolarisabilityTensor.isotropic_value">
-<span class="sig-name descname"><span class="pre">isotropic_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.isotropic_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">isotropic_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.isotropic_value" title="Permalink to this definition"></a></dt>
 <dd><p>Isotropic value:</p>
 <div class="math notranslate nohighlight">
 \[\bar{\alpha}=\frac{1}{3}\sum_i \alpha_{ii}.\]</div>
@@ -559,7 +620,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.PolarisabilityTensor.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Rewritten to add information</p>
 </dd></dl>
 
@@ -567,24 +628,24 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py data">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.REPRESENTATIONS">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">REPRESENTATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'alpha(-w;w)':</span> <span class="pre">'dD',</span> <span class="pre">'alpha(0;0)':</span> <span class="pre">'FF',</span> <span class="pre">'beta(-2w;w,w)':</span> <span class="pre">'XDD',</span> <span class="pre">'beta(-w;w,0)':</span> <span class="pre">'dDF',</span> <span class="pre">'beta(0;0,0)':</span> <span class="pre">'FFF',</span> <span class="pre">'beta(0;w,-w)':</span> <span class="pre">'FDd',</span> <span class="pre">'gamma(-2w;w,w,0)':</span> <span class="pre">'XDDF',</span> <span class="pre">'gamma(-3w;w,w,w)':</span> <span class="pre">'XDDD',</span> <span class="pre">'gamma(-w;0,0,w)':</span> <span class="pre">'dFFD',</span> <span class="pre">'gamma(-w;w,0,0)':</span> <span class="pre">'dDFF',</span> <span class="pre">'gamma(-w;w,w,-w)':</span> <span class="pre">'dDDd',</span> <span class="pre">'gamma(0;0,0,0)':</span> <span class="pre">'FFFF',</span> <span class="pre">'mu':</span> <span class="pre">'F'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_e.REPRESENTATIONS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">REPRESENTATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'alpha(-w;w)':</span> <span class="pre">'dD',</span> <span class="pre">'alpha(0;0)':</span> <span class="pre">'FF',</span> <span class="pre">'beta(-2w;w,w)':</span> <span class="pre">'XDD',</span> <span class="pre">'beta(-w;w,0)':</span> <span class="pre">'dDF',</span> <span class="pre">'beta(0;0,0)':</span> <span class="pre">'FFF',</span> <span class="pre">'beta(0;w,-w)':</span> <span class="pre">'FDd',</span> <span class="pre">'gamma(-2w;w,w,0)':</span> <span class="pre">'XDDF',</span> <span class="pre">'gamma(-3w;w,w,w)':</span> <span class="pre">'XDDD',</span> <span class="pre">'gamma(-w;0,0,w)':</span> <span class="pre">'dFFD',</span> <span class="pre">'gamma(-w;w,0,0)':</span> <span class="pre">'dDFF',</span> <span class="pre">'gamma(-w;w,w,-w)':</span> <span class="pre">'dDDd',</span> <span class="pre">'gamma(0;0,0,0)':</span> <span class="pre">'FFFF',</span> <span class="pre">'mu':</span> <span class="pre">'F'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_e.REPRESENTATIONS" title="Permalink to this definition"></a></dt>
 <dd><p>Correspondence between a name and a representation</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SIMPLIFIED_NAMES">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">SIMPLIFIED_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'alpha':</span> <span class="pre">'α(0;0)',</span> <span class="pre">'alpha(-w;w)':</span> <span class="pre">'α(-w;w)',</span> <span class="pre">'beta':</span> <span class="pre">'β(0;0,0)',</span> <span class="pre">'beta(-2w;w,w)':</span> <span class="pre">'β(-2w;w,w)',</span> <span class="pre">'beta(-w;w,0)':</span> <span class="pre">'β(-w;w,0)',</span> <span class="pre">'energy':</span> <span class="pre">'E',</span> <span class="pre">'gamma':</span> <span class="pre">'γ(0;0,0,0)',</span> <span class="pre">'gamma(-2w;w,w,0)':</span> <span class="pre">'γ(-2w;w,w,0)',</span> <span class="pre">'gamma(-3w;w,w,w)':</span> <span class="pre">'γ(-3w;w,w,w)',</span> <span class="pre">'gamma(-w;0,0,w)':</span> <span class="pre">'γ(-w;0,0,w)',</span> <span class="pre">'gamma(-w;w,0,0)':</span> <span class="pre">'γ(-w;0,0,w)',</span> <span class="pre">'gamma(-w;w,w,-w)':</span> <span class="pre">'γ(-w;w,w,-w)',</span> <span class="pre">'mu':</span> <span class="pre">'µ'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_e.SIMPLIFIED_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">SIMPLIFIED_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'alpha':</span> <span class="pre">'α(0;0)',</span> <span class="pre">'alpha(-w;w)':</span> <span class="pre">'α(-w;w)',</span> <span class="pre">'beta':</span> <span class="pre">'β(0;0,0)',</span> <span class="pre">'beta(-2w;w,w)':</span> <span class="pre">'β(-2w;w,w)',</span> <span class="pre">'beta(-w;w,0)':</span> <span class="pre">'β(-w;w,0)',</span> <span class="pre">'energy':</span> <span class="pre">'E',</span> <span class="pre">'gamma':</span> <span class="pre">'γ(0;0,0,0)',</span> <span class="pre">'gamma(-2w;w,w,0)':</span> <span class="pre">'γ(-2w;w,w,0)',</span> <span class="pre">'gamma(-3w;w,w,w)':</span> <span class="pre">'γ(-3w;w,w,w)',</span> <span class="pre">'gamma(-w;0,0,w)':</span> <span class="pre">'γ(-w;0,0,w)',</span> <span class="pre">'gamma(-w;w,0,0)':</span> <span class="pre">'γ(-w;0,0,w)',</span> <span class="pre">'gamma(-w;w,w,-w)':</span> <span class="pre">'γ(-w;w,w,-w)',</span> <span class="pre">'mu':</span> <span class="pre">'µ'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_e.SIMPLIFIED_NAMES" title="Permalink to this definition"></a></dt>
 <dd><p>List of all simplified names</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">SecondHyperpolarizabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">SecondHyperpolarizabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor" title="Permalink to this definition"></a></dt>
 <dd><p>Second hyperpolarisability  tensor, commonly written
 <span class="math notranslate nohighlight">\(\gamma(-\omega_\sigma;\omega_1,\omega_2,\omega_3)\)</span>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_sum">
-<span class="sig-name descname"><span class="pre">compute_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">what</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_sum" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">what</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_sum" title="Permalink to this definition"></a></dt>
 <dd><p>Shorthand to simplify the computation of invariant quantities.
 <code class="docutils literal notranslate"><span class="pre">what</span></code> is the list of quantities to compute:
 <code class="docutils literal notranslate"><span class="pre">gamma_tensor.compute_sum([(2/5,</span> <span class="pre">'ijklijkl'),</span> <span class="pre">(3/5,</span> <span class="pre">'iijjkkll'])</span></code> is equivalent to</p>
@@ -602,7 +663,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.depolarization_ratio">
-<span class="sig-name descname"><span class="pre">depolarization_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.depolarization_ratio" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">depolarization_ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.depolarization_ratio" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the depolarization ratio:</p>
 <div class="math notranslate nohighlight">
 \[DR = \frac{\langle\gamma^2_{ZZZZ}\rangle}{\langle\gamma^2_{ZXXX}\rangle}\]</div>
@@ -615,7 +676,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_kerr">
-<span class="sig-name descname"><span class="pre">gamma_kerr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_kerr" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gamma_kerr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_kerr" title="Permalink to this definition"></a></dt>
 <dd><p>Measured quantity in a dc-Kerr (-w;w,0,0) experiment</p>
 <div class="math notranslate nohighlight">
 \[\gamma^K = \frac{3}{2}\,(\gamma_{||}-\gamma_{\perp})\]</div>
@@ -628,7 +689,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_parallel">
-<span class="sig-name descname"><span class="pre">gamma_parallel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_parallel" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gamma_parallel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_parallel" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch parallel isotropic average of gamma</p>
 <div class="math notranslate nohighlight">
 \[\gamma_{||} = \frac{1}{15}\,\sum_{ij} \gamma_{iijj} + \gamma_{ijji} + \gamma_{ijij}\]</div>
@@ -641,7 +702,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_perpendicular">
-<span class="sig-name descname"><span class="pre">gamma_perpendicular</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_perpendicular" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gamma_perpendicular</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_perpendicular" title="Permalink to this definition"></a></dt>
 <dd><p>Fetch perpendicular isotropic average of gamma</p>
 <div class="math notranslate nohighlight">
 \[\gamma_{\perp} = \frac{1}{15}\,\sum_{ij} 2\gamma_{iijj} - \gamma_{ijij}\]</div>
@@ -654,7 +715,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_squared_zxxx">
-<span class="sig-name descname"><span class="pre">gamma_squared_zxxx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_squared_zxxx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gamma_squared_zxxx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_squared_zxxx" title="Permalink to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\langle\gamma^2_{ZXXX}\rangle\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\langle\gamma_{ZXXX}^2\rangle &amp;=
@@ -678,7 +739,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_squared_zzzz">
-<span class="sig-name descname"><span class="pre">gamma_squared_zzzz</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_squared_zzzz" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gamma_squared_zzzz</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_squared_zzzz" title="Permalink to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\langle\gamma^2_{ZZZZ}\rangle\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\langle\gamma_{ZZZZ}^2\rangle &amp;=
@@ -703,7 +764,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_ths">
-<span class="sig-name descname"><span class="pre">gamma_ths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_ths" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gamma_ths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.gamma_ths" title="Permalink to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\gamma_{THS}\)</span>, the quantity from a third harmonic scattering experiment.</p>
 <div class="math notranslate nohighlight">
 \[\gamma_{THS} = \sqrt{\langle\gamma^2_{ZZZZ}\rangle + \langle\gamma^2_{ZXXX}\rangle}\]</div>
@@ -716,7 +777,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.hexadecapolar_contribution">
-<span class="sig-name descname"><span class="pre">hexadecapolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.hexadecapolar_contribution" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hexadecapolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.hexadecapolar_contribution" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the hexadecapolar contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -730,7 +791,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.hexadecapolar_contribution_squared">
-<span class="sig-name descname"><span class="pre">hexadecapolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.hexadecapolar_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hexadecapolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.hexadecapolar_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the square of the hexadecapolar (bless you!) contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -744,7 +805,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.is_thg">
-<span class="sig-name descname"><span class="pre">is_thg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.is_thg" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_thg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.is_thg" title="Permalink to this definition"></a></dt>
 <dd><p>Check if a tensor is a THG one</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -755,7 +816,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.isotropic_contribution">
-<span class="sig-name descname"><span class="pre">isotropic_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.isotropic_contribution" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">isotropic_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.isotropic_contribution" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the isotropic contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -769,7 +830,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.isotropic_contribution_squared">
-<span class="sig-name descname"><span class="pre">isotropic_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.isotropic_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">isotropic_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.isotropic_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the square of the isotropic contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -783,7 +844,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.polarization_angle_dependant_intensity">
-<span class="sig-name descname"><span class="pre">polarization_angle_dependant_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.polarization_angle_dependant_intensity" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">polarization_angle_dependant_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.polarization_angle_dependant_intensity" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the angle (<span class="math notranslate nohighlight">\(\Psi\)</span>) dependant intensity in the THS setup.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\langle\gamma^2\rangle = \frac{1}{630}\,
@@ -816,7 +877,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.quadrupolar_contribution">
-<span class="sig-name descname"><span class="pre">quadrupolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.quadrupolar_contribution" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">quadrupolar_contribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.quadrupolar_contribution" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the quadrupolar contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -830,7 +891,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.quadrupolar_contribution_squared">
-<span class="sig-name descname"><span class="pre">quadrupolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.quadrupolar_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">quadrupolar_contribution_squared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.quadrupolar_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the square of the quadrupolar contribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -844,7 +905,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J0_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J0_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J0_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J0_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J0_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=0}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[|\gamma_{J=0}|^2 = \frac{1}{5} \sum^{xyz}_{ijkl} \sgg{iijj}{kllk}\]</div>
@@ -857,7 +918,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J1_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J1_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J1_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J1_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J1_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=1}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[|\gamma_{J=1}|^2 = \frac{1}{10} \sum^{xyz}_{ijkl} 3\,\sgg{ijjk}{ikll} - 3\,\sgg{ijjk}{kill}\]</div>
@@ -870,7 +931,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J2_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J2_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=2}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -889,7 +950,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2a_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J2a_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2a_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J2a_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2a_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=2\alpha}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[|\gamma_{J=2\alpha}|^2 =
@@ -903,7 +964,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2ab_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J2ab_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2ab_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J2ab_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2ab_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=2\alpha\beta}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[|\gamma_{J=2\alpha\beta}|^2
@@ -917,7 +978,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2b_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J2b_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2b_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J2b_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J2b_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=2\beta}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[|\gamma_{J=2\beta}|^2 = \frac{1}{21} \sum_{ijkl}^{xyz} 15\,\sgg{iijk}{ljlk}-5\,\sgg{iijj}{kllk}\]</div>
@@ -930,7 +991,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J3_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J3_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J3_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J3_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J3_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=3}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}|\gamma_{J=3}|^2 = \frac{1}{20} \sum^{xyz}_{ijkl}\left\{
@@ -948,7 +1009,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J4_contribution_squared">
-<span class="sig-name descname"><span class="pre">spherical_J4_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J4_contribution_squared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">spherical_J4_contribution_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.spherical_J4_contribution_squared" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the <span class="math notranslate nohighlight">\(|\gamma_{J=4}|^2\)</span> contribution:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}|\gamma_{J=4}|^2 = \frac{1}{140} \sum^{xyz}_{ijkl}\left\{
@@ -966,7 +1027,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.to_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_extras</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Rewritten to add information</p>
 </dd></dl>
 
@@ -974,7 +1035,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.convert_energy_to">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">convert_energy_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.convert_energy_to" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">convert_energy_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.convert_energy_to" title="Permalink to this definition"></a></dt>
 <dd><p>Convert energy to something else</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -988,7 +1049,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.convert_frequency_from_string">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">convert_frequency_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.convert_frequency_from_string" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">convert_frequency_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.convert_frequency_from_string" title="Permalink to this definition"></a></dt>
 <dd><p>Convert the string value to the value in atomic units.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1002,7 +1063,7 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.fields_to_str">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">fields_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.fields_to_str" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">fields_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.fields_to_str" title="Permalink to this definition"></a></dt>
 <dd><p>Get the string representation of a series of fields and the response, such as “-3w;w,w,w”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1021,77 +1082,34 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="derivatives.html" class="btn btn-neutral float-left" title="Derivatives of the energy (qcip_tools.derivatives)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="derivatives_exci.html" class="btn btn-neutral float-right" title="Excitations (qcip_tools.derivatives_exci)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sources">Sources</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.derivatives_e">API documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
-</ul>
-</li>
-</ul>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/code-documentation/derivatives_e.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/code-documentation/derivatives_e.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

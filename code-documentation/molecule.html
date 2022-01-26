@@ -1,62 +1,121 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Molecule (qcip_tools.molecule) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Molecule (qcip_tools.molecule) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Numerical differentiation (qcip_tools.numerical_differentiation)" href="numerical_differentiation.html" />
-    <link rel="prev" title="Mixins (qcip_tools.mixins)" href="mixins.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Mixins (qcip_tools.mixins)" href="mixins.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.molecule">API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
+      <li>Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code-documentation/molecule.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="molecule-qcip-tools-molecule">
-<h1>Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)<a class="headerlink" href="#molecule-qcip-tools-molecule" title="Permalink to this headline">¶</a></h1>
+<h1>Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)<a class="headerlink" href="#molecule-qcip-tools-molecule" title="Permalink to this headline"></a></h1>
 <section id="module-qcip_tools.molecule">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.molecule" title="Permalink to this headline">¶</a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.molecule" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Bond">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'single'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Bond" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'single'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Bond" title="Permalink to this definition"></a></dt>
 <dd><p>Define a bond between two atoms</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.molecule.GroupError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">GroupError</span></span><a class="headerlink" href="#qcip_tools.molecule.GroupError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">GroupError</span></span><a class="headerlink" href="#qcip_tools.molecule.GroupError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.molecule.MolecularSymmetryError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">MolecularSymmetryError</span></span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">MolecularSymmetryError</span></span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.molecule.MolecularSymmetryFinder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">MolecularSymmetryFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomise_dummy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryFinder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">MolecularSymmetryFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomise_dummy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryFinder" title="Permalink to this definition"></a></dt>
 <dd><p>High-level symmetry finder on the molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -70,7 +129,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.MolecularSymmetryFinder.orient_molecule">
-<span class="sig-name descname"><span class="pre">orient_molecule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryFinder.orient_molecule" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">orient_molecule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryFinder.orient_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Find the symmetry of the molecule, then orient it
 (just translation, then rotation).</p>
 <dl class="field-list simple">
@@ -82,7 +141,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.MolecularSymmetryFinder.symmetrise_molecule">
-<span class="sig-name descname"><span class="pre">symmetrise_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lowers_infinite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryFinder.symmetrise_molecule" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symmetrise_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lowers_infinite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.MolecularSymmetryFinder.symmetrise_molecule" title="Permalink to this definition"></a></dt>
 <dd><p>After <code class="docutils literal notranslate"><span class="pre">`orient_molecule()</span></code>, and among the unique positions</p>
 <ul class="simple">
 <li><p>Find the set of unique atoms: apply the symmetry elements and groups atoms together ;</p></li>
@@ -111,7 +170,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule" title="Permalink to this definition"></a></dt>
 <dd><p>Class to define a molecule (basically a list of atoms).</p>
 <p>This object is mutable.</p>
 <div class="admonition note">
@@ -120,7 +179,7 @@
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.MO_to_str">
-<span class="sig-name descname"><span class="pre">MO_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mo_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.MO_to_str" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MO_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mo_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.MO_to_str" title="Permalink to this definition"></a></dt>
 <dd><p>Get the corresponding Molecular Orbital (MO) as HOMO-x/LUMO+x.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -138,7 +197,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.atom">
-<span class="sig-name descname"><span class="pre">atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shifted_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.atom" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shifted_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.atom" title="Permalink to this definition"></a></dt>
 <dd><p>Get the atom defined by index</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -152,13 +211,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.atoms">
-<span class="sig-name descname"><span class="pre">atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.atoms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.atoms" title="Permalink to this definition"></a></dt>
 <dd><p>Get a list of atom (index) based on some criterion</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.bonds">
-<span class="sig-name descname"><span class="pre">bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.bonds" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.bonds" title="Permalink to this definition"></a></dt>
 <dd><p>Get a list of the bond in the molecule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -172,7 +231,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.bounding_box">
-<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.bounding_box" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.bounding_box" title="Permalink to this definition"></a></dt>
 <dd><p>Get the bounding box corresponding to the molecule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -189,7 +248,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.center_of_charges">
-<span class="sig-name descname"><span class="pre">center_of_charges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.center_of_charges" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">center_of_charges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.center_of_charges" title="Permalink to this definition"></a></dt>
 <dd><p>Position of the center of charge</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -200,7 +259,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.center_of_mass">
-<span class="sig-name descname"><span class="pre">center_of_mass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.center_of_mass" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">center_of_mass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.center_of_mass" title="Permalink to this definition"></a></dt>
 <dd><p>Position of the center of mass</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -211,7 +270,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.connectivities">
-<span class="sig-name descname"><span class="pre">connectivities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.connectivities" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">connectivities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.connectivities" title="Permalink to this definition"></a></dt>
 <dd><p>Get connectivity atom by atom, using the VdW radii.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,7 +287,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.distances">
-<span class="sig-name descname"><span class="pre">distances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.distances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.distances" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieve the distance matrix between all atoms in the molecule.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -243,7 +302,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.formula">
-<span class="sig-name descname"><span class="pre">formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enhanced</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.formula" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enhanced</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.formula" title="Permalink to this definition"></a></dt>
 <dd><p>Get the formula, based on self.formula_holder and self. symbols_contained.
 Implementation note : logically, it can write the atoms in whatever order. But in chemistry,
 the usual way is to start in this order C,H,N,O,X … Where X is the other(s) atom(s). So
@@ -252,7 +311,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.insert">
-<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.insert" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.insert" title="Permalink to this definition"></a></dt>
 <dd><p>Add atom in the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -266,7 +325,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.linear">
-<span class="sig-name descname"><span class="pre">linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.linear" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.linear" title="Permalink to this definition"></a></dt>
 <dd><p>Compute if the molecule is linear or not. A molecule is linear if <span class="math notranslate nohighlight">\(I_\alpha \approx 0\)</span> and
 <span class="math notranslate nohighlight">\(I_\beta \approx I_\gamma\)</span>, if <span class="math notranslate nohighlight">\(I_\alpha &lt; I_\beta \approx I_\gamma\)</span>.</p>
 <dl class="field-list simple">
@@ -281,7 +340,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.list_of_atoms">
-<span class="sig-name descname"><span class="pre">list_of_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shifted_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.list_of_atoms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">list_of_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shifted_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.list_of_atoms" title="Permalink to this definition"></a></dt>
 <dd><p>Make a list of atoms following the connectivity and excluding some if any.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -301,7 +360,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.mass">
-<span class="sig-name descname"><span class="pre">mass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.mass" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.mass" title="Permalink to this definition"></a></dt>
 <dd><p>Get the mass of the molecule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -312,7 +371,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.moments_of_inertia">
-<span class="sig-name descname"><span class="pre">moments_of_inertia</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.moments_of_inertia" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">moments_of_inertia</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.moments_of_inertia" title="Permalink to this definition"></a></dt>
 <dd><p>Get the moment of inertia tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -323,7 +382,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.number_of_electrons">
-<span class="sig-name descname"><span class="pre">number_of_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.number_of_electrons" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">number_of_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.number_of_electrons" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The number of electrons in the molecule</p>
@@ -333,7 +392,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.output_atoms">
-<span class="sig-name descname"><span class="pre">output_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_z_instead_of_symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.output_atoms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">output_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_z_instead_of_symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.output_atoms" title="Permalink to this definition"></a></dt>
 <dd><p>List atoms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -350,7 +409,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.position_matrix">
-<span class="sig-name descname"><span class="pre">position_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomise_dummy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.position_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">position_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomise_dummy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.position_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>Get position matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -367,7 +426,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.principal_axes">
-<span class="sig-name descname"><span class="pre">principal_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.principal_axes" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">principal_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.principal_axes" title="Permalink to this definition"></a></dt>
 <dd><p>Return the moment of inertia
 (from <a class="reference external" href="https://github.com/moorepants/DynamicistToolKit/blob/master/dtk/inertia.py">https://github.com/moorepants/DynamicistToolKit/blob/master/dtk/inertia.py</a>).</p>
 <dl class="field-list simple">
@@ -382,20 +441,20 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.remove_atom">
-<span class="sig-name descname"><span class="pre">remove_atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shifted_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.remove_atom" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">remove_atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shifted_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.remove_atom" title="Permalink to this definition"></a></dt>
 <dd><p>Remove an atom in the list
 :param shifted_index: index of the atom</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.set_to_inertia_axes">
-<span class="sig-name descname"><span class="pre">set_to_inertia_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.set_to_inertia_axes" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_to_inertia_axes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.set_to_inertia_axes" title="Permalink to this definition"></a></dt>
 <dd><p>Translate and rotate molecule to its principal inertia axes</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.square_of_spin_angular_moment">
-<span class="sig-name descname"><span class="pre">square_of_spin_angular_moment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.square_of_spin_angular_moment" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">square_of_spin_angular_moment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.square_of_spin_angular_moment" title="Permalink to this definition"></a></dt>
 <dd><p>Return <span class="math notranslate nohighlight">\(\hat{S}_z^2=S\,(S+1)\)</span>, where <span class="math notranslate nohighlight">\(S\)</span> is the spin value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -406,13 +465,13 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.translate_self_to_center_of_charges">
-<span class="sig-name descname"><span class="pre">translate_self_to_center_of_charges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.translate_self_to_center_of_charges" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">translate_self_to_center_of_charges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.translate_self_to_center_of_charges" title="Permalink to this definition"></a></dt>
 <dd><p>Translate the molecule to the center of charge</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.molecule.Molecule.translate_self_to_center_of_mass">
-<span class="sig-name descname"><span class="pre">translate_self_to_center_of_mass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.translate_self_to_center_of_mass" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">translate_self_to_center_of_mass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.Molecule.translate_self_to_center_of_mass" title="Permalink to this definition"></a></dt>
 <dd><p>Translate the molecule to the center of mass</p>
 </dd></dl>
 
@@ -420,12 +479,12 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.molecule.ShiftedIndexError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">ShiftedIndexError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.ShiftedIndexError" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">ShiftedIndexError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.ShiftedIndexError" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.molecule.gen_molecule_from_unique_atoms">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">gen_molecule_from_unique_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.gen_molecule_from_unique_atoms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.molecule.</span></span><span class="sig-name descname"><span class="pre">gen_molecule_from_unique_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.molecule.gen_molecule_from_unique_atoms" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a molecule out of the uniques atoms and the symmetry group</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -444,75 +503,34 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mixins.html" class="btn btn-neutral float-left" title="Mixins (qcip_tools.mixins)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="numerical_differentiation.html" class="btn btn-neutral float-right" title="Numerical differentiation (qcip_tools.numerical_differentiation)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.molecule">API documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
-</ul>
-</li>
-</ul>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/code-documentation/molecule.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/code-documentation/molecule.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>

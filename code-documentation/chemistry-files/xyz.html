@@ -1,109 +1,46 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>XYZ files (chemistry_files.xyz) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XYZ files (chemistry_files.xyz) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Gaussian files (chemistry_files.gaussian)" href="gaussian.html" />
-    <link rel="prev" title="Helpers (chemistry_files.helpers)" href="helpers.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Helpers (chemistry_files.helpers)" href="helpers.html" /> 
+</head>
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="xyz-files-chemistry-files-xyz">
-<h1>XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)<a class="headerlink" href="#xyz-files-chemistry-files-xyz" title="Permalink to this headline">¶</a></h1>
-<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/XYZ_file_format">XYZ file format</a>.</p>
-<span class="target" id="module-qcip_tools.chemistry_files.xyz"></span><dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.xyz.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File" title="Permalink to this definition">¶</a></dt>
-<dd><p>The (in)famous XYZ file</p>
-<div class="class-members docutils container">
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>: the molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule.Molecule</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">self.title</span></code>: title of the molecule (<code class="docutils literal notranslate"><span class="pre">str</span></code>)</p></li>
-</ul>
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.attempt_identification" title="Permalink to this definition">¶</a></dt>
-<dd><p>An XYZ is kinda simple: it starts with a number, then contains series of 4 things (the 3 last being floats)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.file_type">
-<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'XYZ'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.file_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>The identifier</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.from_molecule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.from_molecule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a file from molecule</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>molecule</strong> (<a class="reference internal" href="../molecule.html#qcip_tools.molecule.Molecule" title="qcip_tools.molecule.Molecule"><em>qcip_tools.molecule.Molecule</em></a>) – the molecule</p></li>
-<li><p><strong>title</strong> (<em>str</em>) – title of the run</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.chemistry_files.xyz.File" title="qcip_tools.chemistry_files.xyz.File">qcip_tools.chemistry_files.xyz.File</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the common extention of this kind of files</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.XYZFormatError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.xyz.</span></span><span class="sig-name descname"><span class="pre">XYZFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.XYZFormatError" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</section>
-
-
-          </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing qcip_tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
@@ -113,7 +50,16 @@
 <li class="toctree-l2"><a class="reference internal" href="../bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../chemistry_files.html#concepts">Concepts</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../chemistry_files.html#api-documentation">API documentation</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../chemistry_files.html#api-documentation">API documentation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gaussian.html">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
@@ -131,41 +77,123 @@
 </li>
 </ul>
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/code-documentation/chemistry-files/xyz.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../../_sources/code-documentation/chemistry-files/xyz.rst.txt"
-          rel="nofollow">Page source</a>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../code-documentation.html">API documentation</a> &raquo;</li>
+          <li><a href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a> &raquo;</li>
+      <li>XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/code-documentation/chemistry-files/xyz.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="xyz-files-chemistry-files-xyz">
+<h1>XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)<a class="headerlink" href="#xyz-files-chemistry-files-xyz" title="Permalink to this headline"></a></h1>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/XYZ_file_format">XYZ file format</a>.</p>
+<span class="target" id="module-qcip_tools.chemistry_files.xyz"></span><dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.xyz.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File" title="Permalink to this definition"></a></dt>
+<dd><p>The (in)famous XYZ file</p>
+<div class="class-members docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>: the molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule.Molecule</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.title</span></code>: title of the molecule (<code class="docutils literal notranslate"><span class="pre">str</span></code>)</p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.attempt_identification">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.attempt_identification" title="Permalink to this definition"></a></dt>
+<dd><p>An XYZ is kinda simple: it starts with a number, then contains series of 4 things (the 3 last being floats)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.file_type">
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'XYZ'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.file_type" title="Permalink to this definition"></a></dt>
+<dd><p>The identifier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.from_molecule">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.from_molecule" title="Permalink to this definition"></a></dt>
+<dd><p>Create a file from molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>molecule</strong> (<a class="reference internal" href="../molecule.html#qcip_tools.molecule.Molecule" title="qcip_tools.molecule.Molecule"><em>qcip_tools.molecule.Molecule</em></a>) – the molecule</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – title of the run</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.chemistry_files.xyz.File" title="qcip_tools.chemistry_files.xyz.File">qcip_tools.chemistry_files.xyz.File</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.possible_file_extensions">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.possible_file_extensions" title="Permalink to this definition"></a></dt>
+<dd><p>Return the common extention of this kind of files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.XYZFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.xyz.</span></span><span class="sig-name descname"><span class="pre">XYZFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.XYZFormatError" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="helpers.html" class="btn btn-neutral float-left" title="Helpers (chemistry_files.helpers)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gaussian.html" class="btn btn-neutral float-right" title="Gaussian files (chemistry_files.gaussian)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
-    
+  <hr/>
 
-    
-  </body>
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

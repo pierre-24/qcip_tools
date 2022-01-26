@@ -9,9 +9,9 @@ To just use ``qcip_tools`` in your Python projects, simply use pip:
 
 .. code-block:: bash
 
-    pip3 install --user git+https://gitlab.unamur.be/chimie/lct/qcip_tools.git@release-vXX
+    pip3 install --user git+https://github.com/pierre-24/qcip_tools.git@release-vXX
 
-Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://gitlab.unamur.be/chimie/lct/qcip_tools/blob/master/README.md>`_).
+Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://github.com/pierre-24/qcip_tools#readme>`_).
 
 Note that ``--user`` allow you to install the package without being superuser (see `here <https://pip.pypa.io/en/stable/user_guide/#user-installs>`_).
 You will probably need to add ``$HOME/.local/bin`` to ``$PATH`` for this to work:
@@ -25,6 +25,10 @@ On the other hand, you can install it in a *virtualenv* (see below).
 
 (*optional*) Patching Dalton
 ----------------------------
+
+.. warning::
+
+    Not checked with recent (> 2018) version of Dalton.
 
 You can download a patch here: :download:`dalton.patch` to outputs responses functions in a better place (``DALTON.PROP`` in the archive), with more digits.
 This is generally not important, except if you are looking for accuracy (for numerical differentiation, for example).
@@ -57,7 +61,7 @@ Installation for contributors
 
 To contribute to the project, you need to clone the repository:
 
-+ Clone it: ``git clone git@git.pierrebeaujean.net:pierre/qcip_tools.git``.
++ Clone it: ``git@github.com:pierre-24/qcip_tools.git``.
 + Install scipy's (and other python's) dependencies : ``sudo apt-get install libopenblas-dev libatlas-dev build-essential libpng12-dev libfreetype6-dev libpython3.*-dev`` (or something like this).
 + Create a virtualenv : ``python3 -m venv venv; source venv/bin/activate``
 + Install ``pip-tools``: ``pip3 install pip-tools`` ;

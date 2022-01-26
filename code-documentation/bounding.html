@@ -1,258 +1,46 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Bounding objects(qcip_tools.bounding) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bounding objects(qcip_tools.bounding) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Chemistry files (qcip_tools.chemistry_files)" href="chemistry_files.html" />
-    <link rel="prev" title="Basis set (qcip_tools.basis_set)" href="basis_set.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Basis set (qcip_tools.basis_set)" href="basis_set.html" /> 
+</head>
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="bounding-objects-qcip-tools-bounding">
-<h1>Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)<a class="headerlink" href="#bounding-objects-qcip-tools-bounding" title="Permalink to this headline">¶</a></h1>
-<p>Bouding box/sphere.</p>
-<section id="module-qcip_tools.bounding">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.bounding" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">AABoundingBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a Axis Aligned (AA) bounding box. You must define either <code class="docutils literal notranslate"><span class="pre">maximum</span></code> or <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Works for any dimension.</p>
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">origin</span></code> is corrected so that is the lowest coordinates possible, and <code class="docutils literal notranslate"><span class="pre">dimension</span></code> is set
-accordingly, so that it contains only positive numbers.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>origin</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the origin</p></li>
-<li><p><strong>maximum</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the maximum</p></li>
-<li><p><strong>size</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – size of bounding box</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox.contains">
-<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if point in bounding box</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox.maximum">
-<span class="sig-name descname"><span class="pre">maximum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox.maximum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the position of the maximum of the bounding box in “global” coordinates</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the size of the bounding box to include a given point</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">BoundingObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Define a general bounding object</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>origin</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the origin</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject.contains">
-<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if point in bounding box</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>item</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject.local_coordinates">
-<span class="sig-name descname"><span class="pre">local_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject.local_coordinates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns coordinates with respect to the origin of the bounding box</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the size of the bounding box to include a given point</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">BoundingSet</span></span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Define a set of bounding objects</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet.contains">
-<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if point in the set</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>item</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em><em>|</em><em>tuple</em>) – coordinates of the point</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet.exclude">
-<span class="sig-name descname"><span class="pre">exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet.exclude" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an object to the inclusion set</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>bounding_object</strong> (<a class="reference internal" href="#qcip_tools.bounding.BoundingObject" title="qcip_tools.bounding.BoundingObject"><em>BoundingObject</em></a>) – object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet.include">
-<span class="sig-name descname"><span class="pre">include</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet.include" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an object to the inclusion set</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>bounding_object</strong> (<a class="reference internal" href="#qcip_tools.bounding.BoundingObject" title="qcip_tools.bounding.BoundingObject"><em>BoundingObject</em></a>) – object</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSphere">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">BoundingSphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSphere" title="Permalink to this definition">¶</a></dt>
-<dd><p>Define a bounding sphere</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Works for any dimension.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>origin</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the origin</p></li>
-<li><p><strong>radius</strong> (<em>float</em>) – the radius</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSphere.contains">
-<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSphere.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if point in bounding sphere</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p></li>
-<li><p><strong>tolerance</strong> (<em>float</em>) – threshold of tolerance</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSphere.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSphere.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the radius of the bounding sphere to include a given point</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="qcip_tools.bounding.DimensionAreNotEquals">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">DimensionAreNotEquals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.DimensionAreNotEquals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</section>
-</section>
-
-
-          </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -279,41 +67,271 @@ accordingly, so that it contains only positive numbers.</p>
 </li>
 </ul>
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/code-documentation/bounding.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/code-documentation/bounding.rst.txt"
-          rel="nofollow">Page source</a>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
+      <li>Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code-documentation/bounding.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bounding-objects-qcip-tools-bounding">
+<h1>Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)<a class="headerlink" href="#bounding-objects-qcip-tools-bounding" title="Permalink to this headline"></a></h1>
+<p>Bouding box/sphere.</p>
+<section id="module-qcip_tools.bounding">
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.bounding" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">AABoundingBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox" title="Permalink to this definition"></a></dt>
+<dd><p>Defines a Axis Aligned (AA) bounding box. You must define either <code class="docutils literal notranslate"><span class="pre">maximum</span></code> or <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Works for any dimension.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">origin</span></code> is corrected so that is the lowest coordinates possible, and <code class="docutils literal notranslate"><span class="pre">dimension</span></code> is set
+accordingly, so that it contains only positive numbers.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the origin</p></li>
+<li><p><strong>maximum</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the maximum</p></li>
+<li><p><strong>size</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – size of bounding box</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox.contains" title="Permalink to this definition"></a></dt>
+<dd><p>Test if point in bounding box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox.maximum">
+<span class="sig-name descname"><span class="pre">maximum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox.maximum" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the position of the maximum of the bounding box in “global” coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.AABoundingBox.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.AABoundingBox.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the size of the bounding box to include a given point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">BoundingObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject" title="Permalink to this definition"></a></dt>
+<dd><p>Define a general bounding object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>origin</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the origin</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject.contains" title="Permalink to this definition"></a></dt>
+<dd><p>Test if point in bounding box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject.local_coordinates">
+<span class="sig-name descname"><span class="pre">local_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject.local_coordinates" title="Permalink to this definition"></a></dt>
+<dd><p>Returns coordinates with respect to the origin of the bounding box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingObject.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingObject.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the size of the bounding box to include a given point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">BoundingSet</span></span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet" title="Permalink to this definition"></a></dt>
+<dd><p>Define a set of bounding objects</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet.contains" title="Permalink to this definition"></a></dt>
+<dd><p>Test if point in the set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em><em>|</em><em>tuple</em>) – coordinates of the point</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet.exclude">
+<span class="sig-name descname"><span class="pre">exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet.exclude" title="Permalink to this definition"></a></dt>
+<dd><p>Add an object to the inclusion set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bounding_object</strong> (<a class="reference internal" href="#qcip_tools.bounding.BoundingObject" title="qcip_tools.bounding.BoundingObject"><em>BoundingObject</em></a>) – object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSet.include">
+<span class="sig-name descname"><span class="pre">include</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounding_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSet.include" title="Permalink to this definition"></a></dt>
+<dd><p>Add an object to the inclusion set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bounding_object</strong> (<a class="reference internal" href="#qcip_tools.bounding.BoundingObject" title="qcip_tools.bounding.BoundingObject"><em>BoundingObject</em></a>) – object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSphere">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">BoundingSphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSphere" title="Permalink to this definition"></a></dt>
+<dd><p>Define a bounding sphere</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Works for any dimension.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – the origin</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – the radius</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSphere.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSphere.contains" title="Permalink to this definition"></a></dt>
+<dd><p>Test if point in bounding sphere</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – threshold of tolerance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.bounding.BoundingSphere.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.BoundingSphere.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the radius of the bounding sphere to include a given point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coo</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – coordinates of the point</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.bounding.DimensionAreNotEquals">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.bounding.</span></span><span class="sig-name descname"><span class="pre">DimensionAreNotEquals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.bounding.DimensionAreNotEquals" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basis_set.html" class="btn btn-neutral float-left" title="Basis set (qcip_tools.basis_set)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chemistry_files.html" class="btn btn-neutral float-right" title="Chemistry files (qcip_tools.chemistry_files)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
-    
+  <hr/>
 
-    
-  </body>
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

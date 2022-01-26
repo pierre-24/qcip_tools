@@ -1,13 +1,7 @@
 ============
 Contributing
 ============
-
-Please note that the code is not actually developed on the git server of the University of Namur (which only contains the releases) but on a personal protected git server (with CI activated and properly configured).
-Feel free to ask access if needed.
-
 You first need to `install <./install.html>`_ if you wan to contribute to the code.
-
-You may want to take a look into `qcip_scripts <https://gitlab.unamur.be/pierre.beaujean/qcip_scripts>`_, a collection of scripts based on this library.
 
 Design rules
 ------------
@@ -39,12 +33,6 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
     1. Normal installation use ``pip-sync && pip install -e .`` (``make init``)
     2. To update the dependencies from upstream, ``pip-sync``  (``make sync``).
     3. To update the ``requirements.txt`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pip-compile requirements/requirements.in -o requirements.txt`` (followed by ``make sync`` on the dev's machine).
-
-Licence
--------
-
-This code belong to me, `Pierre Beaujean <pierre.beaujean@unamur.be>`_, and to the `University of Namur <https://www.unamur.be>`_ since it is developed and used in the frame of my PhD thesis.
-Of course, if you contribute, you will be added to this list ;)
 
 A note about units
 ------------------

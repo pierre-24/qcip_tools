@@ -4,14 +4,13 @@ Welcome to qcip_tools's documentation!
 
 Quantum Chemistry In Python (QCIP) tools package.
 
-(the documentation is written in `REST <http://www.sphinx-doc.org/en/stable/rest.html>`_).
-
+Library maintained by `Pierre Beaujean <https://pierrebeaujean.net>`_ to ease the manipulation of quantum chemistry results in Python 3.
+Created in the frame of my PhD thesis in the `University of Namur <https://unamur.be>`_.
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 2
     :caption: Contents:
 
     install
     contributing
     code-documentation
-

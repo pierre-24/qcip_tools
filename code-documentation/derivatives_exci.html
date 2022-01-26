@@ -1,157 +1,47 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Excitations (qcip_tools.derivatives_exci) &#8212; qcip_tools 0.6.6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excitations (qcip_tools.derivatives_exci) &mdash; qcip_tools 0.6.6 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Derivatives w.r.t. geometrical stuffs (qcip_tools.derivatives_g)" href="derivatives_g.html" />
-    <link rel="prev" title="Derivatives w.r.t. electric field (qcip_tools.derivatives_e)" href="derivatives_e.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Derivatives w.r.t. electric field (qcip_tools.derivatives_e)" href="derivatives_e.html" /> 
+</head>
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="excitations-qcip-tools-derivatives-exci">
-<h1>Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)<a class="headerlink" href="#excitations-qcip-tools-derivatives-exci" title="Permalink to this headline">¶</a></h1>
-<p>Tools to ease the manipulation of excited state quantities</p>
-<section id="module-qcip_tools.derivatives_exci">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_exci" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Configuration">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_exci.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excitations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Define a determinant as an excitation of the ground state determinant
-(with all electrons stored in the lowest energy MOs)</p>
-<p><code class="docutils literal notranslate"><span class="pre">excitation</span></code> is a list of tuple containing two integer and one string:
-source MO wrt HOMO, destination MO wrt LUMO, spin. Thus,</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">(0,0,None)</span></code> is a HOMO→LUMO excitation of spin alpha,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">(-1,2,'a')</span></code> is a HOMO-1→LUMO+2 excitation of spin alpha, etc.</p></li>
-</ul>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Configuration.n">
-<span class="sig-name descname"><span class="pre">n</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Configuration.n" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of excitations</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.ConfigurationStateFunction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_exci.</span></span><span class="sig-name descname"><span class="pre">ConfigurationStateFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.ConfigurationStateFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>(Symmetry-adapted) linear combination of Slater determinants (configuration).</p>
-<p><code class="docutils literal notranslate"><span class="pre">configuration</span></code> is a list of tuple of one float (weight) and one <code class="docutils literal notranslate"><span class="pre">Configuration</span></code>.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.ConfigurationStateFunction.missing">
-<span class="sig-name descname"><span class="pre">missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.ConfigurationStateFunction.missing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the percentage of missing configurations</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.ConfigurationStateFunction.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.ConfigurationStateFunction.to_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Text representation, only configurations above <code class="docutils literal notranslate"><span class="pre">limit</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_exci.</span></span><span class="sig-name descname"><span class="pre">Excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_energies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition_dipoles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>energies</strong> (<a class="reference internal" href="derivatives.html#qcip_tools.derivatives.Tensor" title="qcip_tools.derivatives.Tensor"><em>qcip_tools.derivatives.Tensor</em></a>) – transition (or excited state) energies (<code class="docutils literal notranslate"><span class="pre">!</span></code> or <code class="docutils literal notranslate"><span class="pre">#</span></code>)</p></li>
-<li><p><strong>transition_dipoles</strong> (<a class="reference internal" href="derivatives.html#qcip_tools.derivatives.Tensor" title="qcip_tools.derivatives.Tensor"><em>qcip_tools.derivatives.Tensor</em></a>) – transition dipoles (<code class="docutils literal notranslate"><span class="pre">!F</span></code>)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations.oscillator_strength">
-<span class="sig-name descname"><span class="pre">oscillator_strength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations.oscillator_strength" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the oscillator strength</p>
-<div class="math notranslate nohighlight">
-\[f_{gi} = \frac{2}{3}\,E_{gi}\,|\mu_{gi}|^2\]</div>
-<p>where <span class="math notranslate nohighlight">\(i\)</span> is the index of the excited state.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – index (<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">nstate</span></code>)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations.transition_dipole">
-<span class="sig-name descname"><span class="pre">transition_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations.transition_dipole" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the transition dipole</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – index (<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">nstate</span></code>)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations.transition_energy">
-<span class="sig-name descname"><span class="pre">transition_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations.transition_energy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the transition energy</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – index (<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">nstate</span></code>)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-</section>
-
-
-          </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table of Contents</a></h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.6
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
@@ -178,41 +68,169 @@ source MO wrt HOMO, destination MO wrt LUMO, spin. Thus,</p>
 </li>
 </ul>
 
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/code-documentation/derivatives_exci.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, Pierre Beaujean (University of Namur).
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/code-documentation/derivatives_exci.rst.txt"
-          rel="nofollow">Page source</a>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
+      <li>Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/code-documentation/derivatives_exci.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="excitations-qcip-tools-derivatives-exci">
+<h1>Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)<a class="headerlink" href="#excitations-qcip-tools-derivatives-exci" title="Permalink to this headline"></a></h1>
+<p>Tools to ease the manipulation of excited state quantities</p>
+<section id="module-qcip_tools.derivatives_exci">
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_exci" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Configuration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_exci.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">excitations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Configuration" title="Permalink to this definition"></a></dt>
+<dd><p>Define a determinant as an excitation of the ground state determinant
+(with all electrons stored in the lowest energy MOs)</p>
+<p><code class="docutils literal notranslate"><span class="pre">excitation</span></code> is a list of tuple containing two integer and one string:
+source MO wrt HOMO, destination MO wrt LUMO, spin. Thus,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">(0,0,None)</span></code> is a HOMO→LUMO excitation of spin alpha,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(-1,2,'a')</span></code> is a HOMO-1→LUMO+2 excitation of spin alpha, etc.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Configuration.n">
+<span class="sig-name descname"><span class="pre">n</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Configuration.n" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of excitations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.ConfigurationStateFunction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_exci.</span></span><span class="sig-name descname"><span class="pre">ConfigurationStateFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.ConfigurationStateFunction" title="Permalink to this definition"></a></dt>
+<dd><p>(Symmetry-adapted) linear combination of Slater determinants (configuration).</p>
+<p><code class="docutils literal notranslate"><span class="pre">configuration</span></code> is a list of tuple of one float (weight) and one <code class="docutils literal notranslate"><span class="pre">Configuration</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.ConfigurationStateFunction.missing">
+<span class="sig-name descname"><span class="pre">missing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.ConfigurationStateFunction.missing" title="Permalink to this definition"></a></dt>
+<dd><p>Return the percentage of missing configurations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.ConfigurationStateFunction.to_string">
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.ConfigurationStateFunction.to_string" title="Permalink to this definition"></a></dt>
+<dd><p>Text representation, only configurations above <code class="docutils literal notranslate"><span class="pre">limit</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_exci.</span></span><span class="sig-name descname"><span class="pre">Excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transition_energies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition_dipoles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>energies</strong> (<a class="reference internal" href="derivatives.html#qcip_tools.derivatives.Tensor" title="qcip_tools.derivatives.Tensor"><em>qcip_tools.derivatives.Tensor</em></a>) – transition (or excited state) energies (<code class="docutils literal notranslate"><span class="pre">!</span></code> or <code class="docutils literal notranslate"><span class="pre">#</span></code>)</p></li>
+<li><p><strong>transition_dipoles</strong> (<a class="reference internal" href="derivatives.html#qcip_tools.derivatives.Tensor" title="qcip_tools.derivatives.Tensor"><em>qcip_tools.derivatives.Tensor</em></a>) – transition dipoles (<code class="docutils literal notranslate"><span class="pre">!F</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations.oscillator_strength">
+<span class="sig-name descname"><span class="pre">oscillator_strength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations.oscillator_strength" title="Permalink to this definition"></a></dt>
+<dd><p>Get the oscillator strength</p>
+<div class="math notranslate nohighlight">
+\[f_{gi} = \frac{2}{3}\,E_{gi}\,|\mu_{gi}|^2\]</div>
+<p>where <span class="math notranslate nohighlight">\(i\)</span> is the index of the excited state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – index (<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">nstate</span></code>)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations.transition_dipole">
+<span class="sig-name descname"><span class="pre">transition_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations.transition_dipole" title="Permalink to this definition"></a></dt>
+<dd><p>Get the transition dipole</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – index (<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">nstate</span></code>)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_exci.Excitations.transition_energy">
+<span class="sig-name descname"><span class="pre">transition_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_exci.Excitations.transition_energy" title="Permalink to this definition"></a></dt>
+<dd><p>Get the transition energy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – index (<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">nstate</span></code>)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="derivatives_e.html" class="btn btn-neutral float-left" title="Derivatives w.r.t. electric field (qcip_tools.derivatives_e)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="derivatives_g.html" class="btn btn-neutral float-right" title="Derivatives w.r.t. geometrical stuffs (qcip_tools.derivatives_g)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
-    
+  <hr/>
 
-    
-  </body>
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>
