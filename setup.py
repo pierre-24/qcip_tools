@@ -26,11 +26,11 @@ setup(
     keywords='website',
 
     project_urls={
-        'Bug Reports': 'https://gitlab.unamur.be/chimie/lct/qcip_tools/issues',
-        'Source': 'https://gitlab.unamur.be/chimie/lct/qcip_tools',
+        'Bug Reports': 'https://github.com/pierre-24/qcip_tools/issues',
+        'Source': 'https://github.com/pierre-24/qcip_tools',
     },
 
-    url='https://gitlab.unamur.be/chimie/lct/qcip_tools',
+    url='https://github.com/pierre-24/qcip_tools',
     author=qcip_tools.__author__,
 
     # Classifiers
@@ -40,13 +40,12 @@ setup(
 
         # Specify the Python versions:
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9'
     ],
 
     packages=find_packages(),
-    python_requires='>=3.5',
+    python_requires='>=3.8',
     test_suite='tests',
 
     # requirements
