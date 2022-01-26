@@ -1,5 +1,4 @@
 -r requirements-base.in
-release_it @ git+ssh://gitea@gitea.pierrebeaujean.net/unamur/make-release.git@release-v0.4.3
 flake8
 flake8-quotes
 autopep8
