@@ -9,9 +9,9 @@ To just use ``qcip_tools`` in your Python projects, simply use pip:
 
 .. code-block:: bash
 
-    pip3 install --user git+https://github.com/pierre-24/qcip_tools.git@release-vXX
+    pip3 install --user git+https://github.com/pierre-24/qcip_tools.git@vXX
 
-Change ``@release-vXX`` at the end of the line to fetch a given version (listed `in the README <https://github.com/pierre-24/qcip_tools#readme>`_).
+Change ``@vXX`` at the end of the line to fetch a given version (listed `in the README <https://github.com/pierre-24/qcip_tools#readme>`_).
 
 Note that ``--user`` allow you to install the package without being superuser (see `here <https://pip.pypa.io/en/stable/user_guide/#user-installs>`_).
 You will probably need to add ``$HOME/.local/bin`` to ``$PATH`` for this to work:
