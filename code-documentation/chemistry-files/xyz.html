@@ -36,6 +36,63 @@
   <section id="xyz-files-chemistry-files-xyz">
 <h1>XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)<a class="headerlink" href="#xyz-files-chemistry-files-xyz" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference external" href="https://en.wikipedia.org/wiki/XYZ_file_format">XYZ file format</a>.</p>
+<span class="target" id="module-qcip_tools.chemistry_files.xyz"></span><dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.xyz.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>The (in)famous XYZ file</p>
+<div class="class-members docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>: the molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule.Molecule</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.title</span></code>: title of the molecule (<code class="docutils literal notranslate"><span class="pre">str</span></code>)</p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.attempt_identification">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<dd><p>An XYZ is kinda simple: it starts with a number, then contains series of 4 things (the 3 last being floats)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.file_type">
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'XYZ'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.file_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identifier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.from_molecule">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.from_molecule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a file from molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>molecule</strong> (<a class="reference internal" href="../molecule.html#qcip_tools.molecule.Molecule" title="qcip_tools.molecule.Molecule"><em>qcip_tools.molecule.Molecule</em></a>) – the molecule</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – title of the run</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.chemistry_files.xyz.File" title="qcip_tools.chemistry_files.xyz.File">qcip_tools.chemistry_files.xyz.File</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.File.possible_file_extensions">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.File.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the common extention of this kind of files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.xyz.XYZFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.xyz.</span></span><span class="sig-name descname"><span class="pre">XYZFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.xyz.XYZFormatError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 

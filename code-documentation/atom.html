@@ -35,8 +35,111 @@
             
   <section id="atom-qcip-tools-atom">
 <h1>Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)<a class="headerlink" href="#atom-qcip-tools-atom" title="Permalink to this headline">¶</a></h1>
-<section id="api-documentation">
-<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<section id="module-qcip_tools.atom">
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.atom" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.atom.</span></span><span class="sig-name descname"><span class="pre">Atom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atomic_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an atom. You must gives either symbol or atomic_number.</p>
+<p>The object is mutable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atomic_number</strong> (<em>int</em>) – the atomic number</p></li>
+<li><p><strong>symbol</strong> (<em>str</em>) – the atom symbol (starting with an upercase letter)</p></li>
+<li><p><strong>position</strong> (<em>list</em><em>|</em><em>numpy.ndarray</em>) – atom position</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – define the mass (for an isotope, for example)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.charge">
+<span class="sig-name descname"><span class="pre">charge</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.charge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get atomic charge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Charge</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.is_dummy">
+<span class="sig-name descname"><span class="pre">is_dummy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.is_dummy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return if an atom is dummy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.number_of_core_electrons">
+<span class="sig-name descname"><span class="pre">number_of_core_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.number_of_core_electrons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of core electrons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.number_of_electrons">
+<span class="sig-name descname"><span class="pre">number_of_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.number_of_electrons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of electrons in the atoms</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.number_of_neutrons">
+<span class="sig-name descname"><span class="pre">number_of_neutrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.number_of_neutrons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of neutrons</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.number_of_protons">
+<span class="sig-name descname"><span class="pre">number_of_protons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.number_of_protons" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of protons</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.atom.Atom.number_of_valence_electrons">
+<span class="sig-name descname"><span class="pre">number_of_valence_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.atom.Atom.number_of_valence_electrons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of valence electrons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -54,7 +157,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.atom">API documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>

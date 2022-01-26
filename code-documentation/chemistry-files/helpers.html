@@ -36,6 +36,73 @@
   <section id="helpers-chemistry-files-helpers">
 <h1>Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)<a class="headerlink" href="#helpers-chemistry-files-helpers" title="Permalink to this headline">¶</a></h1>
 <p>Based on <code class="docutils literal notranslate"><span class="pre">possible_file_extensions()</span></code> and <code class="docutils literal notranslate"><span class="pre">attempt_identification()</span></code> of <a class="reference external" href="base.html#qcip_tools.chemistry_files.WithIdentificationMixin">WithIdentificationMixin</a> , the <code class="docutils literal notranslate"><span class="pre">helpers</span></code> submodule helps to open any chemistry files.</p>
+<span class="target" id="module-qcip_tools.chemistry_files.helpers"></span><dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.ProbablyNotAChemistryFile">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">ProbablyNotAChemistryFile</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.ProbablyNotAChemistryFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when the type of the file is not recognized</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.create_open_chemistry_file_action">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">create_open_chemistry_file_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.create_open_chemistry_file_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a custom argparse action.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qcip_tools.chemistry_files</span> <span class="kn">import</span> <span class="n">helpers</span><span class="p">,</span> <span class="n">gaussian</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">helpers</span><span class="o">.</span><span class="n">create_open_chemistry_file_action</span><span class="p">())</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">helpers</span><span class="o">.</span><span class="n">create_open_chemistry_file_action</span><span class="p">(</span><span class="n">must_be</span><span class="o">=</span><span class="p">[</span><span class="n">gaussian</span><span class="o">.</span><span class="n">Input</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>String (or list) is parsed, and identifier can be added with <code class="docutils literal notranslate"><span class="pre">IDENTIFIER:/path/to/file</span></code>.
+Valid identifier are the values of <code class="docutils literal notranslate"><span class="pre">file_type</span></code> in the different <code class="docutils literal notranslate"><span class="pre">ChemistryFile</span></code> objects
+(a list can be found in the table on the beginning <a class="reference external" href="chemistry_files.html#api-documentation">of this section</a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>must_be</strong> (<em>list</em>) – restrict the list of possibilities</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>argparse.Action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.identifiable_chemistry_file_objects">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">identifiable_chemistry_file_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier_must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.identifiable_chemistry_file_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield all objects with the <code class="docutils literal notranslate"><span class="pre">WithIdentificationMixin</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier_must_be</strong> (<em>list of str</em>) – check if <code class="docutils literal notranslate"><span class="pre">file_type</span></code> is of the same type as the obj</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.open_chemistry_file">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">open_chemistry_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trust_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.open_chemistry_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to recognise a file in the different possibility, and return the (normally) correct class.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Despite the fact that it uses the file extension to pre-sort the possibilities, the performances are bad.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use the trick from <a class="reference external" href="https://stackoverflow.com/a/31123030">https://stackoverflow.com/a/31123030</a> to serve a binary file if needed.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>file</em>) – file</p></li>
+<li><p><strong>must_be</strong> (<em>list</em>) – restrict the list of possibilities</p></li>
+<li><p><strong>trust_extension</strong> (<em>bool</em>) – do not run a second pass on every other possibility if the content does not match extension</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="base.html#qcip_tools.chemistry_files.ChemistryFile" title="qcip_tools.chemistry_files.ChemistryFile">qcip_tools.chemistry_files.ChemistryFile</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

@@ -36,6 +36,158 @@
   <section id="gamess-files-chemistry-files-gamess">
 <h1>GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)<a class="headerlink" href="#gamess-files-chemistry-files-gamess" title="Permalink to this headline">¶</a></h1>
 <p>Files from the <a class="reference external" href="http://www.msg.ameslab.gov/gamess/">GAMESS (US) software</a>.</p>
+<span class="target" id="module-qcip_tools.chemistry_files.gamess"></span><dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Input">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gamess.</span></span><span class="sig-name descname"><span class="pre">Input</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Input" title="Permalink to this definition">¶</a></dt>
+<dd><p>GAMESS (US) input file.</p>
+<div class="class-members docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>: the molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule.Molecule</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.modules</span></code>: the different modules (<code class="docutils literal notranslate"><span class="pre">dict</span></code> of
+<a class="reference external" href="#qcip_tools.chemistry_files.gamess.InputModule">InputModule</a>,
+where the key is the name of the module <strong>in lowercase</strong>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.title</span></code>: the title of the run (from $DATA)</p></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>All module are stored in lowercase.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Does not implement Z-matrix molecule definition and other symmetries than C1.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Input.attempt_identification">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Input.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<dd><p>A GAMESS input file contains too many “$”!!!</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Input.file_type">
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAMESS_INP'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Input.file_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identifier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Input.from_molecule">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Input.from_molecule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a file from molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>molecule</strong> (<a class="reference internal" href="../molecule.html#qcip_tools.molecule.Molecule" title="qcip_tools.molecule.Molecule"><em>qcip_tools.molecule.Molecule</em></a>) – the molecule</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – title of the run</p></li>
+<li><p><strong>modules</strong> (<em>list</em>) – running module</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.chemistry_files.gamess.Input" title="qcip_tools.chemistry_files.gamess.Input">qcip_tools.chemistry_files.gamess.Input</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Input.possible_file_extensions">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Input.possible_file_extensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the common extention of this kind of files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Input.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Input.read" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.InputFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gamess.</span></span><span class="sig-name descname"><span class="pre">InputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.InputFormatError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.InputModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gamess.</span></span><span class="sig-name descname"><span class="pre">InputModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">special_module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.InputModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>GAMESS input module (ends with <code class="docutils literal notranslate"><span class="pre">$END</span></code>).</p>
+<p>A “special” module is a multiline module (i.e. <code class="docutils literal notranslate"><span class="pre">$DATA</span></code> or <code class="docutils literal notranslate"><span class="pre">$TDHFX</span></code>)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.InputModule.from_string">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.InputModule.from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a module out of string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – the string</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.chemistry_files.gamess.InputModule" title="qcip_tools.chemistry_files.gamess.InputModule">qcip_tools.chemistry_files.gamess.InputModule</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Output">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gamess.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output of GAMESS.</p>
+<div class="class-members docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>: the molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule.Molecule</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.lines</span></code>: the lines of the file (<code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.chunks</span></code>: the different sections (<code class="docutils literal notranslate"><span class="pre">list</span></code> of
+<a class="reference external" href="#qcip_tools.chemistry_files.gamess.OutputStep">OutputStep</a>)</p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Output.attempt_identification">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Output.attempt_identification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same trick as Dalton: check for universities and states name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Output.file_type">
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GAMESS_LOG'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Output.file_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identifier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.Output.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.Output.read" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>file</em>) – File</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.OutputFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gamess.</span></span><span class="sig-name descname"><span class="pre">OutputFormatError</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.OutputFormatError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gamess.OutputStep">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gamess.</span></span><span class="sig-name descname"><span class="pre">OutputStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_end</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gamess.OutputStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remind when a “step” is entered and exited</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>step_name</strong> (<em>str</em>) – name of the step</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

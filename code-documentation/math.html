@@ -13,6 +13,7 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Mixins (qcip_tools.mixins)" href="mixins.html" />
@@ -35,8 +36,225 @@
             
   <section id="math-helpers-qcip-tools-math">
 <h1>Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)<a class="headerlink" href="#math-helpers-qcip-tools-math" title="Permalink to this headline">¶</a></h1>
-<section id="api-documentation">
-<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<section id="module-qcip_tools.math">
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.math" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.BLA">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">BLA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.BLA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the BLA of the atom in the positions givens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lst</strong> (<em>list</em>) – list of position</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.angle">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the angle (in degree) between three position. Note that <cite>c2</cite> is the center coordinate !!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>list</em>) – coordinate</p></li>
+<li><p><strong>c2</strong> (<em>list</em>) – coordinate</p></li>
+<li><p><strong>c3</strong> (<em>list</em>) – coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.angle_vector">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">angle_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.angle_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the angle (in degree) between two vectors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v1</strong> (<em>numpy.ndarray</em>) – vector</p></li>
+<li><p><strong>v2</strong> (<em>numpy.ndarray</em>) – vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.closest_fraction">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">closest_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_denominator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1081080</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.closest_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>A fairly simple algorithm to get the fraction out of a floating number.
+Try to get as close as possible to <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p>Notice that the maximum denominator is chosen to be the multiplication of the primes (and their even power)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – the float</p></li>
+<li><p><strong>max_denominator</strong> (<em>int</em>) – the maximum denominator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.closest_int">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">closest_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.closest_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the closest integer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>float</em>) – a float</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.conjugate">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">conjugate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.conjugate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the conjugate complex of z</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>complex</em>) – complex number</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the conjugate</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.distance">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the distance between two position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>list</em>) – coordinate</p></li>
+<li><p><strong>c2</strong> (<em>list</em>) – coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.normalize">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize and return the vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>c</strong> (<em>numpy.ndarray</em><em>|</em><em>list</em>) – vector</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.num_of_unique_permutations">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">num_of_unique_permutations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.num_of_unique_permutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of unique elements. Compute the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients">multinomial coefficients</a>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\prod_i^m \left(\begin{matrix}\sum_j^i k_j\\k_i\end{matrix}\right) = \frac{n!}{\prod_i k_i!}.\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of elements in the set and <span class="math notranslate nohighlight">\(k_i\)</span> is the number of <span class="math notranslate nohighlight">\(i\)</span> in the set (their
+multiplicities).</p>
+<p>This is equivalent to <code class="docutils literal notranslate"><span class="pre">len(unique_permutation(elements))</span></code> (but faster).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>elements</strong> (<em>iterable</em>) – a set</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.prod">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">prod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.prod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as sum(), but multiplying</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>iterable</strong> (<em>iterable</em>) – an iterable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>multiplication</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.torsion_angle">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">torsion_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.torsion_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the torsion angle (in degree) between four position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>list</em>) – coordinate</p></li>
+<li><p><strong>c2</strong> (<em>list</em>) – coordinate</p></li>
+<li><p><strong>c3</strong> (<em>list</em>) – coordinate</p></li>
+<li><p><strong>c4</strong> (<em>list</em>) – coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.unique_everseen">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">unique_everseen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.unique_everseen" title="Permalink to this definition">¶</a></dt>
+<dd><p>List unique elements, preserving order. Remember all elements ever seen.</p>
+<p>Credit goes to the “recipes” in <a class="reference external" href="https://docs.python.org/dev/library/itertools.html">https://docs.python.org/dev/library/itertools.html</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterable</strong> (<em>iterable</em>) – any iterable</p></li>
+<li><p><strong>key</strong> (<em>function</em>) – apply a function to each element before checking if seen</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.math.unique_permutations">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.math.</span></span><span class="sig-name descname"><span class="pre">unique_permutations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.math.unique_permutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like itertools.permutation(), but yield UNIQUE elements.
+Iterative. May be not as fast as possible.</p>
+<p>Credit to <a class="reference external" href="http://stackoverflow.com/a/30558049">http://stackoverflow.com/a/30558049</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>elements</strong> (<em>iterable</em>) – a set of elements</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -62,7 +280,7 @@
 <li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.math">API documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>

@@ -141,8 +141,127 @@ Finally, a basis set is defined by the <a class="reference external" href="#qcip
 </pre></div>
 </div>
 </section>
-<section id="api-documentation">
-<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<section id="module-qcip_tools.basis_set">
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.basis_set" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.AtomicBasisSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">AtomicBasisSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.AtomicBasisSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of basis functions for a given atom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atomic_number</strong> (<em>int</em>) – the atomic number</p></li>
+<li><p><strong>symbol</strong> (<em>str</em>) – the atom symbol (starting with an upercase letter)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.AtomicBasisSet.add_basis_function">
+<span class="sig-name descname"><span class="pre">add_basis_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basis_function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.AtomicBasisSet.add_basis_function" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shell</strong> (<em>str</em>) – the shell</p></li>
+<li><p><strong>basis_function</strong> (<a class="reference internal" href="#qcip_tools.basis_set.Function" title="qcip_tools.basis_set.Function"><em>Function</em></a>) – the basis function</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.BasisSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">BasisSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nickname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.BasisSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basis set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nickname</strong> (<em>str</em>) – name of the basis set</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.BasisSet.add_atomic_basis_set">
+<span class="sig-name descname"><span class="pre">add_atomic_basis_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atomic_basis_set</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.BasisSet.add_atomic_basis_set" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atomic_basis_set</strong> (<a class="reference internal" href="#qcip_tools.basis_set.AtomicBasisSet" title="qcip_tools.basis_set.AtomicBasisSet"><em>AtomicBasisSet</em></a>) – the atomic basis set</p></li>
+<li><p><strong>force_replace</strong> – replace if existing (otherwise, raise an exception if already exists)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.Function">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">Function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contracted Gaussian type orbital (basis function)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.Function.add_primitive">
+<span class="sig-name descname"><span class="pre">add_primitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitive</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.Function.add_primitive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a GTO to the contraction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>primitive</strong> (<a class="reference internal" href="#qcip_tools.basis_set.Primitive" title="qcip_tools.basis_set.Primitive"><em>Primitive</em></a>) – the GTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.Function.is_diffuse">
+<span class="sig-name descname"><span class="pre">is_diffuse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponent_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.Function.is_diffuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if the function correspond to a diffuse one, based on the following criterions:</p>
+<ul class="simple">
+<li><p>There is only one primitive in the basis function ;</p></li>
+<li><p>This primitive have a contraction coefficient of 1.0 ;</p></li>
+<li><p>This primitive have a exponent lower than <code class="docutils literal notranslate"><span class="pre">exponent_threshold</span></code>.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>exponent_threshold</strong> (<em>float</em>) – threshold for the exponent of the primitive</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.NotAValidAngularMomentum">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">NotAValidAngularMomentum</span></span><a class="headerlink" href="#qcip_tools.basis_set.NotAValidAngularMomentum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.Primitive">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">Primitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contraction_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.Primitive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gaussian type orbital (<strong>primitive</strong> gaussian function)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>contraction_coefficient</strong> (<em>float</em>) – contraction coefficient</p></li>
+<li><p><strong>p_coefficient</strong> (<em>float</em>) – contraction coefficient for the p function (SP orbital)</p></li>
+<li><p><strong>exponent</strong> (<em>float</em>) – exponent of the gaussian (also called “zeta”)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.SHELL_TO_TAM">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">SHELL_TO_TAM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'D':</span> <span class="pre">2,</span> <span class="pre">'F':</span> <span class="pre">3,</span> <span class="pre">'G':</span> <span class="pre">4,</span> <span class="pre">'H':</span> <span class="pre">5,</span> <span class="pre">'I':</span> <span class="pre">6,</span> <span class="pre">'P':</span> <span class="pre">1,</span> <span class="pre">'S':</span> <span class="pre">0,</span> <span class="pre">'SP':</span> <span class="pre">-1}</span></em><a class="headerlink" href="#qcip_tools.basis_set.SHELL_TO_TAM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shell to total angular momentum</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="qcip_tools.basis_set.TAM_TO_SHELL">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">TAM_TO_SHELL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{-1:</span> <span class="pre">'SP',</span> <span class="pre">0:</span> <span class="pre">'S',</span> <span class="pre">1:</span> <span class="pre">'P',</span> <span class="pre">2:</span> <span class="pre">'D',</span> <span class="pre">3:</span> <span class="pre">'F',</span> <span class="pre">4:</span> <span class="pre">'G',</span> <span class="pre">5:</span> <span class="pre">'H',</span> <span class="pre">6:</span> <span class="pre">'I'}</span></em><a class="headerlink" href="#qcip_tools.basis_set.TAM_TO_SHELL" title="Permalink to this definition">¶</a></dt>
+<dd><p>total angular momentum to shell</p>
+</dd></dl>
+
 </section>
 </section>
 
@@ -163,7 +282,7 @@ Finally, a basis set is defined by the <a class="reference external" href="#qcip
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.basis_set">API documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>

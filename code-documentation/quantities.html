@@ -46,6 +46,49 @@ Only slight adjustments are needed, with the help of the <a class="reference ext
 <dd><p>Raised when a value is larger or lower that given boundaries</p>
 </dd></dl>
 
+<span class="target" id="module-qcip_tools.quantities"></span><dl class="py data">
+<dt class="sig sig-object py" id="qcip_tools.quantities.AMUToElectronMass">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.quantities.</span></span><span class="sig-name descname"><span class="pre">AMUToElectronMass</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1822.8884862173131</span></em><a class="headerlink" href="#qcip_tools.quantities.AMUToElectronMass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert atomic mass units to electron mass</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="qcip_tools.quantities.AuToAngstrom">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.quantities.</span></span><span class="sig-name descname"><span class="pre">AuToAngstrom</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.529177210903</span></em><a class="headerlink" href="#qcip_tools.quantities.AuToAngstrom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert bohr to angstrom</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcip_tools.quantities.Q_">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.quantities.</span></span><span class="sig-name descname"><span class="pre">Q_</span></span><a class="headerlink" href="#qcip_tools.quantities.Q_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut for quantities</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.quantities.convert">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.quantities.</span></span><span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.quantities.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conversion factor from one unit to the other</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from</strong> (<em>pint.unit.Unit</em>) – base unit</p></li>
+<li><p><strong>to</strong> (<em>pint.unit.Unit</em>) – converted unit</p></li>
+<li><p><strong>value</strong> (<em>float</em>) – value to convert</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="qcip_tools.quantities.ureg">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.quantities.</span></span><span class="sig-name descname"><span class="pre">ureg</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;pint.registry.UnitRegistry</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#qcip_tools.quantities.ureg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unit registry. Include definitions for:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bohr</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wavenumber</span></code>.</p></li>
+</ul>
+</dd></dl>
+
 </section>
 </section>
 

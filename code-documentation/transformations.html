@@ -34,8 +34,329 @@
             
   <section id="transformations-qcip-tools-transformations">
 <h1>Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)<a class="headerlink" href="#transformations-qcip-tools-transformations" title="Permalink to this headline">¶</a></h1>
-<section id="api-documentation">
-<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<section id="module-qcip_tools.transformations">
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.transformations" title="Permalink to this headline">¶</a></h2>
+<p>Transformation (matrices) manipulation.</p>
+<p>Constructed on top of <a class="reference external" href="https://github.com/matthew-brett/transforms3d">transforms3d</a> for the most part.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableRotatable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">ImmutableRotatable</span></span><a class="headerlink" href="#qcip_tools.transformations.ImmutableRotatable" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableRotatable.rotate_around_axis">
+<span class="sig-name descname"><span class="pre">rotate_around_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.ImmutableRotatable.rotate_around_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a axis-angle rotation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – axis</p></li>
+<li><p><strong>angle</strong> (<em>float</em>) – rotation angle (in degree)</p></li>
+<li><p><strong>is_normalized</strong> (<em>bool</em>) – is the axis already normalized?</p></li>
+<li><p><strong>in_degree</strong> (<em>bool</em>) – is the angle in degree ?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.transformations.ImmutableRotatable" title="qcip_tools.transformations.ImmutableRotatable">ImmutableRotatable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableRotatable.rotate_euler">
+<span class="sig-name descname"><span class="pre">rotate_euler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sxyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.ImmutableRotatable.rotate_euler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate via Euler angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi</strong> (<em>float</em>) – first rotation angle</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – second rotation angle</p></li>
+<li><p><strong>chi</strong> (<em>float</em>) – third rotation angle</p></li>
+<li><p><strong>axes</strong> (<em>str</em>) – axes</p></li>
+<li><p><strong>in_degree</strong> (<em>bool</em>) – is the angle in degree ?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.transformations.ImmutableRotatable" title="qcip_tools.transformations.ImmutableRotatable">ImmutableRotatable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableScalable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">ImmutableScalable</span></span><a class="headerlink" href="#qcip_tools.transformations.ImmutableScalable" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableScalable.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.ImmutableScalable.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a translation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – scale x</p></li>
+<li><p><strong>y</strong> – scale y</p></li>
+<li><p><strong>y</strong> – float</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – scale z</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.transformations.ImmutableScalable" title="qcip_tools.transformations.ImmutableScalable">ImmutableScalable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableScalable.scale_uniform">
+<span class="sig-name descname"><span class="pre">scale_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.ImmutableScalable.scale_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale by a given factor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>float</em>) – scale x</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.transformations.ImmutableScalable" title="qcip_tools.transformations.ImmutableScalable">ImmutableScalable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableTransformable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">ImmutableTransformable</span></span><a class="headerlink" href="#qcip_tools.transformations.ImmutableTransformable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformation for non-mutable objects</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableTranslatable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">ImmutableTranslatable</span></span><a class="headerlink" href="#qcip_tools.transformations.ImmutableTranslatable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translatable objects</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.ImmutableTranslatable.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.ImmutableTranslatable.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – translation x</p></li>
+<li><p><strong>y</strong> – translation y</p></li>
+<li><p><strong>y</strong> – float</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – translation z:</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#qcip_tools.transformations.ImmutableTranslatable" title="qcip_tools.transformations.ImmutableTranslatable">ImmutableTranslatable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableRotatable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">MutableRotatable</span></span><a class="headerlink" href="#qcip_tools.transformations.MutableRotatable" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableRotatable.rotate_around_axis_self">
+<span class="sig-name descname"><span class="pre">rotate_around_axis_self</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.MutableRotatable.rotate_around_axis_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a axis-angle rotation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – axis</p></li>
+<li><p><strong>angle</strong> (<em>float</em>) – rotation angle (in degree)</p></li>
+<li><p><strong>is_normalized</strong> (<em>bool</em>) – is the axis already normalized?</p></li>
+<li><p><strong>in_degree</strong> (<em>bool</em>) – is the angle in degree ?</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableRotatable.rotate_euler_self">
+<span class="sig-name descname"><span class="pre">rotate_euler_self</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sxyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.MutableRotatable.rotate_euler_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate via Euler angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi</strong> (<em>float</em>) – first rotation angle</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – second rotation angle</p></li>
+<li><p><strong>chi</strong> (<em>float</em>) – third rotation angle</p></li>
+<li><p><strong>axes</strong> (<em>str</em>) – axes</p></li>
+<li><p><strong>in_degree</strong> (<em>bool</em>) – is the angle in degree ?</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableScalable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">MutableScalable</span></span><a class="headerlink" href="#qcip_tools.transformations.MutableScalable" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableScalable.scale_self">
+<span class="sig-name descname"><span class="pre">scale_self</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.MutableScalable.scale_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a translation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – scale x</p></li>
+<li><p><strong>y</strong> – scale y</p></li>
+<li><p><strong>y</strong> – float</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – scale z</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableScalable.scale_uniform_self">
+<span class="sig-name descname"><span class="pre">scale_uniform_self</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.MutableScalable.scale_uniform_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale by a given factor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>float</em>) – scale x</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableTransformable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">MutableTransformable</span></span><a class="headerlink" href="#qcip_tools.transformations.MutableTransformable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformation for mutable objects</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableTranslatable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">MutableTranslatable</span></span><a class="headerlink" href="#qcip_tools.transformations.MutableTranslatable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translatable objects</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.MutableTranslatable.translate_self">
+<span class="sig-name descname"><span class="pre">translate_self</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.MutableTranslatable.translate_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – translation x</p></li>
+<li><p><strong>y</strong> – translation y</p></li>
+<li><p><strong>y</strong> – float</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – translation z:</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.transformations.</span></span><span class="sig-name descname"><span class="pre">TransformationMatrix</span></span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>4x4 matrix to represent a transformation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.identity">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">identity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create identity 4x4 matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.rotate_around_axis">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotate_around_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.rotate_around_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a axis-angle rotation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – axis</p></li>
+<li><p><strong>angle</strong> (<em>float</em>) – rotation angle (in degree)</p></li>
+<li><p><strong>is_normalized</strong> (<em>bool</em>) – is the axis already normalized?</p></li>
+<li><p><strong>in_degree</strong> (<em>bool</em>) – is the angle in degree ?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.rotate_euler">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotate_euler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sxyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.rotate_euler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate via Euler angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi</strong> (<em>float</em>) – first rotation angle</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – second rotation angle</p></li>
+<li><p><strong>chi</strong> (<em>float</em>) – third rotation angle</p></li>
+<li><p><strong>axes</strong> (<em>str</em>) – axes</p></li>
+<li><p><strong>in_degree</strong> (<em>bool</em>) – is the angle in degree ?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.scale">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a translation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – scale x</p></li>
+<li><p><strong>y</strong> – scale y</p></li>
+<li><p><strong>y</strong> – float</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – scale z</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.scale_uniform">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.scale_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale by a given factor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factor</strong> (<em>float</em>) – scale x</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.translate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a translation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – translation x</p></li>
+<li><p><strong>y</strong> – translation y</p></li>
+<li><p><strong>y</strong> – float</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – translation z:</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -67,7 +388,7 @@
 <li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.transformations">API documentation</a></li>
 </ul>
 </li>
 </ul>
