@@ -59,12 +59,17 @@ If it is the case (no ``error`` in the output of the previous command), you can 
 Installation for contributors
 -----------------------------
 
-To contribute to the project, you need to clone the repository:
+To contribute to the project,
 
-+ Clone it: ``git@github.com:pierre-24/qcip_tools.git``.
-+ Install scipy's (and other python's) dependencies : ``sudo apt-get install libopenblas-dev libatlas-dev build-essential libpng12-dev libfreetype6-dev libpython3.*-dev`` (or something like this).
-+ Create a virtualenv : ``python3 -m venv venv; source venv/bin/activate``
-+ Install ``pip-tools``: ``pip3 install pip-tools`` ;
++ `Fork it <https://docs.github.com/en/get-started/quickstart/fork-a-repo>`_.
++ Clone your fork: ``git clone git@github.com:<USERNAME>/qcip_tools.git``.
++ Go in it: ``cd qcip_tools``
++ Install pip-tools: ``pip3 install pip-tools``
++ Install virtualenv ``python3 -m venv venv; source venv/bin/activate``
 + Install dependencies: ``make init``.
++ Add upstream: ``git remote add upstream https://github.com/pierre-24/qcip_tools.git``
++ Don't forget to create a separate branch to implement your changes: ``git checkout -b my_branch upstream/dev``.
+
+See `the contribution part <contributing.html>`_.
 
 You can launch the tests series with ``make test``
