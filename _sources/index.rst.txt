@@ -9,7 +9,6 @@ Created in the frame of my PhD thesis in the `University of Namur <https://unamu
 
 .. toctree::
     :maxdepth: 2
-    :caption: Contents:
 
     install
     contributing
