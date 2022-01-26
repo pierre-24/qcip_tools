@@ -13,11 +13,9 @@ Current release: [release-v0.6.6](https://github.com/pierre-24/qcip_tools/releas
 
 # Documentation
 
-To access the online documentation of the latest release, login is `doc` and password is `doc`.
+**For the installation procedure, see [this page](https://pierre-24.github.io/qcip_tools/install.html).**
 
-**For the installation procedure, see [this page](http://perso.unamur.be/~pbeaujea/qcip_tools/html/install.html).**
-
-The latest API documentation is available [here](http://perso.unamur.be/~pbeaujea/qcip_tools/html/).
+The latest API documentation is available [here](https://pierre-24.github.io/qcip_tools/).
 
 If you download the package sources, build the documentation with `make doc`.
 
@@ -25,5 +23,5 @@ If you download the package sources, build the documentation with `make doc`.
 
 You can report bugs and suggestions any time [using the bugtracker](https://github.com/pierre-24/qcip_tools/issues).
 
-If you want to contribute to the code, see the [contribution page](./documentation/source/contributing.rst). 
+If you want to contribute to the code, see the [contribution page](https://pierre-24.github.io/qcip_tools/contributing.html). 
 Feel free to ask access if needed.
