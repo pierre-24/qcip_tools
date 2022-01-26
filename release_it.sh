@@ -29,18 +29,18 @@ while true; do
 done
 
 
-# go to master and ensure latest version
-if [[ $CURRENT_BRANCH != "master" ]]; then
-  git checkout master
+# go to dev and ensure latest version
+if [[ $CURRENT_BRANCH != "dev" ]]; then
+  git checkout dev
 fi
 
 git pull
 
 # bump version
 bump2version "$RELEASE_PART" --verbose
-git push --follow-tags origin master
+git push --follow-tags origin dev
 
 # switch back to current branch
-if [[ $CURRENT_BRANCH != "master" ]]; then
+if [[ $CURRENT_BRANCH != "dev" ]]; then
   git checkout "$CURRENT_BRANCH"
 fi
