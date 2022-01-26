@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Basis set (qcip_tools.basis_set) &#8212; qcip_tools 0.6.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bounding objects(qcip_tools.bounding)" href="bounding.html" />
+    <link rel="prev" title="Atom (qcip_tools.atom)" href="atom.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="basis-set-qcip-tools-basis-set">
+<h1>Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)<a class="headerlink" href="#basis-set-qcip-tools-basis-set" title="Permalink to this headline">¶</a></h1>
+<section id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<section id="definition">
+<h3>Definition<a class="headerlink" href="#definition" title="Permalink to this headline">¶</a></h3>
+<p>Quantum calculations are, most of the time, based on the LCAO (linear combination of atomic orbitals) principle,</p>
+<div class="math notranslate nohighlight">
+\[\Psi_i = \sum_j^N c_{ij} \phi_{j},\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_{ij}\)</span> are coefficient of the linear combination and <span class="math notranslate nohighlight">\(\phi_j\)</span> are the atomic orbitals.
+The atomic orbitals (or <strong>basis functions</strong>) are solution of the Hartree-Fock equation for the atom.
+Slater type obritals (STO, <span class="math notranslate nohighlight">\(\propto e^{-r}\)</span>) are sometimes used to describe the atomic orbitals, due to their similarity to hydrogen atom solutions, but Gaussian type orbitals (GTO) are more convenient from a computationnal point of view.
+The general expression (in carthesian coordinates) of a GTO centered in <span class="math notranslate nohighlight">\(\mathbf{R}\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[G_{lmn}^{\mathbf{R}, \alpha}(\mathbf{r}) = N_{lmn}^\alpha\,(r_x - R_x)^l\,(r_y-R_y)^m\,(r_z - R_z)^n\,e^{-\alpha\,|\mathbf{r}-\mathbf{R}|^2},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> (the letter <span class="math notranslate nohighlight">\(\zeta\)</span> is also used) is the exponent of the GTO (which controls the <em>width</em> of the orbital, small <span class="math notranslate nohighlight">\(\alpha\)</span> giving large/diffuse functions), and <span class="math notranslate nohighlight">\(N_{lmn}^\alpha\)</span> is a normalization factor.</p>
+<p>To mimic STO’s, a linear combination (a contraction) of GTO’s (<strong>primitives</strong>) is used to form a <strong>basis function</strong>.</p>
+<p>The sum of exponents <span class="math notranslate nohighlight">\(L=l+m+n\)</span> (which are not quantum numbers) is used analogously to the angular quantum number for atom, to mark function as <em>s</em>-type (<span class="math notranslate nohighlight">\(L=0\)</span>), <em>p</em>-type (<span class="math notranslate nohighlight">\(L=1\)</span>), <em>d</em>-type  (<span class="math notranslate nohighlight">\(L=2\)</span>), etc.
+Primitives (and basis functions) are regrouped in shells (S, P, D, F …), forming a collection of GTO’s with the same <span class="math notranslate nohighlight">\(L\)</span>: in each shell <span class="math notranslate nohighlight">\(\mu\)</span>, the primitives are contracted in <span class="math notranslate nohighlight">\(n_\mu\)</span> basis functions <span class="math notranslate nohighlight">\(\mu\gamma\)</span> (for example, with <em>s</em>-type basis function, the usual atomic orbitals 1s, 2s, 3s …).</p>
+<p>The general expression for an atomic basis set centered in <span class="math notranslate nohighlight">\(\mathbf{R}\)</span> is therefore:</p>
+<div class="math notranslate nohighlight" id="equation-atomicbasisset">
+<span class="eqno">(1)<a class="headerlink" href="#equation-atomicbasisset" title="Permalink to this equation">¶</a></span>\[\begin{split}\phi^{\mathbf{R}}(\mathbf{r}) = \sum_\mu^{\text{S, P, D, }\ldots}\sum_{(l,m,n)\in \mu} \sum_{\gamma}^{n_\mu} \underbrace{N_{\mu\gamma}\,\sum_k^{n_{\mu\gamma}} c_{\mu\gamma k}\,G_{lmn}^{\mathbf{R}, \alpha_{\mu\gamma k}}(\mathbf{r})}_{\begin{array}{c}\text{basis function}\,\mu\gamma\,\equiv\\\text{contraction of }n_{\mu\gamma}\text{ primitives}\end{array}},\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_{\mu\gamma k}\)</span> is the contraction coefficient of the primitive <span class="math notranslate nohighlight">\(k\)</span> in basis function <span class="math notranslate nohighlight">\(\mu\gamma\)</span> in shell <span class="math notranslate nohighlight">\(\mu\)</span>, to which correspond a exponent <span class="math notranslate nohighlight">\(\alpha_{\mu\gamma k}\)</span>.
+<span class="math notranslate nohighlight">\(N_{\mu\gamma}\)</span> is a normalization constant for the whole basis function <span class="math notranslate nohighlight">\(\gamma\)</span> in <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
+<p>In the calculation, a LCAO coefficient is associated to each <span class="math notranslate nohighlight">\(\mu\gamma\)</span> basis function.</p>
+</section>
+<section id="construction">
+<h3>Construction<a class="headerlink" href="#construction" title="Permalink to this headline">¶</a></h3>
+<p>Some basis sets are constucted using the same number of basis function in each shell. This number of contractions helps to label the basis set as <em>n</em>-uple <span class="math notranslate nohighlight">\(\zeta\)</span>: simple <span class="math notranslate nohighlight">\(\zeta\)</span> (for example the infamous STO-3G), double <span class="math notranslate nohighlight">\(\zeta\)</span> (DZ),  triple <span class="math notranslate nohighlight">\(\zeta\)</span> (TZ), quadruple <span class="math notranslate nohighlight">\(\zeta\)</span> (QZ) and so all (5Z, 6Z, …).</p>
+<p>On the other hand, since valence orbitals are affected than the core (inner) orbitals by chemical processes, more basis functions (contractions) are sometimes used to describe these (which does not mean more primitives).
+The corresponding basis sets (for example the Pople basis sets) are sometimes called <em>split-valence</em>.
+These basis sets are usually structured in such a way that most diffuse primitives (small <span class="math notranslate nohighlight">\(\alpha\)</span>) are left uncontracted.
+For example, in the 6-31G basis set of Pople, a contraction of 6 primitives is used for core orbitals while 2 contractions (of 3 and 1 primitives, respectively) is used for valence orbitals. It is therefore referred as double <span class="math notranslate nohighlight">\(\zeta\)</span>.</p>
+<p>Basis sets are frequently augmented with others functions:</p>
+<ul class="simple">
+<li><p><em>Polarization functions</em>: functions with higher values of <span class="math notranslate nohighlight">\(L\)</span> than those present in occupied atomic orbitals of the ground state of the corresponding atom (or, strictly speaking, of the noble gas belonging to the same row in the periodic table).
+They are important for correlated calculations as well as description of bonding.
+In Pople’s notation, they are indicated in parentheses, for example 6-31G(d) include a <em>d</em>-type basis function.</p></li>
+<li><p><em>Diffuse functions</em>: primitives with very small (&lt; 0.01 ?) exponent, contained in uncontracted basis functions, that therefore decay slowly with <span class="math notranslate nohighlight">\(|\mathbf{r}-\mathbf{R}|^2\)</span>.
+They are important for the computation of properties, weak bonds (i.e. hydrogen bonds) and long distance interactions.
+In Pople’s notation, they are indicated by <cite>+</cite>, for example 6+31G include a <em>p</em>-type diffuse basis function on heavy atoms.
+Note that “polarization-diffuse” functions are possible (in Dunning “aug” basis sets, for example), although not in Pople’s basis sets.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Shells</strong>. Even thought it does not make sense strictly speaking (because of the orthogonality of primitives of different shells), the “SP” shell exists (in Pople basis sets), and define a shell when GTO share the same exponent but different contraction coefficients for the <em>s</em> and <em>p</em> orbitals.</p>
+<p><strong>Naming of basis sets</strong>. Basis set are named based on arbitrary criterions (with the author name, generally) or more systematically (Pople or Dunning).
+One notation, used by Dalton and some authors in the literature is <code class="docutils literal notranslate"><span class="pre">[uncontracted</span> <span class="pre">set|contracted</span> <span class="pre">set]</span></code>.
+For example <code class="docutils literal notranslate"><span class="pre">[10s4p1d|3s2p1d]</span></code> for second row atoms (6-31G* in the notation of Pople), which is constituted of 10 <em>s</em>-type primitives (contracted in 3 <em>s</em>-type basis functions), 4 <em>p</em>-type primitives (contracted in 2 <em>p</em>-type basis functions) and 1 <em>d</em>-type primitive (in one <em>d</em>-type polarization basis function).
+The representation of a atomic basis function in the code follows this notation.</p>
+<p><strong>Basis functions</strong>. Therefore, when using a basis set defined by <code class="docutils literal notranslate"><span class="pre">[10s4p1d|3s2p1d]</span></code> for second row atoms, in means that there is, on an atomic point of view the [1s, 2s, 2p, 3s’, 3p’, 3d’] orbitals (where ‘ represents the added polarization orbitals).</p>
+<p><strong>Number of basis basis functions and primitives</strong>. Don’t forget that for each <em>p</em>-type “basis function”, there is actually 3 basis function (<span class="math notranslate nohighlight">\(p_x\)</span>, <span class="math notranslate nohighlight">\(p_y\)</span> and <span class="math notranslate nohighlight">\(p_z\)</span>) defined, as emphasized by the sum of over <span class="math notranslate nohighlight">\((l,m,n)\in\mu\)</span> in Eq. <a class="reference internal" href="#equation-atomicbasisset">(1)</a>, 5 for each <em>d</em>-type orbitals (or six if one consider the carthesian counterparts), and so all. The same goes for the number of primitives.
+For example, water with a 6-31+G(d) basis set (<code class="docutils literal notranslate"><span class="pre">[11s5p1d|4s3p1d]</span></code> for oxygen, <code class="docutils literal notranslate"><span class="pre">[4s|2s]</span></code> for hydrogen) contains actually 18 basis functions for the oxygen (= <span class="math notranslate nohighlight">\(4\times 1+3\times 3+1\times 5\)</span>) and 31 primitives (= <span class="math notranslate nohighlight">\(11\times 1+5\times 3 + 1\times 5\)</span>), so in total there is 22 basis functions and 39 GTO’s for the water molecule.</p>
+<p><strong>Output</strong>. By convention, the primitives of a basis set are listed shell by shell, in decrasing order of number of primitive per basis function and starting from the highest coefficient.
+The code handle that order by sorting internal lists.</p>
+</div>
+</section>
+<section id="sources">
+<h3>Sources<a class="headerlink" href="#sources" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.ccl.net/cca/documents/basis-sets/img/basis-sets.shtml">http://www.ccl.net/cca/documents/basis-sets/img/basis-sets.shtml</a> ;</p></li>
+<li><p><a class="reference external" href="http://vergil.chemistry.gatech.edu/courses/chem6485/pdf/basis-sets.pdf">http://vergil.chemistry.gatech.edu/courses/chem6485/pdf/basis-sets.pdf</a> ;</p></li>
+<li><p><a class="reference external" href="http://www.helsinki.fi/kemia/fysikaalinen/opetus/jlk/luennot/Lecture5.pdf">http://www.helsinki.fi/kemia/fysikaalinen/opetus/jlk/luennot/Lecture5.pdf</a> ;</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Basis_set_(chemistry">https://en.wikipedia.org/wiki/Basis_set_(chemistry</a>) ;</p></li>
+</ul>
+<p>(last consultation on the 18th of August, 2017)</p>
+</section>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>A primitive is defined with the <a class="reference external" href="#qcip_tools.basis_set.Primitive">Primitive</a> object, and represent basically a contraction coefficient and and exponent.
+Basis functions are defined with the <a class="reference external" href="#qcip_tools.basis_set.Function">Function</a> object, which contains the different primitives.
+For a given atom, one defines a basis set with <a class="reference external" href="#qcip_tools.basis_set.AtomicBasisSet">AtomicBasisSet</a>, in which you define the different basis functions for a given shell (S, P or SP, D, F …).
+Finally, a basis set is defined by the <a class="reference external" href="#qcip_tools.basis_set.BasisSet">BasisSet</a> object, which contains the different basis sets for each atoms.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qcip_tools</span> <span class="kn">import</span> <span class="n">basis_set</span>
+
+<span class="c1"># STO-3G for hydrogen or oxygen (with SP):</span>
+<span class="c1"># From ESML basis set exchange</span>
+<span class="n">sto3g</span> <span class="o">=</span> <span class="n">basis_set</span><span class="o">.</span><span class="n">BasisSet</span><span class="p">(</span><span class="s1">&#39;STO-3G&#39;</span><span class="p">)</span>
+
+<span class="n">bf_H_S</span> <span class="o">=</span> <span class="n">basis_set</span><span class="o">.</span><span class="n">Function</span><span class="p">()</span>
+<span class="n">bf_H_S</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">3.42525091</span><span class="p">,</span> <span class="mf">0.15432897</span><span class="p">))</span>  <span class="c1"># exponent, then coefficient</span>
+<span class="n">bf_H_S</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">0.62391373</span><span class="p">,</span> <span class="mf">0.53532814</span><span class="p">))</span>
+<span class="n">bf_H_S</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">0.16885540</span><span class="p">,</span> <span class="mf">0.44463454</span><span class="p">))</span>
+
+<span class="n">b_H</span> <span class="o">=</span> <span class="n">basis_set</span><span class="o">.</span><span class="n">AtomicBasisSet</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>  <span class="c1"># you can use symbol or atomic number</span>
+<span class="n">b_H</span><span class="o">.</span><span class="n">add_basis_function</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">bf_H_S</span><span class="p">)</span>  <span class="c1"># you can use upper or lowercase</span>
+
+<span class="n">bf_O_S</span> <span class="o">=</span> <span class="n">basis_set</span><span class="o">.</span><span class="n">Function</span><span class="p">()</span>
+<span class="n">bf_O_S</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">130.7093200</span><span class="p">,</span> <span class="mf">0.15432897</span><span class="p">))</span>
+<span class="n">bf_O_S</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">23.8088610</span><span class="p">,</span> <span class="mf">0.53532814</span><span class="p">))</span>
+<span class="n">bf_O_S</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">6.4436083</span><span class="p">,</span> <span class="mf">0.44463454</span><span class="p">))</span>
+
+<span class="n">bf_O_SP</span> <span class="o">=</span> <span class="n">basis_set</span><span class="o">.</span><span class="n">Function</span><span class="p">()</span>
+<span class="n">bf_O_SP</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">5.0331513</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.09996723</span><span class="p">,</span> <span class="mf">0.15591627</span><span class="p">))</span>  <span class="c1"># &quot;sp&quot; primitives have two coefficients</span>
+<span class="n">bf_O_SP</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">1.1695961</span><span class="p">,</span> <span class="mf">0.39951283</span><span class="p">,</span> <span class="mf">0.60768372</span><span class="p">))</span>
+<span class="n">bf_O_SP</span><span class="o">.</span><span class="n">add_primitive</span><span class="p">(</span><span class="n">basis_set</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="mf">0.3803890</span><span class="p">,</span> <span class="mf">0.70011547</span><span class="p">,</span> <span class="mf">0.39195739</span><span class="p">))</span>
+
+<span class="n">b_O</span> <span class="o">=</span> <span class="n">basis_set</span><span class="o">.</span><span class="n">AtomicBasisSet</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">)</span>
+<span class="n">b_O</span><span class="o">.</span><span class="n">add_basis_function</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">bf_O_S</span><span class="p">)</span>
+<span class="n">b_O</span><span class="o">.</span><span class="n">add_basis_function</span><span class="p">(</span><span class="s1">&#39;sp&#39;</span><span class="p">,</span> <span class="n">bf_O_SP</span><span class="p">)</span>
+
+<span class="n">sto3g</span><span class="o">.</span><span class="n">add_atomic_basis_set</span><span class="p">(</span><span class="n">b_O</span><span class="p">)</span>  <span class="c1"># add the atomic basis set for oxygen</span>
+<span class="n">sto3g</span><span class="o">.</span><span class="n">add_atomic_basis_set</span><span class="p">(</span><span class="n">b_H</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="api-documentation">
+<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/code-documentation/basis_set.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Pierre Beaujean (University of Namur).
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/code-documentation/basis_set.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

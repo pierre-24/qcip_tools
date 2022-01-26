@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Derivatives of the energy (qcip_tools.derivatives) &#8212; qcip_tools 0.6.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Derivatives w.r.t. electric field (qcip_tools.derivatives_e)" href="derivatives_e.html" />
+    <link rel="prev" title="Chemistry data files (chemistry_files.chemistry_datafile)" href="chemistry-files/chemistry_datafile.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="derivatives-of-the-energy-qcip-tools-derivatives">
+<h1>Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)<a class="headerlink" href="#derivatives-of-the-energy-qcip-tools-derivatives" title="Permalink to this headline">¶</a></h1>
+<p>Tools to help the representation of derivatives of the energy.</p>
+<section id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>Supposing a function <span class="math notranslate nohighlight">\(\mathbf{f}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{m}\)</span>, a function which takes a vector <span class="math notranslate nohighlight">\(\mathbf{x}\in\mathbb{R}^n\)</span> as input and produce a vector <span class="math notranslate nohighlight">\(\mathbf{f}(\mathbf{x})\in\mathbb{R}^m\)</span>, one can write its <a class="reference external" href="https://en.wikipedia.org/wiki/Taylor_series">Maclaurin series expansion</a> as</p>
+<div class="math notranslate nohighlight" id="equation-mclaurin">
+<span class="eqno">(1)<a class="headerlink" href="#equation-mclaurin" title="Permalink to this equation">¶</a></span>\[\mathbf{M}(\mathbf{q}) = \sum_{r=0}^{r_{max}} \frac{1}{r!}\frac{\partial^r\mathbf{f}(0)}{\partial\mathbf{q}^r}\,\mathbf{q}^r,\]</div>
+<p>where <span class="math notranslate nohighlight">\(r_{max}=\infty\)</span> if the series is not truncated.</p>
+<p>In this expansion, one recognise, for example, <span class="math notranslate nohighlight">\(\frac{\partial\mathbf{f}(0)}{\partial\mathbf{q}}\)</span>, which is the jacobian of the function (and a linear application <span class="math notranslate nohighlight">\(\mathbb{R}^n\rightarrow\mathbb{R}^m\)</span>) evaluated at <span class="math notranslate nohighlight">\(\mathbf{q}=\mathbf{0}\)</span>, which correspond to a <span class="math notranslate nohighlight">\(n\times m\)</span> matrix <span class="math notranslate nohighlight">\(\alpha\)</span>, for which the elements <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{ij} = \left.\frac{\partial \mathbf{f}_i}{\partial \mathbf{q}_j}\right|_{\mathbf{q}=\mathbf{0}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{f}_i\)</span> is the application that associate to <span class="math notranslate nohighlight">\(\mathbf{x}\in\mathbb{R}^n\)</span> the <span class="math notranslate nohighlight">\(i^\text{th}\)</span> coordinates of <span class="math notranslate nohighlight">\(\mathbf{f}(\mathbf{x})\in\mathbb{R}^m\)</span>.
+By facility, it will be referred as the term “tensor of order 2”. For any <span class="math notranslate nohighlight">\(r\)</span> in <a class="reference internal" href="#equation-mclaurin">(1)</a>, there is a corresponding tensor of order <span class="math notranslate nohighlight">\(r+1\)</span> (corresponding to a multilinear application to <span class="math notranslate nohighlight">\(\mathbb{R}^m\)</span> and wich can be flatten into a <span class="math notranslate nohighlight">\(n^r\, m\)</span> dimension vector).</p>
+<p>Due to the <a class="reference external" href="https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives#Schwarz.27s_theorem">Shwarz’s theorem</a> (referred as “Kleinman symmetry” in the field of nonlinear optics), some component of those tensors are equals to each others.</p>
+<p>Three kind of derivatives are considered for the moment:</p>
+<ul>
+<li><p>Electrical, with respect to a static (<code class="docutils literal notranslate"><span class="pre">F</span></code>) or dynamic (<code class="docutils literal notranslate"><span class="pre">D</span></code> or <code class="docutils literal notranslate"><span class="pre">d</span></code>) electric field (though the first one is a special case of the second).
+The input space is <span class="math notranslate nohighlight">\(\mathbf{f}\in\mathbb{R}^3\)</span>, and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+  E(\mathbf{f}) = E_0  &amp;+  \sum_i \mu_i\,\mathbf{f}_i+ \frac{1}{2!}\,\sum_{ij}\alpha_{ij}\mathbf{f}_i\mathbf{f}_j + \frac{1}{3!}\sum_{ijk}\beta_{ijk}\mathbf{f}_i\mathbf{f}_j\mathbf{f}_k \\
+  &amp;+ \frac{1}{4!}\,\sum_{ijkl}\gamma_{ijkl}\mathbf{f}_i\mathbf{f}_j\mathbf{f}_k\mathbf{f}_l + \ldots
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the electric dipole moment, <span class="math notranslate nohighlight">\(\alpha\)</span> is the polarizability, <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> are the first and second hyperpolarizabilites.
+Note that in the case of dynamic electric fields, <span class="math notranslate nohighlight">\(\mathbf{f}_i(t)=\mathbf{f}^0_i\,(e^{-i\omega t}+c.c.)\)</span>, where <span class="math notranslate nohighlight">\(\omega\)</span> is the pulsation (<span class="math notranslate nohighlight">\(\omega=2\pi\nu\)</span>).</p>
+</li>
+<li><p>Geometrical, with respect to cartesian (<code class="docutils literal notranslate"><span class="pre">G</span></code>) or normal mode (<code class="docutils literal notranslate"><span class="pre">N</span></code>) coordinates.
+The input space is <span class="math notranslate nohighlight">\(\mathbf{q}\in\mathbf{R}^{3N}\)</span> where <span class="math notranslate nohighlight">\(3N\)</span> is the number of degrees of freedom of <span class="math notranslate nohighlight">\(N\)</span> atoms expressed in cartesian coordinates, and</p>
+<div class="math notranslate nohighlight">
+\[V(\mathbf{q}) = V_0  +  \sum_i F_i\mathbf{q}_i + \frac{1}{2!}\,\sum_{ij}H_{ij}\mathbf{q}_i\mathbf{q}_j +  \frac{1}{3!}\,\sum_{ij}F_{ijk}\mathbf{q}_i\mathbf{q}_j\mathbf{q}_k+ \ldots\]</div>
+<p>where <span class="math notranslate nohighlight">\(F_i=\left.\frac{\partial V}{\partial\mathbf{q}_i}\right|_{\mathbf{q}=0}\)</span> is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), <span class="math notranslate nohighlight">\(H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{q}_i\mathbf{q}_j}\right|_{\mathbf{q}=0}\)</span> is the hessian (force constant matrix) and <span class="math notranslate nohighlight">\(F_{ijk}\)</span> is the cubic force constants matrix (and so on).</p>
+</li>
+<li><p>Excitation energies: not exactly derivatives themselves, but obtained by single/double/… residue on the response functions.
+Excited state are represented by <code class="docutils literal notranslate"><span class="pre">#</span></code>, while excitation are represented by <code class="docutils literal notranslate"><span class="pre">!</span></code>.
+Therefore, <code class="docutils literal notranslate"><span class="pre">#F</span></code> means “excited state dipole moment” while <code class="docutils literal notranslate"><span class="pre">!F</span></code> means “(ground to excited) transition dipole moment”, and <code class="docutils literal notranslate"><span class="pre">#!F</span></code> means “excited to excited transition dipole moment”.</p></li>
+</ul>
+<p>All derivatives are written with respect to the energy (assuming a corresponding Maclaurrin expansion). For example, <code class="docutils literal notranslate"><span class="pre">GG</span></code> corresponds to the hessian expressed in cartesian coordinates (second order derivative of the energy), while <code class="docutils literal notranslate"><span class="pre">F</span></code> is the electric dipole moment.
+Therefore, <code class="docutils literal notranslate"><span class="pre">FG</span></code> (or <code class="docutils literal notranslate"><span class="pre">GF</span></code>) is the first-order derivative of the dipole moment with respect to the cartesian coordinates.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The name of a derivative is expressed as its electrical-derivative counterpart with respect to the geometrical parameters, though the opposite is valid (<code class="docutils literal notranslate"><span class="pre">GF</span></code> is also the derivative of the gradient with respect to electric field).
+The first is just more used in the literature (for IR and Raman spectra, for example).</p>
+</div>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The object <code class="docutils literal notranslate"><span class="pre">Derivative</span></code> handle the manipulation of derivative on a symbolic level : you can define a derivative and differenciate it.
+It computes the shape, dimension and order of the corresponding derivative.
+Note that you must provide <code class="docutils literal notranslate"><span class="pre">spacial_dof</span></code>, the number of spacial degrees of freeedom of the corresponding system if the derivative contains a geometrical one (<code class="docutils literal notranslate"><span class="pre">G</span></code> or <code class="docutils literal notranslate"><span class="pre">N</span></code>), and <code class="docutils literal notranslate"><span class="pre">nstate</span></code> if the derivative contains an excitation (<code class="docutils literal notranslate"><span class="pre">!</span></code> or <code class="docutils literal notranslate"><span class="pre">#</span></code>).</p>
+<p>The object <code class="docutils literal notranslate"><span class="pre">Tensor</span></code> allows to store this derivative in the <code class="docutils literal notranslate"><span class="pre">components</span></code> array (but without the specific operation that you can perform on certain tensors, e.g. the isotropic value for the polarizability and so all).
+It is provided with a <code class="docutils literal notranslate"><span class="pre">Derivative</span></code> (<code class="docutils literal notranslate"><span class="pre">self.representation</span></code>) for efficiency, so the <code class="docutils literal notranslate"><span class="pre">components</span></code> array is shaped accordingly.
+You must also provide <code class="docutils literal notranslate"><span class="pre">frequency</span></code> if the derivatives contains a dynamic electric field (<code class="docutils literal notranslate"><span class="pre">D</span></code> or <code class="docutils literal notranslate"><span class="pre">d</span></code>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Always use the <code class="docutils literal notranslate"><span class="pre">representation()</span></code> function to get the actual representation of the derivatives.
+The representation of the derivative is ordered so that geometrical derivatives come before electric one.
+Therefore, the content of the <code class="docutils literal notranslate"><span class="pre">components</span></code> array in <code class="docutils literal notranslate"><span class="pre">Tensor</span></code> must be given with the indices in that order.</p>
+</div>
+</section>
+<section id="api-documentation">
+<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/code-documentation/derivatives.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Pierre Beaujean (University of Namur).
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/code-documentation/derivatives.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

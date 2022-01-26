@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Chemistry files (qcip_tools.chemistry_files) &#8212; qcip_tools 0.6.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Base (chemistry_files)" href="chemistry-files/base.html" />
+    <link rel="prev" title="Bounding objects(qcip_tools.bounding)" href="bounding.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="chemistry-files-qcip-tools-chemistry-files">
+<h1>Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)<a class="headerlink" href="#chemistry-files-qcip-tools-chemistry-files" title="Permalink to this headline">¶</a></h1>
+<p>Read/write files commonly used in quantum chemistry.</p>
+<section id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
+<p>Human readable text files are widely used in the field of quantum chemistry, but there is large syntaxic differences from one to another (when there IS a syntax).
+This is especially true for input files, which follows rigorous syntax, while output files are more or less incoherent. This module implement access to different formats.</p>
+<p>All classes derive from <a class="reference external" href="chemistry-files/base.html#qcip_tools.chemistry_files.ChemistryFile">ChemistryFile</a>.
+You need to override the <code class="docutils literal notranslate"><span class="pre">read()</span></code> method to read from a file.</p>
+<p>Thanks to the <a class="reference external" href="mixins.html#qcip_tools.mixins.Dispatcher">dispatcher pattern</a>, derivation from this class allow to define taylor-made accessors: use the <code class="docutils literal notranslate"><span class="pre">&#64;Class.define_property(property_name)</span></code> decorator to give the ability to use this callback function with <code class="docutils literal notranslate"><span class="pre">property(property_name[,</span> <span class="pre">optional</span> <span class="pre">kwargs</span> <span class="pre">...])</span></code>.
+Callbacks should have the form <code class="docutils literal notranslate"><span class="pre">callback_func(obj,</span> <span class="pre">**kwargs)</span></code>, where <code class="docutils literal notranslate"><span class="pre">obj</span></code> is the current object. In the code, those callbacks have the form <code class="docutils literal notranslate"><span class="pre">property__*(obj,</span> <span class="pre">**kwargs)</span></code>. One can check if a property is available with <code class="docutils literal notranslate"><span class="pre">has_property()</span></code> (which does not mean that the file actually contains this property, but that it can be carry out).</p>
+<p>There is some <em>mixins</em> and derived classes to add functionnalities:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="chemistry-files/base.html#qcip_tools.chemistry_files.WithMoleculeMixin">WithMoleculeMixin</a> adds <code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>, which is accessible trough <code class="docutils literal notranslate"><span class="pre">get_molecule()</span></code>.
+It also provides a <code class="docutils literal notranslate"><span class="pre">Class.from_molecule(molecule,</span> <span class="pre">*args,</span> <span class="pre">**kwargs)</span></code> class method to ease creation of a file from scratch (if defined in subclass).</p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="chemistry-files/base.html#qcip_tools.chemistry_files.WithIdentificationMixin">WithIdentificationMixin</a> adds <code class="docutils literal notranslate"><span class="pre">Class.possible_file_extensions()</span></code> and <code class="docutils literal notranslate"><span class="pre">Class.attempt_identification()</span></code> to allow file recognition by <a class="reference external" href="chemistry-files/helpers.html#helpers-helpers">helpers</a>.</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">possible_file_extensions()</span></code> helps to avoid some possibilities if the extension is trusted. The helper expects a list of possible extentions (without the dot).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attempt_identification()</span></code> actually make the recognition of the file: given <code class="docutils literal notranslate"><span class="pre">f</span></code> (the file open in read mode), the helper function expects <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> if it is a file corresponding to a given objects.
+This recognition is usually based on patterns or words (like the name of the program) that frequently appears.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><a class="reference external" href="chemistry-files/base.html#qcip_tools.chemistry_files.WithOutputMixin">WithOutputMixin</a>, which gives the ability to <code class="docutils literal notranslate"><span class="pre">write()</span></code> in a new file.
+Note that it is easier to override <code class="docutils literal notranslate"><span class="pre">to_string()</span></code> in this case.</p></li>
+<li><p><a class="reference external" href="chemistry-files/base.html#qcip_tools.chemistry_files.ChemistryLogFile">ChemistryLogFile</a> (derived class) keeps the whole file in memory (in <code class="docutils literal notranslate"><span class="pre">self.lines</span></code>) and allow to divide the file in <code class="docutils literal notranslate"><span class="pre">chunks</span></code> to ease their manipulation.
+The <code class="docutils literal notranslate"><span class="pre">chunk_exists()</span></code> function check if a given chunk is present in the file.
+The mixins defines a <code class="docutils literal notranslate"><span class="pre">apply_function()</span></code> method to apply a given function (with <code class="docutils literal notranslate"><span class="pre">apply_over_list()</span></code>, <a class="reference external" href="chemistry-files/base.html#qcip_tools.chemistry_files.apply_over_list">see here</a>) to the lines (to carry out information for example).
+Based on that, it also defines a <code class="docutils literal notranslate"><span class="pre">search()</span></code> function, which returns the line where the information was found.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If one would like to construct the chemistry files from scratch (without using <code class="docutils literal notranslate"><span class="pre">read()</span></code> on an existing file) or get additional information from it, the different class members are given in the documentation.
+Also check if <code class="docutils literal notranslate"><span class="pre">from_molecule()</span></code> is defined.</p>
+</div>
+</section>
+<section id="api-documentation">
+<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/xyz.html">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/gaussian.html">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
+</ul>
+</div>
+<p>More precisely,</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 41%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Class</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Identifier</p></th>
+<th class="head"><p>Input</p></th>
+<th class="head"><p>Ouput</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/xyz.html#qcip_tools.chemistry_files.xyz.File">xyz.File</a></p></td>
+<td><p>XYZ file (.xyz)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">XYZ</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="./chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.BasisSet">gaussian.BasisSet</a></p></td>
+<td><p>Gaussian basis set (.gbs ?)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAUSSIAN_BS</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.Cube">gaussian.Cube</a></p></td>
+<td><p><a class="reference external" href="http://gaussian.com/cubegen/">Gaussian Cube file</a> (.cub)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAUSSIAN_CUBE</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="./chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.FCHK">gaussian.FCHK</a></p></td>
+<td><p><a class="reference external" href="http://gaussian.com/formchk/">Gaussian formated checkpoint file</a> (.fchk)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAUSSIAN_FCHK</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.Input">gaussian.Input</a></p></td>
+<td><p>Gaussian input file (.com, .gau or .inp)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAUSSIAN_INP</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="./chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.Output">gaussian.Output</a></p></td>
+<td><p>Gaussian output (.log or .out)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAUSSIAN_LOG</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.ArchiveOutput">dalton.ArchiveOutput</a></p></td>
+<td><p>Dalton archive (.tar.gz)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DALTON_ARCHIVE</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="./chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.Input">dalton.Input</a></p></td>
+<td><p>Dalton input file (.dal)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DALTON_DAL</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.MoleculeInput">dalton.MoleculeInput</a></p></td>
+<td><p>Dalton molecule file (.mol)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DALTON_MOL</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="./chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.Output">dalton.Output</a></p></td>
+<td><p>Dalton output file (.out)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DALTON_LOG</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.Input">gamess.Input</a></p></td>
+<td><p>GAMESS input (.inp)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAMESS_INP</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="./chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.Output">gamess.Output</a></p></td>
+<td><p>GAMESS output (.log or .out)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GAMESS_LOG</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p><strong>No</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="./chemistry-files/chemistry_datafile.html#qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile">chemistry_datafile.ChemistryDataFile</a></p></td>
+<td><p>QCIP chemistry data file (.h5)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">QCIP_CDF</span></code></p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#concepts">Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/code-documentation/chemistry_files.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Pierre Beaujean (University of Namur).
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/code-documentation/chemistry_files.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

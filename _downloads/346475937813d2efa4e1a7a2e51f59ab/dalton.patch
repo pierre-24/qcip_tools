@@ -1,0 +1,128 @@
+From f395144cff08e90e8b03742e846b95614d474f10 Mon Sep 17 00:00:00 2001
+From: pierre-24 <pierreb24@gmail.com>
+Date: Fri, 5 Jan 2018 17:41:44 +0100
+Subject: [PATCH 1/2] .GAMALL outputs in .PROP
+
+---
+ DALTON/rsp/rspcr3.F       | 46 +++++++++++++++++++++++++++++-----------------
+
+diff --git a/DALTON/rsp/rspcr3.F b/DALTON/rsp/rspcr3.F
+index f7391ab..62fdeec 100644
+--- a/DALTON/rsp/rspcr3.F
++++ b/DALTON/rsp/rspcr3.F
+@@ -733,12 +733,14 @@ C
+             WRITE(LUPRI,'(A,8(A1),F16.4)')
+      *           '@ gamma(',DIPOP(I),';',DIPOP(I),',',DIPOP(J),
+      *           ',',DIPOP(J),')',GAMMA(I,I,J,J)
+-
+-            CALL WRIPRO(GAMMA(I,I,J,J),"CR-SCF/DFT",4,
+-     *                  DIQMMM(I),DIQMMM(I),
+-     *                  DIQMMM(J),DIQMMM(J),
+-     *                  FREQB,FREQC,FREQD,
+-     *                  1,0,0,0)
++
++            IF (.NOT. GAMALL) THEN
++               CALL WRIPRO(GAMMA(I,I,J,J),"CR-SCF/DFT",4,
++     *                     DIQMMM(I),DIQMMM(I),
++     *                     DIQMMM(J),DIQMMM(J),
++     *                     FREQB,FREQC,FREQD,
++     *                     1,0,0,0)
++            END IF
+          END IF
+          IF (I.NE.J) THEN
+             IF (GAMMA(I,J,J,I) .EQ. D0) THEN
+@@ -747,12 +749,14 @@ C
+                WRITE(LUPRI,'(A,8(A1),F16.4)')
+      *              '@ gamma(',DIPOP(I),';',DIPOP(J),',',DIPOP(J),
+      *           ',',DIPOP(I),')',GAMMA(I,J,J,I)
+-            CALL WRIPRO(GAMMA(I,J,J,I),"CR-SCF/DFT",4,
+-     *                  DIQMMM(I),DIQMMM(J),
+-     *                  DIQMMM(J),DIQMMM(I),
+-     *                  FREQB,FREQC,FREQD,
+-     *                  1,0,0,0)
+-
++
++               IF (.NOT. GAMALL) THEN
++                  CALL WRIPRO(GAMMA(I,J,J,I),"CR-SCF/DFT",4,
++     *                        DIQMMM(I),DIQMMM(J),
++     *                        DIQMMM(J),DIQMMM(I),
++     *                        FREQB,FREQC,FREQD,
++     *                        1,0,0,0)
++               END IF
+             END IF
+             IF (GAMMA(I,J,I,J) .EQ. D0) THEN
+                IZERO = IZERO + 1
+@@ -760,11 +764,14 @@ C
+                WRITE(LUPRI,'(A,8(A1),F16.4)')
+      *              '@ gamma(',DIPOP(I),';',DIPOP(J),',',DIPOP(I),
+      *           ',',DIPOP(J),')',GAMMA(I,J,I,J)
+-            CALL WRIPRO(GAMMA(I,J,I,J),"CR-SCF/DFT",4,
+-     *                  DIQMMM(I),DIQMMM(J),
+-     *                  DIQMMM(I),DIQMMM(J),
+-     *                  FREQB,FREQC,FREQD,
+-     *                  1,0,0,0)
++
++               IF (.NOT. GAMALL) THEN
++                  CALL WRIPRO(GAMMA(I,J,I,J),"CR-SCF/DFT",4,
++     *                        DIQMMM(I),DIQMMM(J),
++     *                        DIQMMM(I),DIQMMM(J),
++     *                        FREQB,FREQC,FREQD,
++     *                        1,0,0,0)
++               END IF
+             END IF
+          END IF
+          GAMAVE=GAMAVE +
+@@ -790,6 +797,11 @@ C
+                   WRITE(LUPRI,'(A,8(A1),F18.8)')
+      *                 '@ gamma(',DIPOP(I),';',DIPOP(J),',',DIPOP(K),
+      *                 ',',DIPOP(L),')',GAMMA(I,J,K,L)
++                  CALL WRIPRO(GAMMA(I,J,K,L),"CR-SCF/DFT",4,
++     *                        DIQMMM(I),DIQMMM(J),
++     *                        DIQMMM(K),DIQMMM(L),
++     *                        FREQB,FREQC,FREQD,
++     *                        1,0,0,0)
+                 END IF
+               END DO
+             END DO
+--
+1.9.1
+
+
+
+From 0b9901597d28ad3fed457dae907ee03563dc2430 Mon Sep 17 00:00:00 2001
+From: pierre-24 <pierreb24@gmail.com>
+Date: Fri, 5 Jan 2018 18:38:04 +0100
+Subject: [PATCH 2/2] add beta to .PROP
+
+---
+
+diff --git a/DALTON/rsp/rspvec.F b/DALTON/rsp/rspvec.F
+index ed77639..316dd81 100644
+--- a/DALTON/rsp/rspvec.F
++++ b/DALTON/rsp/rspvec.F
+@@ -953,6 +953,7 @@ C CALCULATION OF FIRST HYPERPOLARIZABILITIES AND RELATED PROPERTIES
+ C
+       CHARACTER*1 ALABP, BLABP, CLABP
+       CHARACTER*8 BLANK, LABEL
++      CHARACTER*7 BLANK_CHARS
+       DIMENSION CMO(*),UDV(*),PV(*),FOCK(*),FC(*),FV(*),FCAC(*),H2AC(*)
+       DIMENSION XINDX(*),VECB(*),VECC(*),WRK(*)
+       DIMENSION SPNFC1(*), SPNFC2(*), SPNFC(*), SPNSD1(*), SPNSD2(*),
+@@ -1687,6 +1688,14 @@ C
+      &              '@ B-freq =',BQRFR(IBFR),'  C-freq =',CQRFR(ICFR),
+      &                   '     beta(',ALABP,';',BLABP,',',CLABP,')',
+      &                        ' =',-HYPVAL(IAOP)
++                           CALL WRIPRO(-HYPVAL(IAOP),"QR-SCF/DFT",3,
++     *                                 ALABP // '       ',
++     *                                 BLABP // '       ',
++     *                                 CLABP // '       ',
++     *                                 ALABP // '       ',
++     *                                 BQRFR(IBFR),CQRFR(ICFR),
++     *                                 CQRFR(ICFR),
++     *                                 1,0,0,0)
+ C      hjaaj Oct 2001: note that
+ C            beta = <<mu; -mu, -mu>> = -<<r; r, r>>
+                               END IF
+--
+1.9.1
+

@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Derivatives w.r.t. geometrical stuffs (qcip_tools.derivatives_g) &#8212; qcip_tools 0.6.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Math helpers (qcip_tools.math)" href="math.html" />
+    <link rel="prev" title="Excitations (qcip_tools.derivatives_exci)" href="derivatives_exci.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g">
+<h1>Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)<a class="headerlink" href="#derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g" title="Permalink to this headline">¶</a></h1>
+<p>Tools to help the manipulation of derivatives of the energy with respect to cartesian (<code class="docutils literal notranslate"><span class="pre">G</span></code>) or normal mode (<code class="docutils literal notranslate"><span class="pre">N</span></code>) coordinates.</p>
+<section id="theory">
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h2>
+<p>The displacement around the equilibrium position, <span class="math notranslate nohighlight">\(\mathbf{x}_i=\mathbf{x}'_i-\mathbf{x}_{i,0}\)</span>, may be expressed as a Taylor series to describe the potential energy surface:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[V(\mathbf{x}) = V_0  +  \sum_i F_i\mathbf{x}_i + \frac{1}{2!}\,\sum_{ij}H_{ij}\mathbf{x}_i\mathbf{x}_j + \frac{1}{3!}\,\sum_{ij}F_{ijk}\mathbf{x}_i\mathbf{x}_j\mathbf{x}_k+ \ldots\]</div>
+</div></blockquote>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x}\in\mathbf{R}^{3N}\)</span>, <span class="math notranslate nohighlight">\(F_i=\left.\frac{\partial V}{\partial\mathbf{x}_i}\right|_{\mathbf{x}=0}\)</span> is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), <span class="math notranslate nohighlight">\(H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{x}_i\mathbf{x}_j}\right|_{\mathbf{x}=0}\)</span> is the hessian (force constant matrix) and <span class="math notranslate nohighlight">\(F_{ijk}\)</span> is the cubic force constants matrix (and so on).
+The sums runs over the <span class="math notranslate nohighlight">\(3N\)</span> degrees of freedom of <span class="math notranslate nohighlight">\(N\)</span> atoms.</p>
+<section id="normal-modes">
+<h3>Normal modes<a class="headerlink" href="#normal-modes" title="Permalink to this headline">¶</a></h3>
+<p>By settings the Lagrange equations of the harmonic oscillator,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+&amp;T(\mathbf{x}) = \frac{1}{2} \sum_{ij} m_{ij}\,\dot{x}_i\dot{x}_j, \\
+&amp;V(\mathbf{x}) = \frac{1}{2}\sum_{ij} H_{ij}\,x_i\,x_j,
+\end{align}\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(L = T-V\)</span>. Taking advantage of the fact that the Hessian and the mass matrices are diagonals, <span class="math notranslate nohighlight">\(H_{ij}=H_{ii}\delta_{ij}\)</span> and <span class="math notranslate nohighlight">\(m_{ij}=m_i\delta_{ij}\)</span>, the <span class="math notranslate nohighlight">\(3N\)</span> Lagrange equation are written</p>
+<div class="math notranslate nohighlight">
+\[\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{x}_i}\right) - \left(\frac{\partial L}{\partial x_i}\right) = \sum_j m_{ij}\,\overset{\cdot\cdot}{x}_j + H_{ij}\,x_{j} = 0,\]</div>
+<p>or, in a matrix form,</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{m}\,\overset{\cdot\cdot}{\mathbf{X}} + \mathbf{H}\,\mathbf{X} = 0.\]</div>
+<p>One can assume, in the case of small displacements, a linear harmonic solution, <span class="math notranslate nohighlight">\(\mathbf{X}=\mathbf{X}_0\,\cos{(\mathbf{\omega}\,t)}\)</span>, so that the previous equation reduce to</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{H}\,\mathbf{X}_0 = \mathbf{m}\,\mathbf{\omega}^2\,\mathbf{X}_0.\]</div>
+<p>This is reduced to an eigenvalue problem by setting mass-weighted coordinates, <span class="math notranslate nohighlight">\(\mathbf{Q}=\mathbf{m}^{\frac{1}{2}}\,\mathbf{X}_0\)</span>, which gives</p>
+<div class="math notranslate nohighlight">
+\[(\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}})\,\mathbf{Q} = \mathbf{\omega}^2\,\mathbf{Q},\]</div>
+<p>or,</p>
+<div class="math notranslate nohighlight" id="equation-x1">
+<span class="eqno">(1)<a class="headerlink" href="#equation-x1" title="Permalink to this equation">¶</a></span>\[\mathbf{Q}^\dagger\,\mathbf{H}^m\,\mathbf{Q} = \omega^2\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{H}^m=\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}}\)</span> is the mass-weighted Hessian.
+The <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span>’s are therefore eigenvectors of the mass-weigted hessian, also called normal modes (which form a complete and orthogonal basis), while the <span class="math notranslate nohighlight">\(\mathbf{\omega}\)</span>’s are the eigenvalues (vibrational frequencies).
+There is 6 (or 5, if the system is linear) zeros eigenvalues for the translation and rotation modes, while the other normal modes describe the vibrations.</p>
+</section>
+<section id="computation-of-normal-modes">
+<h3>Computation of normal modes<a class="headerlink" href="#computation-of-normal-modes" title="Permalink to this headline">¶</a></h3>
+<p>The computation takes place in the  <code class="docutils literal notranslate"><span class="pre">MassWeightedHessian</span></code> class.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Modes are not decontamined from translations and rotations.</p>
+</div>
+<ol class="arabic">
+<li><p>Compute the mass weighted Hessian, <span class="math notranslate nohighlight">\(\mathbf{H}^m\)</span>, as</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[H^m_{i\alpha,j\beta} = \frac{1}{\sqrt{m_i\,m_j}}\,H_{i\alpha,j\beta},\]</div>
+</div></blockquote>
+</li>
+</ol>
+<blockquote>
+<div><p>where <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> are the number of the atom, while <span class="math notranslate nohighlight">\(\alpha\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span> ar the cartesian coordinates of the atoms.
+Masses, <span class="math notranslate nohighlight">\(m_i\)</span> and <span class="math notranslate nohighlight">\(m_j\)</span>, are in AMU.</p>
+</div></blockquote>
+<ol class="arabic" start="2">
+<li><p>Compute the <span class="math notranslate nohighlight">\(3N\)</span> eigenvalues (<span class="math notranslate nohighlight">\(\omega^2\)</span>) and egeinvectors (<span class="math notranslate nohighlight">\(\mathbf{Q}\)</span>) of <span class="math notranslate nohighlight">\(\mathbf{H}^m\)</span>. The explicit set of equations to solve, obtained from <a class="reference internal" href="#equation-x1">(1)</a>, is written</p>
+<blockquote>
+<div><div class="math notranslate nohighlight" id="equation-v1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-v1" title="Permalink to this equation">¶</a></span>\[\omega_p^2\,\delta_{pq} = \sum_{i\alpha,j\beta} Q_{i\alpha,p}\,\frac{H_{i\alpha,j\beta}}{\sqrt{m_i\,m_j}}\,Q_{j\beta,q}.\label{eq:v1}\]</div>
+</div></blockquote>
+</li>
+</ol>
+<blockquote>
+<div><p>Order them from the lowest to the largest eigenvalue.
+Eventually discard the 6 (or 5) first lowest ones.</p>
+</div></blockquote>
+<ol class="arabic" start="3">
+<li><p>Compute frequencies:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\nu_p = \sqrt{\frac{\omega^2_p}{\mu}},\]</div>
+</div></blockquote>
+</li>
+</ol>
+<blockquote>
+<div><p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the conversion factor from AMU to electron mass (about 1822, see <a class="reference external" href="quantities.html#qcip_tools.quantities.AMUToElectronMass">here</a>) and <span class="math notranslate nohighlight">\(p\)</span> is the normal mode. With the conversion, <span class="math notranslate nohighlight">\(\nu_p\)</span> is therefore in atomic units.</p>
+</div></blockquote>
+<ol class="arabic" start="4">
+<li><p>Compute the carthesian displacements. From <a class="reference internal" href="#equation-v1">(2)</a>, they are defined by</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[D_{p,i\alpha} = \frac{1}{\sqrt{m_i\,\mu}} Q_{i\alpha,p}.\]</div>
+</div></blockquote>
+</li>
+</ol>
+<blockquote>
+<div><p>With the conversion, displacement are therefore in <span class="math notranslate nohighlight">\(\text{Å}\,m_e^{-1/2}\)</span>, where <span class="math notranslate nohighlight">\(m_e\)</span> is the electron mass (so atomic unit of mass).</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The normal modes (<code class="docutils literal notranslate"><span class="pre">normal_modes</span></code>) and cartesian displacements (<code class="docutils literal notranslate"><span class="pre">displacements</span></code>) are stored in the form <span class="math notranslate nohighlight">\(p,i\alpha\)</span>.</p>
+</div>
+</section>
+<section id="computation-of-thermochemistry-data">
+<h3>Computation of thermochemistry data<a class="headerlink" href="#computation-of-thermochemistry-data" title="Permalink to this headline">¶</a></h3>
+<p>See <a class="reference external" href="http://gaussian.com/thermo/">this excellent white paper from Gaussian</a> on thermochemistry, which explains step by step how the thermochemistry quantities are computed.</p>
+<p>Since the vibrational frequencies are needed, the <code class="docutils literal notranslate"><span class="pre">MassWeightedHessian</span></code> object also provide the methods for thermochemistry.
+Note that currently, the heat capacity is not implemented.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ZPVA contribution can be computed separately with <code class="docutils literal notranslate"><span class="pre">compute_zpva()</span></code>.
+Therefore it is not included in the computation of internal energy, enthalpy of free Gibbs energy.</p>
+</div>
+</section>
+</section>
+<section id="api-documentation">
+<h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../code-documentation.html">API documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="atom.html">Atom (<code class="docutils literal notranslate"><span class="pre">qcip_tools.atom</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basis_set.html">Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bounding.html">Bounding objects(<code class="docutils literal notranslate"><span class="pre">qcip_tools.bounding</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-documentation">API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecule.html">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantities.html">Quantities (<code class="docutils literal notranslate"><span class="pre">qcip_tools.quantities</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetry.html">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/code-documentation/derivatives_g.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Pierre Beaujean (University of Namur).
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/code-documentation/derivatives_g.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
