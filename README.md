@@ -1,47 +1,9 @@
 # Quantum chemistry in python (QCiP) tools library
 
-Library maintained by [Pierre Beaujean](pierre.beaujean@unamur.be) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
+Library maintained by [Pierre Beaujean](https://pierrebeaujean.net) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
 
-<!-- STABLE: -->
-Current release: [release-v0.6.6.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.6.1) (August 05, 2021)
-
-Previous releases (see [the changelog](./CHANGELOG.md)):
-
-<!-- PREVIOUS: -->
-+  [release-v0.6.6](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.6) (June 24, 2021)
-+  [release-v0.6.5](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.5) (February 18, 2021)
-+  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
-+  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
-+  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
-+  [release-v0.6.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.4) (July 09, 2020)
-+  [release-v0.6.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.3) (April 07, 2020)
-+  [release-v0.6.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.2) (January 20, 2020)
-+  [release-v0.6.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6.1) (June 19, 2019)
-+  [release-v0.6](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.6) (April 09, 2019)
-+  [release-v0.5.4.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4.2) (January 03, 2019)
-+  [release-v0.5.4.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4.1) (December 12, 2018)
-+  [release-v0.5.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.4) (November 13, 2018)
-+  [release-v0.5.3.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3.2) (June 29, 2018)
-+  [release-v0.5.3.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3.1) (April 11, 2018)
-+  [release-v0.5.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.3) (April 11, 2018)
-+  [release-v0.5.2.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.2.1) (February 13, 2018)
-+  [release-v0.5.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.2) (February 09, 2018)
-+  [release-v0.5.1.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1.2) (January 15, 2018)
-+  [release-v0.5.1.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1.1) (January 12, 2018)
-+  [release-v0.5.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5.1) (January 10, 2018)
-+  [release-v0.5](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.5) (January 04, 2018)
-+ [release-v0.4.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4.3) (December 25, 2017)
-+ [release-v0.4.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4.2) (December 18, 2017)
-+ [release-v0.4.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4.1) (December 05, 2017)
-+ [release-v0.4](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.4) (November 21, 2017)
-+ [release-v0.3.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3.2) (September 29, 2017)
-+ [release-v0.3.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3.1) (September 26, 2017)
-+ [release-v0.3](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3) (September 25, 2017)
-+ [release-v0.3a](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.3a) (September 19, 2017)
-+ [release-v0.2.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.2.2) (August 25, 2017).
-+ [release-v0.2.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.2.1) (August 25, 2017).
-+ [release-v0.2](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.2) (August, 24 2017).
-+ [release-v0.1](https://gitlab.unamur.be/chimie/lct/qcip_tools/tree/release-v0.1) (July, 11 2017).
+Current release: [release-v0.6.6](https://github.com/pierre-24/qcip_tools/releases/tag/release-v0.6.6)
+(see [the changelog](./CHANGELOG.md)).
 
 ## Purpose
 
@@ -49,21 +11,17 @@ Previous releases (see [the changelog](./CHANGELOG.md)):
 + Handle and post-analyze results of calculations (currently, electrical and geometrical derivatives of the energy) ;
 + Retrieve data from quantum chemistry package and create input files (currently Gaussian, Dalton and GAMESS).
 
+# Documentation
 
-## Documentation
+**For the installation procedure, see [this page](https://pierre-24.github.io/qcip_tools/install.html).**
 
-To access the online documentation of the latest release, login is `doc` and password is `doc`.
-
-**For the installation procedure, see [this page](http://perso.unamur.be/~pbeaujea/qcip_tools/html/install.html).**
-
-The latest API documentation is available [here](http://perso.unamur.be/~pbeaujea/qcip_tools/html/).
+The latest API documentation is available [here](https://pierre-24.github.io/qcip_tools/).
 
 If you download the package sources, build the documentation with `make doc`.
 
 ## Contributing
 
-You can reports bugs and suggestions any time by email or using the bugtracker.
+You can report bugs and suggestions any time [using the bugtracker](https://github.com/pierre-24/qcip_tools/issues).
 
-If you want to contribute to the code, see the [contribution page](./documentation/source/contributing.rst). 
-Please note that the code is not actually developed on the git server of the University of Namur (which only contains the releases) but on a personal protected git server (with CI activated and properly configured). 
+If you want to contribute to the code, see the [contribution page](https://pierre-24.github.io/qcip_tools/contributing.html). 
 Feel free to ask access if needed.

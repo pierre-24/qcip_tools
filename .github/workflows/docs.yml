@@ -1,0 +1,26 @@
+name: Publish docs via GitHub Pages
+# from https://github.com/marketplace/actions/sphinx-to-github-pages
+on:
+  push:
+    branches:
+    - dev
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+    - name: Build and Commit
+      uses: sphinx-notes/pages@v2
+      with:
+        documentation_path: './docs'
+        requirements_path: 'requirements.txt'
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages

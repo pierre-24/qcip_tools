@@ -1,9 +1,12 @@
 # Changelog
 
+"Pacing my time"
+
 + Extract TD excitation energies from gaussian logs 
 + Remove ESML, since there is a new version (with an API)
 + Switch to pip-tools
 + Add PDB files
++ Releasing on Github, switched to GH action and `bump2version`.
 
 ## Version 0.6
 

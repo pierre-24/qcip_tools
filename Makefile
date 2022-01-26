@@ -19,7 +19,7 @@ lint:
 	flake8 qcip_tools tests --max-line-length=120 --ignore=N802
 
 test:
-	python -m unittest discover -s tests
+	python3 -m unittest discover -s tests
 
 doc:
-	cd documentation; make html
+	cd docs; make html
