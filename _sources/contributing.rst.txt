@@ -21,10 +21,11 @@ Workflow
 
 Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-branching-model/>`_.
 
-+ Development is mad in ``dev`` branch, while ``master`` contains the production version (and is protected from edition).
-+ Functionality are added through merge request (MR) in the ``dev`` branch. Do not work in ``dev`` directly, but create a new branch (``git checkout -b my_branch origin/dev``).
-+ Theses merge requests should be unitary, and include unit test(s) and documentation if needed. The test suite must succeed for the merge request to be accepted.
-+ At some (random) points, ``dev`` will be merged by the maintainer into ``master`` to create a new version, with a tag of the form ``release-vXX``.
++ Development is made in ``dev`` branch.
++ Functionalities are added through pull requests (PR) to the ``dev`` branch. Do not work in ``dev`` directly, but create a new branch (``git checkout -b my_branch upstream/dev``).
++ Theses pull requests should be unitary, and include unit test(s) and documentation if needed. The test suite must succeed for the merge request to be accepted.
++ The pull requests will be reviewed before acceptance.
++ At some (random) points, a new version will appear, with a tag of the form ``vXX``.
 
 .. note::
 
@@ -32,7 +33,7 @@ Adapted from the (in)famous `Git flow <http://nvie.com/posts/a-successful-git-br
 
     1. Normal installation use ``pip-sync && pip install -e .`` (``make init``)
     2. To update the dependencies from upstream, ``pip-sync``  (``make sync``).
-    3. To update the ``requirements.txt`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pip-compile requirements/requirements.in -o requirements.txt`` (followed by ``make sync`` on the dev's machine).
+    3. To update the ``requirements.txt`` (and thus the actual version of the dependencies), a **specific** merge request is done, with the result of ``pipenv lock`` (followed by ``make sync`` on the dev's machine).
 
 A note about units
 ------------------

@@ -96,10 +96,11 @@ You may need test files to do so, but try to make them small (say, don’t use d
 <h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline"></a></h2>
 <p>Adapted from the (in)famous <a class="reference external" href="http://nvie.com/posts/a-successful-git-branching-model/">Git flow</a>.</p>
 <ul class="simple">
-<li><p>Development is mad in <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch, while <code class="docutils literal notranslate"><span class="pre">master</span></code> contains the production version (and is protected from edition).</p></li>
-<li><p>Functionality are added through merge request (MR) in the <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch. Do not work in <code class="docutils literal notranslate"><span class="pre">dev</span></code> directly, but create a new branch (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">my_branch</span> <span class="pre">origin/dev</span></code>).</p></li>
-<li><p>Theses merge requests should be unitary, and include unit test(s) and documentation if needed. The test suite must succeed for the merge request to be accepted.</p></li>
-<li><p>At some (random) points, <code class="docutils literal notranslate"><span class="pre">dev</span></code> will be merged by the maintainer into <code class="docutils literal notranslate"><span class="pre">master</span></code> to create a new version, with a tag of the form <code class="docutils literal notranslate"><span class="pre">release-vXX</span></code>.</p></li>
+<li><p>Development is made in <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch.</p></li>
+<li><p>Functionalities are added through pull requests (PR) to the <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch. Do not work in <code class="docutils literal notranslate"><span class="pre">dev</span></code> directly, but create a new branch (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">my_branch</span> <span class="pre">upstream/dev</span></code>).</p></li>
+<li><p>Theses pull requests should be unitary, and include unit test(s) and documentation if needed. The test suite must succeed for the merge request to be accepted.</p></li>
+<li><p>The pull requests will be reviewed before acceptance.</p></li>
+<li><p>At some (random) points, a new version will appear, with a tag of the form <code class="docutils literal notranslate"><span class="pre">vXX</span></code>.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -107,7 +108,7 @@ You may need test files to do so, but try to make them small (say, don’t use d
 <ol class="arabic simple">
 <li><p>Normal installation use <code class="docutils literal notranslate"><span class="pre">pip-sync</span> <span class="pre">&amp;&amp;</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code> (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">init</span></code>)</p></li>
 <li><p>To update the dependencies from upstream, <code class="docutils literal notranslate"><span class="pre">pip-sync</span></code>  (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">sync</span></code>).</p></li>
-<li><p>To update the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> (and thus the actual version of the dependencies), a <strong>specific</strong> merge request is done, with the result of <code class="docutils literal notranslate"><span class="pre">pip-compile</span> <span class="pre">requirements/requirements.in</span> <span class="pre">-o</span> <span class="pre">requirements.txt</span></code> (followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">sync</span></code> on the dev’s machine).</p></li>
+<li><p>To update the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> (and thus the actual version of the dependencies), a <strong>specific</strong> merge request is done, with the result of <code class="docutils literal notranslate"><span class="pre">pipenv</span> <span class="pre">lock</span></code> (followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">sync</span></code> on the dev’s machine).</p></li>
 </ol>
 </div>
 </section>

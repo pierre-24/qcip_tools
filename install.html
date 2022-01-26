@@ -120,14 +120,18 @@ make install
 </section>
 <section id="installation-for-contributors">
 <h2>Installation for contributors<a class="headerlink" href="#installation-for-contributors" title="Permalink to this headline"></a></h2>
-<p>To contribute to the project, you need to clone the repository:</p>
+<p>To contribute to the project,</p>
 <ul class="simple">
-<li><p>Clone it: <code class="docutils literal notranslate"><span class="pre">git&#64;github.com:pierre-24/qcip_tools.git</span></code>.</p></li>
-<li><p>Install scipy’s (and other python’s) dependencies : <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libopenblas-dev</span> <span class="pre">libatlas-dev</span> <span class="pre">build-essential</span> <span class="pre">libpng12-dev</span> <span class="pre">libfreetype6-dev</span> <span class="pre">libpython3.*-dev</span></code> (or something like this).</p></li>
-<li><p>Create a virtualenv : <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">venv</span> <span class="pre">venv;</span> <span class="pre">source</span> <span class="pre">venv/bin/activate</span></code></p></li>
-<li><p>Install <code class="docutils literal notranslate"><span class="pre">pip-tools</span></code>: <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">pip-tools</span></code> ;</p></li>
+<li><p><a class="reference external" href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">Fork it</a>.</p></li>
+<li><p>Clone your fork: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:&lt;USERNAME&gt;/qcip_tools.git</span></code>.</p></li>
+<li><p>Go in it: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">qcip_tools</span></code></p></li>
+<li><p>Install pip-tools: <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">pip-tools</span></code></p></li>
+<li><p>Install virtualenv <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">venv</span> <span class="pre">venv;</span> <span class="pre">source</span> <span class="pre">venv/bin/activate</span></code></p></li>
 <li><p>Install dependencies: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">init</span></code>.</p></li>
+<li><p>Add upstream: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">add</span> <span class="pre">upstream</span> <span class="pre">https://github.com/pierre-24/qcip_tools.git</span></code></p></li>
+<li><p>Don’t forget to create a separate branch to implement your changes: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">my_branch</span> <span class="pre">upstream/dev</span></code>.</p></li>
 </ul>
+<p>See <a class="reference external" href="contributing.html">the contribution part</a>.</p>
 <p>You can launch the tests series with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code></p>
 </section>
 </section>
