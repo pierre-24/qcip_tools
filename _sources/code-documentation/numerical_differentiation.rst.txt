@@ -171,7 +171,7 @@ Let :math:`H_{k,0}\equiv A_d(h=a^k h_0)` with :math:`h_0` the minimal value, the
 .. math::
     :label: romberg
 
-    H_{k,m+1} = \frac{a^{rm}\,H_{k,m}-H_{k+1,m}}{a^{rm}-1} + \mathcal{O}(h^{rm}),
+    H_{k,m} = \frac{a^{rm}\,H_{k,m-1}-H_{k+1,m-1}}{a^{rm}-1} + \mathcal{O}(h^{r(m+1)}),
 
 
 where :math:`m` is the number of *refinement* steps or iterations. To achieve such a :math:`\mathcal{O}(h^{rm})` precision, it is required to know :math:`m+1` values of :math:`H_{k,0}` with :math:`k\in [0;m+1]`.
