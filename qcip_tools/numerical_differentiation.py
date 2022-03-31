@@ -398,7 +398,7 @@ class RombergTriangle:
 
                     return (stability_region[0], m), \
                         self.romberg_triangle[stability_region[0], m], \
-                        self.iteration_error(k=stability_region[0], m=m - 1)
+                        0.0 if m < 1 else self.iteration_error(k=stability_region[0], m=m)
 
             prev_region_error = stability_region[2]
 
