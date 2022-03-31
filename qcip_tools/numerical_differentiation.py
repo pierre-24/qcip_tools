@@ -49,14 +49,14 @@ def ak_shifted(ratio, q):
 class Coefficients:
     """Class to store the coefficients for the derivative calculation.
 
-        :param d: derivation order
-        :type d: int
-        :param p:  order of error
-        :type p: int
-        :param ratio: ratio (a)
-        :type ratio: float
-        :param method: derivation method, either forward (F), backward (B) or centered (C)
-        :type method: str
+    :param d: derivation order
+    :type d: int
+    :param p:  order of error
+    :type p: int
+    :param ratio: ratio (a)
+    :type ratio: float
+    :param method: derivation method, either forward (F), backward (B) or centered (C)
+    :type method: str
     """
 
     def __init__(self, d, p, ratio=2., method='C'):
@@ -207,14 +207,24 @@ class RombergTriangle:
     :type ratio: float
     :param r: derivatives to remove. r=1 for backward and forward approximation and 2 for centered approximation.
     :type r: int
+    :param force_choice: force the choice in the Romberg triangle, must be a tuple of the form ``(k, m)``
+    :type force_choice: tuple
     """
 
-    def __init__(self, values, ratio=2., r=1):
+    def __init__(self, values, ratio=2., r=1, force_choice=None):
 
         self.ratio = ratio
         self.side = len(values)
         self.romberg_triangle = numpy.zeros((self.side, self.side))
         self.romberg_triangle[:, 0] = values
+
+        if force_choice is not None:
+            if len(force_choice) != 2:
+                raise Exception('force_choice must have length 2')
+            if not (0 <= force_choice[0] < self.side and 0 <= force_choice[1] < (self.side - force_choice[0])):
+                raise Exception('force_choice is outside the Romberg triangle')
+
+        self.force_choice = force_choice
 
         # compute Romberg triangle:
         for m in range(1, self.side):
@@ -244,7 +254,7 @@ class RombergTriangle:
         return self.best_value
 
     def amplitude_error(self, k=0, m=0):
-        """Compute :math:`\\varepsilon_k(m) = H_{k+1,m} - H_{k,m}`
+        """Compute :math:`\\varepsilon_k(m) = H_{k,m} - H_{k-1,m}`
 
         :param k: amplitude
         :type k: int
@@ -253,13 +263,13 @@ class RombergTriangle:
         :rtype: float
         """
 
-        assert_in_domain(m, 0, self.side - 2)
-        assert_in_domain(k, 0, (self.side - m - 2))
+        assert_in_domain(k, 1, self.side - 1)
+        assert_in_domain(m, 0, (self.side - k - 1))
 
-        return self.romberg_triangle[k + 1, m] - self.romberg_triangle[k, m]
+        return self.romberg_triangle[k, m] - self.romberg_triangle[k - 1, m]
 
     def iteration_error(self, m=0, k=0):
-        """Compute :math:`\\varepsilon_m(k) = H_{k,m+1} - H_{k,m}`
+        """Compute :math:`\\varepsilon_m(k) = H_{k,m} - H_{k,m-1}`
 
         :param k: amplitude
         :type k: int
@@ -268,10 +278,10 @@ class RombergTriangle:
         :rtype: float
         """
 
-        assert_in_domain(m, 0, self.side - 2)
-        assert_in_domain(k, 0, (self.side - m - 2))
+        assert_in_domain(k, 0, self.side - 1)
+        assert_in_domain(m, 1, (self.side - k - 1))
 
-        return self.romberg_triangle[k, m + 1] - self.romberg_triangle[k, m]
+        return self.romberg_triangle[k, m] - self.romberg_triangle[k, m - 1]
 
     def __repr__(self):
         return self.romberg_triangle_repr()
@@ -328,6 +338,12 @@ class RombergTriangle:
         :rtype: tuple
         """
 
+        if self.force_choice is not None:
+            return self.force_choice, \
+                self.romberg_triangle[self.force_choice], \
+                0.0 if self.force_choice[1] < 1 \
+                else self.iteration_error(k=self.force_choice[0], m=self.force_choice[1])
+
         if self.side == 1:  # if there is no Triangle, then the best value is the only value
             return (0, 0), self.romberg_triangle[0, 0], 0.0
 
@@ -340,14 +356,14 @@ class RombergTriangle:
 
         while True:
             stability_regions = [
-                [current_region[0], current_region[0], self.amplitude_error(k=current_region[0], m=m)]]
+                [current_region[0], current_region[0], self.amplitude_error(k=current_region[0] + 1, m=m)]]
 
             current_stability_region = 0
             prev_error = .0
 
             # dissect the column into stabiliy regions (and look for a value below the threshold, if any)
             for k in range(*current_region):
-                amplitude_error = self.amplitude_error(k=k, m=m)
+                amplitude_error = self.amplitude_error(k=k + 1, m=m)
                 if math.fabs(amplitude_error) < threshold:
                     if verbose:
                         print('→ value in ({}, {}) have an iteration error lower than threshold, stopping'.format(

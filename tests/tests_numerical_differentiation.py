@@ -262,14 +262,14 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
         t = numerical_differentiation.RombergTriangle(derivative_values, ratio=a)
 
         # test amplitude and iteration error
-        self.assertEqual(t.amplitude_error(0, 0), t.romberg_triangle[1, 0] - t.romberg_triangle[0, 0])
-        self.assertEqual(t.iteration_error(0, 0), t.romberg_triangle[0, 1] - t.romberg_triangle[0, 0])
+        self.assertEqual(t.amplitude_error(1, 0), t.romberg_triangle[1, 0] - t.romberg_triangle[0, 0])
+        self.assertEqual(t.iteration_error(1, 0), t.romberg_triangle[0, 1] - t.romberg_triangle[0, 0])
 
         # test best value:
         position, value, iteration_error = t(threshold=1e-5)
         self.assertAlmostEqual(value, self.coefficients_of_univariate_polynom[1], places=5)
         self.assertTrue(position[1] > 0)  # it needed improvements !
-        self.assertTrue(math.fabs(iteration_error) < 1e-5)
+        self.assertTrue(math.fabs(iteration_error) < 1e-3)
 
         # test error:
         with self.assertRaises(ValueError):
@@ -279,13 +279,32 @@ class NumericalDifferentiationTestCase(QcipToolsTestCase):
             t.amplitude_error(k=0, m=-1)
 
         with self.assertRaises(ValueError):
-            t.amplitude_error(k=4, m=0)  # no k=5
-
-        with self.assertRaises(ValueError):
             t.amplitude_error(k=2, m=3)  # no k=2 if m=3
 
         with self.assertRaises(ValueError):
             t.iteration_error(k=2, m=3)  # no k=2 if m=3
 
-        with self.assertRaises(ValueError):
-            t.iteration_error(k=0, m=4)  # no m=5
+    def test_romberg_force_choice(self):
+
+        def scalar_function(fields, h_0, a, coefficients=self.coefficients_of_univariate_polynom):
+            return self.univariate_polynom(numerical_differentiation.ak_shifted(a, fields[0]) * h_0, coefficients)
+
+        # forward derivative gives awful results by default
+        a = 2.0
+        c = numerical_differentiation.Coefficients(1, 1, ratio=a, method='F')
+        derivative_values = []
+
+        for k in range(5):
+            derivative_values.append(numerical_differentiation.compute_derivative_of_function(
+                [(c, 0)],
+                scalar_function,
+                k,
+                0.001,
+                a=a
+            ))
+
+        force = (2, 2)
+        t = numerical_differentiation.RombergTriangle(derivative_values, ratio=a, force_choice=force)
+        position, value, iteration_error = t(threshold=1e-5)
+
+        self.assertEqual(position, force)
