@@ -376,7 +376,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">RombergTriangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">RombergTriangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle" title="Permalink to this definition"></a></dt>
 <dd><p>Do a Romberg triangle to lower (remove) the influence of higher-order derivatives.</p>
 <p>Note: Romberg triangle indices are n, then k (but printing require n to be column, so invert them !)</p>
 <dl class="field-list simple">
@@ -385,13 +385,14 @@ But since the vector is symmetric, it can reduce the number of components to car
 <li><p><strong>vals</strong> (<em>list</em>) – list of derivatives, the first one calculated with the lowest k, the last one the larger</p></li>
 <li><p><strong>ratio</strong> (<em>float</em>) – ratio (a)</p></li>
 <li><p><strong>r</strong> (<em>int</em>) – derivatives to remove. r=1 for backward and forward approximation and 2 for centered approximation.</p></li>
+<li><p><strong>force_choice</strong> (<em>tuple</em>) – force the choice in the Romberg triangle, must be a tuple of the form <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">m)</span></code></p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle.amplitude_error">
 <span class="sig-name descname"><span class="pre">amplitude_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.amplitude_error" title="Permalink to this definition"></a></dt>
-<dd><p>Compute <span class="math notranslate nohighlight">\(\varepsilon_k(m) = H_{k+1,m} - H_{k,m}\)</span></p>
+<dd><p>Compute <span class="math notranslate nohighlight">\(\varepsilon_k(m) = H_{k,m} - H_{k-1,m}\)</span></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -428,7 +429,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle.iteration_error">
 <span class="sig-name descname"><span class="pre">iteration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.iteration_error" title="Permalink to this definition"></a></dt>
-<dd><p>Compute <span class="math notranslate nohighlight">\(\varepsilon_m(k) = H_{k,m+1} - H_{k,m}\)</span></p>
+<dd><p>Compute <span class="math notranslate nohighlight">\(\varepsilon_m(k) = H_{k,m} - H_{k,m-1}\)</span></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
