@@ -249,7 +249,7 @@ class RombergTriangle:
         :rtype: tuple
         """
         if self.best_value is None or force:
-            self.best_value = self.find_best_value()
+            self.best_value = self.find_best_value(threshold=threshold, verbose=verbose, out=out)
 
         return self.best_value
 
