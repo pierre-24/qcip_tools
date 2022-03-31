@@ -683,7 +683,7 @@ class Tensor:
 
 def compute_numerical_derivative_of_tensor(
         basis, derivative_repr, tensor_func, k_max, min_field, ratio, frequency=None, dry_run=False, accuracy_level=1,
-        **kwargs):
+        force_choice=None, **kwargs):
     """
     Compute numerical derivative of tensor (taking advantage of the so-called *smart iterator*).
 
@@ -708,6 +708,8 @@ def compute_numerical_derivative_of_tensor(
     :type frequency: float|str
     :param accuracy_level: level of accuracy. Default value (1) does not change the behavior,
       but "0" and lower use forward derivatives for order of differentiation == 3 (retro-compatibility behavior)
+    :param force_choice: force the choice in the Romberg triangle
+    :type force_choice: tuple
     :param kwargs: args passed to tensor_func
     :type kwargs: dict
     :return: tensor and romberg triangles
@@ -785,7 +787,9 @@ def compute_numerical_derivative_of_tensor(
             ]
 
             if not dry_run:
-                trig = numerical_differentiation.RombergTriangle(values_per_k, ratio=ratio, r=2)
+                trig = numerical_differentiation.RombergTriangle(
+                    values_per_k, ratio=ratio, r=2, force_choice=force_choice)
+
                 romberg_triangles[derivative_coo][basis_coo] = trig
                 val = trig()  # find best values and save them
 
