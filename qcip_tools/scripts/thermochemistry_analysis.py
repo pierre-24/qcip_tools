@@ -19,16 +19,6 @@ __status__ = 'Development'
 __longdoc__ = """
 Try to fetch the hessian, and compute thermochemisty data out of that
 Rely on the availability of ``geometrical_derivatives`` and ``computed_energies``.
-
-Currently implemented for:
-
-+ Gaussian FCHK
-+ Dalton archive output (``DALTON.HES``)
-+ Dalton LOG (only Hessian)
-+ GAMESS output (only HF)
-
-To do:
-+ Gaussian LOG (only Hessian?)
 """
 
 

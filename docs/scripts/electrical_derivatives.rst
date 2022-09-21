@@ -1,5 +1,5 @@
-.. hash=32ca166a5412afe40fb6934947487356c17e8e67
-.. Generated: 21/09/22 18:48
+.. hash=5dcf2ab22db36814212599c78974732d065c7a5a
+.. Generated: 21/09/22 22:46
 .. Do not edit!
 
 ==========================
@@ -49,20 +49,8 @@ More information
 Try to fetch the dipole moment and the frequency dependant (hyper)polarizabilities, then print the tensors, and
 related quantities. Rely on the availability of ``electrical_derivatives``.
 
-Currently implemented for:
-
-+ Dalton archive output (CC and normal responses).
-  Probably not working for explicit operator settings (please use ``.FREQUE`` along with things like ``.SHG`` or so),
-  and other type of operators (different from ``DIPLEN``).
-+ Gaussian FCHK, with sign correction (but **not the second hyperpolarizability tensors**).
-
-To do:
-
-+ GAMESS output (not easy, and don't forget the DFT one)
-+ Gaussian LOG (all located in the same place)
-+ Dalton LOG (not located in the same place)
-
 .. warning::
 
-    By default, second hyperpolarizability with HF or DFT does not compute all components of the gamma tensor, but only
-    the one that contribute to :math:`\gamma_{||}`.
+    In Dalton, by default, second hyperpolarizability with HF or DFT does not compute
+    all components of the gamma tensor, but only the one that contribute to :math:`\gamma_{||}`.
+    Use ``.GAMALL`` in ``*CUBIC`` to do so.

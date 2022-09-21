@@ -19,17 +19,6 @@ __status__ = 'Development'
 __longdoc__ = """
 Try to fetch the gradient and hessian. If the second one is found, compute vibrational frequencies.
 Rely on the availability of ``geometrical_derivatives``.
-
-Currently implemented for:
-
-+ Gaussian FCHK
-+ Dalton archive output (``DALTON.HES`` if ``.HESPUN``!)
-+ Dalton LOG (CC and ``RESPONSE`` gradient and Hesssian, if available)
-
-To do:
-
-+ GAMESS output (only Hessian?)
-+ Gaussian LOG (only Hessian?)
 """
 
 

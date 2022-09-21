@@ -1,5 +1,5 @@
-.. hash=4e157d3553f6c9e453a5664d481049abe1ac38cd
-.. Generated: 21/09/22 18:48
+.. hash=8be03ef9bb9400b35d2112ead47077efe99fb331
+.. Generated: 21/09/22 22:41
 .. Do not edit!
 
 ===========================
@@ -52,14 +52,3 @@ More information
 
 Try to fetch the gradient and hessian. If the second one is found, compute vibrational frequencies.
 Rely on the availability of ``geometrical_derivatives``.
-
-Currently implemented for:
-
-+ Gaussian FCHK
-+ Dalton archive output (``DALTON.HES`` if ``.HESPUN``!)
-+ Dalton LOG (CC and ``RESPONSE`` gradient and Hesssian, if available)
-
-To do:
-
-+ GAMESS output (only Hessian?)
-+ Gaussian LOG (only Hessian?)

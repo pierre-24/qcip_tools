@@ -20,6 +20,13 @@ __status__ = 'Development'
 __longdoc__ = """
 Report the radial distribution of a cube around a given center [by default :math:`(0,0,0)`].
 
+.. note::
+    Please cite
+    `[P. Beaujean and B. Champagne, Inorg. Chem. 2022, 61, 1928] 
+    <https://dx.doi.org/10.1021/acs.inorgchem.1c03077>`_,
+    if you use this program. 
+    This publication also showcase the kind of results you can expect and the analysis that may be extracted.
+
 The charge in a given region of the space, located by :math:`\\mathbf{r}` and in an element of volume
 :math:`d\\mathbf{r}`, is given by
 
@@ -175,7 +182,7 @@ def get_arguments_parser():
         '--n-azimuthal', help='Number of subdivision for the integration over phi', type=int, default=40)
 
     parser.add_argument(
-        '-d', '--data', help='Center', type=int, default=0)
+        '-d', '--data', help='data of the cube', type=int)
 
     return parser
 
@@ -190,13 +197,14 @@ def main():
     if args.square:
         cube = cube ** 2
 
-    if cube.data_per_record <= args.data:
+    if args.data and cube.data_per_record <= args.data:
         raise Exception('only {} data per record in cube'.format(cube.data_per_record))
 
     # convert center in bohr, then get the result in cube dimensions (C.D.)
     center = tuple(
         (x / quantities.AuToAngstrom - cube.origin[i]) / cube.increments[i] for i, x in enumerate(args.center))
 
+    print('# Please cite P. Beaujean, B. Champagne, Inorg. Chem. 2022, 61, 1928 (10.1021/acs.inorgchem.1c03077)')
     print('# center (in C.D.): {:.3f}, {:.3f}, {:.3f}'.format(*center))
 
     # radius

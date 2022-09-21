@@ -1,5 +1,5 @@
-.. hash=ba7819f123601f95b90e153e24a5e8ebace290b8
-.. Generated: 21/09/22 18:48
+.. hash=5bdc9e07a785ff348129bf345393b1f9759f0fed
+.. Generated: 21/09/22 22:41
 .. Do not edit!
 
 ============================
@@ -83,13 +83,3 @@ More information
 
 Try to fetch the hessian, and compute thermochemisty data out of that
 Rely on the availability of ``geometrical_derivatives`` and ``computed_energies``.
-
-Currently implemented for:
-
-+ Gaussian FCHK
-+ Dalton archive output (``DALTON.HES``)
-+ Dalton LOG (only Hessian)
-+ GAMESS output (only HF)
-
-To do:
-+ Gaussian LOG (only Hessian?)
