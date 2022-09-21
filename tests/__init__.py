@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 import numpy
 import os
@@ -67,7 +68,6 @@ class QcipScriptsTestCase(QcipToolsTestCase):
             self,
             path,
             args=None,
-            cwd='.',
             in_pipe=subprocess.DEVNULL,
             out_pipe=subprocess.DEVNULL,
             err_pipe=subprocess.DEVNULL):
@@ -86,8 +86,9 @@ class QcipScriptsTestCase(QcipToolsTestCase):
         :rtype: subprocess.Popen
         """
 
-        real_path = os.path.join(cwd, path)
-        if not os.path.isfile(real_path):
+        cwd = pathlib.Path(__file__).parent.absolute() / '..'
+        real_path = cwd / path
+        if not real_path.is_file():
             raise FileNotFoundError(real_path)
 
         cmd = ['python', path]
