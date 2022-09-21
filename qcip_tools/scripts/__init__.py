@@ -12,10 +12,10 @@ provide_scripts = [
     'ct_analysis',
     'cube_radial_distribution',
     'electrical_derivatives',
-#    'excitations',  # noqa
+    'excitations',
     'geometrical_derivatives',  # noqa
 #    'gen_character_table',  # noqa
-#    'gen_spectrum',  # noqa
+    'gen_spectrum',
 #    'measure_mols',  # noqa
 #    'symmetrise',  # noqa
     'thermochemistry_analysis',
