@@ -9,16 +9,16 @@ import pathlib
 provide_scripts = [
     'boltzmann_population',
     'check_chemistry_file',
-    'ct_analysis',  # noqa
-    'cube_radial_distribution',  # noqa
-#    'electrical_derivatives',  # noqa
+    'ct_analysis',
+    'cube_radial_distribution',
+    'electrical_derivatives',
 #    'excitations',  # noqa
-#    'geometrical_derivatives',  # noqa
+    'geometrical_derivatives',  # noqa
 #    'gen_character_table',  # noqa
 #    'gen_spectrum',  # noqa
 #    'measure_mols',  # noqa
 #    'symmetrise',  # noqa
-#    'thermochemistry_analysis',  # noqa
+    'thermochemistry_analysis',
     'to_xyz'
 ]
 
