@@ -46,10 +46,12 @@ API documentation
     chemistry-files/base.rst
     chemistry-files/helpers.rst
     chemistry-files/xyz.rst
+    chemistry-files/pdb.rst
     chemistry-files/gaussian.rst
     chemistry-files/dalton.rst
     chemistry-files/gamess.rst
     chemistry-files/chemistry_datafile.rst
+    chemistry-files/csv_tensor.rst
 
 More precisely,
 
