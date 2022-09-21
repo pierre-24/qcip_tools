@@ -9,8 +9,8 @@ import pathlib
 provide_scripts = [
     'boltzmann_population',
     'check_chemistry_file',
-#    'ct_analysis',  # noqa
-#    'cube_radial_distribution',  # noqa
+    'ct_analysis',  # noqa
+    'cube_radial_distribution',  # noqa
 #    'electrical_derivatives',  # noqa
 #    'excitations',  # noqa
 #    'geometrical_derivatives',  # noqa
