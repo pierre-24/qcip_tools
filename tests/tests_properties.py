@@ -159,7 +159,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDDD', f, (0, 0, 0, 0), 0.382162)
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4)
 
             d = derivatives.Derivative(tensor)
@@ -189,7 +189,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('dD', f, (2, 2), 2.0459)
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -223,7 +223,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDD', f, (2, 2, 2), -3.34979625)
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -292,7 +292,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDDD', f, (1, 0, 0, 0), -13.44430492),
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -328,7 +328,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDDD', f, (1, 0, 0, 0), -13.44430492),
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
