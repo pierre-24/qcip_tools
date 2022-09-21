@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -95,10 +96,10 @@
            <div itemprop="articleBody">
              
   <section id="derivatives-of-the-energy-qcip-tools-derivatives">
-<h1>Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)<a class="headerlink" href="#derivatives-of-the-energy-qcip-tools-derivatives" title="Permalink to this headline"></a></h1>
+<h1>Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)<a class="headerlink" href="#derivatives-of-the-energy-qcip-tools-derivatives" title="Permalink to this heading"></a></h1>
 <p>Tools to help the representation of derivatives of the energy.</p>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline"></a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h2>
 <p>Supposing a function <span class="math notranslate nohighlight">\(\mathbf{f}:\mathbb{R}^{n}\rightarrow \mathbb{R}^{m}\)</span>, a function which takes a vector <span class="math notranslate nohighlight">\(\mathbf{x}\in\mathbb{R}^n\)</span> as input and produce a vector <span class="math notranslate nohighlight">\(\mathbf{f}(\mathbf{x})\in\mathbb{R}^m\)</span>, one can write its <a class="reference external" href="https://en.wikipedia.org/wiki/Taylor_series">Maclaurin series expansion</a> as</p>
 <div class="math notranslate nohighlight" id="equation-mclaurin">
 <span class="eqno">(1)<a class="headerlink" href="#equation-mclaurin" title="Permalink to this equation"></a></span>\[\mathbf{M}(\mathbf{q}) = \sum_{r=0}^{r_{max}} \frac{1}{r!}\frac{\partial^r\mathbf{f}(0)}{\partial\mathbf{q}^r}\,\mathbf{q}^r,\]</div>
@@ -140,7 +141,7 @@ The first is just more used in the literature (for IR and Raman spectra, for exa
 </div>
 </section>
 <section id="implementation">
-<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline"></a></h2>
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading"></a></h2>
 <p>The object <code class="docutils literal notranslate"><span class="pre">Derivative</span></code> handle the manipulation of derivative on a symbolic level : you can define a derivative and differenciate it.
 It computes the shape, dimension and order of the corresponding derivative.
 Note that you must provide <code class="docutils literal notranslate"><span class="pre">spacial_dof</span></code>, the number of spacial degrees of freeedom of the corresponding system if the derivative contains a geometrical one (<code class="docutils literal notranslate"><span class="pre">G</span></code> or <code class="docutils literal notranslate"><span class="pre">N</span></code>), and <code class="docutils literal notranslate"><span class="pre">nstate</span></code> if the derivative contains an excitation (<code class="docutils literal notranslate"><span class="pre">!</span></code> or <code class="docutils literal notranslate"><span class="pre">#</span></code>).</p>
@@ -155,7 +156,7 @@ Therefore, the content of the <code class="docutils literal notranslate"><span c
 </div>
 </section>
 <section id="module-qcip_tools.derivatives">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives" title="Permalink to this headline"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives" title="Permalink to this heading"></a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="qcip_tools.derivatives.ALLOWED_DERIVATIVES">
 <span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives.</span></span><span class="sig-name descname"><span class="pre">ALLOWED_DERIVATIVES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('!',</span> <span class="pre">'#',</span> <span class="pre">'G',</span> <span class="pre">'N',</span> <span class="pre">'F',</span> <span class="pre">'D',</span> <span class="pre">'d',</span> <span class="pre">'X')</span></em><a class="headerlink" href="#qcip_tools.derivatives.ALLOWED_DERIVATIVES" title="Permalink to this definition"></a></dt>

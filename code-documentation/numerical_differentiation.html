@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -99,13 +100,13 @@
            <div itemprop="articleBody">
              
   <section id="numerical-differentiation-qcip-tools-numerical-differentiation">
-<h1>Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)<a class="headerlink" href="#numerical-differentiation-qcip-tools-numerical-differentiation" title="Permalink to this headline"></a></h1>
+<h1>Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)<a class="headerlink" href="#numerical-differentiation-qcip-tools-numerical-differentiation" title="Permalink to this heading"></a></h1>
 <section id="mathematical-background">
-<h2>Mathematical background<a class="headerlink" href="#mathematical-background" title="Permalink to this headline"></a></h2>
+<h2>Mathematical background<a class="headerlink" href="#mathematical-background" title="Permalink to this heading"></a></h2>
 <section id="numerical-derivation">
-<h3>Numerical derivation<a class="headerlink" href="#numerical-derivation" title="Permalink to this headline"></a></h3>
+<h3>Numerical derivation<a class="headerlink" href="#numerical-derivation" title="Permalink to this heading"></a></h3>
 <section id="theory">
-<h4>Theory<a class="headerlink" href="#theory" title="Permalink to this headline"></a></h4>
+<h4>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h4>
 <p>This an application of the <a class="reference external" href="https://en.wikipedia.org/wiki/Neville%27s_algorithm">Neville’s algorithm</a>.</p>
 <p>Let <span class="math notranslate nohighlight">\(M(x)\)</span> be a <a class="reference external" href="https://en.wikipedia.org/wiki/Taylor_series">Maclaurin series expansion</a> of a function <span class="math notranslate nohighlight">\(f(x)\)</span>,</p>
 <div class="math notranslate nohighlight" id="equation-expansion">
@@ -183,7 +184,7 @@ see the <a class="reference external" href="https://docs.python.org/3.6/tutorial
 </div>
 </section>
 <section id="implementation">
-<h4>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline"></a></h4>
+<h4>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading"></a></h4>
 <p>The <span class="math notranslate nohighlight">\(I_{a,q}\)</span> function is named <code class="docutils literal notranslate"><span class="pre">ak_shifted()</span></code> in the python code.</p>
 <p>In the code, to works with the romberg triangles defined below, <span class="math notranslate nohighlight">\(h=a^{k}h_0\)</span>, where <span class="math notranslate nohighlight">\(k\)</span> is the minimal amplitude, while <span class="math notranslate nohighlight">\(h_0\)</span> is the minimal value.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Coefficients</span></code> class takes care of the computation of the different coefficients, storing them in <code class="docutils literal notranslate"><span class="pre">Coefficients.mat_coefs</span></code>.
@@ -215,9 +216,9 @@ Since the function expects real values, <span class="math notranslate nohighligh
 </section>
 </section>
 <section id="romberg-s-scheme-richardson-extrapolation">
-<h3>Romberg’s scheme (Richardson extrapolation)<a class="headerlink" href="#romberg-s-scheme-richardson-extrapolation" title="Permalink to this headline"></a></h3>
+<h3>Romberg’s scheme (Richardson extrapolation)<a class="headerlink" href="#romberg-s-scheme-richardson-extrapolation" title="Permalink to this heading"></a></h3>
 <section id="id1">
-<h4>Theory<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h4>
+<h4>Theory<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
 <p>In quantum chemistry, the <a class="reference external" href="https://en.wikipedia.org/wiki/Richardson_extrapolation">Richardson extrapolation</a> is also known as the Romberg differentiation scheme.
 Like its integration counterpart, it allows to refine the value of a numerical derivatives by computing multiple estimate of the derivates.</p>
 <p>Given Eq. <a class="reference internal" href="#equation-expansion">(1)</a> and a small <span class="math notranslate nohighlight">\(h \in \mathbb{R}^+\)</span>, <span class="math notranslate nohighlight">\(r, m \in \mathbb{N}^+\)</span>, <span class="math notranslate nohighlight">\(k \in \mathbb{N}^0\)</span>,</p>
@@ -264,7 +265,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 </div>
 </section>
 <section id="id2">
-<h4>Implementation<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h4>
+<h4>Implementation<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">RombergTriangle</span></code> class implement the Romberg’s triangle algorithm. The constructors expect the value corresponding to increasing <code class="docutils literal notranslate"><span class="pre">k</span></code> values to be passed as argument.</p>
 <p>The <span class="math notranslate nohighlight">\(H_{k,m}\)</span> are available as <code class="docutils literal notranslate"><span class="pre">RombergTriangle.romberg_triangle[k,</span> <span class="pre">m]</span></code>. Note that the values for which <span class="math notranslate nohighlight">\(k \geqslant k_{max} - m\)</span> are set to zero.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">find_best_value()</span></code> implement the flowchart showed above. To help the (eventual) debugging and understanding, a <code class="docutils literal notranslate"><span class="pre">verbose</span></code> option is available.</p>
@@ -313,7 +314,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 </section>
 </section>
 <section id="sources">
-<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline"></a></h2>
+<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>D. Eberly, « Derivative Approximation by Finite Difference ». From the <a class="reference external" href="https://www.geometrictools.com/Documentation/Documentation.html">Geometric Tools documentation</a> (last consultation: March 4, 2017).</p></li>
 <li><p>J.N. Lyness <em>et al</em>. <em>Numer. Math.</em> <strong>8</strong>, 458 (1966).</p></li>
@@ -323,7 +324,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 </ul>
 </section>
 <section id="module-qcip_tools.numerical_differentiation">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.numerical_differentiation" title="Permalink to this headline"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.numerical_differentiation" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.Coefficients">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">Coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients" title="Permalink to this definition"></a></dt>

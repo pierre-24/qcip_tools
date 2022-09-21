@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -95,13 +96,13 @@
            <div itemprop="articleBody">
              
   <section id="derivatives-w-r-t-electric-field-qcip-tools-derivatives-e">
-<h1>Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)<a class="headerlink" href="#derivatives-w-r-t-electric-field-qcip-tools-derivatives-e" title="Permalink to this headline"></a></h1>
+<h1>Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)<a class="headerlink" href="#derivatives-w-r-t-electric-field-qcip-tools-derivatives-e" title="Permalink to this heading"></a></h1>
 <p>Tools to help the manipulation of derivatives of the energy with respect to a static (<code class="docutils literal notranslate"><span class="pre">F</span></code>) or dynamic (<code class="docutils literal notranslate"><span class="pre">D</span></code>) electric field (though the first one is a special case of the second).</p>
 <div class="math notranslate nohighlight">
 \[\newcommand{\sbb}[2]{\beta_{#1}\,\beta_{#2}}
 \newcommand{\sgg}[2]{\gamma_{#1}\,\gamma_{#2}}\]</div>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline"></a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h2>
 <p>Light can be described as an electromagnetic radiation, with time and space varying components.
 Generally, only the phenomena associated with its electric components, because dominant, are considered.
 If the space-dependent term is left constant, the electric part of the field reads</p>
@@ -122,7 +123,7 @@ This leads to an oscillating induced dipole moment, or, at the macroscopic scale
 For small electric fields, the polarizability term is dominant, but the hyperpolarizability terms becomes non-negligible when the field gets large.</p>
 </section>
 <section id="sources">
-<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this headline"></a></h2>
+<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>R.W. Boyd,  « Nonlinear Optics (3rd edition) ». <em>Elsevier</em> (2008).</p></li>
 <li><p>F. Castet <em>et al</em>. <em>J. Chem. Phys.</em> <strong>136</strong>, 024506 (2012).</p></li>
@@ -130,7 +131,7 @@ For small electric fields, the polarizability term is dominant, but the hyperpol
 </ul>
 </section>
 <section id="module-qcip_tools.derivatives_e">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_e" title="Permalink to this headline"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_e" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.BaseElectricalDerivativeTensor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">BaseElectricalDerivativeTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor" title="Permalink to this definition"></a></dt>

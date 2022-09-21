@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -99,10 +100,10 @@
            <div itemprop="articleBody">
              
   <section id="derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g">
-<h1>Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)<a class="headerlink" href="#derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g" title="Permalink to this headline"></a></h1>
+<h1>Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)<a class="headerlink" href="#derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g" title="Permalink to this heading"></a></h1>
 <p>Tools to help the manipulation of derivatives of the energy with respect to cartesian (<code class="docutils literal notranslate"><span class="pre">G</span></code>) or normal mode (<code class="docutils literal notranslate"><span class="pre">N</span></code>) coordinates.</p>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline"></a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h2>
 <p>The displacement around the equilibrium position, <span class="math notranslate nohighlight">\(\mathbf{x}_i=\mathbf{x}'_i-\mathbf{x}_{i,0}\)</span>, may be expressed as a Taylor series to describe the potential energy surface:</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
@@ -111,7 +112,7 @@
 <p>where <span class="math notranslate nohighlight">\(\mathbf{x}\in\mathbf{R}^{3N}\)</span>, <span class="math notranslate nohighlight">\(F_i=\left.\frac{\partial V}{\partial\mathbf{x}_i}\right|_{\mathbf{x}=0}\)</span> is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), <span class="math notranslate nohighlight">\(H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{x}_i\mathbf{x}_j}\right|_{\mathbf{x}=0}\)</span> is the hessian (force constant matrix) and <span class="math notranslate nohighlight">\(F_{ijk}\)</span> is the cubic force constants matrix (and so on).
 The sums runs over the <span class="math notranslate nohighlight">\(3N\)</span> degrees of freedom of <span class="math notranslate nohighlight">\(N\)</span> atoms.</p>
 <section id="normal-modes">
-<h3>Normal modes<a class="headerlink" href="#normal-modes" title="Permalink to this headline"></a></h3>
+<h3>Normal modes<a class="headerlink" href="#normal-modes" title="Permalink to this heading"></a></h3>
 <p>By settings the Lagrange equations of the harmonic oscillator,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -138,7 +139,7 @@ The <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span>’s are the
 There is 6 (or 5, if the system is linear) zeros eigenvalues for the translation and rotation modes, while the other normal modes describe the vibrations.</p>
 </section>
 <section id="computation-of-normal-modes">
-<h3>Computation of normal modes<a class="headerlink" href="#computation-of-normal-modes" title="Permalink to this headline"></a></h3>
+<h3>Computation of normal modes<a class="headerlink" href="#computation-of-normal-modes" title="Permalink to this heading"></a></h3>
 <p>The computation takes place in the  <code class="docutils literal notranslate"><span class="pre">MassWeightedHessian</span></code> class.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -196,7 +197,7 @@ Eventually discard the 6 (or 5) first lowest ones.</p>
 </div>
 </section>
 <section id="computation-of-thermochemistry-data">
-<h3>Computation of thermochemistry data<a class="headerlink" href="#computation-of-thermochemistry-data" title="Permalink to this headline"></a></h3>
+<h3>Computation of thermochemistry data<a class="headerlink" href="#computation-of-thermochemistry-data" title="Permalink to this heading"></a></h3>
 <p>See <a class="reference external" href="http://gaussian.com/thermo/">this excellent white paper from Gaussian</a> on thermochemistry, which explains step by step how the thermochemistry quantities are computed.</p>
 <p>Since the vibrational frequencies are needed, the <code class="docutils literal notranslate"><span class="pre">MassWeightedHessian</span></code> object also provide the methods for thermochemistry.
 Note that currently, the heat capacity is not implemented.</p>
@@ -208,7 +209,7 @@ Therefore it is not included in the computation of internal energy, enthalpy of 
 </section>
 </section>
 <section id="module-qcip_tools.derivatives_g">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_g" title="Permalink to this headline"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_g" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">BaseGeometricalDerivativeTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacial_dof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans_plus_rot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor" title="Permalink to this definition"></a></dt>

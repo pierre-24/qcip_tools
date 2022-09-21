@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -100,11 +101,11 @@
            <div itemprop="articleBody">
              
   <section id="basis-set-qcip-tools-basis-set">
-<h1>Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)<a class="headerlink" href="#basis-set-qcip-tools-basis-set" title="Permalink to this headline"></a></h1>
+<h1>Basis set (<code class="docutils literal notranslate"><span class="pre">qcip_tools.basis_set</span></code>)<a class="headerlink" href="#basis-set-qcip-tools-basis-set" title="Permalink to this heading"></a></h1>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this headline"></a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h2>
 <section id="definition">
-<h3>Definition<a class="headerlink" href="#definition" title="Permalink to this headline"></a></h3>
+<h3>Definition<a class="headerlink" href="#definition" title="Permalink to this heading"></a></h3>
 <p>Quantum calculations are, most of the time, based on the LCAO (linear combination of atomic orbitals) principle,</p>
 <div class="math notranslate nohighlight">
 \[\Psi_i = \sum_j^N c_{ij} \phi_{j},\]</div>
@@ -126,7 +127,7 @@ Primitives (and basis functions) are regrouped in shells (S, P, D, F …), formi
 <p>In the calculation, a LCAO coefficient is associated to each <span class="math notranslate nohighlight">\(\mu\gamma\)</span> basis function.</p>
 </section>
 <section id="construction">
-<h3>Construction<a class="headerlink" href="#construction" title="Permalink to this headline"></a></h3>
+<h3>Construction<a class="headerlink" href="#construction" title="Permalink to this heading"></a></h3>
 <p>Some basis sets are constucted using the same number of basis function in each shell. This number of contractions helps to label the basis set as <em>n</em>-uple <span class="math notranslate nohighlight">\(\zeta\)</span>: simple <span class="math notranslate nohighlight">\(\zeta\)</span> (for example the infamous STO-3G), double <span class="math notranslate nohighlight">\(\zeta\)</span> (DZ),  triple <span class="math notranslate nohighlight">\(\zeta\)</span> (TZ), quadruple <span class="math notranslate nohighlight">\(\zeta\)</span> (QZ) and so all (5Z, 6Z, …).</p>
 <p>On the other hand, since valence orbitals are affected than the core (inner) orbitals by chemical processes, more basis functions (contractions) are sometimes used to describe these (which does not mean more primitives).
 The corresponding basis sets (for example the Pople basis sets) are sometimes called <em>split-valence</em>.
@@ -157,7 +158,7 @@ The code handle that order by sorting internal lists.</p>
 </div>
 </section>
 <section id="sources">
-<h3>Sources<a class="headerlink" href="#sources" title="Permalink to this headline"></a></h3>
+<h3>Sources<a class="headerlink" href="#sources" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.ccl.net/cca/documents/basis-sets/img/basis-sets.shtml">http://www.ccl.net/cca/documents/basis-sets/img/basis-sets.shtml</a> ;</p></li>
 <li><p><a class="reference external" href="http://vergil.chemistry.gatech.edu/courses/chem6485/pdf/basis-sets.pdf">http://vergil.chemistry.gatech.edu/courses/chem6485/pdf/basis-sets.pdf</a> ;</p></li>
@@ -168,7 +169,7 @@ The code handle that order by sorting internal lists.</p>
 </section>
 </section>
 <section id="implementation">
-<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline"></a></h2>
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading"></a></h2>
 <p>A primitive is defined with the <a class="reference external" href="#qcip_tools.basis_set.Primitive">Primitive</a> object, and represent basically a contraction coefficient and and exponent.
 Basis functions are defined with the <a class="reference external" href="#qcip_tools.basis_set.Function">Function</a> object, which contains the different primitives.
 For a given atom, one defines a basis set with <a class="reference external" href="#qcip_tools.basis_set.AtomicBasisSet">AtomicBasisSet</a>, in which you define the different basis functions for a given shell (S, P or SP, D, F …).
@@ -207,7 +208,7 @@ Finally, a basis set is defined by the <a class="reference external" href="#qcip
 </div>
 </section>
 <section id="module-qcip_tools.basis_set">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.basis_set" title="Permalink to this headline"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.basis_set" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.basis_set.AtomicBasisSet">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.basis_set.</span></span><span class="sig-name descname"><span class="pre">AtomicBasisSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.basis_set.AtomicBasisSet" title="Permalink to this definition"></a></dt>

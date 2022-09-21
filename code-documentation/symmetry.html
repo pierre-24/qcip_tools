@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -100,12 +101,12 @@
            <div itemprop="articleBody">
              
   <section id="symmetry-qcip-tools-symmetry">
-<h1>Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)<a class="headerlink" href="#symmetry-qcip-tools-symmetry" title="Permalink to this headline"></a></h1>
+<h1>Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)<a class="headerlink" href="#symmetry-qcip-tools-symmetry" title="Permalink to this heading"></a></h1>
 <p>Handle symmetry.</p>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <section id="what-s-a-group-anyway">
-<h3>What’s a group anyway ?<a class="headerlink" href="#what-s-a-group-anyway" title="Permalink to this headline"></a></h3>
+<h3>What’s a group anyway ?<a class="headerlink" href="#what-s-a-group-anyway" title="Permalink to this heading"></a></h3>
 <p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Group_(mathematics)">group</a> is a set <span class="math notranslate nohighlight">\(G\)</span>, together with a binary operation <span class="math notranslate nohighlight">\(\star\)</span> (group law),
 form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if it satisfies 4 requirements:</p>
 <ul class="simple">
@@ -134,7 +135,7 @@ form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if
 <p>This implementation also compute the different classes (which includes, at least, an element and its inverse) and the Cayley table (multiplication table).</p>
 </section>
 <section id="point-group">
-<h3>Point group<a class="headerlink" href="#point-group" title="Permalink to this headline"></a></h3>
+<h3>Point group<a class="headerlink" href="#point-group" title="Permalink to this heading"></a></h3>
 <p>By using symmetry operation as group element (and matrix multiplication as the binary operation), one can create a <a class="reference external" href="https://en.wikipedia.org/wiki/Finite_group">point group</a>, which apply on finite objects (in oposition to space group, which aply to infinite objects).</p>
 <p>Symmetry operation are of two types, basically:</p>
 <ul class="simple">
@@ -162,7 +163,7 @@ One can generate simply any point group by using the methods of <a class="refere
 </div>
 </section>
 <section id="character-table">
-<h3>Character table<a class="headerlink" href="#character-table" title="Permalink to this headline"></a></h3>
+<h3>Character table<a class="headerlink" href="#character-table" title="Permalink to this heading"></a></h3>
 <p>An useful tools when working with group theory is the <a class="reference external" href="https://en.wikipedia.org/wiki/Character_table">character table</a>, which contains irreducible representations of character for each class of the group.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">C_2v</span> <span class="o">=</span> <span class="n">symmetry</span><span class="o">.</span><span class="n">PointGroup</span><span class="o">.</span><span class="n">C_nv</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">C_2v</span><span class="o">.</span><span class="n">character_table</span><span class="p">()</span>
@@ -187,7 +188,7 @@ B2     1.00       -1.00       -1.00        1.00
 </div>
 </section>
 <section id="discover-symmetry">
-<h3>Discover symmetry<a class="headerlink" href="#discover-symmetry" title="Permalink to this headline"></a></h3>
+<h3>Discover symmetry<a class="headerlink" href="#discover-symmetry" title="Permalink to this heading"></a></h3>
 <p>Use <a class="reference external" href="#qcip_tools.symmetry.SymmetryFinder">SymmetryFinder</a>.
 In particular, the documentation of <a class="reference external" href="#qcip_tools.symmetry.SymmetryFinder.find_symmetry">find_symmetry()</a> describes the way the point group is found.</p>
 <div class="admonition warning">
@@ -198,7 +199,7 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 </section>
 </section>
 <section id="module-qcip_tools.symmetry">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.symmetry" title="Permalink to this headline"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.symmetry" title="Permalink to this heading"></a></h2>
 <p>Symmetry handling.</p>
 <p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Group_(mathematics">https://en.wikipedia.org/wiki/Group_(mathematics</a>)</p>
 <p>Base implementation inspired by <a class="reference external" href="https://github.com/naftaliharris/Abstract-Algebra/">https://github.com/naftaliharris/Abstract-Algebra/</a></p>
@@ -925,7 +926,7 @@ for unknown reasons, it “fails” for <span class="math notranslate nohighligh
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription" title="Permalink to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupDescription.gen_point_group">
-<span class="sig-name descname"><span class="pre">gen_point_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lowers_infinite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription.gen_point_group" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gen_point_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lowers_infinite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription.gen_point_group" title="Permalink to this definition"></a></dt>
 <dd><p>Generate the point group out of the description.</p>
 <p>Not able to generate infinite groups <span class="math notranslate nohighlight">\(D_{\infty h}\)</span> or <span class="math notranslate nohighlight">\(C_{\infty v}\)</span>, except
 if <code class="docutils literal notranslate"><span class="pre">lowers_infinite</span></code> is set.</p>
@@ -1089,7 +1090,7 @@ character table) and get its principal components.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.degeneracies">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degeneracies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.degeneracies" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degeneracies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.degeneracies" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
