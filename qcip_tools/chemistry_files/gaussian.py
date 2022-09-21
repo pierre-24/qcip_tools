@@ -964,6 +964,89 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         self.molecule.multiplicity = int(self.lines[charge_and_multiplicity_line][27:])
 
 
+def _find_in_links(obj, q, links):
+    found = filter(lambda n: n > 0, (obj.search(q, into=link) for link in links))
+    try:
+        return next(found)
+    except StopIteration:
+        return -1
+
+
+@Output.define_property('computed_energies')
+def gaussian__output__get_computed_energies(obj, *args, **kwargs):
+    """Get the energies... Actually, "only"
+    + HF and DFT energy (in link 502/503/506/508)
+    + MP2 energy (in link 804/903/905/906)
+    + MP3, CCSD and CCSD(T) energy (in link 913)
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.Output
+    :rtype: dict
+    """
+    energies = {}
+    modified_gaussian = False  # pristine Gaussian 16
+
+    # fetch HF or DFT energy
+    n = _find_in_links(obj, 'SCF Done:', [502, 503, 506, 508])
+    if n > 0:
+        chunks = obj.lines[n][12:].split()
+        e = float(chunks[2])
+        if (len(chunks[2]) - chunks[2].find('.')) != 9:
+            modified_gaussian = True
+        else:  # try to fetch more decimals above: "E = xxx" contains eleven of them
+            for line in reversed(obj.lines[:n]):
+                if 'Delta-E=' in line:
+                    e = float(line.split()[1])
+                    break
+                elif 'Cycle' in line:
+                    break
+
+        if 'HF' in chunks[0]:
+            energies['HF'] = e
+        else:
+            energies['SCF/DFT'] = e
+
+        energies['total'] = e
+
+    # fetch MP2 energies
+    n = _find_in_links(obj, 'EUMP2 =', [804, 903, 905, 906])
+    if n > 0:
+        chunk = obj.lines[n].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+
+        energies['MP2'] = float(chunk)
+        energies['total'] = energies['MP2']
+
+    # fetch MP3 energies
+    n = _find_in_links(obj, 'EUMP3=', [913])
+    if n > 0:
+        chunk = obj.lines[n].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+        energies['MP3'] = float(chunk)
+
+    # fetch CCSD energies
+    n = obj.search('Wavefunction amplitudes converged.', into=913)
+    if n > 0:
+        chunk = obj.lines[n - 3][:-16].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+        energies['CCSD'] = float(chunk)
+        energies['total'] = energies['CCSD']
+
+    # fetch CCSD(T) energies
+    n = obj.search('CCSD(T)=', into=913)
+    if n > 0:
+        chunk = obj.lines[n].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+        energies['CCSD(T)'] = float(chunk)
+        energies['total'] = energies['CCSD(T)']
+
+    return energies
+
+
 @Output.define_property('excitations')
 def gaussian__output__property__excitations(obj, *args, **kwargs):
     """Get excitation properties in FCHK. Returns a dictionary:

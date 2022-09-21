@@ -22,9 +22,9 @@ Report the radial distribution of a cube around a given center [by default :math
 
 .. note::
     Please cite
-    `[P. Beaujean and B. Champagne, Inorg. Chem. 2022, 61, 1928] 
+    `[P. Beaujean and B. Champagne, Inorg. Chem. 2022, 61, 1928]
     <https://dx.doi.org/10.1021/acs.inorgchem.1c03077>`_,
-    if you use this program. 
+    if you use this program.
     This publication also showcase the kind of results you can expect and the analysis that may be extracted.
 
 The charge in a given region of the space, located by :math:`\\mathbf{r}` and in an element of volume

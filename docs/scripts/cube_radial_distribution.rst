@@ -1,5 +1,5 @@
-.. hash=002d2202306ae4325305409ad5ee7320edfe58a6
-.. Generated: 21/09/22 22:49
+.. hash=ad13eb27292d253de3d416d924dac24661b426d3
+.. Generated: 21/09/22 23:05
 .. Do not edit!
 
 ============================
@@ -77,9 +77,9 @@ Report the radial distribution of a cube around a given center [by default :math
 
 .. note::
     Please cite
-    `[P. Beaujean and B. Champagne, Inorg. Chem. 2022, 61, 1928] 
+    `[P. Beaujean and B. Champagne, Inorg. Chem. 2022, 61, 1928]
     <https://dx.doi.org/10.1021/acs.inorgchem.1c03077>`_,
-    if you use this program. 
+    if you use this program.
     This publication also showcase the kind of results you can expect and the analysis that may be extracted.
 
 The charge in a given region of the space, located by :math:`\mathbf{r}` and in an element of volume
