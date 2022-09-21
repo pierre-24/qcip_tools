@@ -6,10 +6,9 @@ Perform a thermochemistry analysis
 import argparse
 import sys
 
+import qcip_tools.scripts
 from qcip_tools import derivatives_g, molecule as qcip_molecule, symmetry
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent
-
-from qcip_tools.scripts import commons
 
 __version__ = '0.1'
 __author__ = 'Pierre Beaujean'
@@ -65,22 +64,22 @@ def main():
     args = parser.parse_args()
 
     if not args.infile.has_property('geometrical_derivatives'):
-        commons.exit_failure('cannot find geometrical derivatives ({})'.format(args.infile.file_type))
+        qcip_tools.scripts.exit_failure('cannot find geometrical derivatives ({})'.format(args.infile.file_type))
 
     if not args.infile.has_property('computed_energies'):
-        commons.exit_failure('cannot find energies ({})'.format(args.infile.file_type))
+        qcip_tools.scripts.exit_failure('cannot find energies ({})'.format(args.infile.file_type))
 
     try:
         geometrical_derivatives = args.infile.property('geometrical_derivatives')
         energies = args.infile.property('computed_energies')
     except PropertyNotPresent as e:
-        return commons.exit_failure('cannot find {} ({})'.format(e, args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find {} ({})'.format(e, args.infile.file_type))
 
     if 'GG' not in geometrical_derivatives:
-        return commons.exit_failure('no Hessian in this file')
+        return qcip_tools.scripts.exit_failure('no Hessian in this file')
 
     if 'total' not in energies:
-        return commons.exit_failure('cannot find total energy!')
+        return qcip_tools.scripts.exit_failure('cannot find total energy!')
 
     molecule = args.infile.molecule
     mwh = derivatives_g.MassWeightedHessian(
@@ -97,7 +96,7 @@ def main():
                 sys.exit(1)
 
             if not (1 <= n <= mwh.dof):
-                return commons.exit_failure(
+                return qcip_tools.scripts.exit_failure(
                     '{} is not in the range of allowed frequencies (1-{})'.format(n, mwh.dof))
 
             try:
@@ -105,14 +104,14 @@ def main():
                 if index >= 0:
                     mwh.included_modes.pop(index)
             except ValueError:
-                return commons.exit_failure('{} is not in the possibilities'.format(n))
+                return qcip_tools.scripts.exit_failure('{} is not in the possibilities'.format(n))
 
     symmetry_number = args.symmetry_number
     if args.guess_symmetry:
         try:
             mol = args.infile.property('molecule')
         except PropertyNotPresent:
-            return commons.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
+            return qcip_tools.scripts.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
 
         sf = qcip_molecule.MolecularSymmetryFinder(mol, tol=1e-3)
         g, _, _ = sf.find_symmetry()

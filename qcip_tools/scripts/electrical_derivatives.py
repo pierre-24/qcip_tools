@@ -7,10 +7,9 @@ import argparse
 import sys
 from scipy import constants
 
+import qcip_tools.scripts
 from qcip_tools import derivatives_e, quantities
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent
-
-from qcip_tools.scripts import commons
 
 __version__ = '0.3'
 __author__ = 'Pierre Beaujean'
@@ -96,12 +95,12 @@ def main():
     args = get_arguments_parser().parse_args()
 
     if not args.infile.has_property('electrical_derivatives'):
-        return commons.exit_failure('cannot find electrical derivatives ({})'.format(args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find electrical derivatives ({})'.format(args.infile.file_type))
 
     try:
         electrical_derivatives = args.infile.property('electrical_derivatives')
     except PropertyNotPresent:
-        return commons.exit_failure('cannot find electrical derivatives ({})'.format(args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find electrical derivatives ({})'.format(args.infile.file_type))
 
     # mu
     if 'F' in electrical_derivatives:

@@ -6,6 +6,8 @@ import pathlib
 
 # List of the scripts that are installed, without the .py extension. The name is used to give the command name.
 # Please keep this list ordered alphabetically.
+import sys
+
 provide_scripts = [
     'boltzmann_population',
     'check_chemistry_file',
@@ -38,3 +40,17 @@ def make_console_scripts(package_name=pathlib.Path('qcip_tools/scripts')):
         console_scripts.append('{0} = {1}.{0}:main'.format(script, str(package_name).replace('/', '.')))
 
     return console_scripts
+
+
+def exit_failure(msg, status=1):
+    """Write a message in stderr and exits
+
+    :param msg: the msg
+    :type msg: str
+    :param status: exit status (!=0)
+    :type status: int
+    """
+
+    sys.stderr.write(msg)
+    sys.stderr.write('\n')
+    return sys.exit(status)

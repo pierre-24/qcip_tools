@@ -6,7 +6,7 @@ Convert any chemistry file that contain a geometry to a xyz file
 import argparse
 import sys
 
-from qcip_tools.scripts import commons
+import qcip_tools.scripts
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent, xyz
 
 __version__ = '0.1'
@@ -41,7 +41,7 @@ def main():
     try:
         mol = args.infile.property('molecule')
     except PropertyNotPresent:
-        return commons.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
 
     xf = xyz.File.from_molecule(mol)
     print(xf.to_string())

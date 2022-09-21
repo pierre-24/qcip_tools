@@ -140,7 +140,7 @@ def get_arguments_parser():
     return parser
 
 
-exclude_scripts = ['__init__.py', 'commons.py', 'generate_documentation.py']
+exclude_scripts = ['__init__.py', 'generate_documentation.py']
 possible_argparse_parsers = ['arguments_parser', 'arg_parser', 'parser']
 possible_argparse_parsers_func = ['get_arguments_parser', 'get_arg_parser']
 

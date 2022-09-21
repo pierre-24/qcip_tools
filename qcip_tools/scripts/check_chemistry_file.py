@@ -7,8 +7,6 @@ from qcip_tools.chemistry_files import helpers
 import argparse
 import sys
 
-from qcip_tools.scripts import commons  # noqa
-
 __version__ = '0.1'
 __author__ = 'Pierre Beaujean'
 __maintainer__ = 'Pierre Beaujean'

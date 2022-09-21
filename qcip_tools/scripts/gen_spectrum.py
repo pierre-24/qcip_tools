@@ -10,10 +10,9 @@ import numpy
 
 from scipy import constants
 
+import qcip_tools.scripts
 from qcip_tools import derivatives_exci, derivatives_e, quantities
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent
-
-from qcip_tools.scripts import commons
 
 __version__ = '0.1'
 __author__ = 'Pierre Beaujean'
@@ -251,13 +250,13 @@ def main():
         try:
             excitations = args.infile.property('excitations')
         except PropertyNotPresent as e:
-            return commons.exit_failure('cannot find {} ({})'.format(e, args.infile.file_type))
+            return qcip_tools.scripts.exit_failure('cannot find {} ({})'.format(e, args.infile.file_type))
 
         if '!F' not in excitations:
-            return commons.exit_failure('no transition dipoles (!F)')
+            return qcip_tools.scripts.exit_failure('no transition dipoles (!F)')
 
         if '!' not in excitations and '#' not in excitations:
-            return commons.exit_failure('no excitation energies (# or !)')
+            return qcip_tools.scripts.exit_failure('no excitation energies (# or !)')
 
         handler = derivatives_exci.Excitations(
             transition_energies=excitations['!'], transition_dipoles=excitations['!F'])

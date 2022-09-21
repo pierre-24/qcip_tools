@@ -1,9 +1,6 @@
 import subprocess
 from tests import QcipScriptsTestCase
 
-from qcip_tools.scripts import commons # noqa
-from qcip_tools.chemistry_files import gaussian
-
 
 class ElectricalDerivativesTestCase(QcipScriptsTestCase):
     def setUp(self):
@@ -12,35 +9,6 @@ class ElectricalDerivativesTestCase(QcipScriptsTestCase):
             'properties/electrical_derivatives/dalton_output_no_RSP.tar.gz')
         self.dalton_archive_output_cc = self.copy_to_temporary_directory(
             'properties/electrical_derivatives/dalton_output_CC.tar.gz')
-
-        # gaussian
-        self.gaussian_fchk = self.copy_to_temporary_directory('properties/electrical_derivatives/gaussian_output.fchk')
-        self.gaussian_log = self.copy_to_temporary_directory('properties/electrical_derivatives/gaussian_output.log')
-
-    def test_gaussian_log(self):
-
-        fchk_file = gaussian.FCHK()
-        with open(self.gaussian_fchk) as f:
-            fchk_file.read(f)
-
-        log_file = gaussian.Output()
-        with open(self.gaussian_log) as f:
-            log_file.read(f)
-
-        log_file_ed = log_file.property('electrical_derivatives')
-        fchk_file_ed = fchk_file.property('electrical_derivatives')
-
-        test_equals = [
-            ('FF', 'static', 'static'),
-            ('FFF', 'static', 'static'),
-            ('dDF', 0.04, 0.04),
-            ('XDD', 0.04, 0.04)
-        ]
-
-        for prop, freq1, freq2 in test_equals:
-            self.assertArraysAlmostEqual(
-                log_file_ed[prop][freq1].components,
-                fchk_file_ed[prop][freq2].components)
 
     def test_command(self):
         """Test the command on dalton archive"""

@@ -6,10 +6,10 @@ Detect point group, symmetrise molecule and outputs it as XYZ
 import argparse
 import sys
 
+import qcip_tools.scripts
 from qcip_tools import molecule
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent, xyz
 
-from qcip_tools.scripts import commons
 
 __version__ = '0.1'
 __author__ = 'Pierre Beaujean'
@@ -70,7 +70,7 @@ def main():
     try:
         mol = args.infile.property('molecule')
     except PropertyNotPresent:
-        return commons.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
 
     sf = molecule.MolecularSymmetryFinder(mol, tol=args.tolerance)
 

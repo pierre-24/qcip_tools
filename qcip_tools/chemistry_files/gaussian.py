@@ -1061,6 +1061,70 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
     return excitations
 
 
+@Output.define_property('electrical_derivatives')
+def gaussian__output__property__electrical_derivatives(obj, *args, **kwargs):
+    """
+
+    :param obj: object
+    :type obj: gaussian.Output
+    :rtype: dict
+    """
+
+    line_start = obj.search(' Property number 1', into=801)
+    if line_start < 0:
+        return {}
+
+    offset = 0
+    data = {}
+    while True:
+        line = obj.lines[line_start + offset]
+        if 'Property' not in line:
+            break
+        elif 'Alpha' in line:
+            frequency = float(line[-10:-2])
+            tensor = derivatives_e.PolarisabilityTensor(frequency=frequency if frequency != .0 else 'static')
+            for i in range(3):
+                cpts = obj.lines[line_start + offset + 2 + i].split()
+                tensor.components[i, :] = [float(cpts[j + 1].replace('D', 'e')) for j in range(3)]
+            if frequency == .0:
+                data.update({'FF': {'static': tensor}})
+            else:
+                if 'dD' not in data:
+                    data['dD'] = {}
+                data['dD'].update({frequency: tensor})
+            offset += 5
+        elif 'Beta' in line:
+            frequency = float(line[-10:-2])
+            is_SHG = 'w,w,-2w' in line
+            tensor = derivatives_e.FirstHyperpolarisabilityTensor(
+                input_fields=(0, 0) if frequency == .0 else ((1, 1) if is_SHG else (0, 1)),
+                frequency=frequency if frequency != .0 else 'static')
+
+            compressed_tensor = []
+            for i in range(18):
+                compressed_tensor.append(float(obj.lines[line_start + offset + 2 + i][-15:].replace('D', 'e')))
+            if is_SHG:
+                tensor.components = beta_SHG_from_fchk(compressed_tensor)
+                if frequency == .0:
+                    data.update({'FFF': {'static': tensor}})
+                else:
+                    if 'XDD' not in data:
+                        data['XDD'] = {}
+                    data['XDD'].update({frequency: tensor})
+            else:
+                tensor.components = beta_EOP_from_fchk(compressed_tensor)
+                if frequency != .0:
+                    if 'dDF' not in data:
+                        data['dDF'] = {}
+                    data['dDF'].update({frequency: tensor})
+
+            offset += 20
+        else:  # probably Gamma
+            break
+
+    return data
+
+
 class ChargeTransferInformation:
     """Analyzed charge transfer.
 

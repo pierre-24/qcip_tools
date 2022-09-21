@@ -5,10 +5,10 @@ Fetch the different derivatives of the energy with respect to geometrical modifi
 
 import argparse
 import sys
+
+import qcip_tools.scripts
 from qcip_tools import chemistry_files, derivatives_g
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent
-
-from qcip_tools.scripts import commons
 
 __version__ = '0.2'
 __author__ = 'Pierre Beaujean'
@@ -72,12 +72,12 @@ def main():
     args = get_arguments_parser().parse_args()
 
     if not args.infile.has_property('geometrical_derivatives'):
-        return commons.exit_failure('cannot find geometrical derivatives ({})'.format(args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find geometrical derivatives ({})'.format(args.infile.file_type))
 
     try:
         geometrical_derivatives = args.infile.property('geometrical_derivatives')
     except PropertyNotPresent:
-        return commons.exit_failure('cannot find geometrical derivatives ({})'.format(args.infile.file_type))
+        return qcip_tools.scripts.exit_failure('cannot find geometrical derivatives ({})'.format(args.infile.file_type))
 
     molecule = None
     if issubclass(type(args.infile), chemistry_files.WithMoleculeMixin):
