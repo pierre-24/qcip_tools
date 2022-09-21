@@ -2,6 +2,7 @@ from setuptools import setup, find_packages
 from os import path
 
 import qcip_tools
+from qcip_tools.scripts import make_console_scripts
 
 here = path.abspath(path.dirname(__file__))
 
@@ -47,6 +48,10 @@ setup(
     packages=find_packages(),
     python_requires='>=3.8',
     test_suite='tests',
+
+    entry_points={
+        'console_scripts': make_console_scripts()
+    },
 
     # requirements
     install_requires=requirements,
