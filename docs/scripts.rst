@@ -1,6 +1,6 @@
-====================
-Scipts documentation
-====================
+=====================
+Scripts documentation
+=====================
 
 Bunch of utility scripts for post-analysis
 

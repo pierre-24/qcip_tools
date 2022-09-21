@@ -1,10 +1,10 @@
-.. hash=c38ea655ae0ce857f54c7b2e9bf870344cff5122
+.. hash=1e84a16e8f5f0153f2aa31d604e9e6b020966e67
 .. Generated: 21/09/22 18:09
 .. Do not edit!
 
-==========
-``to_xyz``
-==========
+================
+``measure_mols``
+================
 
 By **Pierre Beaujean** (`pierre.beaujean@unamur.be <pierre.beaujean@unamur.be>`_).
 
@@ -13,22 +13,28 @@ By **Pierre Beaujean** (`pierre.beaujean@unamur.be <pierre.beaujean@unamur.be>`_
 Synopsis
 ++++++++
 
-``to_xyz`` - 
-Convert any chemistry file that contain a geometry to a xyz file
+``measure_mols`` - 
+Measure distances/angles/dihedrals in molecules
 
 
-.. program:: to_xyz
+.. program:: measure_mols
 
 .. code-block:: console
 
-  usage: to_xyz [-h] [-v] [infile]
+  usage: measure_mols [-h] [-v] -c CRITERIA [infiles ...]
 
 
 Positional arguments:
 
-.. option:: infile
+.. option:: infiles
 
-  source of the derivatives
+  sources
+
+Required arguments:
+
+.. option:: -c, --criteria
+
+  list of criteria to measure
 
 Optional arguments:
 
@@ -46,4 +52,4 @@ More information
 ++++++++++++++++
 
 
-*Nothing yet*
+Measure distances/angles/dihedrals in molecules.
