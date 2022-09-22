@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Dalton files (chemistry_files.dalton)" href="dalton.html" />
-    <link rel="prev" title="XYZ files (chemistry_files.xyz)" href="xyz.html" /> 
+    <link rel="prev" title="PDB files (chemistry_files.pdb)" href="pdb.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,10 +54,12 @@
 <li class="toctree-l4"><a class="reference internal" href="base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="xyz.html">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pdb.html">PDB files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.pdb</span></code>)</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csv_tensor.html">Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)</a></li>
 </ul>
 </li>
 </ul>
@@ -75,6 +77,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts.html">Scripts documentation</a></li>
 </ul>
 
         </div>
@@ -779,6 +782,36 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__output__get_computed_energies">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__output__get_computed_energies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__output__get_computed_energies" title="Permalink to this definition"></a></dt>
+<dd><p>Get the energies… Actually, “only”
++ HF and DFT energy (in link 502/503/506/508)
++ MP2 energy (in link 804/903/905/906)
++ MP3, CCSD and CCSD(T) energy (in link 913)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="#qcip_tools.chemistry_files.gaussian.Output" title="qcip_tools.chemistry_files.gaussian.Output"><em>qcip_tools.chemistry_files.gaussian.Output</em></a>) – object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__output__property__electrical_derivatives">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__output__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__output__property__electrical_derivatives" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="#qcip_tools.chemistry_files.gaussian.Output" title="qcip_tools.chemistry_files.gaussian.Output"><em>gaussian.Output</em></a>) – object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.gaussian.gaussian__output__property__excitations">
 <span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.gaussian.</span></span><span class="sig-name descname"><span class="pre">gaussian__output__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.gaussian.gaussian__output__property__excitations" title="Permalink to this definition"></a></dt>
 <dd><p>Get excitation properties in FCHK. Returns a dictionary:</p>
@@ -819,7 +852,7 @@ and <code class="docutils literal notranslate"><span class="pre">Derivative</spa
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="xyz.html" class="btn btn-neutral float-left" title="XYZ files (chemistry_files.xyz)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pdb.html" class="btn btn-neutral float-left" title="PDB files (chemistry_files.pdb)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="dalton.html" class="btn btn-neutral float-right" title="Dalton files (chemistry_files.dalton)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

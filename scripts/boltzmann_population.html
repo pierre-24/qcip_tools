@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boltzmann_population &mdash; qcip_tools 0.6.10 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="check_chemistry_file" href="check_chemistry_file.html" />
+    <link rel="prev" title="Scripts documentation" href="../scripts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.10
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-documentation.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../scripts.html">Scripts documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-information">More information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="check_chemistry_file.html"><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ct_analysis.html"><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cube_radial_distribution.html"><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="electrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">electrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html"><code class="docutils literal notranslate"><span class="pre">excitations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_character_table.html"><code class="docutils literal notranslate"><span class="pre">gen_character_table</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_spectrum.html"><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">geometrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="measure_mols.html"><code class="docutils literal notranslate"><span class="pre">measure_mols</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetrise.html"><code class="docutils literal notranslate"><span class="pre">symmetrise</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry_analysis.html"><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="to_xyz.html"><code class="docutils literal notranslate"><span class="pre">to_xyz</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../scripts.html">Scripts documentation</a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/boltzmann_population.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="boltzmann-population">
+<h1><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code><a class="headerlink" href="#boltzmann-population" title="Permalink to this heading"></a></h1>
+<p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
+<p><strong>Version 0.1</strong> (Development).</p>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code> -
+Compute the Boltzmann population of molecules</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: boltzmann_population [-h] [-v] [-t TEMPERATURE] [-p PRESSURE] [-c {E,H,G,U}] [-f FACTOR] [infiles ...]</span>
+</pre></div>
+</div>
+<p>Positional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-arg-infiles">
+<span id="cmdoption-boltzmann-population-arg-infiles"></span><span class="sig-name descname"><span class="pre">infiles</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-arg-infiles" title="Permalink to this definition"></a></dt>
+<dd><p>sources</p>
+</dd></dl>
+
+<p>Optional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-h">
+<span id="cmdoption-boltzmann-population-h"></span><span id="cmdoption-boltzmann_population-help"></span><span id="cmdoption-boltzmann-population-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-v">
+<span id="cmdoption-boltzmann-population-v"></span><span id="cmdoption-boltzmann_population-version"></span><span id="cmdoption-boltzmann-population-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-v" title="Permalink to this definition"></a></dt>
+<dd><p>show program’s version number and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-t">
+<span id="cmdoption-boltzmann-population-t"></span><span id="cmdoption-boltzmann_population-temperature"></span><span id="cmdoption-boltzmann-population-temperature"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--temperature</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-t" title="Permalink to this definition"></a></dt>
+<dd><p>Temperature (in K)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-p">
+<span id="cmdoption-boltzmann-population-p"></span><span id="cmdoption-boltzmann_population-pressure"></span><span id="cmdoption-boltzmann-population-pressure"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--pressure</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-p" title="Permalink to this definition"></a></dt>
+<dd><p>Pressure (in Pa)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-c">
+<span id="cmdoption-boltzmann-population-c"></span><span id="cmdoption-boltzmann_population-criterion"></span><span id="cmdoption-boltzmann-population-criterion"></span><span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--criterion</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-c" title="Permalink to this definition"></a></dt>
+<dd><p>Criterion for the population</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-boltzmann_population-f">
+<span id="cmdoption-boltzmann-population-f"></span><span id="cmdoption-boltzmann_population-factor"></span><span id="cmdoption-boltzmann-population-factor"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--factor</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-f" title="Permalink to this definition"></a></dt>
+<dd><p>multiply energies by a given factor</p>
+</dd></dl>
+
+</section>
+<section id="more-information">
+<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<p>Compute the Boltzmann population of molecules, based on:</p>
+<ul class="simple">
+<li><p>their total energy (<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">E</span></code>, default),</p></li>
+<li><p>their internal energy (<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">U</span></code>),</p></li>
+<li><p>their enthalpy (<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">H</span></code>),</p></li>
+<li><p>their free Gibbs energy (<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">G</span></code>).</p></li>
+</ul>
+<p>Checks if the molecular formula of all inputs matches
+(but that’s it, e.g. not that they have been obtained with the same method).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../scripts.html" class="btn btn-neutral float-left" title="Scripts documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="check_chemistry_file.html" class="btn btn-neutral float-right" title="check_chemistry_file" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

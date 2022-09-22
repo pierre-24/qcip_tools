@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cube_radial_distribution &mdash; qcip_tools 0.6.10 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="electrical_derivatives" href="electrical_derivatives.html" />
+    <link rel="prev" title="ct_analysis" href="ct_analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.10
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-documentation.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../scripts.html">Scripts documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boltzmann_population.html"><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="check_chemistry_file.html"><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ct_analysis.html"><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-information">More information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="electrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">electrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html"><code class="docutils literal notranslate"><span class="pre">excitations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_character_table.html"><code class="docutils literal notranslate"><span class="pre">gen_character_table</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_spectrum.html"><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">geometrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="measure_mols.html"><code class="docutils literal notranslate"><span class="pre">measure_mols</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetrise.html"><code class="docutils literal notranslate"><span class="pre">symmetrise</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry_analysis.html"><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="to_xyz.html"><code class="docutils literal notranslate"><span class="pre">to_xyz</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../scripts.html">Scripts documentation</a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/cube_radial_distribution.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cube-radial-distribution">
+<h1><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code><a class="headerlink" href="#cube-radial-distribution" title="Permalink to this heading"></a></h1>
+<p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
+<p><strong>Version 0.1</strong> (Development).</p>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code> -
+Radial distribution</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: cube_radial_distribution [-h] [-v] [-S] [-c CENTER] [--dr DR]</span>
+<span class="go">                                [--n-polar N_POLAR]</span>
+<span class="go">                                [--n-azimuthal N_AZIMUTHAL] [-d DATA]</span>
+<span class="go">                                infile</span>
+</pre></div>
+</div>
+<p>Positional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-arg-infile">
+<span id="cmdoption-cube-radial-distribution-arg-infile"></span><span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-arg-infile" title="Permalink to this definition"></a></dt>
+<dd><p>Density cube</p>
+</dd></dl>
+
+<p>Optional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-h">
+<span id="cmdoption-cube-radial-distribution-h"></span><span id="cmdoption-cube_radial_distribution-help"></span><span id="cmdoption-cube-radial-distribution-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-v">
+<span id="cmdoption-cube-radial-distribution-v"></span><span id="cmdoption-cube_radial_distribution-version"></span><span id="cmdoption-cube-radial-distribution-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-v" title="Permalink to this definition"></a></dt>
+<dd><p>show program’s version number and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-S">
+<span id="cmdoption-cube-radial-distribution-s"></span><span id="cmdoption-cube_radial_distribution-square"></span><span id="cmdoption-cube-radial-distribution-square"></span><span class="sig-name descname"><span class="pre">-S</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--square</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-S" title="Permalink to this definition"></a></dt>
+<dd><p>square cube before</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-c">
+<span id="cmdoption-cube-radial-distribution-c"></span><span id="cmdoption-cube_radial_distribution-center"></span><span id="cmdoption-cube-radial-distribution-center"></span><span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--center</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-c" title="Permalink to this definition"></a></dt>
+<dd><p>Center</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-dr">
+<span id="cmdoption-cube-radial-distribution-dr"></span><span class="sig-name descname"><span class="pre">--dr</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-dr" title="Permalink to this definition"></a></dt>
+<dd><p>Increment of radius</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-n-polar">
+<span id="cmdoption-cube-radial-distribution-n-polar"></span><span class="sig-name descname"><span class="pre">--n-polar</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-n-polar" title="Permalink to this definition"></a></dt>
+<dd><p>Number of subdivision for the integration over theta</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-n-azimuthal">
+<span id="cmdoption-cube-radial-distribution-n-azimuthal"></span><span class="sig-name descname"><span class="pre">--n-azimuthal</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-n-azimuthal" title="Permalink to this definition"></a></dt>
+<dd><p>Number of subdivision for the integration over phi</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-cube_radial_distribution-d">
+<span id="cmdoption-cube-radial-distribution-d"></span><span id="cmdoption-cube_radial_distribution-data"></span><span id="cmdoption-cube-radial-distribution-data"></span><span class="sig-name descname"><span class="pre">-d</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--data</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-cube_radial_distribution-d" title="Permalink to this definition"></a></dt>
+<dd><p>data of the cube</p>
+</dd></dl>
+
+</section>
+<section id="more-information">
+<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<p>Report the radial distribution of a cube around a given center [by default <span class="math notranslate nohighlight">\((0,0,0)\)</span>].</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please cite
+<a class="reference external" href="https://dx.doi.org/10.1021/acs.inorgchem.1c03077">[P. Beaujean and B. Champagne, Inorg. Chem. 2022, 61, 1928]</a>,
+if you use this program.
+This publication also showcase the kind of results you can expect and the analysis that may be extracted.</p>
+</div>
+<p>The charge in a given region of the space, located by <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and in an element of volume
+<span class="math notranslate nohighlight">\(d\mathbf{r}\)</span>, is given by</p>
+<div class="math notranslate nohighlight">
+\[q(\mathbf{r}) = \rho(\mathbf{r})\,d\mathbf{r}.\]</div>
+<p>Integration over whole space gives the number of particles, <span class="math notranslate nohighlight">\(Q\)</span>.
+In spherical coordinates, <span class="math notranslate nohighlight">\(d\mathbf{r} = r^2\sin{\theta}\,dr\,d\theta\,d\phi\)</span>,
+this integral becomes</p>
+<div class="math notranslate nohighlight">
+\[Q =
+\int_0^{2\pi}\int_0^{\pi}\int_0^{\infty}
+\rho(r,\theta,\phi)\,r^2\,\sin{\theta}\,dr\,d\theta\,d\phi.\]</div>
+<p>Thus, the radial distribution is given by</p>
+<div class="math notranslate nohighlight" id="equation-tr">
+<span class="eqno">(1)<a class="headerlink" href="#equation-tr" title="Permalink to this equation"></a></span>\[\frac{dQ(r)}{dr} =
+r^2\,\int_0^{2\pi}\int_0^{\pi}
+\rho(r,\theta,\phi)\sin{\theta}\,d\theta\,d\phi,\]</div>
+<p>Equation <a class="reference internal" href="#equation-tr">(1)</a> is obtained numerically by interpolation over the cube.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ct_analysis.html" class="btn btn-neutral float-left" title="ct_analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="electrical_derivatives.html" class="btn btn-neutral float-right" title="electrical_derivatives" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

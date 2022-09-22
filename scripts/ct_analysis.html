@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ct_analysis &mdash; qcip_tools 0.6.10 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cube_radial_distribution" href="cube_radial_distribution.html" />
+    <link rel="prev" title="check_chemistry_file" href="check_chemistry_file.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.10
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-documentation.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../scripts.html">Scripts documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boltzmann_population.html"><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="check_chemistry_file.html"><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-information">More information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cube_radial_distribution.html"><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="electrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">electrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html"><code class="docutils literal notranslate"><span class="pre">excitations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_character_table.html"><code class="docutils literal notranslate"><span class="pre">gen_character_table</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_spectrum.html"><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">geometrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="measure_mols.html"><code class="docutils literal notranslate"><span class="pre">measure_mols</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetrise.html"><code class="docutils literal notranslate"><span class="pre">symmetrise</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry_analysis.html"><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="to_xyz.html"><code class="docutils literal notranslate"><span class="pre">to_xyz</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../scripts.html">Scripts documentation</a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/ct_analysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ct-analysis">
+<h1><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code><a class="headerlink" href="#ct-analysis" title="Permalink to this heading"></a></h1>
+<p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
+<p><strong>Version 0.2</strong> (Development).</p>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code> -
+Compute charge transfer (CT) quantities</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: ct_analysis [-h] [-v] -g GROUND -e EXCITED [-S] [-o OUTPUT] [-D]</span>
+<span class="go">                   [-d DUMMY]</span>
+</pre></div>
+</div>
+<p>Required arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-g">
+<span id="cmdoption-ct-analysis-g"></span><span id="cmdoption-ct_analysis-ground"></span><span id="cmdoption-ct-analysis-ground"></span><span class="sig-name descname"><span class="pre">-g</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--ground</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-g" title="Permalink to this definition"></a></dt>
+<dd><p>Ground state density</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-e">
+<span id="cmdoption-ct-analysis-e"></span><span id="cmdoption-ct_analysis-excited"></span><span id="cmdoption-ct-analysis-excited"></span><span class="sig-name descname"><span class="pre">-e</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--excited</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-e" title="Permalink to this definition"></a></dt>
+<dd><p>Excited state density</p>
+</dd></dl>
+
+<p>Optional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-h">
+<span id="cmdoption-ct-analysis-h"></span><span id="cmdoption-ct_analysis-help"></span><span id="cmdoption-ct-analysis-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-v">
+<span id="cmdoption-ct-analysis-v"></span><span id="cmdoption-ct_analysis-version"></span><span id="cmdoption-ct-analysis-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-v" title="Permalink to this definition"></a></dt>
+<dd><p>show program’s version number and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-S">
+<span id="cmdoption-ct-analysis-s"></span><span id="cmdoption-ct_analysis-square"></span><span id="cmdoption-ct-analysis-square"></span><span class="sig-name descname"><span class="pre">-S</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--square</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-S" title="Permalink to this definition"></a></dt>
+<dd><p>square cube before make the difference</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-o">
+<span id="cmdoption-ct-analysis-o"></span><span id="cmdoption-ct_analysis-output"></span><span id="cmdoption-ct-analysis-output"></span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--output</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-o" title="Permalink to this definition"></a></dt>
+<dd><p>difference cube</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-D">
+<span id="cmdoption-ct-analysis-d"></span><span id="cmdoption-ct_analysis-output-with-diff"></span><span id="cmdoption-ct-analysis-output-with-diff"></span><span class="sig-name descname"><span class="pre">-D</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--output-with-diff</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-D" title="Permalink to this definition"></a></dt>
+<dd><p>Store all the densities (total, positive, negative)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ct_analysis-d">
+<span id="cmdoption-ct_analysis-dummy"></span><span id="cmdoption-ct-analysis-dummy"></span><span class="sig-name descname"><span class="pre">-d</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--dummy</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ct_analysis-d" title="Permalink to this definition"></a></dt>
+<dd><p>Create an xyz file with dummy atoms in positions of both barycenters (negative then positive)</p>
+</dd></dl>
+
+</section>
+<section id="more-information">
+<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<section id="theory">
+<h3>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h3>
+<p>Based on an implementation of this theory by D. Jacquemin (see supporting informations of the corresponding paper).</p>
+<p>The charge in a given region of the space, located by <span class="math notranslate nohighlight">\(\mathbf{r}\)</span> and in an element of volume
+<span class="math notranslate nohighlight">\(d\mathbf{r}\)</span>, is given by</p>
+<div class="math notranslate nohighlight">
+\[q(\mathbf{r}) = \int  \rho(\mathbf{r})\,d\mathbf{r}.\]</div>
+<p>Charges at different point of the space (a “density”) can be obtained by using the
+<code class="docutils literal notranslate"><span class="pre">cubegen</span></code> utility <a class="reference external" href="http://gaussian.com/cubegen/">provided by Gaussian</a>. In particular,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cubegen</span> <span class="pre">0</span> <span class="pre">density=scf</span> <span class="pre">x.fchk</span> <span class="pre">out.cub</span></code> permit to obtain the “density” of the ground state, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cubegen</span> <span class="pre">0</span> <span class="pre">density=ci</span> <span class="pre">x.fchk</span> <span class="pre">out.cub</span></code> permit to obtain the “density” of the excited state.</p></li>
+</ul>
+<p>Note that you need to launch the Gaussian calculations with <code class="docutils literal notranslate"><span class="pre">Density=(all)</span></code> so that it stores the CI density
+(if you use solvatation, please <strong>make sure</strong> to use <code class="docutils literal notranslate"><span class="pre">TD=(NonEqSolv)</span></code>!).</p>
+<p>Let <span class="math notranslate nohighlight">\(\delta q(r)\)</span> be the difference between the charge of the excited and the ground state.
+This quantity can be splitted into increasing areas and decreasing ones, <span class="math notranslate nohighlight">\(\delta q_+(\mathbf{r})\)</span> and
+<span class="math notranslate nohighlight">\(\delta q_-(\mathbf{r})\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\delta q_+(\mathbf{r}) = \left\{
+\begin{array}{ll}
+    \delta q(\mathbf{r}) &amp; \text{if }\delta q(\mathbf{r}) &gt; 0, \\
+    0 &amp; \text{otherwise.}
+\end{array}
+\right.\end{split}\]</div>
+<p>and,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\delta q_-(\mathbf{r}) = \left\{
+\begin{array}{ll}
+    \delta q(\mathbf{r}) &amp; \text{if }\delta q(\mathbf{r}) &lt; 0, \\
+    0 &amp; \text{otherwise.}
+\end{array}
+\right.\end{split}\]</div>
+<p>One can therefore compute:</p>
+<ul>
+<li><p>The transferred charge between ground and excited state:</p>
+<div class="math notranslate nohighlight">
+\[q_{CT} = \frac{1}{2}\,\sum_{\mathbf{r}_i} \delta q_+(\mathbf{r}_i) - \delta q_-(\mathbf{r}_i).\]</div>
+<p>Note that the original papers states that</p>
+<div class="math notranslate nohighlight">
+\[q_{CT} =\sum_{\mathbf{r}_i} \delta q_+(\mathbf{r}_i) =-\sum_{\mathbf{r}_i} \delta q_-(\mathbf{r}_i),\]</div>
+<p>but the implementation of D. Jacquemin reports and uses the average.</p>
+</li>
+<li><p>The starting and ending point of the charge transfer, <span class="math notranslate nohighlight">\(\mathbf{r}_+\)</span> and <span class="math notranslate nohighlight">\(\mathbf{r}_-\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\mathbf{r}_+ = \sum_{\mathbf{r}_i} \frac{\mathbf{r}_i\,q_+(\mathbf{r}_i)}{q_{CT}},\\\mathbf{r}_- = \sum_{\mathbf{r}_i} \frac{\mathbf{r}_i\,q_-(\mathbf{r}_i)}{q_{CT}}.\end{aligned}\end{align} \]</div>
+<p>Those are the barycenters of the positive and the negative densities.
+The vector between those two barycenter is the charge transfer vector, defined as</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{v}_{CT} = \mathbf{r}_--\mathbf{r}_+.\]</div>
+<p>In particular, the charge transfer distance is the norm of this vector, <span class="math notranslate nohighlight">\(d_{CT} = |\mathbf{v}_{CT}|\)</span>.
+Notice the usage of the so called <em>chemist convention</em>, where the dipole is defined from positive to negative
+positions.</p>
+</li>
+</ul>
+<ul>
+<li><p>The norm of variation of dipole moment between the ground and excited state:</p>
+<div class="math notranslate nohighlight">
+\[|\mu_{CT}| = q_{CT}\,d_{CT}.\]</div>
+</li>
+</ul>
+</section>
+<section id="implementation">
+<h3>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading"></a></h3>
+<p>Only works with gaussian cube.
+Note that external programs may be abble to generate those as well
+(if this is not a density but a probability, like with MO, squaring it gives the density, so use the <code class="docutils literal notranslate"><span class="pre">-S</span></code> option).</p>
+<p>The program reports <span class="math notranslate nohighlight">\(\mathbf{v}_{CT}\)</span> as well as <span class="math notranslate nohighlight">\(q_{CT}\)</span>, <span class="math notranslate nohighlight">\(d_{CT}\)</span>, and
+<span class="math notranslate nohighlight">\(|\mu_{CT}|\)</span>.</p>
+<p>It allows to save the difference cube (for visualization) and an xyz file containing two dummy atoms (one for each
+barycenter, first <span class="math notranslate nohighlight">\(\mathbf{r}_-\)</span> and then <span class="math notranslate nohighlight">\(\mathbf{r}_+\)</span>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Vector and <span class="math notranslate nohighlight">\(d_{CT}\)</span> are given in Angstrom, <span class="math notranslate nohighlight">\(q_{CT}\)</span> is in |e| (electron charge),
+and <span class="math notranslate nohighlight">\(|\mu_{CT}|\)</span> is therefore in Angstrom |e|.</p>
+</div>
+</section>
+<section id="source">
+<h3>Source<a class="headerlink" href="#source" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>T. Le Bahers <em>et al.</em> <em>J. Chem. Theory. Comput.</em> <strong>7</strong>, 2498 (2011)
+<a class="reference external" href="http://dx.doi.org/10.1021/ct200308m">10.1021/ct200308m</a>.</p></li>
+<li><p>D. Jacquemin <em>et al.</em> <em>Phys Chem Chem Phys.</em> <strong>28</strong>, 5383 (2012)
+<a class="reference external" href="http://dx.doi.org/10.1039/c2cp40261k">10.1039/c2cp40261k</a>.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="check_chemistry_file.html" class="btn btn-neutral float-left" title="check_chemistry_file" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cube_radial_distribution.html" class="btn btn-neutral float-right" title="cube_radial_distribution" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

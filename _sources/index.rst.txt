@@ -13,3 +13,4 @@ Created in the frame of my PhD thesis in the `University of Namur <https://unamu
     install
     contributing
     code-documentation
+    scripts

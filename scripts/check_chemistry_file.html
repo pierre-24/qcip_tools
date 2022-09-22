@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>check_chemistry_file &mdash; qcip_tools 0.6.10 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ct_analysis" href="ct_analysis.html" />
+    <link rel="prev" title="boltzmann_population" href="boltzmann_population.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> qcip_tools
+          </a>
+              <div class="version">
+                0.6.10
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing qcip_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-documentation.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../scripts.html">Scripts documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boltzmann_population.html"><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#more-information">More information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ct_analysis.html"><code class="docutils literal notranslate"><span class="pre">ct_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cube_radial_distribution.html"><code class="docutils literal notranslate"><span class="pre">cube_radial_distribution</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="electrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">electrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="excitations.html"><code class="docutils literal notranslate"><span class="pre">excitations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_character_table.html"><code class="docutils literal notranslate"><span class="pre">gen_character_table</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen_spectrum.html"><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometrical_derivatives.html"><code class="docutils literal notranslate"><span class="pre">geometrical_derivatives</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="measure_mols.html"><code class="docutils literal notranslate"><span class="pre">measure_mols</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="symmetrise.html"><code class="docutils literal notranslate"><span class="pre">symmetrise</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermochemistry_analysis.html"><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="to_xyz.html"><code class="docutils literal notranslate"><span class="pre">to_xyz</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">qcip_tools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../scripts.html">Scripts documentation</a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/check_chemistry_file.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="check-chemistry-file">
+<h1><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code><a class="headerlink" href="#check-chemistry-file" title="Permalink to this heading"></a></h1>
+<p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
+<p><strong>Version 0.1</strong> (Development).</p>
+<section id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">check_chemistry_file</span></code> -
+checks whether qcip_tools identify a given file. If so, it can also check if it have a given property.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: check_chemistry_file [-h] [-v] [-p PROPERTY] [-T] [infile]</span>
+</pre></div>
+</div>
+<p>Positional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-check_chemistry_file-arg-infile">
+<span id="cmdoption-check-chemistry-file-arg-infile"></span><span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-check_chemistry_file-arg-infile" title="Permalink to this definition"></a></dt>
+<dd><p>file to check</p>
+</dd></dl>
+
+<p>Optional arguments:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-check_chemistry_file-h">
+<span id="cmdoption-check-chemistry-file-h"></span><span id="cmdoption-check_chemistry_file-help"></span><span id="cmdoption-check-chemistry-file-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-check_chemistry_file-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-check_chemistry_file-v">
+<span id="cmdoption-check-chemistry-file-v"></span><span id="cmdoption-check_chemistry_file-version"></span><span id="cmdoption-check-chemistry-file-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-check_chemistry_file-v" title="Permalink to this definition"></a></dt>
+<dd><p>show program’s version number and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-check_chemistry_file-p">
+<span id="cmdoption-check-chemistry-file-p"></span><span id="cmdoption-check_chemistry_file-property"></span><span id="cmdoption-check-chemistry-file-property"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--property</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-check_chemistry_file-p" title="Permalink to this definition"></a></dt>
+<dd><p>List of atoms</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-check_chemistry_file-T">
+<span id="cmdoption-check-chemistry-file-t"></span><span id="cmdoption-check_chemistry_file-not-trust-extension"></span><span id="cmdoption-check-chemistry-file-not-trust-extension"></span><span class="sig-name descname"><span class="pre">-T</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--not-trust-extension</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-check_chemistry_file-T" title="Permalink to this definition"></a></dt>
+<dd><p>Do not trust extension of the file (slower)</p>
+</dd></dl>
+
+</section>
+<section id="more-information">
+<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<p>Prints 1 if it is the case, 0 if not.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Having this property does not mean that the property in question is indeed available in this given file,
+just that it <em>could</em> present this property.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boltzmann_population.html" class="btn btn-neutral float-left" title="boltzmann_population" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ct_analysis.html" class="btn btn-neutral float-right" title="ct_analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pierre Beaujean (University of Namur).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
