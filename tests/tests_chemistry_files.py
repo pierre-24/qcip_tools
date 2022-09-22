@@ -288,6 +288,12 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertAlmostEqual(fi.molecule[0].position[2], 0.04791742, places=3)
         self.assertAlmostEqual(fi.molecule[1].position[2], -1.45865742, places=3)
 
+        # test energy
+        energies = fi.property('computed_energies')
+        self.assertIn('HF', energies)
+        self.assertIn('SCF/DFT', energies)
+        self.assertIn('total', energies)
+
         # one atom fchk (fix #35)
         fi = gaussian.FCHK()
         with open(self.fchk_one_atom) as f:
@@ -326,7 +332,7 @@ class GaussianTestCase(QcipToolsTestCase):
 
         self.assertTrue(fo.chunk_exists(1))  # the real beginning of the program
         self.assertTrue(fo.chunk_exists(202))  # Link 202 deals with geometry
-        self.assertFalse(fo.chunk_exists(9998))  # Does not exists (apart from 9999 and 1, all links have the form xxx)
+        self.assertFalse(fo.chunk_exists(9998))  # Does not exist (apart from 9999 and 1, all links have the form xxx)
 
         # test molecule
         symbols = ['O', 'H', 'H']
@@ -347,6 +353,12 @@ class GaussianTestCase(QcipToolsTestCase):
         self.assertEqual(fo.search(to_find, line_start=line_found + 1), -1)
         self.assertEqual(fo.search(to_find, into=1), line_found)
         self.assertEqual(fo.search(to_find, into=101), -1)
+
+        # test energy
+        energies = fo.property('computed_energies')
+        self.assertIn('HF', energies)
+        self.assertIn('MP2', energies)
+        self.assertIn('total', energies)
 
     def test_cube_file(self):
         """Test the cube files"""
@@ -729,6 +741,11 @@ class DaltonTestCase(QcipToolsTestCase):
             with self.assertRaises(FileNotFoundError):
                 fa.get_file('whatever')
 
+            # test energy
+            energies = fa.property('computed_energies')
+            self.assertIn('CCS/SCF', energies)
+            self.assertIn('total', energies)
+
     def test_output(self):
         """Test the bare dalton output"""
 
@@ -762,6 +779,11 @@ class DaltonTestCase(QcipToolsTestCase):
         self.assertEqual(fl.search(to_find, into='SIRIUS'), line_found)
         self.assertEqual(fl.search(to_find, into='CC'), -1)
 
+        # test energy
+        energies = fl.property('computed_energies')
+        self.assertIn('SCF/DFT', energies)
+        self.assertIn('total', energies)
+
         # compare with the archive output:
         fa = dalton.ArchiveOutput()
 
@@ -770,6 +792,9 @@ class DaltonTestCase(QcipToolsTestCase):
 
             for index, a in enumerate(fa.molecule):
                 self.assertArraysAlmostEqual(a.position, fl.molecule[index].position)
+
+            energies_archive = fa.property('computed_energies')
+            self.assertAlmostEqual(energies_archive['CCS/SCF'], energies['SCF/DFT'])
 
         # test get inputs
         dal, mol = fl.get_inputs()

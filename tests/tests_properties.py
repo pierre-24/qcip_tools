@@ -159,7 +159,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDDD', f, (0, 0, 0, 0), 0.382162)
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4)
 
             d = derivatives.Derivative(tensor)
@@ -189,7 +189,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('dD', f, (2, 2), 2.0459)
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -223,7 +223,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDD', f, (2, 2, 2), -3.34979625)
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -292,7 +292,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDDD', f, (1, 0, 0, 0), -13.44430492),
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -328,7 +328,7 @@ class PropertiesTestCase(QcipToolsTestCase):
             ('XDDD', f, (1, 0, 0, 0), -13.44430492),
         ]
 
-        for(tensor, freq, coo, value) in tests_in_tensor:
+        for (tensor, freq, coo, value) in tests_in_tensor:
             self.assertAlmostEqual(electrical_derivatives[tensor][freq].components[coo], value, places=4, msg=tensor)
 
             d = derivatives.Derivative(tensor)
@@ -336,6 +336,34 @@ class PropertiesTestCase(QcipToolsTestCase):
                 v = electrical_derivatives[tensor][freq].components[i]
                 for j in d.inverse_smart_iterator(i):
                     self.assertArraysAlmostEqual(electrical_derivatives[tensor][freq].components[j], v)
+
+    def test_electrical_derivatives_gaussian_log(self):
+
+        gaussian_fchk = self.copy_to_temporary_directory('properties/electrical_derivatives/gaussian_output.fchk')
+        gaussian_log = self.copy_to_temporary_directory('properties/electrical_derivatives/gaussian_output.log')
+
+        fchk_file = gaussian.FCHK()
+        with open(gaussian_fchk) as f:
+            fchk_file.read(f)
+
+        log_file = gaussian.Output()
+        with open(gaussian_log) as f:
+            log_file.read(f)
+
+        log_file_ed = log_file.property('electrical_derivatives')
+        fchk_file_ed = fchk_file.property('electrical_derivatives')
+
+        test_equals = [
+            ('FF', 'static', 'static'),
+            ('FFF', 'static', 'static'),
+            ('dDF', 0.04, 0.04),
+            ('XDD', 0.04, 0.04)
+        ]
+
+        for prop, freq1, freq2 in test_equals:
+            self.assertArraysAlmostEqual(
+                log_file_ed[prop][freq1].components,
+                fchk_file_ed[prop][freq2].components)
 
     def test_geometrical_derivatives(self):
         """Test geometrical properties"""

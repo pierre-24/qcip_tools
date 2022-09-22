@@ -1,3 +1,8 @@
+import math
+
+import numpy
+
+from qcip_tools import chemistry_files, derivatives_g
 from qcip_tools.molecule import Molecule
 from qcip_tools.atom import Atom
 from qcip_tools.chemistry_files import ChemistryFile, WithOutputMixin, WithMoleculeMixin, ChemistryLogFile, \
@@ -385,3 +390,76 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         if number_of_electrons != self.molecule.number_of_electrons():
             raise OutputFormatError('not the same number of electron {} != {}'.format(
                 number_of_electrons, self.molecule.number_of_electrons()))
+
+
+@Output.define_property('computed_energies')
+def gamess__log__property__computed_energies(obj, *args, **kwargs):
+    """Get the energies (actually only the HF one)
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gamess.Output
+    :rtype: dict
+    """
+    found = obj.search('TOTAL ENERGY', into='PROPERTY EVALUATION')
+    if found < 0:
+        raise chemistry_files.PropertyNotPresent('computed_energies')
+
+    e = float(obj.lines[found][-20:].strip())
+    return {'total': e, 'SCF': e}
+
+
+@Output.define_property('geometrical_derivatives')
+def gamess__log__property__geometrical_derivatives(obj, *args, **kwargs):
+    """Get the geometrical derivatives, if available
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gamess.Output
+    :rtype: dict
+    """
+
+    if not obj.chunk_exists('NORMAL COORDINATE ANALYSIS'):
+        raise chemistry_files.PropertyNotPresent('geometrical_derivatives')
+
+    n = len(obj.molecule)
+    spacial_dof = 3 * n
+    trans_plus_rot_dof = 5 if obj.molecule.linear() else 6
+    geometrical_derivatives = {}
+
+    found = obj.search('ENERGY GRADIENT', into='NORMAL COORDINATE ANALYSIS')
+    if found > 0:
+        gradient = numpy.zeros((spacial_dof))
+        for i in range(n):
+            gradient[3 * i:3 * (i + 1)] = [float(a) for a in obj.lines[found + 4 + i].split()[-3:]]
+
+        geometrical_derivatives['G'] = derivatives_g.BaseGeometricalDerivativeTensor(
+            spacial_dof=spacial_dof, trans_plus_rot=trans_plus_rot_dof, representation='G', components=gradient)
+
+    found = obj.search('CARTESIAN FORCE CONSTANT MATRIX', line_start=found, into='NORMAL COORDINATE ANALYSIS')
+    if found > 0:
+        hessian = numpy.zeros((spacial_dof, spacial_dof))
+        num_of_pack = int(math.ceil(n / 2))
+        shift = found + 6
+        for i in range(num_of_pack):
+            num_lines = 3 * (n - 2 * i)
+            jinf = 1
+            for j in range(num_lines):
+                jatom = 2 * i
+                iatom = j // 3 + jatom
+                coord = j % 3
+
+                for jc in range(jinf):
+                    e = float(obj.lines[shift + j][20 + 9 * jc: 20 + 9 * jc + 9].strip())
+                    hessian[3 * iatom + coord, 3 * jatom + jc] = e
+
+                if jinf != 6:
+                    jinf += 1
+
+            shift += num_lines + 4
+
+        hessian_ = hessian.T + hessian
+        numpy.fill_diagonal(hessian_, numpy.diag(hessian))
+
+        geometrical_derivatives['GG'] = derivatives_g.BaseGeometricalDerivativeTensor(
+            spacial_dof=spacial_dof, trans_plus_rot=trans_plus_rot_dof, representation='GG', components=hessian_)
+
+    return geometrical_derivatives

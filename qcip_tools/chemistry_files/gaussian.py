@@ -964,6 +964,89 @@ class Output(ChemistryLogFile, WithMoleculeMixin, WithIdentificationMixin):
         self.molecule.multiplicity = int(self.lines[charge_and_multiplicity_line][27:])
 
 
+def _find_in_links(obj, q, links):
+    found = filter(lambda n: n > 0, (obj.search(q, into=link) for link in links))
+    try:
+        return next(found)
+    except StopIteration:
+        return -1
+
+
+@Output.define_property('computed_energies')
+def gaussian__output__get_computed_energies(obj, *args, **kwargs):
+    """Get the energies... Actually, "only"
+    + HF and DFT energy (in link 502/503/506/508)
+    + MP2 energy (in link 804/903/905/906)
+    + MP3, CCSD and CCSD(T) energy (in link 913)
+
+    :param obj: object
+    :type obj: qcip_tools.chemistry_files.gaussian.Output
+    :rtype: dict
+    """
+    energies = {}
+    modified_gaussian = False  # pristine Gaussian 16
+
+    # fetch HF or DFT energy
+    n = _find_in_links(obj, 'SCF Done:', [502, 503, 506, 508])
+    if n > 0:
+        chunks = obj.lines[n][12:].split()
+        e = float(chunks[2])
+        if (len(chunks[2]) - chunks[2].find('.')) != 9:
+            modified_gaussian = True
+        else:  # try to fetch more decimals above: "E = xxx" contains eleven of them
+            for line in reversed(obj.lines[:n]):
+                if 'Delta-E=' in line:
+                    e = float(line.split()[1])
+                    break
+                elif 'Cycle' in line:
+                    break
+
+        if 'HF' in chunks[0]:
+            energies['HF'] = e
+        else:
+            energies['SCF/DFT'] = e
+
+        energies['total'] = e
+
+    # fetch MP2 energies
+    n = _find_in_links(obj, 'EUMP2 =', [804, 903, 905, 906])
+    if n > 0:
+        chunk = obj.lines[n].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+
+        energies['MP2'] = float(chunk)
+        energies['total'] = energies['MP2']
+
+    # fetch MP3 energies
+    n = _find_in_links(obj, 'EUMP3=', [913])
+    if n > 0:
+        chunk = obj.lines[n].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+        energies['MP3'] = float(chunk)
+
+    # fetch CCSD energies
+    n = obj.search('Wavefunction amplitudes converged.', into=913)
+    if n > 0:
+        chunk = obj.lines[n - 3][:-16].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+        energies['CCSD'] = float(chunk)
+        energies['total'] = energies['CCSD']
+
+    # fetch CCSD(T) energies
+    n = obj.search('CCSD(T)=', into=913)
+    if n > 0:
+        chunk = obj.lines[n].split()[-1]
+        if not modified_gaussian:
+            chunk = chunk.replace('D', 'E')
+        energies['CCSD(T)'] = float(chunk)
+        energies['total'] = energies['CCSD(T)']
+
+    return energies
+
+
 @Output.define_property('excitations')
 def gaussian__output__property__excitations(obj, *args, **kwargs):
     """Get excitation properties in FCHK. Returns a dictionary:
@@ -1059,6 +1142,70 @@ def gaussian__output__property__excitations(obj, *args, **kwargs):
         raise PropertyNotPresent('excitations')
 
     return excitations
+
+
+@Output.define_property('electrical_derivatives')
+def gaussian__output__property__electrical_derivatives(obj, *args, **kwargs):
+    """
+
+    :param obj: object
+    :type obj: gaussian.Output
+    :rtype: dict
+    """
+
+    line_start = obj.search(' Property number 1', into=801)
+    if line_start < 0:
+        return {}
+
+    offset = 0
+    data = {}
+    while True:
+        line = obj.lines[line_start + offset]
+        if 'Property' not in line:
+            break
+        elif 'Alpha' in line:
+            frequency = float(line[-10:-2])
+            tensor = derivatives_e.PolarisabilityTensor(frequency=frequency if frequency != .0 else 'static')
+            for i in range(3):
+                cpts = obj.lines[line_start + offset + 2 + i].split()
+                tensor.components[i, :] = [float(cpts[j + 1].replace('D', 'e')) for j in range(3)]
+            if frequency == .0:
+                data.update({'FF': {'static': tensor}})
+            else:
+                if 'dD' not in data:
+                    data['dD'] = {}
+                data['dD'].update({frequency: tensor})
+            offset += 5
+        elif 'Beta' in line:
+            frequency = float(line[-10:-2])
+            is_SHG = 'w,w,-2w' in line
+            tensor = derivatives_e.FirstHyperpolarisabilityTensor(
+                input_fields=(0, 0) if frequency == .0 else ((1, 1) if is_SHG else (0, 1)),
+                frequency=frequency if frequency != .0 else 'static')
+
+            compressed_tensor = []
+            for i in range(18):
+                compressed_tensor.append(float(obj.lines[line_start + offset + 2 + i][-15:].replace('D', 'e')))
+            if is_SHG:
+                tensor.components = beta_SHG_from_fchk(compressed_tensor)
+                if frequency == .0:
+                    data.update({'FFF': {'static': tensor}})
+                else:
+                    if 'XDD' not in data:
+                        data['XDD'] = {}
+                    data['XDD'].update({frequency: tensor})
+            else:
+                tensor.components = beta_EOP_from_fchk(compressed_tensor)
+                if frequency != .0:
+                    if 'dDF' not in data:
+                        data['dDF'] = {}
+                    data['dDF'].update({frequency: tensor})
+
+            offset += 20
+        else:  # probably Gamma
+            break
+
+    return data
 
 
 class ChargeTransferInformation:

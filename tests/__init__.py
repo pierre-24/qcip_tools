@@ -1,8 +1,10 @@
+import pathlib
 import unittest
 import numpy
 import os
 import tempfile
 import shutil
+import subprocess
 
 
 def array_almost_equals(a, b, places=7, delta=None, msg=''):
@@ -58,3 +60,39 @@ class QcipToolsTestCase(unittest.TestCase):
                 f.write(fx.read())
 
         return path_in_temp
+
+
+class QcipScriptsTestCase(QcipToolsTestCase):
+
+    def run_python_script(
+            self,
+            path,
+            args=None,
+            in_pipe=subprocess.DEVNULL,
+            out_pipe=subprocess.DEVNULL,
+            err_pipe=subprocess.DEVNULL):
+        """
+        Return a subprocess.Popen object to a python process with the given script executed
+
+        :param path: path to the script, with respect to the top of the package
+        :type path: str
+        :param args: the args
+        :type args: list
+        :param cwd: current directory
+        :type cwd: str
+        :param in_pipe: the input pipe (set to subprocess.PIPE for communication)
+        :param out_pipe: the output pipe (set to subprocess.PIPE for communication)
+        :param err_pipe: the error pipe (set to subprocess.PIPE for communication)
+        :rtype: subprocess.Popen
+        """
+
+        cwd = pathlib.Path(__file__).parent.absolute() / '..'
+        real_path = cwd / path
+        if not real_path.is_file():
+            raise FileNotFoundError(real_path)
+
+        cmd = ['python', path]
+        if args:
+            cmd.extend(args)
+
+        return subprocess.Popen(cmd, stdin=in_pipe, stdout=out_pipe, stderr=err_pipe, cwd=cwd)

@@ -8,7 +8,8 @@ Current release: [v0.6.10](https://github.com/pierre-24/qcip_tools/releases/tag/
 ## Purpose
 
 + General purpose objects (molecule, atom, basis set) ;
-+ Handle and post-analyze results of calculations (currently, electrical and geometrical derivatives of the energy) ;
++ Handle and post-analyze results of calculations (currently, energy, electrical and geometrical derivatives of the energy, and excitations) from various sources (Gaussian and Dalton, primarily, but with partial support of others).
+  Some [scripts](https://pierre-24.github.io/qcip_tools/scripts.html) are available for the end-users;
 + Retrieve data from quantum chemistry package and create input files (currently Gaussian, Dalton and GAMESS).
 
 # Documentation
