@@ -1234,6 +1234,17 @@ class CrystalTestCase(QcipToolsTestCase):
         self.output_file = self.copy_to_temporary_directory(
             'properties/electrical_derivatives/crystal_output_static.out')
 
+    def test_primitive_cell(self):
+        fo = crystal.Output()
+        self.assertFalse(fo.from_read)
+
+        with open(self.output_file) as f:
+            fo.read(f)
+
+        self.assertArraysAlmostEqual(fo.lattice_abc, [14.4597, 14.4597, 14.4597])
+        self.assertArraysAlmostEqual(fo.lattice_albega, [90, 90, 90])
+        self.assertEqual(len(fo.molecule), 300)
+
     def test_file_recognition(self):
         """Test that the helper function recognise file as it is"""
 

@@ -1,5 +1,8 @@
-from qcip_tools.chemistry_files import ChemistryLogFile, WithIdentificationMixin, PropertyNotPresent, WithMoleculeMixin
-from qcip_tools import molecule, derivatives_e
+from qcip_tools.chemistry_files import ChemistryLogFile, WithIdentificationMixin, PropertyNotPresent, \
+    WithMoleculeMixin, FormatError
+from qcip_tools import molecule, derivatives_e, atom
+import numpy
+import qcip_tools.math as qmath
 
 
 class Output(ChemistryLogFile, WithIdentificationMixin, WithMoleculeMixin):
@@ -7,7 +10,9 @@ class Output(ChemistryLogFile, WithIdentificationMixin, WithMoleculeMixin):
 
     .. container:: class-members
 
-        + ``self.molecule``: the molecule (``qcip_tools.molecule.Molecule``)
+        + ``self.molecule``: the primitive cell (``qcip_tools.molecule.Molecule``)
+        + ``self.lattice_vectors``, ``self.lattice_abc`` and ``self.lattice_albega``: cell vectors, abc lengths
+          (in angstrom) and alpha-beta-gamma (in degree).
         + ``self.lines``: the lines of the file (``list`` of ``str``)
 
     """
@@ -17,6 +22,10 @@ class Output(ChemistryLogFile, WithIdentificationMixin, WithMoleculeMixin):
 
     def __init__(self):
         self.molecule = molecule.Molecule()
+        self.lattice_vectors = numpy.eye(3)
+
+        self.lattice_abc = numpy.ones(3)
+        self.lattice_albega = numpy.pi / 2 * numpy.ones(3)
 
     @classmethod
     def attempt_identification(cls, f):
@@ -43,13 +52,36 @@ class Output(ChemistryLogFile, WithIdentificationMixin, WithMoleculeMixin):
             if count > 100:
                 break
 
-        print(found_countries, found_universities, found_crystal)
-
         return found_countries > 5 and found_universities > 5 and found_crystal > 2
 
     def read(self, f):
-        """There does not seem to be any obvious sections"""
+        """There does not seem to be any obvious sectioning"""
         super().read(f)
+
+        line_primitive = self.search('CARTESIAN COORDINATES - PRIMITIVE CELL')
+        if line_primitive < 0:
+            raise FormatError('not primitive cell')
+
+        # lattice vectors
+        l_vecs = [[float(a) for a in line.split()] for line in self.lines[line_primitive - 5:line_primitive - 2]]
+        self.lattice_vectors = numpy.array(l_vecs).reshape((3, 3))
+
+        self.lattice_abc = numpy.linalg.norm(self.lattice_vectors, axis=1)
+        self.lattice_albega = numpy.array([
+            qmath.angle(self.lattice_vectors[1], numpy.zeros(3), self.lattice_vectors[2]),
+            qmath.angle(self.lattice_vectors[0], numpy.zeros(3), self.lattice_vectors[2]),
+            qmath.angle(self.lattice_vectors[0], numpy.zeros(3), self.lattice_vectors[1]),
+        ])
+
+        # geometry of the primitive cell
+        for line in self.lines[line_primitive + 4:]:
+            if line == '\n':
+                break
+
+            atom_def = line.split()
+
+            self.molecule.insert(
+                atom.Atom(symbol=atom_def[2][0] + atom_def[2][1:].lower(), position=[float(a) for a in atom_def[3:]]))
 
 
 @Output.define_property('electrical_derivatives')
