@@ -829,10 +829,13 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
             beta_vector = self.beta_vector()
             r += '||B||      {: .5e}\n'.format(numpy.linalg.norm(beta_vector))
+            r += 'B_x        {: .5e}\n'.format(beta_vector[0])
+            r += 'B_y        {: .5e}\n'.format(beta_vector[1])
+            r += 'B_z        {: .5e}\n'.format(beta_vector[2])
 
             if dipole is not None:
                 r += 'B_||       {: .5e}\n'.format(self.beta_parallel(dipole))
-                r += 'theta      {: .3f}°\n'.format(numpy.rad2deg(math.acos(
+                r += 'theta      {: .3f}\n'.format(numpy.rad2deg(math.acos(
                     numpy.dot(dipole, beta_vector) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(beta_vector)))))
 
                 if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
