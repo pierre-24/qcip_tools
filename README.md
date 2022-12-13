@@ -2,7 +2,7 @@
 
 Library maintained by [Pierre Beaujean](https://pierrebeaujean.net) to ease the manipulation of quantum chemistry results in Python 3. Created in the frame of my PhD thesis in the [University of Namur](https://www.unamur.be).
 
-Current release: [v0.6.10](https://github.com/pierre-24/qcip_tools/releases/tag/v0.6.10)
+Current release: [v0.7.0](https://github.com/pierre-24/qcip_tools/releases/tag/v0.7.0)
 (see [the changelog](./CHANGELOG.md)).
 
 ## Purpose
