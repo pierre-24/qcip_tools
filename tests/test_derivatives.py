@@ -830,20 +830,20 @@ class TensorNumDiff(QcipToolsTestCase):
         k_max = 5
         ratio = 2.
 
-        def energy_exp(fields, h0, basis, inverse, component, **kwargs):
+        def energy_exp(fields, h0, basis, component, **kwargs):
             """Taylor series of the energy"""
 
             r_field = numerical_differentiation.real_fields(fields, h0, ratio)
 
             x = energy
-            x += numpy.tensordot(mu.components, r_field, axes=1)
-            x += 1 / 2 * numpy.tensordot(numpy.tensordot(alpha.components, r_field, axes=1), r_field, axes=1)
-            x += 1 / 6 * numpy.tensordot(
+            x -= numpy.tensordot(mu.components, r_field, axes=1)
+            x -= 1 / 2 * numpy.tensordot(numpy.tensordot(alpha.components, r_field, axes=1), r_field, axes=1)
+            x -= 1 / 6 * numpy.tensordot(
                 numpy.tensordot(numpy.tensordot(beta.components, r_field, axes=1), r_field, axes=1), r_field, axes=1)
 
             return x
 
-        def dipole_exp(fields, h0, basis, inverse, component, **kwargs):
+        def dipole_exp(fields, h0, basis, component, **kwargs):
             """Taylor series of the dipole moment"""
 
             r_field = numerical_differentiation.real_fields(fields, h0, ratio)
@@ -903,7 +903,7 @@ class TensorNumDiff(QcipToolsTestCase):
         k_max = 5
         ratio = 2.
 
-        def hp_exp(fields, h0, basis, inverse, component, **kwargs):
+        def hp_exp(fields, h0, basis, component, **kwargs):
             r_field = numerical_differentiation.real_fields(fields, h0, ratio)
 
             x = t_fdf.components.copy()
