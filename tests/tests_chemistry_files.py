@@ -9,7 +9,8 @@ from unittest.mock import MagicMock, patch
 from tests import QcipToolsTestCase, factories
 from qcip_tools import molecule as qcip_molecule, atom as qcip_atom, derivatives, bounding, \
     chemistry_files
-from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile, pdb
+from qcip_tools.chemistry_files import ChemistryFile, gaussian, dalton, helpers, xyz, gamess, chemistry_datafile, pdb, \
+    crystal
 
 
 class HelpersTestCase(QcipToolsTestCase):
@@ -1224,3 +1225,28 @@ class PDBTestCase(QcipToolsTestCase):
 
         with open(self.pdb_file) as f:
             self.assertIsInstance(helpers.open_chemistry_file(f), pdb.File)
+
+
+class CrystalTestCase(QcipToolsTestCase):
+    """Crystal stuffs"""
+
+    def setUp(self):
+        self.output_file = self.copy_to_temporary_directory(
+            'properties/electrical_derivatives/crystal_output_static.out')
+
+    def test_primitive_cell(self):
+        fo = crystal.Output()
+        self.assertFalse(fo.from_read)
+
+        with open(self.output_file) as f:
+            fo.read(f)
+
+        self.assertArraysAlmostEqual(fo.lattice_abc, [14.4597, 14.4597, 14.4597])
+        self.assertArraysAlmostEqual(fo.lattice_albega, [90, 90, 90])
+        self.assertEqual(len(fo.molecule), 300)
+
+    def test_file_recognition(self):
+        """Test that the helper function recognise file as it is"""
+
+        with open(self.output_file) as f:
+            self.assertIsInstance(helpers.open_chemistry_file(f), crystal.Output)
