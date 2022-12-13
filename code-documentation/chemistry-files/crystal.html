@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tensor in CSV format (chemistry_files.csv_tensor) &mdash; qcip_tools 0.6.10 documentation</title>
+  <title>CRYSTAL17 files (chemistry_files.crystal) &mdash; qcip_tools 0.6.10 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Derivatives of the energy (qcip_tools.derivatives)" href="../derivatives.html" />
-    <link rel="prev" title="Chemistry data files (chemistry_files.chemistry_datafile)" href="chemistry_datafile.html" /> 
+    <link rel="next" title="Chemistry data files (chemistry_files.chemistry_datafile)" href="chemistry_datafile.html" />
+    <link rel="prev" title="GAMESS files (chemistry_files.gamess)" href="gamess.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,9 +58,9 @@
 <li class="toctree-l4"><a class="reference internal" href="gaussian.html">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="crystal.html">CRYSTAL17 files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.crystal</span></code>)</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CRYSTAL17 files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.crystal</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csv_tensor.html">Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)</a></li>
 </ul>
 </li>
 </ul>
@@ -97,9 +97,9 @@
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../code-documentation.html">API documentation</a> &raquo;</li>
           <li><a href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a> &raquo;</li>
-      <li>Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)</li>
+      <li>CRYSTAL17 files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.crystal</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/code-documentation/chemistry-files/csv_tensor.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/code-documentation/chemistry-files/crystal.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -107,95 +107,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tensor-in-csv-format-chemistry-files-csv-tensor">
-<h1>Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)<a class="headerlink" href="#tensor-in-csv-format-chemistry-files-csv-tensor" title="Permalink to this heading"></a></h1>
-<p>Internal (lossy) textual format for the storage of data.</p>
-<span class="target" id="module-qcip_tools.chemistry_files.csv_tensor"></span><dl class="py class">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.csv_tensor.CSVTensor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.csv_tensor.</span></span><span class="sig-name descname"><span class="pre">CSVTensor</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.csv_tensor.CSVTensor" title="Permalink to this definition"></a></dt>
-<dd><p>Special CSV input. Assume that the first cell contains <code class="docutils literal notranslate"><span class="pre">CSV_TENSOR_IN</span></code>, and that the first row contains
-different information:</p>
+  <section id="crystal17-files-chemistry-files-crystal">
+<h1>CRYSTAL17 files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.crystal</span></code>)<a class="headerlink" href="#crystal17-files-chemistry-files-crystal" title="Permalink to this heading"></a></h1>
+<p>Files from the <a class="reference external" href="https://www.crystal.unito.it">CRYSTAL17 software</a>.</p>
+<span class="target" id="module-qcip_tools.chemistry_files.crystal"></span><dl class="py class">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.crystal.Output">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.crystal.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.crystal.Output" title="Permalink to this definition"></a></dt>
+<dd><p>Output of Crystal</p>
+<div class="class-members docutils container">
 <ul class="simple">
-<li><p>In second column, the derivative type (i.e. <code class="docutils literal notranslate"><span class="pre">FFF</span></code>, <code class="docutils literal notranslate"><span class="pre">GG</span></code>, …) ;</p></li>
-<li><p>In third column: spacial DOF, if needed ;</p></li>
-<li><p>In fourth column: frequency, if needed ;</p></li>
-<li><p>In fifth column: number of (excited) states, if needed.</p></li>
-<li><p>For the latter rows, values of the first column does not matter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.molecule</span></code>: the primitive cell (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule.Molecule</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.lattice_vectors</span></code>, <code class="docutils literal notranslate"><span class="pre">self.lattice_abc</span></code> and <code class="docutils literal notranslate"><span class="pre">self.lattice_albega</span></code>: cell vectors, abc lengths
+(in angstrom) and alpha-beta-gamma (in degree).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.lines</span></code>: the lines of the file (<code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>)</p></li>
 </ul>
-<p>Then, the rest correspond to the values of the last dimension of the tensor (F/D/X = 3,
-G = spacial DOF).
-The number of row is equal to the product of the dimensions of the tensor (except the last one).</p>
-<p>New tensor starts with <code class="docutils literal notranslate"><span class="pre">CSV_TENSOR_IN</span></code>.</p>
-<p>For example,</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CSV_TENSOR_IN,G,6,,,
-1,1,1,1,1,1
-CSV_TENSOR_IN,GG,6
-1,0,0,0,0,0
-0,2,0,0,0,0
-0,0,3,0,0,0
-0,0,0,4,0,0
-0,0,0,0,5,0
-0,0,0,0,0,6
-</pre></div>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.csv_tensor.CSVTensor.attempt_identification">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.csv_tensor.CSVTensor.attempt_identification" title="Permalink to this definition"></a></dt>
-<dd><p>Check for “CSV_TENSOR_IN”</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.crystal.Output.attempt_identification">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attempt_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.crystal.Output.attempt_identification" title="Permalink to this definition"></a></dt>
+<dd><p>A Crystal output, like DALTON, contains a bit of countries, universities and sometimes its own name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.crystal.Output.file_type">
+<span class="sig-name descname"><span class="pre">file_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CRYSTAL_LOG'</span></em><a class="headerlink" href="#qcip_tools.chemistry_files.crystal.Output.file_type" title="Permalink to this definition"></a></dt>
+<dd><p>The identifier</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.csv_tensor.CSVTensor.possible_file_extensions">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">possible_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.csv_tensor.CSVTensor.possible_file_extensions" title="Permalink to this definition"></a></dt>
-<dd><p>Return the common extention of this kind of files</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.crystal.Output.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.crystal.Output.read" title="Permalink to this definition"></a></dt>
+<dd><p>There does not seem to be any obvious sectioning</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.csv_tensor.csvtensor__property__electrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.csv_tensor.</span></span><span class="sig-name descname"><span class="pre">csvtensor__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.csv_tensor.csvtensor__property__electrical_derivatives" title="Permalink to this definition"></a></dt>
-<dd><p>Get the geometrical derivatives, if available</p>
+<dt class="sig sig-object py" id="qcip_tools.chemistry_files.crystal.crystal__output__property__electrical_derivatives">
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.crystal.</span></span><span class="sig-name descname"><span class="pre">crystal__output__property__electrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.crystal.crystal__output__property__electrical_derivatives" title="Permalink to this definition"></a></dt>
+<dd><p>Get electrical derivatives in Dalton archives. Returns a dictionary of dictionaries:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+ &quot;F&quot;
+    + static : ElectricDipole
++ &quot;FF&quot;:
+    + static : PolarizabilityTensor
++ &quot;FD&quot;:
+    + 0.042 : PolarizabilityTensor
+    + ...
++ &quot;FDD&quot;:
+    + static : FirstHyperpolarizabilityTensor
+    + ...
++ ...
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only works with the CPKS module</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="#qcip_tools.chemistry_files.csv_tensor.CSVTensor" title="qcip_tools.chemistry_files.csv_tensor.CSVTensor"><em>CSVTensor</em></a>) – object</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.csv_tensor.csvtensor__property__excitations">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.csv_tensor.</span></span><span class="sig-name descname"><span class="pre">csvtensor__property__excitations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.csv_tensor.csvtensor__property__excitations" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="#qcip_tools.chemistry_files.csv_tensor.CSVTensor" title="qcip_tools.chemistry_files.csv_tensor.CSVTensor"><em>CSVTensor</em></a>) – object</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="qcip_tools.chemistry_files.csv_tensor.csvtensor__property__geometrical_derivatives">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.csv_tensor.</span></span><span class="sig-name descname"><span class="pre">csvtensor__property__geometrical_derivatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.csv_tensor.csvtensor__property__geometrical_derivatives" title="Permalink to this definition"></a></dt>
-<dd><p>Get the geometrical derivatives, if available</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="#qcip_tools.chemistry_files.csv_tensor.CSVTensor" title="qcip_tools.chemistry_files.csv_tensor.CSVTensor"><em>CSVTensor</em></a>) – object</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="#qcip_tools.chemistry_files.crystal.Output" title="qcip_tools.chemistry_files.crystal.Output"><em>qcip_tools.chemistry_files.crystal.Output</em></a>) – object</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
@@ -209,8 +179,8 @@ CSV_TENSOR_IN,GG,6
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="chemistry_datafile.html" class="btn btn-neutral float-left" title="Chemistry data files (chemistry_files.chemistry_datafile)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../derivatives.html" class="btn btn-neutral float-right" title="Derivatives of the energy (qcip_tools.derivatives)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="gamess.html" class="btn btn-neutral float-left" title="GAMESS files (chemistry_files.gamess)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chemistry_datafile.html" class="btn btn-neutral float-right" title="Chemistry data files (chemistry_files.chemistry_datafile)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

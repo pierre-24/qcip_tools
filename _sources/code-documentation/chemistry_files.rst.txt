@@ -50,6 +50,7 @@ API documentation
     chemistry-files/gaussian.rst
     chemistry-files/dalton.rst
     chemistry-files/gamess.rst
+    chemistry-files/crystal.rst
     chemistry-files/chemistry_datafile.rst
     chemistry-files/csv_tensor.rst
 
