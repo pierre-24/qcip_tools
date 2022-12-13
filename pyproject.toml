@@ -1,0 +1,59 @@
+[project]
+name = "qcip_tools"
+dynamic = ["version"]
+authors = [
+    {name = "Pierre Beaujean", email = "pierre.beaujean@unamur.be"},
+]
+description = "Quantum Chemistry In Python (QCIP) tools package."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    'numpy',
+    'scipy>=1.7',
+    'pandas>=1.2',
+    'pint>=0.14',
+    'requests',
+    'beautifulsoup4',
+    'h5py',
+    'transforms3d',
+    'mendeleev'
+]
+
+
+[project.urls]
+documentation = "https://pierre-24.github.io/qcip_tools/"
+repository = "https://github.com/pierre-24/qcip_tools.git"
+
+[project.scripts]
+
+# keep that alphabetical
+boltzmann_population = 'qcip_tools.scripts.boltzmann_population:main'
+check_chemistry_file = 'qcip_tools.scripts.check_chemistry_file:main'
+ct_analysis = 'qcip_tools.scripts.ct_analysis:main'
+cube_radial_distribution = 'qcip_tools.scripts.cube_radial_distribution:main'
+electrical_derivative = 'qcip_tools.scripts.electrical_derivative:main'
+excitations = 'qcip_tools.scripts.excitations:main'
+geometrical_derivatives = 'qcip_tools.scripts.geometrical_derivatives:main'
+gen_character_table = 'qcip_tools.scripts.gen_character_table:main'
+gen_spectrum = 'qcip_tools.scripts.gen_spectrum:main'
+measure_mols = 'qcip_tools.scripts.measure_mols:main'
+symmetrise = 'qcip_tools.scripts.symmetrise:main'
+thermochemistry_analysis = 'qcip_tools.scripts.thermochemistry_analysis:main'
+to_xyz  = 'qcip_tools.scripts.to_xyz:main'
+
+[tool.setuptools]
+packages = ['qcip_tools', 'qcip_tools.scripts', 'qcip_tools.chemistry_files']
+
+[tool.setuptools.dynamic]
+version = {attr = "qcip_tools.__version__"}

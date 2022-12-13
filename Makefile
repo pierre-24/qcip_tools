@@ -10,9 +10,9 @@ help:
 	@echo "  help                        to get this help"
 
 init:
-	pip-sync && pip3 install -e .
+	pip3 install -e .
 
-sync:
+install-dev:
 	pip-sync
 
 lint:

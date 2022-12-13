@@ -1,9 +1,0 @@
-numpy
-scipy>=1.7
-pandas>=1.2
-pint>=0.14
-requests
-beautifulsoup4
-h5py
-transforms3d
-mendeleev

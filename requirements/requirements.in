@@ -1,7 +1,0 @@
--r requirements-base.in
-flake8
-flake8-quotes
-autopep8
-Sphinx
-sphinx_rtd_theme
-bump2version

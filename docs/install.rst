@@ -66,7 +66,7 @@ To contribute to the project,
 + Go in it: ``cd qcip_tools``
 + Install pip-tools: ``pip3 install pip-tools``
 + Install virtualenv ``python3 -m venv venv; source venv/bin/activate``
-+ Install dependencies: ``make init``.
++ Install dependencies: ``make install-dev``.
 + Add upstream: ``git remote add upstream https://github.com/pierre-24/qcip_tools.git``
 + Don't forget to create a separate branch to implement your changes: ``git checkout -b my_branch upstream/dev``.
 

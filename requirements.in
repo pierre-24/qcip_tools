@@ -1,0 +1,7 @@
+-e file:. #egg=qcip_tools
+flake8 <6.0
+flake8-quotes
+autopep8
+Sphinx
+sphinx_rtd_theme
+bump2version
