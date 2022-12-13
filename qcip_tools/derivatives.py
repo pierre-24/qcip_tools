@@ -764,25 +764,24 @@ def compute_numerical_derivative_of_tensor(
             if derivative_order == 3 and len(each) == 1:  # lower the accuracy for iii tensor components
                 k_max -= 1
 
-        inverse = False
-        if d_repr[0] == 'F':
-            # because E(-F) = E0 - µ.F + 1/2*a.F² + ..
-            #         µ(-F) = µ0 - a.F + 1/2*b.F² + ...
-            if basis.order() == 0:
-                inverse = True if derivative_order % 2 == 0 else False
-            else:
-                inverse = True if derivative_order % 2 == 1 else False
+        # deals with E(F) = E0 - µ.F - 1/2*a.F² - ...
+        if d_repr[0] == 'F' and basis.order() == 0:
+            def tfunc(*args, **kwargs):
+                return -tensor_func(*args, **kwargs)
+        else:
+            def tfunc(*args, **kwargs):
+                return tensor_func(*args, **kwargs)
 
         for basis_coo in basis.smart_iterator():
             values_per_k = [
                 numerical_differentiation.compute_derivative_of_function(
                     deriv_coefs,
-                    tensor_func,
+                    tfunc,
                     k,
                     min_field,
                     derivative_repr.shape()[0],
                     # kwargs:
-                    basis=basis, inverse=inverse, component=basis_coo, frequency=frequency, **kwargs)
+                    basis=basis, component=basis_coo, frequency=frequency, **kwargs)
                 for k in range(k_max)
             ]
 
