@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -53,7 +54,20 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.derivatives">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.derivatives">API documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.ALLOWED_DERIVATIVES"><code class="docutils literal notranslate"><span class="pre">ALLOWED_DERIVATIVES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.COORDINATES"><code class="docutils literal notranslate"><span class="pre">COORDINATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.Derivative"><code class="docutils literal notranslate"><span class="pre">Derivative</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.ORDERS"><code class="docutils literal notranslate"><span class="pre">ORDERS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.RepresentationError"><code class="docutils literal notranslate"><span class="pre">RepresentationError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.Tensor"><code class="docutils literal notranslate"><span class="pre">Tensor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.compute_numerical_derivative_of_tensor"><code class="docutils literal notranslate"><span class="pre">compute_numerical_derivative_of_tensor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.is_electrical"><code class="docutils literal notranslate"><span class="pre">is_electrical()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.is_excitation"><code class="docutils literal notranslate"><span class="pre">is_excitation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.is_geometrical"><code class="docutils literal notranslate"><span class="pre">is_geometrical()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives.representation_to_operator"><code class="docutils literal notranslate"><span class="pre">representation_to_operator()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="derivatives_e.html">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a></li>
@@ -84,9 +98,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
-      <li>Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
+      <li class="breadcrumb-item active">Derivatives of the energy (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code-documentation/derivatives.rst.txt" rel="nofollow"> View page source</a>
       </li>

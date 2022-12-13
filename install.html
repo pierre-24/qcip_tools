@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -66,8 +67,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Installing qcip_tools</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Installing qcip_tools</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -129,7 +130,7 @@ make install
 <li><p>Go in it: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">qcip_tools</span></code></p></li>
 <li><p>Install pip-tools: <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">pip-tools</span></code></p></li>
 <li><p>Install virtualenv <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">venv</span> <span class="pre">venv;</span> <span class="pre">source</span> <span class="pre">venv/bin/activate</span></code></p></li>
-<li><p>Install dependencies: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">init</span></code>.</p></li>
+<li><p>Install dependencies: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install-dev</span></code>.</p></li>
 <li><p>Add upstream: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">add</span> <span class="pre">upstream</span> <span class="pre">https://github.com/pierre-24/qcip_tools.git</span></code></p></li>
 <li><p>Don’t forget to create a separate branch to implement your changes: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">my_branch</span> <span class="pre">upstream/dev</span></code>.</p></li>
 </ul>

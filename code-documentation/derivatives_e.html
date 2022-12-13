@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -54,7 +55,21 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sources">Sources</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.derivatives_e">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.derivatives_e">API documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.BaseElectricalDerivativeTensor"><code class="docutils literal notranslate"><span class="pre">BaseElectricalDerivativeTensor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.ElectricDipole"><code class="docutils literal notranslate"><span class="pre">ElectricDipole</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor"><code class="docutils literal notranslate"><span class="pre">FirstHyperpolarisabilityTensor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.NotSHG"><code class="docutils literal notranslate"><span class="pre">NotSHG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.NotTHG"><code class="docutils literal notranslate"><span class="pre">NotTHG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.PolarisabilityTensor"><code class="docutils literal notranslate"><span class="pre">PolarisabilityTensor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.REPRESENTATIONS"><code class="docutils literal notranslate"><span class="pre">REPRESENTATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.SIMPLIFIED_NAMES"><code class="docutils literal notranslate"><span class="pre">SIMPLIFIED_NAMES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor"><code class="docutils literal notranslate"><span class="pre">SecondHyperpolarizabilityTensor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.convert_energy_to"><code class="docutils literal notranslate"><span class="pre">convert_energy_to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.convert_frequency_from_string"><code class="docutils literal notranslate"><span class="pre">convert_frequency_from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.derivatives_e.fields_to_str"><code class="docutils literal notranslate"><span class="pre">fields_to_str()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
@@ -84,9 +99,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
-      <li>Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
+      <li class="breadcrumb-item active">Derivatives w.r.t. electric field (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_e</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code-documentation/derivatives_e.rst.txt" rel="nofollow"> View page source</a>
       </li>

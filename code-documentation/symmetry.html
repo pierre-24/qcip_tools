@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -67,7 +68,29 @@
 <li class="toctree-l4"><a class="reference internal" href="#discover-symmetry">Discover symmetry</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.symmetry">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.symmetry">API documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.BinaryOperation"><code class="docutils literal notranslate"><span class="pre">BinaryOperation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.CharacterTable"><code class="docutils literal notranslate"><span class="pre">CharacterTable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.CharacterTableError"><code class="docutils literal notranslate"><span class="pre">CharacterTableError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.Group"><code class="docutils literal notranslate"><span class="pre">Group</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.GroupElement"><code class="docutils literal notranslate"><span class="pre">GroupElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.IrreducibleRepresentation"><code class="docutils literal notranslate"><span class="pre">IrreducibleRepresentation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.NotInGroup"><code class="docutils literal notranslate"><span class="pre">NotInGroup</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.OperationDescription"><code class="docutils literal notranslate"><span class="pre">OperationDescription</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.OperationType"><code class="docutils literal notranslate"><span class="pre">OperationType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.PointGroup"><code class="docutils literal notranslate"><span class="pre">PointGroup</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.PointGroupDescription"><code class="docutils literal notranslate"><span class="pre">PointGroupDescription</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.PointGroupError"><code class="docutils literal notranslate"><span class="pre">PointGroupError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.PointGroupType"><code class="docutils literal notranslate"><span class="pre">PointGroupType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.ReducibleRepresentation"><code class="docutils literal notranslate"><span class="pre">ReducibleRepresentation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.RepresentationError"><code class="docutils literal notranslate"><span class="pre">RepresentationError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.Set"><code class="docutils literal notranslate"><span class="pre">Set</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.SymmetryFinder"><code class="docutils literal notranslate"><span class="pre">SymmetryFinder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.SymmetryFinderError"><code class="docutils literal notranslate"><span class="pre">SymmetryFinderError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.symmetry.simultaneous_diagonalization"><code class="docutils literal notranslate"><span class="pre">simultaneous_diagonalization()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="transformations.html">Transformations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.transformations</span></code>)</a></li>
@@ -89,9 +112,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
-      <li>Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
+      <li class="breadcrumb-item active">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code-documentation/symmetry.rst.txt" rel="nofollow"> View page source</a>
       </li>

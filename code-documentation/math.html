@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -55,7 +56,22 @@
 <li class="toctree-l2"><a class="reference internal" href="derivatives_exci.html">Excitations (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_exci</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="derivatives_g.html">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.math">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.math">API documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.BLA"><code class="docutils literal notranslate"><span class="pre">BLA()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.angle"><code class="docutils literal notranslate"><span class="pre">angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.angle_vector"><code class="docutils literal notranslate"><span class="pre">angle_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.closest_fraction"><code class="docutils literal notranslate"><span class="pre">closest_fraction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.closest_int"><code class="docutils literal notranslate"><span class="pre">closest_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.conjugate"><code class="docutils literal notranslate"><span class="pre">conjugate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.distance"><code class="docutils literal notranslate"><span class="pre">distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.num_of_unique_permutations"><code class="docutils literal notranslate"><span class="pre">num_of_unique_permutations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.prod"><code class="docutils literal notranslate"><span class="pre">prod()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.torsion_angle"><code class="docutils literal notranslate"><span class="pre">torsion_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.unique_everseen"><code class="docutils literal notranslate"><span class="pre">unique_everseen()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.math.unique_permutations"><code class="docutils literal notranslate"><span class="pre">unique_permutations()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
@@ -82,9 +98,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
-      <li>Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
+      <li class="breadcrumb-item active">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code-documentation/math.rst.txt" rel="nofollow"> View page source</a>
       </li>

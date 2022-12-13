@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -94,9 +95,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
-      <li>Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
+      <li class="breadcrumb-item active">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code-documentation/chemistry_files.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -147,16 +148,115 @@ Also check if <code class="docutils literal notranslate"><span class="pre">from_
 <h2>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/xyz.html">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/pdb.html">PDB files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.pdb</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/gaussian.html">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/crystal.html">CRYSTAL17 files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.crystal</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chemistry-files/csv_tensor.html">Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/base.html">Base (<code class="docutils literal notranslate"><span class="pre">chemistry_files</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.ChemistryFile"><code class="docutils literal notranslate"><span class="pre">ChemistryFile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.ChemistryLogFile"><code class="docutils literal notranslate"><span class="pre">ChemistryLogFile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.FormatError"><code class="docutils literal notranslate"><span class="pre">FormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.PropertyNotDefined"><code class="docutils literal notranslate"><span class="pre">PropertyNotDefined</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.PropertyNotPresent"><code class="docutils literal notranslate"><span class="pre">PropertyNotPresent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.WithIdentificationMixin"><code class="docutils literal notranslate"><span class="pre">WithIdentificationMixin</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.WithMoleculeMixin"><code class="docutils literal notranslate"><span class="pre">WithMoleculeMixin</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.WithOutputMixin"><code class="docutils literal notranslate"><span class="pre">WithOutputMixin</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.apply_over_list"><code class="docutils literal notranslate"><span class="pre">apply_over_list()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.chemistry_file__property__file_type"><code class="docutils literal notranslate"><span class="pre">chemistry_file__property__file_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/base.html#qcip_tools.chemistry_files.chemistry_file__property__molecule"><code class="docutils literal notranslate"><span class="pre">chemistry_file__property__molecule()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/helpers.html">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/helpers.html#qcip_tools.chemistry_files.helpers.ProbablyNotAChemistryFile"><code class="docutils literal notranslate"><span class="pre">ProbablyNotAChemistryFile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/helpers.html#qcip_tools.chemistry_files.helpers.create_open_chemistry_file_action"><code class="docutils literal notranslate"><span class="pre">create_open_chemistry_file_action()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/helpers.html#qcip_tools.chemistry_files.helpers.identifiable_chemistry_file_objects"><code class="docutils literal notranslate"><span class="pre">identifiable_chemistry_file_objects()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/helpers.html#qcip_tools.chemistry_files.helpers.open_chemistry_file"><code class="docutils literal notranslate"><span class="pre">open_chemistry_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/xyz.html">XYZ files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.xyz</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/xyz.html#qcip_tools.chemistry_files.xyz.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/xyz.html#qcip_tools.chemistry_files.xyz.XYZFormatError"><code class="docutils literal notranslate"><span class="pre">XYZFormatError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/pdb.html">PDB files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.pdb</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/pdb.html#qcip_tools.chemistry_files.pdb.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/gaussian.html">Gaussian files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gaussian</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.BasisSet"><code class="docutils literal notranslate"><span class="pre">BasisSet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.BasisSetFormatError"><code class="docutils literal notranslate"><span class="pre">BasisSetFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.ChargeTransferInformation"><code class="docutils literal notranslate"><span class="pre">ChargeTransferInformation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.Cube"><code class="docutils literal notranslate"><span class="pre">Cube</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.CubeFormatError"><code class="docutils literal notranslate"><span class="pre">CubeFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.FCHK"><code class="docutils literal notranslate"><span class="pre">FCHK</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.FCHKChunkInformation"><code class="docutils literal notranslate"><span class="pre">FCHKChunkInformation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.FCHKFormatError"><code class="docutils literal notranslate"><span class="pre">FCHKFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.InputFormatError"><code class="docutils literal notranslate"><span class="pre">InputFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.LinkCalled"><code class="docutils literal notranslate"><span class="pre">LinkCalled</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.OutputFormatError"><code class="docutils literal notranslate"><span class="pre">OutputFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.beta_EOP_from_fchk"><code class="docutils literal notranslate"><span class="pre">beta_EOP_from_fchk()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.beta_SHG_from_fchk"><code class="docutils literal notranslate"><span class="pre">beta_SHG_from_fchk()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gamma_from_gaussian"><code class="docutils literal notranslate"><span class="pre">gamma_from_gaussian()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__computed_energies"><code class="docutils literal notranslate"><span class="pre">gaussian__fchk__property__computed_energies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__electrical_derivatives"><code class="docutils literal notranslate"><span class="pre">gaussian__fchk__property__electrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__excitations"><code class="docutils literal notranslate"><span class="pre">gaussian__fchk__property__excitations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__fchk__property__geometrical_derivatives"><code class="docutils literal notranslate"><span class="pre">gaussian__fchk__property__geometrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__output__get_computed_energies"><code class="docutils literal notranslate"><span class="pre">gaussian__output__get_computed_energies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__output__property__electrical_derivatives"><code class="docutils literal notranslate"><span class="pre">gaussian__output__property__electrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.gaussian__output__property__excitations"><code class="docutils literal notranslate"><span class="pre">gaussian__output__property__excitations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gaussian.html#qcip_tools.chemistry_files.gaussian.make_cartesian_hessian_from_fchk"><code class="docutils literal notranslate"><span class="pre">make_cartesian_hessian_from_fchk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/dalton.html">Dalton files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.dalton</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.ALLOWED_LEVEL_0_MODULES"><code class="docutils literal notranslate"><span class="pre">ALLOWED_LEVEL_0_MODULES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.ArchiveOutput"><code class="docutils literal notranslate"><span class="pre">ArchiveOutput</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.InputCard"><code class="docutils literal notranslate"><span class="pre">InputCard</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.InputFormatError"><code class="docutils literal notranslate"><span class="pre">InputFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.InputModule"><code class="docutils literal notranslate"><span class="pre">InputModule</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.InputModuleError"><code class="docutils literal notranslate"><span class="pre">InputModuleError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.MoleculeInput"><code class="docutils literal notranslate"><span class="pre">MoleculeInput</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.OutputFormatError"><code class="docutils literal notranslate"><span class="pre">OutputFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.OutputSection"><code class="docutils literal notranslate"><span class="pre">OutputSection</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.WrongNumberOfData"><code class="docutils literal notranslate"><span class="pre">WrongNumberOfData</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.check_module"><code class="docutils literal notranslate"><span class="pre">check_module()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__computed_energies"><code class="docutils literal notranslate"><span class="pre">dalton__archive_output__property__computed_energies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__electrical_derivatives"><code class="docutils literal notranslate"><span class="pre">dalton__archive_output__property__electrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__excitations"><code class="docutils literal notranslate"><span class="pre">dalton__archive_output__property__excitations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.dalton__archive_output__property__geometrical_derivatives"><code class="docutils literal notranslate"><span class="pre">dalton__archive_output__property__geometrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.dalton__output__computed_energies"><code class="docutils literal notranslate"><span class="pre">dalton__output__computed_energies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/dalton.html#qcip_tools.chemistry_files.dalton.dalton__output__get_geometrical_derivatives"><code class="docutils literal notranslate"><span class="pre">dalton__output__get_geometrical_derivatives()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/gamess.html">GAMESS files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.gamess</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.InputFormatError"><code class="docutils literal notranslate"><span class="pre">InputFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.InputModule"><code class="docutils literal notranslate"><span class="pre">InputModule</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.OutputFormatError"><code class="docutils literal notranslate"><span class="pre">OutputFormatError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.OutputStep"><code class="docutils literal notranslate"><span class="pre">OutputStep</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.gamess__log__property__computed_energies"><code class="docutils literal notranslate"><span class="pre">gamess__log__property__computed_energies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/gamess.html#qcip_tools.chemistry_files.gamess.gamess__log__property__geometrical_derivatives"><code class="docutils literal notranslate"><span class="pre">gamess__log__property__geometrical_derivatives()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/crystal.html">CRYSTAL17 files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.crystal</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/crystal.html#qcip_tools.chemistry_files.crystal.Output"><code class="docutils literal notranslate"><span class="pre">Output</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/crystal.html#qcip_tools.chemistry_files.crystal.crystal__output__property__electrical_derivatives"><code class="docutils literal notranslate"><span class="pre">crystal__output__property__electrical_derivatives()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/chemistry_datafile.html">Chemistry data files (<code class="docutils literal notranslate"><span class="pre">chemistry_files.chemistry_datafile</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/chemistry_datafile.html#qcip_tools.chemistry_files.chemistry_datafile.BadChemistryDataFile"><code class="docutils literal notranslate"><span class="pre">BadChemistryDataFile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/chemistry_datafile.html#qcip_tools.chemistry_files.chemistry_datafile.ChemistryDataFile"><code class="docutils literal notranslate"><span class="pre">ChemistryDataFile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/chemistry_datafile.html#qcip_tools.chemistry_files.chemistry_datafile.chemistry_datafile__property__electrical_derivatives"><code class="docutils literal notranslate"><span class="pre">chemistry_datafile__property__electrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/chemistry_datafile.html#qcip_tools.chemistry_files.chemistry_datafile.chemistry_datafile__property__geometrical_derivatives"><code class="docutils literal notranslate"><span class="pre">chemistry_datafile__property__geometrical_derivatives()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chemistry-files/csv_tensor.html">Tensor in CSV format (<code class="docutils literal notranslate"><span class="pre">chemistry_files.csv_tensor</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/csv_tensor.html#qcip_tools.chemistry_files.csv_tensor.CSVTensor"><code class="docutils literal notranslate"><span class="pre">CSVTensor</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/csv_tensor.html#qcip_tools.chemistry_files.csv_tensor.csvtensor__property__electrical_derivatives"><code class="docutils literal notranslate"><span class="pre">csvtensor__property__electrical_derivatives()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/csv_tensor.html#qcip_tools.chemistry_files.csv_tensor.csvtensor__property__excitations"><code class="docutils literal notranslate"><span class="pre">csvtensor__property__excitations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chemistry-files/csv_tensor.html#qcip_tools.chemistry_files.csv_tensor.csvtensor__property__geometrical_derivatives"><code class="docutils literal notranslate"><span class="pre">csvtensor__property__geometrical_derivatives()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 <p>More precisely,</p>

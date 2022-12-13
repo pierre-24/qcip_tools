@@ -16,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -57,7 +58,16 @@
 <li class="toctree-l2"><a class="reference internal" href="math.html">Math helpers (<code class="docutils literal notranslate"><span class="pre">qcip_tools.math</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mixins.html">Mixins (<code class="docutils literal notranslate"><span class="pre">qcip_tools.mixins</span></code>)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.molecule">API documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qcip_tools.molecule">API documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.Bond"><code class="docutils literal notranslate"><span class="pre">Bond</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.GroupError"><code class="docutils literal notranslate"><span class="pre">GroupError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.MolecularSymmetryError"><code class="docutils literal notranslate"><span class="pre">MolecularSymmetryError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.MolecularSymmetryFinder"><code class="docutils literal notranslate"><span class="pre">MolecularSymmetryFinder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.Molecule"><code class="docutils literal notranslate"><span class="pre">Molecule</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.ShiftedIndexError"><code class="docutils literal notranslate"><span class="pre">ShiftedIndexError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qcip_tools.molecule.gen_molecule_from_unique_atoms"><code class="docutils literal notranslate"><span class="pre">gen_molecule_from_unique_atoms()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="numerical_differentiation.html">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</a></li>
@@ -82,9 +92,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../code-documentation.html">API documentation</a> &raquo;</li>
-      <li>Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
+      <li class="breadcrumb-item active">Molecule (<code class="docutils literal notranslate"><span class="pre">qcip_tools.molecule</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/code-documentation/molecule.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -347,7 +357,7 @@ does this. “enhanced” use “X_{i}” to indicate indice i instead of just �
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>shifted_index</strong> (<em>int</em>) – starting atom</p></li>
-<li><p><strong>exclude_atoms</strong> (<em>list of int</em>) – stop following atom (listed as shifted_indexes) if on one of those</p></li>
+<li><p><strong>exclude_atoms</strong> (<em>list</em><em> of </em><em>int</em>) – stop following atom (listed as shifted_indexes) if on one of those</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
