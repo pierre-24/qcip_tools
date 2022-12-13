@@ -46,6 +46,9 @@ def get_arguments_parser():
     parser.add_argument(
         '-g', '--guess-symmetry', help='Guess the symmetry number', action='store_true')
 
+    parser.add_argument(
+        '-G', '--guess-symmetry-tol', help='Tolerance for guessing the symmetry number', type=float, default=1e-3)
+
     return parser
 
 
@@ -103,7 +106,7 @@ def main():
         except PropertyNotPresent:
             return qcip_tools.scripts.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
 
-        sf = qcip_molecule.MolecularSymmetryFinder(mol, tol=1e-3)
+        sf = qcip_molecule.MolecularSymmetryFinder(mol, tol=args.guess_symmetry_tol)
         g, _, _ = sf.find_symmetry()
 
         if g.symbol in [
