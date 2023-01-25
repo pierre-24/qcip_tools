@@ -5,6 +5,8 @@ from functools import reduce
 import operator
 import itertools
 
+# this is a comment
+
 
 def normalize(c):
     """Normalize and return the vector
