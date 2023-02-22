@@ -179,6 +179,7 @@ def create_open_chemistry_file_action(must_be=None):
             try:
                 with open(path) as f:
                     fx = open_chemistry_file(f, must_be=x_must_be)
+                    fx.file_name = path
                     return fx
             except ProbablyNotAChemistryFile:
                 if must_be is not None:
