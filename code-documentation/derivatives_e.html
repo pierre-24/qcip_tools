@@ -204,6 +204,12 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">ElectricDipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dipole</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole" title="Permalink to this definition"></a></dt>
 <dd><p>Dipole moment, commonly written <span class="math notranslate nohighlight">\(\mu\)</span>.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_e.ElectricDipole.compute_properties">
+<span class="sig-name descname"><span class="pre">compute_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole.compute_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Function to compute the tensor’s properties</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.ElectricDipole.norm">
 <span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.ElectricDipole.norm" title="Permalink to this definition"></a></dt>
 <dd><p>Norm of the dipole</p>
@@ -350,6 +356,12 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.compute_properties">
+<span class="sig-name descname"><span class="pre">compute_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.FirstHyperpolarisabilityTensor.compute_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Function to compute the tensor’s properties</p>
 </dd></dl>
 
 <dl class="py method">
@@ -622,6 +634,12 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_e.PolarisabilityTensor.compute_properties">
+<span class="sig-name descname"><span class="pre">compute_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.compute_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Function to compute the tensor’s properties</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.PolarisabilityTensor.isotropic_value">
 <span class="sig-name descname"><span class="pre">isotropic_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.PolarisabilityTensor.isotropic_value" title="Permalink to this definition"></a></dt>
 <dd><p>Isotropic value:</p>
@@ -659,6 +677,12 @@ by <code class="docutils literal notranslate"><span class="pre">field</span></co
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_e.</span></span><span class="sig-name descname"><span class="pre">SecondHyperpolarizabilityTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'static'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor" title="Permalink to this definition"></a></dt>
 <dd><p>Second hyperpolarisability  tensor, commonly written
 <span class="math notranslate nohighlight">\(\gamma(-\omega_\sigma;\omega_1,\omega_2,\omega_3)\)</span>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_properties">
+<span class="sig-name descname"><span class="pre">compute_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Function to compoute the tensor’s properties</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_sum">
 <span class="sig-name descname"><span class="pre">compute_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">what</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_e.SecondHyperpolarizabilityTensor.compute_sum" title="Permalink to this definition"></a></dt>
