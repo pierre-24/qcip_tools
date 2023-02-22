@@ -397,7 +397,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             self.properties['beta_squared_zzz'] = self.beta_squared_zzz()
             self.properties['beta_hrs'] = \
                 _sqrt_or_neg_sqrt(self.properties['beta_squared_zxx'] + self.properties['beta_squared_zzz'])
-            self.properties['DR'] = self.properties['beta_squared_zxx'] / self.properties['beta_squared_zzz']
+            self.properties['DR'] = self.properties['beta_squared_zzz'] / self.properties['beta_squared_zxx']
 
             # "old" version
             self.properties['dipolar_contribution'] = self.dipolar_contribution(old_version=True)
