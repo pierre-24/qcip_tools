@@ -384,24 +384,27 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         # if dipole is not None:
         if kwargs.get('dipole') is not None:
             dipole = kwargs['dipole']
-            self.properties['beta_parallel'] =  self.beta_parallel(dipole)
-            self.properties['theta_mu_beta'] =  numpy.rad2deg(math.acos(
-                numpy.dot(dipole, self.beta_vector()) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(self.beta_vector()))))
+            self.properties['beta_parallel'] = self.beta_parallel(dipole)
+            self.properties['theta_mu_beta'] = numpy.rad2deg(math.acos(
+                numpy.dot(
+                    dipole, self.beta_vector()) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(self.beta_vector()))))
 
             if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
-                self.properties['beta_kerr'] =  self.beta_kerr(dipole)
+                self.properties['beta_kerr'] = self.beta_kerr(dipole)
 
         if self.is_shg():  # SHG
             self.properties['beta_squared_zxx'] = self.beta_squared_zxx()
             self.properties['beta_squared_zzz'] = self.beta_squared_zzz()
-            self.properties['beta_hrs'] =  _sqrt_or_neg_sqrt(self.properties['beta_squared_zxx'] + self.properties['beta_squared_zzz'])
+            self.properties['beta_hrs'] = \
+                _sqrt_or_neg_sqrt(self.properties['beta_squared_zxx'] + self.properties['beta_squared_zzz'])
             self.properties['DR'] = self.properties['beta_squared_zxx'] / self.properties['beta_squared_zzz']
 
             # "old" version
             self.properties['dipolar_contribution'] = self.dipolar_contribution(old_version=True)
             self.properties['octupolar_contribution'] = self.octupolar_contribution(old_version=True)
-            self.properties['rho_3/1'] = self.properties['octupolar_contribution'] / self.properties['dipolar_contribution'] \
-                                        if self.properties['dipolar_contribution'] != .0 else float('inf')
+            self.properties['rho_3/1'] = \
+                self.properties['octupolar_contribution'] / self.properties['dipolar_contribution'] \
+                if self.properties['dipolar_contribution'] != .0 else float('inf')
 
             # new version:
             self.properties['spherical_J1a_contribution_squared'] = self.spherical_J1a_contribution_squared()
@@ -946,8 +949,8 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if self.is_thg():  # THG
             self.properties['gamma_squared_zzzz'] = self.gamma_squared_zzzz()
             self.properties['gamma_squared_zxxx'] = self.gamma_squared_zxxx()
-            self.properties['gamma_THS'] = _sqrt_or_neg_sqrt(self.properties['gamma_squared_zzzz'] + \
-                self.properties['gamma_squared_zxxx'])
+            self.properties['gamma_THS'] = \
+                _sqrt_or_neg_sqrt(self.properties['gamma_squared_zzzz'] + self.properties['gamma_squared_zxxx'])
             self.properties['DR'] = self.properties['gamma_squared_zzzz'] / self.properties['gamma_squared_zxxx']
             # "old" definition
             self.properties['isotropic_contribution'] = self.isotropic_contribution(old_version=True)
@@ -968,7 +971,6 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
             self.properties['G|J=3|*'] = _sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared())
             self.properties['G|J=4|*'] = _sqrt_or_neg_sqrt(self.spherical_J4_contribution_squared())
 
-    
     def is_thg(self):
         """Check if a tensor is a THG one
 

@@ -5,7 +5,6 @@ Fetch the different derivatives of the energy with respect to electric field, an
 
 import argparse
 import sys
-import os
 from scipy import constants
 import pandas as pd
 
@@ -120,12 +119,11 @@ def append_data(electrical_derivatives, to_data_frames, file_id):
                     to_data_frames[df_name] = {}
                 to_data_frames[df_name][file_id] = electrical_derivatives[representation][freq].properties
 
-    
+
 def save_data(to_data_frames):
     for df_name, data in to_data_frames.items():
         df = pd.DataFrame(data).transpose()
         df.to_csv(df_name + '.csv', sep=';')
-        #df.to_excel(df_name + '.xlsx')
 
 
 def main():
@@ -168,7 +166,7 @@ def main():
 
         if args.csv:
             append_data(electrical_derivatives, to_data_frames, infile.file_name)
-    
+
     if args.csv:
         save_data(to_data_frames)
 
