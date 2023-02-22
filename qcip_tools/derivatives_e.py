@@ -270,17 +270,19 @@ class ElectricDipole(BaseElectricalDerivativeTensor):
         super().__init__(tensor=dipole)
 
     def compute_properties(self):
+        """Function to compute the tensor's properties
+        """
         self.properties['mu_x'] = self.components[0]
         self.properties['mu_y'] = self.components[1]
         self.properties['mu_z'] = self.components[2]
         self.properties['mu_norm'] = self.norm()
-    
+
     def norm(self):
         """Norm of the dipole
 
         :rtype: float
         """
-         
+
         return numpy.linalg.norm(self.components)
 
     def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
@@ -305,9 +307,11 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
     def compute_properties(self):
+        """Function to compute the tensor's properties
+        """
         self.properties['alpha_iso'] = self.isotropic_value()
         self.properties['alpha_aniso'] = self.anisotropic_value()
-    
+
     def isotropic_value(self):
         """Isotropic value:
 
@@ -370,12 +374,14 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
     def compute_properties(self, **kwargs):
+        """Function to compute the tensor's properties
+        """
         self.properties['beta_vector_norm'] = numpy.linalg.norm(self.beta_vector())
         self.properties['beta_vector_x'] = self.beta_vector()[0]
         self.properties['beta_vector_y'] = self.beta_vector()[1]
         self.properties['beta_vector_z'] = self.beta_vector()[2]
-        
-        #if dipole is not None:
+
+        # if dipole is not None:
         if kwargs.get('dipole') is not None:
             dipole = kwargs['dipole']
             self.properties['beta_parallel'] =  self.beta_parallel(dipole)
@@ -390,7 +396,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             self.properties['beta_squared_zzz'] = self.beta_squared_zzz()
             self.properties['beta_hrs'] =  _sqrt_or_neg_sqrt(self.properties['beta_squared_zxx'] + self.properties['beta_squared_zzz'])
             self.properties['DR'] = self.properties['beta_squared_zxx'] / self.properties['beta_squared_zzz']
-            
+
             # "old" version
             self.properties['dipolar_contribution'] = self.dipolar_contribution(old_version=True)
             self.properties['octupolar_contribution'] = self.octupolar_contribution(old_version=True)
@@ -404,7 +410,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             self.properties['spherical_J1_contribution_squared'] = self.spherical_J1_contribution_squared()
             self.properties['spherical_J2_contribution_squared'] = self.spherical_J2_contribution_squared()
             self.properties['spherical_J3_contribution_squared'] = self.spherical_J3_contribution_squared()
-                
+
     def polarization_angle_dependant_intensity(self, angle):
         """Compute the angle (:math:`\\Psi`) dependant intensity in the SHS setup.
 
@@ -774,7 +780,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return _sqrt_or_neg_sqrt(
             self.octupolar_contribution_squared(
-                old_version=old_version) / self.dipolar_contribution_squared(old_version=old_version)) 
+                old_version=old_version) / self.dipolar_contribution_squared(old_version=old_version))
 
     def beta_vector(self):
         """return the hyperpolarizability vector
@@ -903,12 +909,13 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 r += 'rho_3/1    {: .3f}\n'.format(self.properties['rho_3/1'])
 
                 # new version:
-                r += 'B|J=1a|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1a_contribution_squared']))
-                r += 'B|J=1b|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1b_contribution_squared']))
-                r += 'B|J=1ab|*  {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1ab_contribution_squared']))
-                r += 'B|J=1|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1_contribution_squared']))
-                r += 'B|J=2|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J2_contribution_squared']))
-                r += 'B|J=3|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J3_contribution_squared']))
+                _sqrt = _sqrt_or_neg_sqrt
+                r += 'B|J=1a|*   {: .5e}\n'.format(_sqrt(self.properties['spherical_J1a_contribution_squared']))
+                r += 'B|J=1b|*   {: .5e}\n'.format(_sqrt(self.properties['spherical_J1b_contribution_squared']))
+                r += 'B|J=1ab|*  {: .5e}\n'.format(_sqrt(self.properties['spherical_J1ab_contribution_squared']))
+                r += 'B|J=1|*    {: .5e}\n'.format(_sqrt(self.properties['spherical_J1_contribution_squared']))
+                r += 'B|J=2|*    {: .5e}\n'.format(_sqrt(self.properties['spherical_J2_contribution_squared']))
+                r += 'B|J=3|*    {: .5e}\n'.format(_sqrt(self.properties['spherical_J3_contribution_squared']))
 
         return r
 
@@ -931,6 +938,8 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
     def compute_properties(self, **kwargs):
+        """Function to compoute the tensor's properties
+        """
         self.properties['gamma_parallel'] = self.gamma_parallel()
         self.properties['gamma_perpendicular'] = self.gamma_perpendicular()
         self.properties['r (||/per)'] = self.properties['gamma_parallel'] / self.properties['gamma_perpendicular']
