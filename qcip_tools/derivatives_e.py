@@ -937,22 +937,27 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         if self.is_thg():  # THG
             self.properties['gamma_squared_zzzz'] = self.gamma_squared_zzzz()
             self.properties['gamma_squared_zxxx'] = self.gamma_squared_zxxx()
-            self.properties['gamma_THS'] = _sqrt_or_neg_sqrt(self.properties['gamma_squared_zzzz'] + self.properties['gamma_squared_zxxx'])
+            self.properties['gamma_THS'] = _sqrt_or_neg_sqrt(self.properties['gamma_squared_zzzz'] + \
+                self.properties['gamma_squared_zxxx'])
             self.properties['DR'] = self.properties['gamma_squared_zzzz'] / self.properties['gamma_squared_zxxx']
             # "old" definition
             self.properties['isotropic_contribution'] = self.isotropic_contribution(old_version=True)
             self.properties['quadrupolar_contribution'] = self.quadrupolar_contribution(old_version=True)
             self.properties['hexadecapolar_contribution'] = self.hexadecapolar_contribution(old_version=True)
-            self.properties['rho_0/2'] = self.properties['isotropic_contribution'] / self.properties['quadrupolar_contribution'] if self.properties['quadrupolar_contribution'] != .0 else float('inf')
-            self.properties['rho_4/2'] = self.properties['hexadecapolar_contribution'] / self.properties['quadrupolar_contribution'] if self.properties['quadrupolar_contribution'] != .0 else float('inf')
-            self.properties['G|J=0|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J0_contribution_squared()))
-            self.properties['G|J=1|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared()))
-            self.properties['G|J=2a|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2a_contribution_squared()))
-            self.properties['G|J=2b|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2b_contribution_squared()))
-            self.properties['G|J=2ab|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2ab_contribution_squared()))
-            self.properties['G|J=2|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared()))
-            self.properties['G|J=3|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared()))
-            self.properties['G|J=4|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J4_contribution_squared()))
+            self.properties['rho_0/2'] = \
+                self.properties['isotropic_contribution'] / self.properties['quadrupolar_contribution'] \
+                if self.properties['quadrupolar_contribution'] != .0 else float('inf')
+            self.properties['rho_4/2'] = \
+                self.properties['hexadecapolar_contribution'] / self.properties['quadrupolar_contribution'] \
+                if self.properties['quadrupolar_contribution'] != .0 else float('inf')
+            self.properties['G|J=0|*'] = _sqrt_or_neg_sqrt(self.spherical_J0_contribution_squared())
+            self.properties['G|J=1|*'] = _sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared())
+            self.properties['G|J=2a|*'] = _sqrt_or_neg_sqrt(self.spherical_J2a_contribution_squared())
+            self.properties['G|J=2b|*'] = _sqrt_or_neg_sqrt(self.spherical_J2b_contribution_squared())
+            self.properties['G|J=2ab|*'] = _sqrt_or_neg_sqrt(self.spherical_J2ab_contribution_squared())
+            self.properties['G|J=2|*'] = _sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared())
+            self.properties['G|J=3|*'] = _sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared())
+            self.properties['G|J=4|*'] = _sqrt_or_neg_sqrt(self.spherical_J4_contribution_squared())
 
     
     def is_thg(self):

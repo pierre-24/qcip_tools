@@ -147,12 +147,10 @@ def create_open_chemistry_file_action(must_be=None):
 
     class CustomAction(argparse.Action):
         def __call__(self, parser, args, values, option_string=None):
-            from glob import glob
             if type(values) is str:
                 setattr(args, self.dest, self.open(values, parser))
             elif type(values) is list:
                 files = []
-                values = glob(*values)
                 for value in values:
                     files.append(self.open(value, parser))
                 setattr(args, self.dest, files)
