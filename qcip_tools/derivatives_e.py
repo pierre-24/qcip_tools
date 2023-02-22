@@ -190,6 +190,7 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
 
         super().__init__(s_representation + representation, frequency=frequency, components=tensor)
         self.name = self.to_name()
+        self.properties = {}
 
     def to_string(self, threshold=1e-5, **kwargs):
         """Rewritten to get a better output with this kind of tensor
@@ -268,11 +269,18 @@ class ElectricDipole(BaseElectricalDerivativeTensor):
     def __init__(self, dipole=None):
         super().__init__(tensor=dipole)
 
+    def compute_properties(self):
+        self.properties['mu_x'] = self.components[0]
+        self.properties['mu_y'] = self.components[1]
+        self.properties['mu_z'] = self.components[2]
+        self.properties['mu_norm'] = self.norm()
+    
     def norm(self):
         """Norm of the dipole
 
         :rtype: float
         """
+         
         return numpy.linalg.norm(self.components)
 
     def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
@@ -296,6 +304,10 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
     def __init__(self, tensor=None, input_fields=(1,), frequency='static'):
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
+    def compute_properties(self):
+        self.properties['alpha_iso'] = self.isotropic_value()
+        self.properties['alpha_aniso'] = self.anisotropic_value()
+    
     def isotropic_value(self):
         """Isotropic value:
 
@@ -305,8 +317,8 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         :rtype: float
         """
-        iso = self.components.trace() * 1 / 3
-        return iso
+
+        return self.components.trace() * 1 / 3
 
     def anisotropic_value(self):
         """Ansotropic value:
@@ -322,6 +334,7 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
         for i in range(3):
             for j in range(3):
                 tmp += 3 * self.components[i, j] ** 2 - self.components[i, i] * self.components[j, j]
+
         return _sqrt_or_neg_sqrt(.5 * tmp)
 
     def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
@@ -329,11 +342,13 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
         """
 
         r = super().to_string(threshold=threshold, **kwargs)
+        r += '\n'
 
         if not disable_extras:
-            r += '\n'
-            r += 'iso    {: .5e}\n'.format(self.isotropic_value())
-            r += 'aniso  {: .5e}\n'.format(self.anisotropic_value())
+            self.compute_properties()
+
+            for k, v in self.properties.items():
+                r += '{:7s}{: .5e}\n'.format(k, v)
 
         return r
 
@@ -354,6 +369,42 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
+    def compute_properties(self, **kwargs):
+        self.properties['beta_vector_norm'] = numpy.linalg.norm(self.beta_vector())
+        self.properties['beta_vector_x'] = self.beta_vector()[0]
+        self.properties['beta_vector_y'] = self.beta_vector()[1]
+        self.properties['beta_vector_z'] = self.beta_vector()[2]
+        
+        #if dipole is not None:
+        if kwargs.get('dipole') is not None:
+            dipole = kwargs['dipole']
+            self.properties['beta_parallel'] =  self.beta_parallel(dipole)
+            self.properties['theta_mu_beta'] =  numpy.rad2deg(math.acos(
+                numpy.dot(dipole, self.beta_vector()) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(self.beta_vector()))))
+
+            if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
+                self.properties['beta_kerr'] =  self.beta_kerr(dipole)
+
+        if self.is_shg():  # SHG
+            self.properties['beta_squared_zxx'] = self.beta_squared_zxx()
+            self.properties['beta_squared_zzz'] = self.beta_squared_zzz()
+            self.properties['beta_hrs'] =  _sqrt_or_neg_sqrt(self.properties['beta_squared_zxx'] + self.properties['beta_squared_zzz'])
+            self.properties['DR'] = self.properties['beta_squared_zxx'] / self.properties['beta_squared_zzz']
+            
+            # "old" version
+            self.properties['dipolar_contribution'] = self.dipolar_contribution(old_version=True)
+            self.properties['octupolar_contribution'] = self.octupolar_contribution(old_version=True)
+            self.properties['rho_3/1'] = self.properties['octupolar_contribution'] / self.properties['dipolar_contribution'] \
+                                        if self.properties['dipolar_contribution'] != .0 else float('inf')
+
+            # new version:
+            self.properties['spherical_J1a_contribution_squared'] = self.spherical_J1a_contribution_squared()
+            self.properties['spherical_J1b_contribution_squared'] = self.spherical_J1b_contribution_squared()
+            self.properties['spherical_J1ab_contribution_squared'] = self.spherical_J1ab_contribution_squared()
+            self.properties['spherical_J1_contribution_squared'] = self.spherical_J1_contribution_squared()
+            self.properties['spherical_J2_contribution_squared'] = self.spherical_J2_contribution_squared()
+            self.properties['spherical_J3_contribution_squared'] = self.spherical_J3_contribution_squared()
+                
     def polarization_angle_dependant_intensity(self, angle):
         """Compute the angle (:math:`\\Psi`) dependant intensity in the SHS setup.
 
@@ -723,7 +774,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return _sqrt_or_neg_sqrt(
             self.octupolar_contribution_squared(
-                old_version=old_version) / self.dipolar_contribution_squared(old_version=old_version))
+                old_version=old_version) / self.dipolar_contribution_squared(old_version=old_version)) 
 
     def beta_vector(self):
         """return the hyperpolarizability vector
@@ -822,48 +873,42 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         r = super().to_string(threshold=threshold, **kwargs)
 
         if not disable_extras:
+            self.compute_properties(dipole=dipole)
             r += '\n'
 
             if self.representation.representation() in PHENOMENON:
                 r += '({})\n\n'.format(PHENOMENON[self.representation.representation()])
 
-            beta_vector = self.beta_vector()
-            r += '||B||      {: .5e}\n'.format(numpy.linalg.norm(beta_vector))
-            r += 'B_x        {: .5e}\n'.format(beta_vector[0])
-            r += 'B_y        {: .5e}\n'.format(beta_vector[1])
-            r += 'B_z        {: .5e}\n'.format(beta_vector[2])
+            r += '||B||      {: .5e}\n'.format(self.properties['beta_vector_norm'])
+            r += 'B_x        {: .5e}\n'.format(self.properties['beta_vector_x'])
+            r += 'B_y        {: .5e}\n'.format(self.properties['beta_vector_y'])
+            r += 'B_z        {: .5e}\n'.format(self.properties['beta_vector_z'])
 
             if dipole is not None:
-                r += 'B_||       {: .5e}\n'.format(self.beta_parallel(dipole))
-                r += 'theta      {: .3f}\n'.format(numpy.rad2deg(math.acos(
-                    numpy.dot(dipole, beta_vector) / (numpy.linalg.norm(dipole) * numpy.linalg.norm(beta_vector)))))
+                r += 'B_||       {: .5e}\n'.format(self.properties['beta_parallel'])
+                r += 'theta     {: .3f}\n'.format(self.properties['theta_mu_beta'])
 
                 if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
-                    r += 'beta^K    {: .5e}\n'.format(self.beta_kerr(dipole))
+                    r += 'beta^K     {: .5e}\n'.format(self.properties['beta_kerr'])
 
             if self.is_shg():  # SHG
-                B2zzz = self.beta_squared_zzz()
-                B2zxx = self.beta_squared_zxx()
-
-                r += '<B2zzz>    {: .5e}\n'.format(B2zzz)
-                r += '<B2zxx>    {: .5e}\n'.format(B2zxx)
-                r += 'beta_HRS   {: .5e}\n'.format(_sqrt_or_neg_sqrt(B2zxx + B2zzz))
-                r += 'DR         {: .3f}\n'.format(B2zzz / B2zxx)
+                r += '<B2zzz>    {: .5e}\n'.format(self.properties['beta_squared_zzz'])
+                r += '<B2zxx>    {: .5e}\n'.format(self.properties['beta_squared_zxx'])
+                r += 'beta_HRS   {: .5e}\n'.format(self.properties['beta_hrs'])
+                r += 'DR         {: .3f}\n'.format(self.properties['DR'])
 
                 # "old" version
-                BJ1 = self.dipolar_contribution(old_version=True)
-                BJ3 = self.octupolar_contribution(old_version=True)
-                r += 'B|J=1|     {: .5e}\n'.format(BJ1)
-                r += 'B|J=3|     {: .5e}\n'.format(BJ3)
-                r += 'rho_3/1    {: .3f}\n'.format(BJ3 / BJ1 if BJ1 != .0 else float('inf'))
+                r += 'B|J=1|     {: .5e}\n'.format(self.properties['dipolar_contribution'])
+                r += 'B|J=3|     {: .5e}\n'.format(self.properties['octupolar_contribution'])
+                r += 'rho_3/1    {: .3f}\n'.format(self.properties['rho_3/1'])
 
                 # new version:
-                r += 'B|J=1a|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1a_contribution_squared()))
-                r += 'B|J=1b|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1b_contribution_squared()))
-                r += 'B|J=1ab|*  {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1ab_contribution_squared()))
-                r += 'B|J=1|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared()))
-                r += 'B|J=2|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared()))
-                r += 'B|J=3|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared()))
+                r += 'B|J=1a|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1a_contribution_squared']))
+                r += 'B|J=1b|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1b_contribution_squared']))
+                r += 'B|J=1ab|*  {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1ab_contribution_squared']))
+                r += 'B|J=1|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J1_contribution_squared']))
+                r += 'B|J=2|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J2_contribution_squared']))
+                r += 'B|J=3|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.properties['spherical_J3_contribution_squared']))
 
         return r
 
@@ -885,6 +930,31 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
 
         super().__init__(tensor=tensor, input_fields=input_fields, frequency=frequency)
 
+    def compute_properties(self, **kwargs):
+        self.properties['gamma_parallel'] = self.gamma_parallel()
+        self.properties['gamma_perpendicular'] = self.gamma_perpendicular()
+        self.properties['r (||/per)'] = self.properties['gamma_parallel'] / self.properties['gamma_perpendicular']
+        if self.is_thg():  # THG
+            self.properties['gamma_squared_zzzz'] = self.gamma_squared_zzzz()
+            self.properties['gamma_squared_zxxx'] = self.gamma_squared_zxxx()
+            self.properties['gamma_THS'] = _sqrt_or_neg_sqrt(self.properties['gamma_squared_zzzz'] + self.properties['gamma_squared_zxxx'])
+            self.properties['DR'] = self.properties['gamma_squared_zzzz'] / self.properties['gamma_squared_zxxx']
+            # "old" definition
+            self.properties['isotropic_contribution'] = self.isotropic_contribution(old_version=True)
+            self.properties['quadrupolar_contribution'] = self.quadrupolar_contribution(old_version=True)
+            self.properties['hexadecapolar_contribution'] = self.hexadecapolar_contribution(old_version=True)
+            self.properties['rho_0/2'] = self.properties['isotropic_contribution'] / self.properties['quadrupolar_contribution'] if self.properties['quadrupolar_contribution'] != .0 else float('inf')
+            self.properties['rho_4/2'] = self.properties['hexadecapolar_contribution'] / self.properties['quadrupolar_contribution'] if self.properties['quadrupolar_contribution'] != .0 else float('inf')
+            self.properties['G|J=0|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J0_contribution_squared()))
+            self.properties['G|J=1|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared()))
+            self.properties['G|J=2a|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2a_contribution_squared()))
+            self.properties['G|J=2b|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2b_contribution_squared()))
+            self.properties['G|J=2ab|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2ab_contribution_squared()))
+            self.properties['G|J=2|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared()))
+            self.properties['G|J=3|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared()))
+            self.properties['G|J=4|*'] = _sqrt_or_neg_sqrt(_sqrt_or_neg_sqrt(self.spherical_J4_contribution_squared()))
+
+    
     def is_thg(self):
         """Check if a tensor is a THG one
 
@@ -1393,47 +1463,37 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
         r = super().to_string(threshold=threshold, **kwargs)
 
         if not disable_extras:
-
+            self.compute_properties()
             r += '\n'
 
             if self.representation.representation() in PHENOMENON:
                 r += '({})\n\n'.format(PHENOMENON[self.representation.representation()])
 
-            para = self.gamma_parallel()
-            perp = self.gamma_perpendicular()
-
-            r += 'gamma_||   {: .5e}\n'.format(para)
-            r += 'gamma_per  {: .5e}\n'.format(perp)
-            r += 'r (||/per) {: .3f}\n'.format(para / perp)
+            r += 'gamma_||   {: .5e}\n'.format(self.properties['gamma_parallel'])
+            r += 'gamma_per  {: .5e}\n'.format(self.properties['gamma_perpendicular'])
+            r += 'r (||/per) {: .3f}\n'.format(self.properties['r (||/per)'])
 
             if self.is_thg():  # THG
-                G2zzzz = self.gamma_squared_zzzz()
-                G2zxxx = self.gamma_squared_zxxx()
-
-                r += '<G2zzzz>   {: .5e}\n'.format(G2zzzz)
-                r += '<G2zxxx>   {: .5e}\n'.format(G2zxxx)
-                r += 'gamma_THS  {: .5e}\n'.format(_sqrt_or_neg_sqrt(G2zzzz + G2zxxx))
-                r += 'DR         {: .3f}\n'.format(G2zzzz / G2zxxx)
+                r += '<G2zzzz>   {: .5e}\n'.format(self.properties['gamma_squared_zzzz'])
+                r += '<G2zxxx>   {: .5e}\n'.format(self.properties['gamma_squared_zxxx'])
+                r += 'gamma_THS  {: .5e}\n'.format(self.properties['gamma_THS'])
+                r += 'DR         {: .3f}\n'.format(self.properties['DR'])
 
                 # "old" definition
-                GJ0 = self.isotropic_contribution(old_version=True)
-                GJ2 = self.quadrupolar_contribution(old_version=True)
-                GJ4 = self.hexadecapolar_contribution(old_version=True)
-
-                r += 'G|J=0|     {: .5e}\n'.format(GJ0)
-                r += 'G|J=2|     {: .5e}\n'.format(GJ2)
-                r += 'G|J=4|     {: .5e}\n'.format(GJ4)
-                r += 'rho_0/2    {: .5e}\n'.format(GJ0 / GJ2 if GJ2 != .0 else float('inf'))
-                r += 'rho_4/2    {: .5e}\n'.format(GJ4 / GJ2 if GJ2 != .0 else float('inf'))
+                r += 'G|J=0|     {: .5e}\n'.format(self.properties['isotropic_contribution'])
+                r += 'G|J=2|     {: .5e}\n'.format(self.properties['quadrupolar_contribution'])
+                r += 'G|J=4|     {: .5e}\n'.format(self.properties['hexadecapolar_contribution'])
+                r += 'rho_0/2    {: .5e}\n'.format(self.properties['rho_0/2'])
+                r += 'rho_4/2    {: .5e}\n'.format(self.properties['rho_4/2'])
 
                 # new definition
-                r += 'G|J=0|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J0_contribution_squared()))
-                r += 'G|J=1|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J1_contribution_squared()))
-                r += 'G|J=2a|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2a_contribution_squared()))
-                r += 'G|J=2b|*   {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2b_contribution_squared()))
-                r += 'G|J=2ab|*  {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2ab_contribution_squared()))
-                r += 'G|J=2|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J2_contribution_squared()))
-                r += 'G|J=3|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J3_contribution_squared()))
-                r += 'G|J=4|*    {: .5e}\n'.format(_sqrt_or_neg_sqrt(self.spherical_J4_contribution_squared()))
+                r += 'G|J=0|*    {: .5e}\n'.format(self.properties['G|J=0|*'])
+                r += 'G|J=1|*    {: .5e}\n'.format(self.properties['G|J=1|*'])
+                r += 'G|J=2a|*   {: .5e}\n'.format(self.properties['G|J=2a|*'])
+                r += 'G|J=2b|*   {: .5e}\n'.format(self.properties['G|J=2b|*'])
+                r += 'G|J=2ab|*  {: .5e}\n'.format(self.properties['G|J=2ab|*'])
+                r += 'G|J=2|*    {: .5e}\n'.format(self.properties['G|J=2|*'])
+                r += 'G|J=3|*    {: .5e}\n'.format(self.properties['G|J=3|*'])
+                r += 'G|J=4|*    {: .5e}\n'.format(self.properties['G|J=4|*'])
 
         return r
