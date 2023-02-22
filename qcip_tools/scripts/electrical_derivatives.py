@@ -76,8 +76,7 @@ def get_arguments_parser():
         'infile',
         nargs='+',
         default=sys.stdin,
-        action=helpers.create_open_chemistry_file_action(),
-        help='source of the derivatives')
+        help='Files containing the source of the derivatives')
 
     return arguments_parser
 
@@ -130,7 +129,12 @@ def main():
     args = get_arguments_parser().parse_args()
     to_data_frames = {}
 
-    for infile in args.infile:
+    for file_name in args.infile:
+        f = open(file_name)
+        infile = helpers.open_chemistry_file(f)
+        f.close()
+        infile.file_name = file_name
+
         if not infile.has_property('electrical_derivatives'):
             return qcip_tools.scripts.exit_failure('cannot find electrical derivatives ({})'.format(infile.file_type))
 
