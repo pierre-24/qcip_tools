@@ -703,27 +703,15 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_shg():
             raise NotSHG(self.input_fields)
 
-        tmp = 0
-
         if old_version:
-            for i in derivatives.COORDINATES_LIST:
-                tmp += 3 / 5 * self.components[i, i, i] ** 2
-                for j in derivatives.COORDINATES_LIST:
-                    if i != j:
-                        tmp += 6 / 5 * self.components[i, i, i] * self.components[i, j, j]
-                        tmp += 3 / 5 * self.components[i, j, j] ** 2
-                        for k in derivatives.COORDINATES_LIST:
-                            if i != k and j != k:
-                                tmp += 3 / 5 * self.components[i, j, j] * self.components[i, k, k]
+            return 6 * self.beta_squared_zzz() - 9 * self.beta_squared_zxx()
         else:
-            tmp = self.spherical_J1_contribution_squared()
-
-        return tmp
+            return self.spherical_J1_contribution_squared()
 
     def octupolar_contribution_squared(self, old_version=True):
         """Compute the square of the octupolar contribution
 
-        :param old_version: Use the previous (with Kleinman's conditions) version
+        :param old_version: Use the previous (with Kleinman's conditions) version (coherent with betaprint's g16)
         :type old_version: bool
         :rtype: float
         """
@@ -731,28 +719,15 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
         if not self.is_shg():
             raise NotSHG(self.input_fields)
 
-        tmp = 0
-
         if old_version:
-            for i in derivatives.COORDINATES_LIST:
-                tmp += 2 / 5 * self.components[i, i, i] ** 2
-                for j in derivatives.COORDINATES_LIST:
-                    if i != j:
-                        tmp -= 6 / 5 * self.components[i, i, i] * self.components[i, j, j]
-                        tmp += 12 / 5 * self.components[i, j, j] ** 2
-                        for k in derivatives.COORDINATES_LIST:
-                            if i != k and j != k:
-                                tmp -= 3 / 5 * self.components[i, j, j] * self.components[i, k, k]
-                                tmp += self.components[i, j, k] ** 2
+            return 63 / 2 * self.beta_squared_zxx() - 7 / 2 * self.beta_squared_zzz()
         else:
-            tmp = self.spherical_J3_contribution_squared()
-
-        return tmp
+            return self.spherical_J3_contribution_squared()
 
     def dipolar_contribution(self, old_version=True):
         """
 
-        :param old_version: Use the previous (with Kleinman's conditions) version
+        :param old_version: Use the previous (with Kleinman's conditions) version (coherent with betaprint's g16)
         :type old_version: bool
         :rtype: float
         """
@@ -895,7 +870,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
 
             if dipole is not None:
                 r += 'B_||       {: .5e}\n'.format(self.properties['beta_parallel'])
-                r += 'theta     {: .3f}\n'.format(self.properties['theta_mu_beta'])
+                r += 'theta      {: .3f}\n'.format(self.properties['theta_mu_beta'])
 
                 if sum(self.input_fields) == 1 or self.frequency == .0 or self.frequency == 'static':  # OEP
                     r += 'beta^K     {: .5e}\n'.format(self.properties['beta_kerr'])
@@ -919,6 +894,11 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 r += 'B|J=1|*    {: .5e}\n'.format(_sqrt(self.properties['spherical_J1_contribution_squared']))
                 r += 'B|J=2|*    {: .5e}\n'.format(_sqrt(self.properties['spherical_J2_contribution_squared']))
                 r += 'B|J=3|*    {: .5e}\n'.format(_sqrt(self.properties['spherical_J3_contribution_squared']))
+                r += 'rho_3/1*   {: .3f}\n'.format(
+                    _sqrt(self.properties['spherical_J3_contribution_squared']) / _sqrt(
+                        self.properties['spherical_J1_contribution_squared']
+                    )
+                )
 
         return r
 

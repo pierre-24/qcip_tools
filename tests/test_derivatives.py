@@ -517,6 +517,10 @@ class DerivativesTestCase(QcipToolsTestCase):
             new_beta = tensor_rotate(beta, *angles)
             nb = derivatives_e.FirstHyperpolarisabilityTensor(tensor=new_beta, frequency='911.3nm')
 
+            # "old" versions
+            self.assertAlmostEqual(nb.octupolar_contribution_squared(), 4.137, places=3)
+            self.assertAlmostEqual(nb.dipolar_contribution_squared(), 1401.5729, places=3)
+
             # Values obtained directly from the contribution matrices
             self.assertAlmostEqual(nb.octupolar_contribution_squared(old_version=False), 123.3727, places=3)
             self.assertAlmostEqual(nb.dipolar_contribution_squared(old_version=False), 1276.4387, places=3)
@@ -526,14 +530,6 @@ class DerivativesTestCase(QcipToolsTestCase):
             self.assertAlmostEqual(nb.beta_squared_zxx(), 31.304, places=3)
             self.assertAlmostEqual(nb.beta_hrs(), 17.659, places=3)
             self.assertAlmostEqual(nb.depolarization_ratio(), 8.962, places=3)
-
-            # check that new and old version are NOT (!) equal
-            self.assertNotEqual(
-                nb.octupolar_contribution_squared(old_version=True),
-                nb.octupolar_contribution_squared(old_version=False))
-            self.assertNotEqual(
-                nb.dipolar_contribution_squared(old_version=True),
-                nb.dipolar_contribution_squared(old_version=False))
 
         # static CH2Cl2, CCS/d-aug-cc-pVDZ (dalton)
         gamma = numpy.array(
