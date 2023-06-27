@@ -96,7 +96,14 @@ AtomicNumberToSymbol = {
     89: 'Ac',
     90: 'Th',
     91: 'Pa',
-    92: 'U'
+    92: 'U',
+    93: 'Np',
+    94: 'Pu',
+    95: 'Am',
+    96: 'Cm',
+    97: 'Bk',
+    98: 'Cf',
+    99: 'Es'
 }
 
 DUMMY_SYMBOLS = ['Xx', 'X', 'x']
@@ -148,13 +155,13 @@ class Atom(transformations.MutableTranslatable):
         self.mass = 0
 
         if self.atomic_number > 0:
-            #if self.symbol not in _mendeleev_cache:  # otherwise, needs to read the data every f*** time
+            # if self.symbol not in _mendeleev_cache:  # otherwise, needs to read the data every f*** time
             #    _mendeleev_cache[self.symbol] = mendeleev.element(self.symbol)
 
             # mendeleev_element = _mendeleev_cache[self.symbol]
             self.num_of_electrons = self.atomic_number
-            #self.mass_number = mendeleev_element.mass_number
-            #self.mass = mendeleev_element.atomic_weight if mass is None else mass
+            # self.mass_number = mendeleev_element.mass_number
+            # self.mass = mendeleev_element.atomic_weight if mass is None else mass
 
         if position is not None:
             if len(position) != 3:

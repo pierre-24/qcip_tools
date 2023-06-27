@@ -121,13 +121,17 @@ def crystal__output__property__electrical_derivatives(obj, *args, **kwargs):
 
     # if so, gather info
     for i, l in enumerate(obj.lines[line_cphf:]):
-        if 'POLARIZABILITY (ALPHA)' in l:  # static or dynamic polarizability
-            freq = obj.lines[line_cphf + i + 4][2:8]  # TODO: maybe somewhere else with additional digits?
+        if ' POLARIZABILITY TENSOR' in l or 'POLARIZABILITY (ALPHA)' in l:  # static or dynamic polarizability
+            is_slab = 'TENSOR' in l
+            freq = obj.lines[line_cphf + i + (4 if not is_slab else 3)][2:8].strip()  # TODO: additional digits?
             tensor = derivatives_e.PolarisabilityTensor(
                 frequency=derivatives_e.convert_frequency_from_string(freq + 'eV'))
 
             for j in range(6):
-                info = obj.lines[line_cphf + i + 4 + j].split()
+                info = obj.lines[line_cphf + i + (4 if not is_slab else 3) + j].split()
+                if len(info) == 0:
+                    break
+
                 component = tuple(translate_c[k] for k in info[1])
                 tensor.components[component] = tensor.components[component[1], component[0]] = float(info[2])
 
@@ -138,11 +142,16 @@ def crystal__output__property__electrical_derivatives(obj, *args, **kwargs):
                     electrical_derivatives['dD'] = {}
                 electrical_derivatives['dD'][tensor.frequency] = tensor
 
-        elif 'FIRST HYPERPOLARIZABILITY (BETA)' in l:
+        elif 'FIRST HYPERPOLARIZABILITY' in l:
+            is_slab = 'TENSOR' in l
             tensor = derivatives_e.FirstHyperpolarisabilityTensor(input_fields=(0, 0))
 
             for j in range(10):
-                info = obj.lines[line_cphf + i + 6 + j].split()
+                line = obj.lines[line_cphf + i + (6 if not is_slab else 5) + j]
+                if '***' in line:
+                    break
+
+                info = line.split()
                 component = tuple(translate_c[k] for k in info[0])
 
                 for c in tensor.representation.inverse_smart_iterator(component):
