@@ -343,6 +343,20 @@ class PropertiesTestCase(QcipToolsTestCase):
 
         self.do_test_in_electrical_derivatives(electrical_derivatives, tests_in_tensor)
 
+        # static slab
+        crystal_file, path, electrical_derivatives = self.get_property(
+            crystal.Output, 'electrical_derivatives/crystal_output_static2.out', 'electrical_derivatives')
+
+        self.assertIn('FF', electrical_derivatives)
+        self.assertIn('FFF', electrical_derivatives)
+
+        tests_in_tensor = [
+            ('FF', 'static', (0, 0), 201.6988),
+            ('FFF', 'static', (0, 0, 1), 2.6391E+01),
+        ]
+
+        self.do_test_in_electrical_derivatives(electrical_derivatives, tests_in_tensor)
+
     def test_electrical_derivatives_gaussian_log(self):
 
         gaussian_fchk = self.copy_to_temporary_directory('properties/electrical_derivatives/gaussian_output.fchk')

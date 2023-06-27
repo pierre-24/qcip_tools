@@ -1,5 +1,4 @@
 import numpy
-# import mendeleev
 
 from qcip_tools import transformations
 
@@ -230,8 +229,6 @@ ATOMIC_WEIGHTS = {  # from https://iupac.qmul.ac.uk/AtWt/
 DUMMY_SYMBOLS = ['Xx', 'X', 'x']
 
 SymbolToAtomicNumber = dict((b, a) for a, b in AtomicNumberToSymbol.items())
-
-_mendeleev_cache = {}
 
 
 class Atom(transformations.MutableTranslatable):
