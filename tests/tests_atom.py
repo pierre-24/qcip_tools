@@ -18,7 +18,6 @@ class AtomTestCase(QcipToolsTestCase):
         self.assertEqual(a1.atomic_number, 2)
         self.assertEqual(a1.symbol, 'He')
         self.assertEqual(a1.num_of_electrons, 2)
-        self.assertEqual(a1.mass_number, 4)
         self.assertTrue(numpy.array_equal(a1.position, numpy.zeros(3)))
         self.assertEqual(a1.number_of_core_electrons(), 2)
         self.assertEqual(a1.number_of_valence_electrons(), 0)
@@ -29,7 +28,6 @@ class AtomTestCase(QcipToolsTestCase):
         self.assertEqual(a2.atomic_number, 3)
         self.assertEqual(a2.symbol, 'Li')
         self.assertEqual(a2.num_of_electrons, 3)
-        self.assertEqual(a2.mass_number, 7)
         self.assertTrue(numpy.array_equal(a2.position, numpy.zeros(3)))
         self.assertEqual(a2.number_of_core_electrons(), 2)
         self.assertEqual(a2.number_of_valence_electrons(), 1)
@@ -59,11 +57,9 @@ class AtomTestCase(QcipToolsTestCase):
         self.assertTrue(a3.symbol in r)
 
         # test functions:
-        self.assertEqual(a3.mass_number, 9)
         self.assertEqual(a3.charge(), 0)
         self.assertEqual(a3.number_of_protons(), 4)
         self.assertEqual(a3.number_of_electrons(), 4)
-        self.assertEqual(a3.number_of_neutrons(), 5)
 
         # change charge:
         a3.num_of_electrons = 3

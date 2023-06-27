@@ -106,6 +106,127 @@ AtomicNumberToSymbol = {
     99: 'Es'
 }
 
+ATOMIC_WEIGHTS = {  # from https://iupac.qmul.ac.uk/AtWt/
+    'H': 1.008,
+    'He': 4.003,
+    'Li': 6.940,
+    'Be': 9.012,
+    'B': 10.810,
+    'C': 12.011,
+    'N': 14.007,
+    'O': 15.999,
+    'F': 18.998,
+    'Ne': 20.180,
+    'Na': 22.990,
+    'Mg': 24.305,
+    'Al': 26.982,
+    'Si': 28.085,
+    'P': 30.974,
+    'S': 32.060,
+    'Cl': 35.450,
+    'Ar': 39.950,
+    'K': 39.098,
+    'Ca': 40.078,
+    'Sc': 44.956,
+    'Ti': 47.867,
+    'V': 50.942,
+    'Cr': 51.996,
+    'Mn': 54.938,
+    'Fe': 55.845,
+    'Co': 58.933,
+    'Ni': 58.693,
+    'Cu': 63.546,
+    'Zn': 65.380,
+    'Ga': 69.723,
+    'Ge': 72.630,
+    'As': 74.922,
+    'Se': 78.971,
+    'Br': 79.904,
+    'Kr': 83.798,
+    'Rb': 85.468,
+    'Sr': 87.620,
+    'Y': 88.906,
+    'Zr': 91.224,
+    'Nb': 92.906,
+    'Mo': 95.950,
+    'Tc': 97.000,
+    'Ru': 101.070,
+    'Rh': 102.905,
+    'Pd': 106.420,
+    'Ag': 107.868,
+    'Cd': 112.414,
+    'In': 114.818,
+    'Sn': 118.710,
+    'Sb': 121.760,
+    'Te': 127.600,
+    'I': 126.904,
+    'Xe': 131.293,
+    'Cs': 132.905,
+    'Ba': 137.327,
+    'La': 138.905,
+    'Ce': 140.116,
+    'Pr': 140.908,
+    'Nd': 144.242,
+    'Pm': 145.000,
+    'Sm': 150.360,
+    'Eu': 151.964,
+    'Gd': 157.250,
+    'Tb': 158.925,
+    'Dy': 162.500,
+    'Ho': 164.930,
+    'Er': 167.259,
+    'Tm': 168.934,
+    'Yb': 173.045,
+    'Lu': 174.967,
+    'Hf': 178.486,
+    'Ta': 180.948,
+    'W': 183.840,
+    'Re': 186.207,
+    'Os': 190.230,
+    'Ir': 192.217,
+    'Pt': 195.084,
+    'Au': 196.967,
+    'Hg': 200.592,
+    'Tl': 204.380,
+    'Pb': 207.200,
+    'Bi': 208.980,
+    'Po': 209.000,
+    'At': 210.000,
+    'Rn': 222.000,
+    'Fr': 223.000,
+    'Ra': 226.000,
+    'Ac': 227.000,
+    'Th': 232.038,
+    'Pa': 231.036,
+    'U': 238.029,
+    'Np': 237.000,
+    'Pu': 244.000,
+    'Am': 243.000,
+    'Cm': 247.000,
+    'Bk': 247.000,
+    'Cf': 251.000,
+    'Es': 252.000,
+    'Fm': 257.000,
+    'Md': 258.000,
+    'No': 259.000,
+    'Lr': 262.000,
+    'Rf': 267.000,
+    'Db': 270.000,
+    'Sg': 269.000,
+    'Bh': 270.000,
+    'Hs': 270.000,
+    'Mt': 278.000,
+    'Ds': 281.000,
+    'Rg': 281.000,
+    'Cn': 285.000,
+    'Nh': 286.000,
+    'Fl': 289.000,
+    'Mc': 289.000,
+    'Lv': 293.000,
+    'Ts': 293.000,
+    'Og': 294.000,
+}
+
 DUMMY_SYMBOLS = ['Xx', 'X', 'x']
 
 SymbolToAtomicNumber = dict((b, a) for a, b in AtomicNumberToSymbol.items())
@@ -151,17 +272,11 @@ class Atom(transformations.MutableTranslatable):
             raise Exception('either atomic_number or symbol must be defined')
 
         self.num_of_electrons = 0
-        self.mass_number = 0
         self.mass = 0
 
         if self.atomic_number > 0:
-            # if self.symbol not in _mendeleev_cache:  # otherwise, needs to read the data every f*** time
-            #    _mendeleev_cache[self.symbol] = mendeleev.element(self.symbol)
-
-            # mendeleev_element = _mendeleev_cache[self.symbol]
             self.num_of_electrons = self.atomic_number
-            # self.mass_number = mendeleev_element.mass_number
-            # self.mass = mendeleev_element.atomic_weight if mass is None else mass
+            self.mass = ATOMIC_WEIGHTS[self.symbol] if mass is None else mass
 
         if position is not None:
             if len(position) != 3:
@@ -220,13 +335,6 @@ class Atom(transformations.MutableTranslatable):
         :rtype: int
         """
         return self.atomic_number
-
-    def number_of_neutrons(self):
-        """
-        :return: The number of neutrons
-        :rtype: int
-        """
-        return self.mass_number - self.atomic_number
 
     def charge(self):
         """Get atomic charge.
