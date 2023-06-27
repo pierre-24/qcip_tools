@@ -171,7 +171,8 @@ def crystal__output__property__electrical_derivatives(obj, *args, **kwargs):
             for j in range(27):
                 info = obj.lines[line_beta + 3 + j].split()
                 component = tuple(translate_c[k] for k in info[0])
-                tensor.components[component] = float(info[1])
+                # NOTE: it seems that the component is reversed!!
+                tensor.components[component] = -float(info[1])
 
             if is_pockel:
                 if 'dDF' not in electrical_derivatives:

@@ -338,7 +338,7 @@ class PropertiesTestCase(QcipToolsTestCase):
         tests_in_tensor = [
             ('FF', 'static', (0, 0), 207.0506),
             ('dD', f, (1, 0), -0.0002),
-            ('XDD', f2, (0, 1, 2), 0.2916e+01)
+            ('XDD', f2, (0, 1, 2), -0.2916e+01)
         ]
 
         self.do_test_in_electrical_derivatives(electrical_derivatives, tests_in_tensor)
