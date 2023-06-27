@@ -1,7 +1,7 @@
 import math
 
 import numpy
-import mendeleev
+# import mendeleev
 import random
 
 from qcip_tools import bounding, transformations, symmetry
@@ -411,6 +411,8 @@ class Molecule(transformations.MutableTranslatable, transformations.MutableRotat
         :return: the connectivity, as a dictionary per atom index (as shifted_indexes)
         :rtype: dict
         """
+
+        import mendeleev
 
         distances = self.distances()
         connectivities = {}

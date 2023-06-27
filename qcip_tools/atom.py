@@ -1,5 +1,5 @@
 import numpy
-import mendeleev
+# import mendeleev
 
 from qcip_tools import transformations
 
@@ -148,13 +148,13 @@ class Atom(transformations.MutableTranslatable):
         self.mass = 0
 
         if self.atomic_number > 0:
-            if self.symbol not in _mendeleev_cache:  # otherwise, needs to read the data every f*** time
-                _mendeleev_cache[self.symbol] = mendeleev.element(self.symbol)
+            #if self.symbol not in _mendeleev_cache:  # otherwise, needs to read the data every f*** time
+            #    _mendeleev_cache[self.symbol] = mendeleev.element(self.symbol)
 
-            mendeleev_element = _mendeleev_cache[self.symbol]
+            # mendeleev_element = _mendeleev_cache[self.symbol]
             self.num_of_electrons = self.atomic_number
-            self.mass_number = mendeleev_element.mass_number
-            self.mass = mendeleev_element.atomic_weight if mass is None else mass
+            #self.mass_number = mendeleev_element.mass_number
+            #self.mass = mendeleev_element.atomic_weight if mass is None else mass
 
         if position is not None:
             if len(position) != 3:

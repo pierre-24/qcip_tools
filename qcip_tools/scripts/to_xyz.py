@@ -31,6 +31,8 @@ def get_arguments_parser():
         action=helpers.create_open_chemistry_file_action(),
         help='source of the derivatives')
 
+    parser.add_argument('-t', '--title', help='title of the XYZ', default='')
+
     return parser
 
 
@@ -43,7 +45,7 @@ def main():
     except PropertyNotPresent:
         return qcip_tools.scripts.exit_failure('cannot find molecule ({})'.format(args.infile.file_type))
 
-    xf = xyz.File.from_molecule(mol)
+    xf = xyz.File.from_molecule(mol, title=args.title)
     print(xf.to_string())
 
 
