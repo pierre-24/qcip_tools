@@ -255,7 +255,7 @@ def main():
                 for func in possible_argparse_parsers_func:
                     if func in module_obj.__dict__:
                         o = getattr(module_obj, func)()
-                        if type(o) == argparse.ArgumentParser:
+                        if type(o) is argparse.ArgumentParser:
                             arg_parser = o
                             break
 

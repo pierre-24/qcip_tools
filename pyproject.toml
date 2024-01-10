@@ -6,7 +6,7 @@ authors = [
 ]
 description = "Quantum Chemistry In Python (QCIP) tools package."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
@@ -17,6 +17,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
     'numpy',
@@ -37,7 +39,7 @@ repository = "https://github.com/pierre-24/qcip_tools.git"
 
 [project.scripts]
 
-# keep that alphabetical
+# keep that alphabetical ;)
 boltzmann_population = 'qcip_tools.scripts.boltzmann_population:main'
 check_chemistry_file = 'qcip_tools.scripts.check_chemistry_file:main'
 ct_analysis = 'qcip_tools.scripts.ct_analysis:main'
