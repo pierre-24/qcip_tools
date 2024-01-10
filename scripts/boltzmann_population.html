@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>boltzmann_population &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>boltzmann_population &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +30,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../scripts.html">Scripts documentation</a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code></li>
       <li class="wy-breadcrumbs-aside">
@@ -94,11 +99,11 @@
            <div itemprop="articleBody">
              
   <section id="boltzmann-population">
-<h1><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code><a class="headerlink" href="#boltzmann-population" title="Permalink to this heading"></a></h1>
+<h1><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code><a class="headerlink" href="#boltzmann-population" title="Link to this heading"></a></h1>
 <p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
 <p><strong>Version 0.1</strong> (Development).</p>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">boltzmann_population</span></code> -
 Compute the Boltzmann population of molecules</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: boltzmann_population [-h] [-v] [-t TEMPERATURE] [-p PRESSURE] [-c {E,H,G,U}] [-f FACTOR] [infiles ...]</span>
@@ -107,50 +112,50 @@ Compute the Boltzmann population of molecules</p>
 <p>Positional arguments:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-arg-infiles">
-<span id="cmdoption-boltzmann-population-arg-infiles"></span><span class="sig-name descname"><span class="pre">infiles</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-arg-infiles" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">infiles</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-arg-infiles" title="Link to this definition"></a></dt>
 <dd><p>sources</p>
 </dd></dl>
 
 <p>Optional arguments:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-h">
-<span id="cmdoption-boltzmann-population-h"></span><span id="cmdoption-boltzmann_population-help"></span><span id="cmdoption-boltzmann-population-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-h" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-boltzmann_population-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-h" title="Link to this definition"></a></dt>
 <dd><p>show this help message and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-v">
-<span id="cmdoption-boltzmann-population-v"></span><span id="cmdoption-boltzmann_population-version"></span><span id="cmdoption-boltzmann-population-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-v" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-boltzmann_population-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-v" title="Link to this definition"></a></dt>
 <dd><p>show program’s version number and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-t">
-<span id="cmdoption-boltzmann-population-t"></span><span id="cmdoption-boltzmann_population-temperature"></span><span id="cmdoption-boltzmann-population-temperature"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--temperature</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-t" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-boltzmann_population-temperature"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--temperature</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-t" title="Link to this definition"></a></dt>
 <dd><p>Temperature (in K)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-p">
-<span id="cmdoption-boltzmann-population-p"></span><span id="cmdoption-boltzmann_population-pressure"></span><span id="cmdoption-boltzmann-population-pressure"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--pressure</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-p" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-boltzmann_population-pressure"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--pressure</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-p" title="Link to this definition"></a></dt>
 <dd><p>Pressure (in Pa)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-c">
-<span id="cmdoption-boltzmann-population-c"></span><span id="cmdoption-boltzmann_population-criterion"></span><span id="cmdoption-boltzmann-population-criterion"></span><span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--criterion</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-c" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-boltzmann_population-criterion"></span><span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--criterion</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-c" title="Link to this definition"></a></dt>
 <dd><p>Criterion for the population</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-boltzmann_population-f">
-<span id="cmdoption-boltzmann-population-f"></span><span id="cmdoption-boltzmann_population-factor"></span><span id="cmdoption-boltzmann-population-factor"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--factor</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-f" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-boltzmann_population-factor"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--factor</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-boltzmann_population-f" title="Link to this definition"></a></dt>
 <dd><p>multiply energies by a given factor</p>
 </dd></dl>
 
 </section>
 <section id="more-information">
-<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<h2>More information<a class="headerlink" href="#more-information" title="Link to this heading"></a></h2>
 <p>Compute the Boltzmann population of molecules, based on:</p>
 <ul class="simple">
 <li><p>their total energy (<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">E</span></code>, default),</p></li>

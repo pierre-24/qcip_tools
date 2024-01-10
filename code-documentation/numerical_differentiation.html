@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Numerical differentiation (qcip_tools.numerical_differentiation) &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>Numerical differentiation (qcip_tools.numerical_differentiation) &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -30,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -96,7 +101,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
       <li class="breadcrumb-item active">Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
@@ -109,17 +114,17 @@
            <div itemprop="articleBody">
              
   <section id="numerical-differentiation-qcip-tools-numerical-differentiation">
-<h1>Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)<a class="headerlink" href="#numerical-differentiation-qcip-tools-numerical-differentiation" title="Permalink to this heading"></a></h1>
+<h1>Numerical differentiation (<code class="docutils literal notranslate"><span class="pre">qcip_tools.numerical_differentiation</span></code>)<a class="headerlink" href="#numerical-differentiation-qcip-tools-numerical-differentiation" title="Link to this heading"></a></h1>
 <section id="mathematical-background">
-<h2>Mathematical background<a class="headerlink" href="#mathematical-background" title="Permalink to this heading"></a></h2>
+<h2>Mathematical background<a class="headerlink" href="#mathematical-background" title="Link to this heading"></a></h2>
 <section id="numerical-derivation">
-<h3>Numerical derivation<a class="headerlink" href="#numerical-derivation" title="Permalink to this heading"></a></h3>
+<h3>Numerical derivation<a class="headerlink" href="#numerical-derivation" title="Link to this heading"></a></h3>
 <section id="theory">
-<h4>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h4>
+<h4>Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h4>
 <p>This an application of the <a class="reference external" href="https://en.wikipedia.org/wiki/Neville%27s_algorithm">Neville’s algorithm</a>.</p>
 <p>Let <span class="math notranslate nohighlight">\(M(x)\)</span> be a <a class="reference external" href="https://en.wikipedia.org/wiki/Taylor_series">Maclaurin series expansion</a> of a function <span class="math notranslate nohighlight">\(f(x)\)</span>,</p>
 <div class="math notranslate nohighlight" id="equation-expansion">
-<span class="eqno">(1)<a class="headerlink" href="#equation-expansion" title="Permalink to this equation"></a></span>\[M(x) =  \sum_ {n=0}^{n_{max}} \frac{1}{n!}\frac{\partial^n f(0)}{\partial x^n} x^n = \sum_ {n=0}^{n_{max}} \frac{A_n}{n!} x^n,\]</div>
+<span class="eqno">(1)<a class="headerlink" href="#equation-expansion" title="Link to this equation"></a></span>\[M(x) =  \sum_ {n=0}^{n_{max}} \frac{1}{n!}\frac{\partial^n f(0)}{\partial x^n} x^n = \sum_ {n=0}^{n_{max}} \frac{A_n}{n!} x^n,\]</div>
 <p>where <span class="math notranslate nohighlight">\(A_n=f^{(n)}(0)\)</span>, the value of the <span class="math notranslate nohighlight">\(n\)</span>-order derivative of <span class="math notranslate nohighlight">\(f(x)\)</span> at <span class="math notranslate nohighlight">\(x=0\)</span>. If the expansion is not truncated, <span class="math notranslate nohighlight">\(n_{max}=\infty\)</span>.</p>
 <p>Given a small value <span class="math notranslate nohighlight">\(h&gt;0\)</span> and <span class="math notranslate nohighlight">\(I_{a,q} \in \mathbb{R}\)</span>,</p>
 <div class="math notranslate nohighlight">
@@ -141,7 +146,7 @@ A_d(h) &amp;= \frac{d!}{h^d}\,\sum_{q=q_{min}}^{q_{max}} C_q\,M(h\,I_{a,q})+  \m
 \end{align}\end{split}\]</div>
 <p>In order for the equality to be satisfied, it is necessary that:</p>
 <div class="math notranslate nohighlight" id="equation-sys">
-<span class="eqno">(2)<a class="headerlink" href="#equation-sys" title="Permalink to this equation"></a></span>\[\begin{split}\sum_{q=q_{min}}^{q_{max}} I_{a,q}^n\,C_q = \left\{
+<span class="eqno">(2)<a class="headerlink" href="#equation-sys" title="Link to this equation"></a></span>\[\begin{split}\sum_{q=q_{min}}^{q_{max}} I_{a,q}^n\,C_q = \left\{
     \begin{array}{ll}
         1 &amp; \text{if }n=d,\\
         0 &amp; \text{otherwise.}
@@ -150,11 +155,6 @@ A_d(h) &amp;= \frac{d!}{h^d}\,\sum_{q=q_{min}}^{q_{max}} C_q\,M(h\,I_{a,q})+  \m
 In order to get a unique solution, <span class="math notranslate nohighlight">\(q_{max}-q_{min}+1\geqslant d\)</span> and therefore, one can set <span class="math notranslate nohighlight">\(n_{max}=q_{max}-q_{min}+1= d+p\)</span>.
 <span class="math notranslate nohighlight">\(q_{min}\)</span> and <span class="math notranslate nohighlight">\(q_{max}\)</span> take different values, depending of the approximation:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 43%" />
-<col style="width: 42%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
 <th class="head"><p><span class="math notranslate nohighlight">\(i_{min}\)</span></p></th>
@@ -179,7 +179,7 @@ In order to get a unique solution, <span class="math notranslate nohighlight">\(
 <p>Note that <span class="math notranslate nohighlight">\(p+d-1\)</span> should therefore always be even in the case of centered derivatives.</p>
 <p>The system of linear equation given by Eq. <a class="reference internal" href="#equation-sys">(2)</a> is solved. Once the <span class="math notranslate nohighlight">\(C_q\)</span>’s are determined, <span class="math notranslate nohighlight">\(A_d(h)\)</span> is obtained with a precision <span class="math notranslate nohighlight">\(\mathcal{O}(h^{d+p})\)</span> by computing</p>
 <div class="math notranslate nohighlight" id="equation-ad">
-<span class="eqno">(3)<a class="headerlink" href="#equation-ad" title="Permalink to this equation"></a></span>\[A_d(h) = \frac{d!}{h^d}\,\sum_{q=q_{min}}^{q_{max}} C_q\,M(h\,I_{a,q}).\]</div>
+<span class="eqno">(3)<a class="headerlink" href="#equation-ad" title="Link to this equation"></a></span>\[A_d(h) = \frac{d!}{h^d}\,\sum_{q=q_{min}}^{q_{max}} C_q\,M(h\,I_{a,q}).\]</div>
 <p>It can be simply showed that the coefficients for a multivariate function is a tensor product of the coefficients for the univariates approximations. In this case <span class="math notranslate nohighlight">\(A_d(\mathbf{h})\)</span> is a symmetric tensor, while <span class="math notranslate nohighlight">\(\mathbf{h}\)</span> is a vector.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -193,7 +193,7 @@ see the <a class="reference external" href="https://docs.python.org/3.6/tutorial
 </div>
 </section>
 <section id="implementation">
-<h4>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading"></a></h4>
+<h4>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h4>
 <p>The <span class="math notranslate nohighlight">\(I_{a,q}\)</span> function is named <code class="docutils literal notranslate"><span class="pre">ak_shifted()</span></code> in the python code.</p>
 <p>In the code, to works with the romberg triangles defined below, <span class="math notranslate nohighlight">\(h=a^{k}h_0\)</span>, where <span class="math notranslate nohighlight">\(k\)</span> is the minimal amplitude, while <span class="math notranslate nohighlight">\(h_0\)</span> is the minimal value.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Coefficients</span></code> class takes care of the computation of the different coefficients, storing them in <code class="docutils literal notranslate"><span class="pre">Coefficients.mat_coefs</span></code>.
@@ -225,9 +225,9 @@ Since the function expects real values, <span class="math notranslate nohighligh
 </section>
 </section>
 <section id="romberg-s-scheme-richardson-extrapolation">
-<h3>Romberg’s scheme (Richardson extrapolation)<a class="headerlink" href="#romberg-s-scheme-richardson-extrapolation" title="Permalink to this heading"></a></h3>
+<h3>Romberg’s scheme (Richardson extrapolation)<a class="headerlink" href="#romberg-s-scheme-richardson-extrapolation" title="Link to this heading"></a></h3>
 <section id="id1">
-<h4>Theory<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<h4>Theory<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
 <p>In quantum chemistry, the <a class="reference external" href="https://en.wikipedia.org/wiki/Richardson_extrapolation">Richardson extrapolation</a> is also known as the Romberg differentiation scheme.
 Like its integration counterpart, it allows to refine the value of a numerical derivatives by computing multiple estimate of the derivates.</p>
 <p>Given Eq. <a class="reference internal" href="#equation-expansion">(1)</a> and a small <span class="math notranslate nohighlight">\(h \in \mathbb{R}^+\)</span>, <span class="math notranslate nohighlight">\(r, m \in \mathbb{N}^+\)</span>, <span class="math notranslate nohighlight">\(k \in \mathbb{N}^0\)</span>,</p>
@@ -239,7 +239,7 @@ Like its integration counterpart, it allows to refine the value of a numerical d
 <p>It is therefore possible to remove the <span class="math notranslate nohighlight">\(s\)</span>-power term from the expansion by choosing <span class="math notranslate nohighlight">\(s=rm\)</span>.</p>
 <p>Let <span class="math notranslate nohighlight">\(H_{k,0}\equiv A_d(h=a^k h_0)\)</span> with <span class="math notranslate nohighlight">\(h_0\)</span> the minimal value, the following recurrence relation can be defined:</p>
 <div class="math notranslate nohighlight" id="equation-romberg">
-<span class="eqno">(4)<a class="headerlink" href="#equation-romberg" title="Permalink to this equation"></a></span>\[H_{k,m} = \frac{a^{rm}\,H_{k,m-1}-H_{k+1,m-1}}{a^{rm}-1} + \mathcal{O}(h^{r(m+1)}),\]</div>
+<span class="eqno">(4)<a class="headerlink" href="#equation-romberg" title="Link to this equation"></a></span>\[H_{k,m} = \frac{a^{rm}\,H_{k,m-1}-H_{k+1,m-1}}{a^{rm}-1} + \mathcal{O}(h^{r(m+1)}),\]</div>
 <p>where <span class="math notranslate nohighlight">\(m\)</span> is the number of <em>refinement</em> steps or iterations. To achieve such a <span class="math notranslate nohighlight">\(\mathcal{O}(h^{rm})\)</span> precision, it is required to know <span class="math notranslate nohighlight">\(m+1\)</span> values of <span class="math notranslate nohighlight">\(H_{k,0}\)</span> with <span class="math notranslate nohighlight">\(k\in [0;m+1]\)</span>.
 In general, <span class="math notranslate nohighlight">\(r\)</span> should be equal to 1 to remove the <span class="math notranslate nohighlight">\(m\)</span>-power contamination at iteration <span class="math notranslate nohighlight">\(m\)</span>, but in the case of centered derivatives, every odd-power term vanishes, so one can use <span class="math notranslate nohighlight">\(r=2\)</span> to achieve a faster convergence by removing the <span class="math notranslate nohighlight">\(2m\)</span>-power contamination at iteration <span class="math notranslate nohighlight">\(m\)</span>.</p>
 <p>A romberg triangle is obtained, with the following shape:</p>
@@ -263,7 +263,7 @@ Without knowledge of this ideal <span class="math notranslate nohighlight">\(h_0
 <figure class="align-center" id="id3">
 <img alt="../_images/flowchart_romberg_selection.png" src="../_images/flowchart_romberg_selection.png" />
 <figcaption>
-<p><span class="caption-text">Flowchart to select the “best” value in a Romberg triangle, adapted from the text in M. de Wergifosse <em>et al</em>. <em>Int. J. Quant. Chem.</em> <strong>114</strong>, 900 (2014).</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+<p><span class="caption-text">Flowchart to select the “best” value in a Romberg triangle, adapted from the text in M. de Wergifosse <em>et al</em>. <em>Int. J. Quant. Chem.</em> <strong>114</strong>, 900 (2014).</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>Note that the original paper does not give advices on what the threshold value should be, but it clearly depends on the order of magnitude of <span class="math notranslate nohighlight">\(A_d(h)\)</span> and the available (and/or required) precision.</p>
@@ -274,7 +274,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 </div>
 </section>
 <section id="id2">
-<h4>Implementation<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<h4>Implementation<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">RombergTriangle</span></code> class implement the Romberg’s triangle algorithm. The constructors expect the value corresponding to increasing <code class="docutils literal notranslate"><span class="pre">k</span></code> values to be passed as argument.</p>
 <p>The <span class="math notranslate nohighlight">\(H_{k,m}\)</span> are available as <code class="docutils literal notranslate"><span class="pre">RombergTriangle.romberg_triangle[k,</span> <span class="pre">m]</span></code>. Note that the values for which <span class="math notranslate nohighlight">\(k \geqslant k_{max} - m\)</span> are set to zero.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">find_best_value()</span></code> implement the flowchart showed above. To help the (eventual) debugging and understanding, a <code class="docutils literal notranslate"><span class="pre">verbose</span></code> option is available.</p>
@@ -323,7 +323,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 </section>
 </section>
 <section id="sources">
-<h2>Sources<a class="headerlink" href="#sources" title="Permalink to this heading"></a></h2>
+<h2>Sources<a class="headerlink" href="#sources" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>D. Eberly, « Derivative Approximation by Finite Difference ». From the <a class="reference external" href="https://www.geometrictools.com/Documentation/Documentation.html">Geometric Tools documentation</a> (last consultation: March 4, 2017).</p></li>
 <li><p>J.N. Lyness <em>et al</em>. <em>Numer. Math.</em> <strong>8</strong>, 458 (1966).</p></li>
@@ -333,13 +333,13 @@ But since the vector is symmetric, it can reduce the number of components to car
 </ul>
 </section>
 <section id="module-qcip_tools.numerical_differentiation">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.numerical_differentiation" title="Permalink to this heading"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.numerical_differentiation" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.Coefficients">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">Coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">Coefficients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients" title="Link to this definition"></a></dt>
 <dd><p>Class to store the coefficients for the derivative calculation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d</strong> (<em>int</em>) – derivation order</p></li>
 <li><p><strong>p</strong> (<em>int</em>) – order of error</p></li>
@@ -350,10 +350,10 @@ But since the vector is symmetric, it can reduce the number of components to car
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.Coefficients.choose_p_for_centered">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">choose_p_for_centered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients.choose_p_for_centered" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">choose_p_for_centered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients.choose_p_for_centered" title="Link to this definition"></a></dt>
 <dd><p>Choose the precision so that <span class="math notranslate nohighlight">\(d+p-1\)</span> is even (for centered derivatives)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>d</strong> (<em>int</em>) – order of the derivative</p></li>
 <li><p><strong>shift</strong> (<em>int</em>) – increase the precision</p></li>
@@ -364,19 +364,19 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.Coefficients.prefactor">
-<span class="sig-name descname"><span class="pre">prefactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients.prefactor" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">prefactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.Coefficients.prefactor" title="Link to this definition"></a></dt>
 <dd><p>return the <span class="math notranslate nohighlight">\(\frac{d!}{h^d}\)</span> prefactor, with <span class="math notranslate nohighlight">\(h=a^kh_0\)</span>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>h0</strong> (<em>float</em>) – minimal value</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – Minimal amplitude</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>prefactor</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -386,11 +386,11 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">RombergTriangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">RombergTriangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle" title="Link to this definition"></a></dt>
 <dd><p>Do a Romberg triangle to lower (remove) the influence of higher-order derivatives.</p>
 <p>Note: Romberg triangle indices are n, then k (but printing require n to be column, so invert them !)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vals</strong> (<em>list</em>) – list of derivatives, the first one calculated with the lowest k, the last one the larger</p></li>
 <li><p><strong>ratio</strong> (<em>float</em>) – ratio (a)</p></li>
@@ -401,16 +401,16 @@ But since the vector is symmetric, it can reduce the number of components to car
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle.amplitude_error">
-<span class="sig-name descname"><span class="pre">amplitude_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.amplitude_error" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">amplitude_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.amplitude_error" title="Link to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\varepsilon_k(m) = H_{k,m} - H_{k-1,m}\)</span></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>k</strong> (<em>int</em>) – amplitude</p></li>
 <li><p><strong>m</strong> (<em>int</em>) – iteration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -418,19 +418,19 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle.find_best_value">
-<span class="sig-name descname"><span class="pre">find_best_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold=1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out=&lt;_io.TextIOWrapper</span> <span class="pre">name='&lt;stdout&gt;'</span> <span class="pre">mode='w'</span> <span class="pre">encoding='utf-8'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.find_best_value" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_best_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold=1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out=&lt;_io.TextIOWrapper</span> <span class="pre">name='&lt;stdout&gt;'</span> <span class="pre">mode='w'</span> <span class="pre">encoding='utf-8'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.find_best_value" title="Link to this definition"></a></dt>
 <dd><p>Find the “best value” in the Romberg triangle</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>threshold</strong> (<em>float</em>) – threshold for maximum iteration error</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – get an insight of how the value was chosen</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a tuple of 3 information: position (tuple), value (float), iteration error (float)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
@@ -438,16 +438,16 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle.iteration_error">
-<span class="sig-name descname"><span class="pre">iteration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.iteration_error" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">iteration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.iteration_error" title="Link to this definition"></a></dt>
 <dd><p>Compute <span class="math notranslate nohighlight">\(\varepsilon_m(k) = H_{k,m} - H_{k,m-1}\)</span></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>k</strong> (<em>int</em>) – amplitude</p></li>
 <li><p><strong>m</strong> (<em>int</em>) – iteration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -455,7 +455,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.RombergTriangle.romberg_triangle_repr">
-<span class="sig-name descname"><span class="pre">romberg_triangle_repr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_decoration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.romberg_triangle_repr" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">romberg_triangle_repr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_decoration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.RombergTriangle.romberg_triangle_repr" title="Link to this definition"></a></dt>
 <dd><p>Print the Romberg triangle …</p>
 </dd></dl>
 
@@ -463,7 +463,7 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.ak_shifted">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">ak_shifted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.ak_shifted" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">ak_shifted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.ak_shifted" title="Link to this definition"></a></dt>
 <dd><p>Match the <span class="math notranslate nohighlight">\(k\)</span> and the real <span class="math notranslate nohighlight">\(a^k\)</span> value.</p>
 <p>For a given <span class="math notranslate nohighlight">\(q\)</span>, returns</p>
 <div class="math notranslate nohighlight">
@@ -474,13 +474,13 @@ But since the vector is symmetric, it can reduce the number of components to car
         a^{q-1}&amp;\text{if }q&gt;0
     \end{array}\right.\end{split}\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>int</em>) – q</p></li>
 <li><p><strong>ratio</strong> (<em>float</em>) – ratio (a)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -488,11 +488,11 @@ But since the vector is symmetric, it can reduce the number of components to car
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.compute_derivative_of_function">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">compute_derivative_of_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalar_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_space_dimension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.compute_derivative_of_function" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">compute_derivative_of_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalar_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_space_dimension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.compute_derivative_of_function" title="Link to this definition"></a></dt>
 <dd><p>Compute the numerical derivative of a scalar, calling the appropriate results through <code class="docutils literal notranslate"><span class="pre">scalar_function</span></code>,
 to which the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameter is provided.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>c</strong> (<em>list</em>) – list of tuple to describe the numerical derivative (Coefficient, coordinate)</p></li>
 <li><p><strong>scalar_function</strong> (<em>callback</em>) – a callback function to access the different quantities</p></li>
@@ -502,10 +502,10 @@ to which the <code class="docutils literal notranslate"><span class="pre">**kwar
 <li><p><strong>kwargs</strong> (<em>dict</em>) – other arguments, transfered to <code class="docutils literal notranslate"><span class="pre">scalar_function()</span></code></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>value of the derivative (as a scalar)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -513,17 +513,17 @@ to which the <code class="docutils literal notranslate"><span class="pre">**kwar
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.numerical_differentiation.real_fields">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">real_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.real_fields" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.numerical_differentiation.</span></span><span class="sig-name descname"><span class="pre">real_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.numerical_differentiation.real_fields" title="Link to this definition"></a></dt>
 <dd><p>Return the “real value” of the field applied</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fields</strong> (<em>list</em>) – input field (in term of ak)</p></li>
 <li><p><strong>min_field</strong> (<em>float</em>) – minimal field</p></li>
 <li><p><strong>ratio</strong> (<em>float</em>) – ratio</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list</p>
 </dd>
 </dl>

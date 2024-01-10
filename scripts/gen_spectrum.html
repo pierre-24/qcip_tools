@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gen_spectrum &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>gen_spectrum &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +30,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../scripts.html">Scripts documentation</a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code></li>
       <li class="wy-breadcrumbs-aside">
@@ -94,11 +99,11 @@
            <div itemprop="articleBody">
              
   <section id="gen-spectrum">
-<h1><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code><a class="headerlink" href="#gen-spectrum" title="Permalink to this heading"></a></h1>
+<h1><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code><a class="headerlink" href="#gen-spectrum" title="Link to this heading"></a></h1>
 <p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
 <p><strong>Version 0.1</strong> (Development).</p>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">gen_spectrum</span></code> -
 Generate a spectrum</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: gen_spectrum [-h] [-v] [-l LIMITS] [-e EACH] [-I] [-L LIMIT_IMPULSES]</span>
@@ -110,92 +115,92 @@ Generate a spectrum</p>
 <p>Positional arguments:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-arg-infile">
-<span id="cmdoption-gen-spectrum-arg-infile"></span><span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-arg-infile" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-arg-infile" title="Link to this definition"></a></dt>
 <dd><p>source of the derivatives</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-arg-subparser_name">
-<span id="cmdoption-gen-spectrum-arg-subparser-name"></span><span class="sig-name descname"><span class="pre">subparser_name</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-arg-subparser_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">subparser_name</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-arg-subparser_name" title="Link to this definition"></a></dt>
 <dd><p>source of the spectrum (<cite>uv</cite> or <cite>ir</cite>)</p>
 </dd></dl>
 
 <p>Optional arguments:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-h">
-<span id="cmdoption-gen-spectrum-h"></span><span id="cmdoption-gen_spectrum-help"></span><span id="cmdoption-gen-spectrum-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-h" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-h" title="Link to this definition"></a></dt>
 <dd><p>show this help message and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-v">
-<span id="cmdoption-gen-spectrum-v"></span><span id="cmdoption-gen_spectrum-version"></span><span id="cmdoption-gen-spectrum-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-v" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-v" title="Link to this definition"></a></dt>
 <dd><p>show program’s version number and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-l">
-<span id="cmdoption-gen-spectrum-l"></span><span id="cmdoption-gen_spectrum-limits"></span><span id="cmdoption-gen-spectrum-limits"></span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--limits</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-l" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-limits"></span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--limits</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-l" title="Link to this definition"></a></dt>
 <dd><p>Limit and units of the graph: <cite>min:max:unit</cite></p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-e">
-<span id="cmdoption-gen-spectrum-e"></span><span id="cmdoption-gen_spectrum-each"></span><span id="cmdoption-gen-spectrum-each"></span><span class="sig-name descname"><span class="pre">-e</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--each</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-e" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-each"></span><span class="sig-name descname"><span class="pre">-e</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--each</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-e" title="Link to this definition"></a></dt>
 <dd><p>Interval (in unit of limits)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-I">
-<span id="cmdoption-gen-spectrum-i"></span><span id="cmdoption-gen_spectrum-impulses"></span><span id="cmdoption-gen-spectrum-impulses"></span><span class="sig-name descname"><span class="pre">-I</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--impulses</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-I" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-impulses"></span><span class="sig-name descname"><span class="pre">-I</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--impulses</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-I" title="Link to this definition"></a></dt>
 <dd><p>Add impulses (at the end)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-L">
-<span id="cmdoption-gen_spectrum-limit-impulses"></span><span id="cmdoption-gen-spectrum-limit-impulses"></span><span class="sig-name descname"><span class="pre">-L</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--limit-impulses</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-L" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-limit-impulses"></span><span class="sig-name descname"><span class="pre">-L</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--limit-impulses</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-L" title="Link to this definition"></a></dt>
 <dd><p>Only output impulses above that threshold</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-m">
-<span id="cmdoption-gen-spectrum-m"></span><span id="cmdoption-gen_spectrum-maximums"></span><span id="cmdoption-gen-spectrum-maximums"></span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--maximums</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-m" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-maximums"></span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--maximums</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-m" title="Link to this definition"></a></dt>
 <dd><p>Add maximums (at the end, after the impulses if any)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-n">
-<span id="cmdoption-gen-spectrum-n"></span><span id="cmdoption-gen_spectrum-normalize"></span><span id="cmdoption-gen-spectrum-normalize"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--normalize</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-n" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-normalize"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--normalize</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-n" title="Link to this definition"></a></dt>
 <dd><p>Set maximum intensity to 1</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-s">
-<span id="cmdoption-gen-spectrum-s"></span><span id="cmdoption-gen_spectrum-scale"></span><span id="cmdoption-gen-spectrum-scale"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--scale</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-s" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-scale"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--scale</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-s" title="Link to this definition"></a></dt>
 <dd><p>Scale the intensities</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-E">
-<span id="cmdoption-gen_spectrum-exclude"></span><span id="cmdoption-gen-spectrum-exclude"></span><span class="sig-name descname"><span class="pre">-E</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--exclude</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-E" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-exclude"></span><span class="sig-name descname"><span class="pre">-E</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--exclude</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-E" title="Link to this definition"></a></dt>
 <dd><p>Exclude some peaks (list starts at 0)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-i">
-<span id="cmdoption-gen_spectrum-include"></span><span id="cmdoption-gen-spectrum-include"></span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--include</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-i" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-include"></span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--include</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-i" title="Link to this definition"></a></dt>
 <dd><p>Include only some peaks (list starts at 0)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-gen_spectrum-D">
-<span id="cmdoption-gen-spectrum-d"></span><span id="cmdoption-gen_spectrum-decontaminate"></span><span id="cmdoption-gen-spectrum-decontaminate"></span><span class="sig-name descname"><span class="pre">-D</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--decontaminate</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-D" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-gen_spectrum-decontaminate"></span><span class="sig-name descname"><span class="pre">-D</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--decontaminate</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gen_spectrum-D" title="Link to this definition"></a></dt>
 <dd><p>Exclude peaks for which Δ&lt;Ŝ²&gt; is larger than this threshold (only relevant if &lt;S²&gt; is available)</p>
 </dd></dl>
 
 </section>
 <section id="more-information">
-<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<h2>More information<a class="headerlink" href="#more-information" title="Link to this heading"></a></h2>
 <p>Generate spectrum the point to plot a spectrum in a given window of energy (or wavelength).</p>
 <p>The <cite>y</cite> values are in arbitrary units.</p>
 <p>Currently, <strong>only fetch UV intensities</strong> and plot them, for</p>

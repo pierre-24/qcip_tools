@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installing qcip_tools &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Installing qcip_tools &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -29,14 +30,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -67,7 +72,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Installing qcip_tools</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
@@ -79,23 +84,23 @@
            <div itemprop="articleBody">
              
   <section id="installing-qcip-tools">
-<h1>Installing qcip_tools<a class="headerlink" href="#installing-qcip-tools" title="Permalink to this heading"></a></h1>
+<h1>Installing qcip_tools<a class="headerlink" href="#installing-qcip-tools" title="Link to this heading"></a></h1>
 <section id="normal-install">
-<h2>Normal install<a class="headerlink" href="#normal-install" title="Permalink to this heading"></a></h2>
+<h2>Normal install<a class="headerlink" href="#normal-install" title="Link to this heading"></a></h2>
 <p>To just use <code class="docutils literal notranslate"><span class="pre">qcip_tools</span></code> in your Python projects, simply use pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --user git+https://github.com/pierre-24/qcip_tools.git@vXX
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>git+https://github.com/pierre-24/qcip_tools.git@vXX
 </pre></div>
 </div>
 <p>Change <code class="docutils literal notranslate"><span class="pre">&#64;vXX</span></code> at the end of the line to fetch a given version (listed <a class="reference external" href="https://github.com/pierre-24/qcip_tools#readme">in the README</a>).</p>
 <p>Note that <code class="docutils literal notranslate"><span class="pre">--user</span></code> allow you to install the package without being superuser (see <a class="reference external" href="https://pip.pypa.io/en/stable/user_guide/#user-installs">here</a>).
 You will probably need to add <code class="docutils literal notranslate"><span class="pre">$HOME/.local/bin</span></code> to <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> for this to work:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s1">&#39;PATH=$HOME/.local/bin:$PATH&#39;</span> &gt;&gt; ~/.bashrc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;PATH=$HOME/.local/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 </pre></div>
 </div>
 <p>On the other hand, you can install it in a <em>virtualenv</em> (see below).</p>
 </section>
 <section id="optional-patching-dalton">
-<h2>(<em>optional</em>) Patching Dalton<a class="headerlink" href="#optional-patching-dalton" title="Permalink to this heading"></a></h2>
+<h2>(<em>optional</em>) Patching Dalton<a class="headerlink" href="#optional-patching-dalton" title="Link to this heading"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Not checked with recent (&gt; 2018) version of Dalton.</p>
@@ -104,25 +109,25 @@ You will probably need to add <code class="docutils literal notranslate"><span c
 This is generally not important, except if you are looking for accuracy (for numerical differentiation, for example).</p>
 <p>To apply this patch you need to recompile Dalton (so you need git, a fortran compiler, and eventual BLAS/LAPACK/MKL).
 The following  commands allow you to <a class="reference external" href="https://gitlab.com/dalton/dalton">get the sources</a>, and check if everything is ok:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone --recursive https://gitlab.com/dalton/dalton.git
-<span class="nb">cd</span> dalton/
-git checkout -b special_version origin/release/2016
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://gitlab.com/dalton/dalton.git
+<span class="nb">cd</span><span class="w"> </span>dalton/
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>special_version<span class="w"> </span>origin/release/2016
 <span class="c1"># use &quot;origin/master&quot; if you want the latest (maybe buggy) version</span>
-git apply --check /path/to/dalton.patch
+git<span class="w"> </span>apply<span class="w"> </span>--check<span class="w"> </span>/path/to/dalton.patch
 </pre></div>
 </div>
 <p>If it is the case (no <code class="docutils literal notranslate"><span class="pre">error</span></code> in the output of the previous command), you can apply it and compile a new version of Dalton:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git am --signoff &lt; /path/to/dalton.patch
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>am<span class="w"> </span>--signoff<span class="w"> </span>&lt;<span class="w"> </span>/path/to/dalton.patch
 <span class="c1">#  You may get &quot;trailing whitespace&quot; error, but it&#39;s ok</span>
-./setup --prefix<span class="o">=</span>/path/to/destination <span class="c1"># [--int64]</span>
-<span class="nb">cd</span> build
+./setup<span class="w"> </span>--prefix<span class="o">=</span>/path/to/destination<span class="w"> </span><span class="c1"># [--int64]</span>
+<span class="nb">cd</span><span class="w"> </span>build
 make
-make install
+make<span class="w"> </span>install
 </pre></div>
 </div>
 </section>
 <section id="installation-for-contributors">
-<h2>Installation for contributors<a class="headerlink" href="#installation-for-contributors" title="Permalink to this heading"></a></h2>
+<h2>Installation for contributors<a class="headerlink" href="#installation-for-contributors" title="Link to this heading"></a></h2>
 <p>To contribute to the project,</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.github.com/en/get-started/quickstart/fork-a-repo">Fork it</a>.</p></li>

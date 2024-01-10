@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Derivatives w.r.t. geometrical stuffs (qcip_tools.derivatives_g) &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>Derivatives w.r.t. geometrical stuffs (qcip_tools.derivatives_g) &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -30,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -95,7 +100,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
       <li class="breadcrumb-item active">Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
@@ -108,10 +113,10 @@
            <div itemprop="articleBody">
              
   <section id="derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g">
-<h1>Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)<a class="headerlink" href="#derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g" title="Permalink to this heading"></a></h1>
+<h1>Derivatives w.r.t. geometrical stuffs (<code class="docutils literal notranslate"><span class="pre">qcip_tools.derivatives_g</span></code>)<a class="headerlink" href="#derivatives-w-r-t-geometrical-stuffs-qcip-tools-derivatives-g" title="Link to this heading"></a></h1>
 <p>Tools to help the manipulation of derivatives of the energy with respect to cartesian (<code class="docutils literal notranslate"><span class="pre">G</span></code>) or normal mode (<code class="docutils literal notranslate"><span class="pre">N</span></code>) coordinates.</p>
 <section id="theory">
-<h2>Theory<a class="headerlink" href="#theory" title="Permalink to this heading"></a></h2>
+<h2>Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h2>
 <p>The displacement around the equilibrium position, <span class="math notranslate nohighlight">\(\mathbf{x}_i=\mathbf{x}'_i-\mathbf{x}_{i,0}\)</span>, may be expressed as a Taylor series to describe the potential energy surface:</p>
 <blockquote>
 <div><div class="math notranslate nohighlight">
@@ -120,7 +125,7 @@
 <p>where <span class="math notranslate nohighlight">\(\mathbf{x}\in\mathbf{R}^{3N}\)</span>, <span class="math notranslate nohighlight">\(F_i=\left.\frac{\partial V}{\partial\mathbf{x}_i}\right|_{\mathbf{x}=0}\)</span> is the gradient (so the forces, wich are close to 0 if the system is in equilibrium), <span class="math notranslate nohighlight">\(H_{ij}=\left.\frac{\partial^2 V}{\partial\mathbf{x}_i\mathbf{x}_j}\right|_{\mathbf{x}=0}\)</span> is the hessian (force constant matrix) and <span class="math notranslate nohighlight">\(F_{ijk}\)</span> is the cubic force constants matrix (and so on).
 The sums runs over the <span class="math notranslate nohighlight">\(3N\)</span> degrees of freedom of <span class="math notranslate nohighlight">\(N\)</span> atoms.</p>
 <section id="normal-modes">
-<h3>Normal modes<a class="headerlink" href="#normal-modes" title="Permalink to this heading"></a></h3>
+<h3>Normal modes<a class="headerlink" href="#normal-modes" title="Link to this heading"></a></h3>
 <p>By settings the Lagrange equations of the harmonic oscillator,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -141,13 +146,13 @@ The sums runs over the <span class="math notranslate nohighlight">\(3N\)</span> 
 \[(\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}})\,\mathbf{Q} = \mathbf{\omega}^2\,\mathbf{Q},\]</div>
 <p>or,</p>
 <div class="math notranslate nohighlight" id="equation-x1">
-<span class="eqno">(1)<a class="headerlink" href="#equation-x1" title="Permalink to this equation"></a></span>\[\mathbf{Q}^\dagger\,\mathbf{H}^m\,\mathbf{Q} = \omega^2\]</div>
+<span class="eqno">(1)<a class="headerlink" href="#equation-x1" title="Link to this equation"></a></span>\[\mathbf{Q}^\dagger\,\mathbf{H}^m\,\mathbf{Q} = \omega^2\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{H}^m=\mathbf{m}^{-\frac{1}{2}}\mathbf{H}\,\mathbf{m}^{-\frac{1}{2}}\)</span> is the mass-weighted Hessian.
 The <span class="math notranslate nohighlight">\(\mathbf{Q}\)</span>’s are therefore eigenvectors of the mass-weigted hessian, also called normal modes (which form a complete and orthogonal basis), while the <span class="math notranslate nohighlight">\(\mathbf{\omega}\)</span>’s are the eigenvalues (vibrational frequencies).
 There is 6 (or 5, if the system is linear) zeros eigenvalues for the translation and rotation modes, while the other normal modes describe the vibrations.</p>
 </section>
 <section id="computation-of-normal-modes">
-<h3>Computation of normal modes<a class="headerlink" href="#computation-of-normal-modes" title="Permalink to this heading"></a></h3>
+<h3>Computation of normal modes<a class="headerlink" href="#computation-of-normal-modes" title="Link to this heading"></a></h3>
 <p>The computation takes place in the  <code class="docutils literal notranslate"><span class="pre">MassWeightedHessian</span></code> class.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -169,7 +174,7 @@ Masses, <span class="math notranslate nohighlight">\(m_i\)</span> and <span clas
 <li><p>Compute the <span class="math notranslate nohighlight">\(3N\)</span> eigenvalues (<span class="math notranslate nohighlight">\(\omega^2\)</span>) and egeinvectors (<span class="math notranslate nohighlight">\(\mathbf{Q}\)</span>) of <span class="math notranslate nohighlight">\(\mathbf{H}^m\)</span>. The explicit set of equations to solve, obtained from <a class="reference internal" href="#equation-x1">(1)</a>, is written</p>
 <blockquote>
 <div><div class="math notranslate nohighlight" id="equation-v1">
-<span class="eqno">(2)<a class="headerlink" href="#equation-v1" title="Permalink to this equation"></a></span>\[\omega_p^2\,\delta_{pq} = \sum_{i\alpha,j\beta} Q_{i\alpha,p}\,\frac{H_{i\alpha,j\beta}}{\sqrt{m_i\,m_j}}\,Q_{j\beta,q}.\label{eq:v1}\]</div>
+<span class="eqno">(2)<a class="headerlink" href="#equation-v1" title="Link to this equation"></a></span>\[\omega_p^2\,\delta_{pq} = \sum_{i\alpha,j\beta} Q_{i\alpha,p}\,\frac{H_{i\alpha,j\beta}}{\sqrt{m_i\,m_j}}\,Q_{j\beta,q}.\label{eq:v1}\]</div>
 </div></blockquote>
 </li>
 </ol>
@@ -205,7 +210,7 @@ Eventually discard the 6 (or 5) first lowest ones.</p>
 </div>
 </section>
 <section id="computation-of-thermochemistry-data">
-<h3>Computation of thermochemistry data<a class="headerlink" href="#computation-of-thermochemistry-data" title="Permalink to this heading"></a></h3>
+<h3>Computation of thermochemistry data<a class="headerlink" href="#computation-of-thermochemistry-data" title="Link to this heading"></a></h3>
 <p>See <a class="reference external" href="http://gaussian.com/thermo/">this excellent white paper from Gaussian</a> on thermochemistry, which explains step by step how the thermochemistry quantities are computed.</p>
 <p>Since the vibrational frequencies are needed, the <code class="docutils literal notranslate"><span class="pre">MassWeightedHessian</span></code> object also provide the methods for thermochemistry.
 Note that currently, the heat capacity is not implemented.</p>
@@ -217,17 +222,17 @@ Therefore it is not included in the computation of internal energy, enthalpy of 
 </section>
 </section>
 <section id="module-qcip_tools.derivatives_g">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_g" title="Permalink to this heading"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.derivatives_g" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">BaseGeometricalDerivativeTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacial_dof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans_plus_rot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">BaseGeometricalDerivativeTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacial_dof</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans_plus_rot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor" title="Link to this definition"></a></dt>
 <dd><p>Base for all derivatives of the energy with respect to geometrical parameters</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor.to_name">
-<span class="sig-name descname"><span class="pre">to_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor.to_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor.to_name" title="Link to this definition"></a></dt>
 <dd><p>Get the name of the tensor from its representation, by using <code class="docutils literal notranslate"><span class="pre">REPRESENTATION</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -237,10 +242,10 @@ Therefore it is not included in the computation of internal energy, enthalpy of 
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">MassWeightedHessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cartesian_hessian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">MassWeightedHessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cartesian_hessian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian" title="Link to this definition"></a></dt>
 <dd><p>To be exact, this is not a derivatives of the energy. So it is not a child of <code class="docutils literal notranslate"><span class="pre">derivatives.Tensor</span></code> !</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>molecule</strong> (<a class="reference internal" href="molecule.html#qcip_tools.molecule.Molecule" title="qcip_tools.molecule.Molecule"><em>qcip_tools.molecule.Molecule</em></a>) – the molecule</p></li>
 <li><p><strong>cartesian_hessian</strong> (<em>numpy.array</em><em>|</em><a class="reference internal" href="#qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor" title="qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor"><em>qcip_tools.derivatives_g.BaseGeometricalDerivativeTensor</em></a>) – cartesian hessian (<code class="docutils literal notranslate"><span class="pre">GG</span></code>).</p></li>
@@ -251,37 +256,37 @@ but used, for example, in thermochemistry</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.ENERGY_IN_AU_CONVERSION">
-<span class="sig-name descname"><span class="pre">ENERGY_IN_AU_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.808798847133371e-07</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.ENERGY_IN_AU_CONVERSION" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ENERGY_IN_AU_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.808798847133371e-07</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.ENERGY_IN_AU_CONVERSION" title="Link to this definition"></a></dt>
 <dd><p>Convert energy from J/mol to Hartree (per particle)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.HARTREE_TO_WAVENUMBER_CONVERSION">
-<span class="sig-name descname"><span class="pre">HARTREE_TO_WAVENUMBER_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">219474.6313632</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.HARTREE_TO_WAVENUMBER_CONVERSION" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">HARTREE_TO_WAVENUMBER_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">219474.6313632</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.HARTREE_TO_WAVENUMBER_CONVERSION" title="Link to this definition"></a></dt>
 <dd><p>Convert Hartree to wavenumber (cm⁻¹)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.INERTIA_CONVERSION">
-<span class="sig-name descname"><span class="pre">INERTIA_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.6605390666000002e-47</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.INERTIA_CONVERSION" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">INERTIA_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.6605390666000002e-47</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.INERTIA_CONVERSION" title="Link to this definition"></a></dt>
 <dd><p>Convert inertia from UMA*A² to kg*m²</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.MASS_CONVERSION">
-<span class="sig-name descname"><span class="pre">MASS_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.6605390666e-27</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.MASS_CONVERSION" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MASS_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.6605390666e-27</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.MASS_CONVERSION" title="Link to this definition"></a></dt>
 <dd><p>Convert mass from AMU to kg</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.VIB_ENERGY_CONVERSION">
-<span class="sig-name descname"><span class="pre">VIB_ENERGY_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6579683920501762.0</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.VIB_ENERGY_CONVERSION" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">VIB_ENERGY_CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6579683920501762.0</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.VIB_ENERGY_CONVERSION" title="Link to this definition"></a></dt>
 <dd><p>Convert hartree to hertz</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.compute_enthalpy">
-<span class="sig-name descname"><span class="pre">compute_enthalpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_enthalpy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_enthalpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_enthalpy" title="Link to this definition"></a></dt>
 <dd><p>Compute the value of the different contribution (translation, rotation, vibration) to the enthalpy,
 <strong>IN HARTREE</strong> !</p>
 <div class="admonition note">
@@ -290,13 +295,13 @@ but used, for example, in thermochemistry</p></li>
 and returns the whole thing (so the same remarks applies, in particular: NO ZPVA)</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>temperature</strong> (<em>float</em>) – temperature considered (in Kelvin)</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(H_t, H_r, H_v) (as a tuple, in Hartree)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
@@ -304,7 +309,7 @@ and returns the whole thing (so the same remarks applies, in particular: NO ZPVA
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.compute_entropy">
-<span class="sig-name descname"><span class="pre">compute_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_entropy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_entropy" title="Link to this definition"></a></dt>
 <dd><p>Compute the value of the different contribution (translation, rotation, vibration) to the entropy,
 <strong>IN HARTREE / KELVIN</strong> !</p>
 <div class="admonition note">
@@ -315,17 +320,17 @@ and returns the whole thing (so the same remarks applies, in particular: NO ZPVA
 </ul>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>symmetry_number</strong> (<em>int</em>) – symmetry number for the rotation</p></li>
 <li><p><strong>temperature</strong> (<em>float</em>) – temperature considered (in Kelvin)</p></li>
 <li><p><strong>pressure</strong> (<em>float</em>) – pressure (in pascal)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(S_t, S_r, S_v) (as a tuple, in Hartree / Kelvin)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
@@ -333,7 +338,7 @@ and returns the whole thing (so the same remarks applies, in particular: NO ZPVA
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.compute_gibbs_free_energy">
-<span class="sig-name descname"><span class="pre">compute_gibbs_free_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_gibbs_free_energy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_gibbs_free_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_gibbs_free_energy" title="Link to this definition"></a></dt>
 <dd><p>Compute the value of the different contribution (translation, rotation, vibration) to gibbs free energy,
 <strong>IN HARTREE</strong> !</p>
 <div class="admonition note">
@@ -342,17 +347,17 @@ and returns the whole thing (so the same remarks applies, in particular: NO ZPVA
 No ZPVA, no electronic energy (as usual)</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>symmetry_number</strong> (<em>int</em>) – symmetry number for the rotation</p></li>
 <li><p><strong>temperature</strong> (<em>float</em>) – temperature considered (in Kelvin)</p></li>
 <li><p><strong>pressure</strong> (<em>float</em>) – pressure (in pascal)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(G_t, G_r, G_v) (as a tuple, in Hartree)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
@@ -360,7 +365,7 @@ No ZPVA, no electronic energy (as usual)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.compute_internal_energy">
-<span class="sig-name descname"><span class="pre">compute_internal_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_internal_energy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_internal_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_internal_energy" title="Link to this definition"></a></dt>
 <dd><p>Compute the value of the different contribution (translation, rotation, vibration) to the internal energy,
 <strong>IN HARTREE</strong> !</p>
 <div class="admonition note">
@@ -372,13 +377,13 @@ No ZPVA, no electronic energy (as usual)</p>
 </ul>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>temperature</strong> (<em>float</em>) – temperature considered (in Kelvin)</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(U_t, U_r, U_v) (as a tuple, in Hartree)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
@@ -386,7 +391,7 @@ No ZPVA, no electronic energy (as usual)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.compute_partition_functions">
-<span class="sig-name descname"><span class="pre">compute_partition_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_partition_functions" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_partition_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">298.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101325.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_partition_functions" title="Link to this definition"></a></dt>
 <dd><p>Compute the value of the different partition functions</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -397,17 +402,17 @@ No ZPVA, no electronic energy (as usual)</p>
 </ul>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>symmetry_number</strong> (<em>int</em>) – symmetry number for the rotation</p></li>
 <li><p><strong>temperature</strong> (<em>float</em>) – temperature considered (in Kelvin)</p></li>
 <li><p><strong>pressure</strong> (<em>float</em>) – pressure (in pascal)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(omega_e, omega_t, omega_r, omega_v) (as a tuple)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
@@ -415,11 +420,11 @@ No ZPVA, no electronic energy (as usual)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.compute_zpva">
-<span class="sig-name descname"><span class="pre">compute_zpva</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_zpva" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_zpva</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.compute_zpva" title="Link to this definition"></a></dt>
 <dd><p>Compute the ZPVA (zero point vibrational averaging) energy from frequencies,
 but WITHOUT the electronic (SCF) energy</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -427,10 +432,10 @@ but WITHOUT the electronic (SCF) energy</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.from_cartesian_hessian">
-<span class="sig-name descname"><span class="pre">from_cartesian_hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_hessian</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.from_cartesian_hessian" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_cartesian_hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cartesian_hessian</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.from_cartesian_hessian" title="Link to this definition"></a></dt>
 <dd><p>From a given carthesian hessian, create mass-weigted ones, and extracts frequencies and displacements.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cartesian_hessian</strong> (<em>numpy.ndarray</em>) – the cartesian hessian</p>
 </dd>
 </dl>
@@ -438,11 +443,11 @@ but WITHOUT the electronic (SCF) energy</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.output_displacements">
-<span class="sig-name descname"><span class="pre">output_displacements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.output_displacements" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">output_displacements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.output_displacements" title="Link to this definition"></a></dt>
 <dd><p>Gaussian-like formatting of displacements. Frequencies in <span class="math notranslate nohighlight">\(cm^{-1}\)</span>, reduced masses in <em>AMU</em>,
 displacement in <span class="math notranslate nohighlight">\(\text{Å}\,AMU^{-1/2}\)</span>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -450,13 +455,13 @@ displacement in <span class="math notranslate nohighlight">\(\text{Å}\,AMU^{-1/
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.rotational_temperature">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotational_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inertia_moment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.rotational_temperature" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotational_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inertia_moment</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.rotational_temperature" title="Link to this definition"></a></dt>
 <dd><p>Convert an inertia moment (in AMU*angstrom**2) to a rotational temperature (K)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>inertia_moment</strong> (<em>float</em>) – inertia moment</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -464,16 +469,16 @@ displacement in <span class="math notranslate nohighlight">\(\text{Å}\,AMU^{-1/
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.MassWeightedHessian.vibrational_temperature">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vibrational_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vibrational_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.vibrational_temperature" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vibrational_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vibrational_energy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.derivatives_g.MassWeightedHessian.vibrational_temperature" title="Link to this definition"></a></dt>
 <dd><p>Convert a vibration energy (hartree) to a vibrational temperature (K)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vibrational_energy</strong> (<em>float</em>) – the vibrational energy (in Hartree)</p></li>
 <li><p><strong>scale</strong> (<em>float</em>) – scale of the vibrational energyµ</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -483,13 +488,13 @@ displacement in <span class="math notranslate nohighlight">\(\text{Å}\,AMU^{-1/
 
 <dl class="py data">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.REPRESENTATIONS">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">REPRESENTATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cubic_FF':</span> <span class="pre">'GGG',</span> <span class="pre">'gradient':</span> <span class="pre">'G',</span> <span class="pre">'hessian':</span> <span class="pre">'GG',</span> <span class="pre">'projected</span> <span class="pre">gradient':</span> <span class="pre">'N',</span> <span class="pre">'projected</span> <span class="pre">hessian':</span> <span class="pre">'NN'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.REPRESENTATIONS" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">REPRESENTATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cubic_FF':</span> <span class="pre">'GGG',</span> <span class="pre">'gradient':</span> <span class="pre">'G',</span> <span class="pre">'hessian':</span> <span class="pre">'GG',</span> <span class="pre">'projected</span> <span class="pre">gradient':</span> <span class="pre">'N',</span> <span class="pre">'projected</span> <span class="pre">hessian':</span> <span class="pre">'NN'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.REPRESENTATIONS" title="Link to this definition"></a></dt>
 <dd><p>Correspondence between a name and a representation</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="qcip_tools.derivatives_g.SIMPLIFIED_NAMES">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">SIMPLIFIED_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cubic_FF':</span> <span class="pre">'Fijk',</span> <span class="pre">'energy':</span> <span class="pre">'E',</span> <span class="pre">'gradient':</span> <span class="pre">'Fi',</span> <span class="pre">'hessian':</span> <span class="pre">'Hij',</span> <span class="pre">'projected</span> <span class="pre">gradient':</span> <span class="pre">'Fi(N)',</span> <span class="pre">'projected</span> <span class="pre">hessian':</span> <span class="pre">'Hij(N)'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.SIMPLIFIED_NAMES" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.derivatives_g.</span></span><span class="sig-name descname"><span class="pre">SIMPLIFIED_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cubic_FF':</span> <span class="pre">'Fijk',</span> <span class="pre">'energy':</span> <span class="pre">'E',</span> <span class="pre">'gradient':</span> <span class="pre">'Fi',</span> <span class="pre">'hessian':</span> <span class="pre">'Hij',</span> <span class="pre">'projected</span> <span class="pre">gradient':</span> <span class="pre">'Fi(N)',</span> <span class="pre">'projected</span> <span class="pre">hessian':</span> <span class="pre">'Hij(N)'}</span></em><a class="headerlink" href="#qcip_tools.derivatives_g.SIMPLIFIED_NAMES" title="Link to this definition"></a></dt>
 <dd><p>List of all simplified names</p>
 </dd></dl>
 

@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>thermochemistry_analysis &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>thermochemistry_analysis &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +30,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../scripts.html">Scripts documentation</a></li>
       <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code></li>
       <li class="wy-breadcrumbs-aside">
@@ -94,11 +99,11 @@
            <div itemprop="articleBody">
              
   <section id="thermochemistry-analysis">
-<h1><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code><a class="headerlink" href="#thermochemistry-analysis" title="Permalink to this heading"></a></h1>
+<h1><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code><a class="headerlink" href="#thermochemistry-analysis" title="Link to this heading"></a></h1>
 <p>By <strong>Pierre Beaujean</strong> (<a class="reference external" href="mailto:pierre&#46;beaujean&#37;&#52;&#48;unamur&#46;be">pierre<span>&#46;</span>beaujean<span>&#64;</span>unamur<span>&#46;</span>be</a>).</p>
 <p><strong>Version 0.1</strong> (Development).</p>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">thermochemistry_analysis</span></code> -
 Perform a thermochemistry analysis</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: thermochemistry_analysis [-h] [-v] [-n SYMMETRY_NUMBER]</span>
@@ -110,74 +115,74 @@ Perform a thermochemistry analysis</p>
 <p>Positional arguments:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-arg-infile">
-<span id="cmdoption-thermochemistry-analysis-arg-infile"></span><span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-arg-infile" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">infile</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-arg-infile" title="Link to this definition"></a></dt>
 <dd><p>source of the derivatives</p>
 </dd></dl>
 
 <p>Optional arguments:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-h">
-<span id="cmdoption-thermochemistry-analysis-h"></span><span id="cmdoption-thermochemistry_analysis-help"></span><span id="cmdoption-thermochemistry-analysis-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-h" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-h" title="Link to this definition"></a></dt>
 <dd><p>show this help message and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-v">
-<span id="cmdoption-thermochemistry-analysis-v"></span><span id="cmdoption-thermochemistry_analysis-version"></span><span id="cmdoption-thermochemistry-analysis-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-v" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-version"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-v" title="Link to this definition"></a></dt>
 <dd><p>show program’s version number and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-n">
-<span id="cmdoption-thermochemistry-analysis-n"></span><span id="cmdoption-thermochemistry_analysis-symmetry-number"></span><span id="cmdoption-thermochemistry-analysis-symmetry-number"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--symmetry-number</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-n" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-symmetry-number"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--symmetry-number</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-n" title="Link to this definition"></a></dt>
 <dd><p>Symmetry number (for the rotation)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-t">
-<span id="cmdoption-thermochemistry-analysis-t"></span><span id="cmdoption-thermochemistry_analysis-temperature"></span><span id="cmdoption-thermochemistry-analysis-temperature"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--temperature</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-t" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-temperature"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--temperature</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-t" title="Link to this definition"></a></dt>
 <dd><p>Temperature (in K)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-p">
-<span id="cmdoption-thermochemistry-analysis-p"></span><span id="cmdoption-thermochemistry_analysis-pressure"></span><span id="cmdoption-thermochemistry-analysis-pressure"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--pressure</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-p" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-pressure"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--pressure</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-p" title="Link to this definition"></a></dt>
 <dd><p>Pressure (in Pa)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-s">
-<span id="cmdoption-thermochemistry-analysis-s"></span><span id="cmdoption-thermochemistry_analysis-scale"></span><span id="cmdoption-thermochemistry-analysis-scale"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--scale</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-s" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-scale"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--scale</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-s" title="Link to this definition"></a></dt>
 <dd><p>Scaling factor for the vibrational frequencies</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-x">
-<span id="cmdoption-thermochemistry-analysis-x"></span><span id="cmdoption-thermochemistry_analysis-exclude"></span><span id="cmdoption-thermochemistry-analysis-exclude"></span><span class="sig-name descname"><span class="pre">-x</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--exclude</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-x" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-exclude"></span><span class="sig-name descname"><span class="pre">-x</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--exclude</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-x" title="Link to this definition"></a></dt>
 <dd><p>Exclude frequencies</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-V">
-<span id="cmdoption-thermochemistry_analysis-verbose"></span><span id="cmdoption-thermochemistry-analysis-verbose"></span><span class="sig-name descname"><span class="pre">-V</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-V" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-verbose"></span><span class="sig-name descname"><span class="pre">-V</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-V" title="Link to this definition"></a></dt>
 <dd><p>Gives the detail of the different contributions</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-f">
-<span id="cmdoption-thermochemistry-analysis-f"></span><span id="cmdoption-thermochemistry_analysis-factor"></span><span id="cmdoption-thermochemistry-analysis-factor"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--factor</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-f" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-factor"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--factor</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-f" title="Link to this definition"></a></dt>
 <dd><p>multiply energies by a given factor</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thermochemistry_analysis-g">
-<span id="cmdoption-thermochemistry-analysis-g"></span><span id="cmdoption-thermochemistry_analysis-guess-symmetry"></span><span id="cmdoption-thermochemistry-analysis-guess-symmetry"></span><span class="sig-name descname"><span class="pre">-g</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--guess-symmetry</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-g" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-thermochemistry_analysis-guess-symmetry"></span><span class="sig-name descname"><span class="pre">-g</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--guess-symmetry</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-thermochemistry_analysis-g" title="Link to this definition"></a></dt>
 <dd><p>Guess the symmetry number</p>
 </dd></dl>
 
 </section>
 <section id="more-information">
-<h2>More information<a class="headerlink" href="#more-information" title="Permalink to this heading"></a></h2>
+<h2>More information<a class="headerlink" href="#more-information" title="Link to this heading"></a></h2>
 <p>Try to fetch the hessian, and compute thermochemisty data out of that
 Rely on the availability of <code class="docutils literal notranslate"><span class="pre">geometrical_derivatives</span></code> and <code class="docutils literal notranslate"><span class="pre">computed_energies</span></code>.</p>
 </section>

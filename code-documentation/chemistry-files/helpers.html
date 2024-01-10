@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helpers (chemistry_files.helpers) &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>Helpers (chemistry_files.helpers) &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -29,14 +30,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -95,7 +100,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../code-documentation.html">API documentation</a></li>
           <li class="breadcrumb-item"><a href="../chemistry_files.html">Chemistry files (<code class="docutils literal notranslate"><span class="pre">qcip_tools.chemistry_files</span></code>)</a></li>
       <li class="breadcrumb-item active">Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)</li>
@@ -109,17 +114,17 @@
            <div itemprop="articleBody">
              
   <section id="helpers-chemistry-files-helpers">
-<h1>Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)<a class="headerlink" href="#helpers-chemistry-files-helpers" title="Permalink to this heading"></a></h1>
+<h1>Helpers (<code class="docutils literal notranslate"><span class="pre">chemistry_files.helpers</span></code>)<a class="headerlink" href="#helpers-chemistry-files-helpers" title="Link to this heading"></a></h1>
 <p>Based on <code class="docutils literal notranslate"><span class="pre">possible_file_extensions()</span></code> and <code class="docutils literal notranslate"><span class="pre">attempt_identification()</span></code> of <a class="reference external" href="base.html#qcip_tools.chemistry_files.WithIdentificationMixin">WithIdentificationMixin</a> , the <code class="docutils literal notranslate"><span class="pre">helpers</span></code> submodule helps to open any chemistry files.</p>
-<span class="target" id="module-qcip_tools.chemistry_files.helpers"></span><dl class="py exception">
+<dl class="py exception" id="module-qcip_tools.chemistry_files.helpers">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.ProbablyNotAChemistryFile">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">ProbablyNotAChemistryFile</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.ProbablyNotAChemistryFile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">ProbablyNotAChemistryFile</span></span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.ProbablyNotAChemistryFile" title="Link to this definition"></a></dt>
 <dd><p>Raised when the type of the file is not recognized</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.create_open_chemistry_file_action">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">create_open_chemistry_file_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.create_open_chemistry_file_action" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">create_open_chemistry_file_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.create_open_chemistry_file_action" title="Link to this definition"></a></dt>
 <dd><p>Create a custom argparse action.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qcip_tools.chemistry_files</span> <span class="kn">import</span> <span class="n">helpers</span><span class="p">,</span> <span class="n">gaussian</span>
 
@@ -132,10 +137,10 @@
 Valid identifier are the values of <code class="docutils literal notranslate"><span class="pre">file_type</span></code> in the different <code class="docutils literal notranslate"><span class="pre">ChemistryFile</span></code> objects
 (a list can be found in the table on the beginning <a class="reference external" href="chemistry_files.html#api-documentation">of this section</a>).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>must_be</strong> (<em>list</em>) – restrict the list of possibilities</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>argparse.Action</p>
 </dd>
 </dl>
@@ -143,10 +148,10 @@ Valid identifier are the values of <code class="docutils literal notranslate"><s
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.identifiable_chemistry_file_objects">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">identifiable_chemistry_file_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier_must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.identifiable_chemistry_file_objects" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">identifiable_chemistry_file_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier_must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.identifiable_chemistry_file_objects" title="Link to this definition"></a></dt>
 <dd><p>Yield all objects with the <code class="docutils literal notranslate"><span class="pre">WithIdentificationMixin</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>identifier_must_be</strong> (<em>list</em><em> of </em><em>str</em>) – check if <code class="docutils literal notranslate"><span class="pre">file_type</span></code> is of the same type as the obj</p>
 </dd>
 </dl>
@@ -154,7 +159,7 @@ Valid identifier are the values of <code class="docutils literal notranslate"><s
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.chemistry_files.helpers.open_chemistry_file">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">open_chemistry_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trust_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.open_chemistry_file" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.chemistry_files.helpers.</span></span><span class="sig-name descname"><span class="pre">open_chemistry_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">must_be</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trust_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.chemistry_files.helpers.open_chemistry_file" title="Link to this definition"></a></dt>
 <dd><p>Try to recognise a file in the different possibility, and return the (normally) correct class.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -165,14 +170,14 @@ Valid identifier are the values of <code class="docutils literal notranslate"><s
 <p>Use the trick from <a class="reference external" href="https://stackoverflow.com/a/31123030">https://stackoverflow.com/a/31123030</a> to serve a binary file if needed.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>file</em>) – file</p></li>
 <li><p><strong>must_be</strong> (<em>list</em>) – restrict the list of possibilities</p></li>
 <li><p><strong>trust_extension</strong> (<em>bool</em>) – do not run a second pass on every other possibility if the content does not match extension</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="base.html#qcip_tools.chemistry_files.ChemistryFile" title="qcip_tools.chemistry_files.ChemistryFile">qcip_tools.chemistry_files.ChemistryFile</a></p>
 </dd>
 </dl>

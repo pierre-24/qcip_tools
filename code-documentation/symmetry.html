@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symmetry (qcip_tools.symmetry) &mdash; qcip_tools 0.7.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>Symmetry (qcip_tools.symmetry) &mdash; qcip_tools 0.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -30,14 +31,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> qcip_tools
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            qcip_tools
           </a>
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -112,7 +117,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../code-documentation.html">API documentation</a></li>
       <li class="breadcrumb-item active">Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)</li>
       <li class="wy-breadcrumbs-aside">
@@ -125,12 +130,12 @@
            <div itemprop="articleBody">
              
   <section id="symmetry-qcip-tools-symmetry">
-<h1>Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)<a class="headerlink" href="#symmetry-qcip-tools-symmetry" title="Permalink to this heading"></a></h1>
+<h1>Symmetry (<code class="docutils literal notranslate"><span class="pre">qcip_tools.symmetry</span></code>)<a class="headerlink" href="#symmetry-qcip-tools-symmetry" title="Link to this heading"></a></h1>
 <p>Handle symmetry.</p>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <section id="what-s-a-group-anyway">
-<h3>What’s a group anyway ?<a class="headerlink" href="#what-s-a-group-anyway" title="Permalink to this heading"></a></h3>
+<h3>What’s a group anyway ?<a class="headerlink" href="#what-s-a-group-anyway" title="Link to this heading"></a></h3>
 <p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Group_(mathematics)">group</a> is a set <span class="math notranslate nohighlight">\(G\)</span>, together with a binary operation <span class="math notranslate nohighlight">\(\star\)</span> (group law),
 form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if it satisfies 4 requirements:</p>
 <ul class="simple">
@@ -159,7 +164,7 @@ form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if
 <p>This implementation also compute the different classes (which includes, at least, an element and its inverse) and the Cayley table (multiplication table).</p>
 </section>
 <section id="point-group">
-<h3>Point group<a class="headerlink" href="#point-group" title="Permalink to this heading"></a></h3>
+<h3>Point group<a class="headerlink" href="#point-group" title="Link to this heading"></a></h3>
 <p>By using symmetry operation as group element (and matrix multiplication as the binary operation), one can create a <a class="reference external" href="https://en.wikipedia.org/wiki/Finite_group">point group</a>, which apply on finite objects (in oposition to space group, which aply to infinite objects).</p>
 <p>Symmetry operation are of two types, basically:</p>
 <ul class="simple">
@@ -187,7 +192,7 @@ One can generate simply any point group by using the methods of <a class="refere
 </div>
 </section>
 <section id="character-table">
-<h3>Character table<a class="headerlink" href="#character-table" title="Permalink to this heading"></a></h3>
+<h3>Character table<a class="headerlink" href="#character-table" title="Link to this heading"></a></h3>
 <p>An useful tools when working with group theory is the <a class="reference external" href="https://en.wikipedia.org/wiki/Character_table">character table</a>, which contains irreducible representations of character for each class of the group.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">C_2v</span> <span class="o">=</span> <span class="n">symmetry</span><span class="o">.</span><span class="n">PointGroup</span><span class="o">.</span><span class="n">C_nv</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">C_2v</span><span class="o">.</span><span class="n">character_table</span><span class="p">()</span>
@@ -212,7 +217,7 @@ B2     1.00       -1.00       -1.00        1.00
 </div>
 </section>
 <section id="discover-symmetry">
-<h3>Discover symmetry<a class="headerlink" href="#discover-symmetry" title="Permalink to this heading"></a></h3>
+<h3>Discover symmetry<a class="headerlink" href="#discover-symmetry" title="Link to this heading"></a></h3>
 <p>Use <a class="reference external" href="#qcip_tools.symmetry.SymmetryFinder">SymmetryFinder</a>.
 In particular, the documentation of <a class="reference external" href="#qcip_tools.symmetry.SymmetryFinder.find_symmetry">find_symmetry()</a> describes the way the point group is found.</p>
 <div class="admonition warning">
@@ -223,14 +228,14 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 </section>
 </section>
 <section id="module-qcip_tools.symmetry">
-<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.symmetry" title="Permalink to this heading"></a></h2>
+<span id="api-documentation"></span><h2>API documentation<a class="headerlink" href="#module-qcip_tools.symmetry" title="Link to this heading"></a></h2>
 <p>Symmetry handling.</p>
 <p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Group_(mathematics">https://en.wikipedia.org/wiki/Group_(mathematics</a>)</p>
 <p>Base implementation inspired by <a class="reference external" href="https://github.com/naftaliharris/Abstract-Algebra/">https://github.com/naftaliharris/Abstract-Algebra/</a></p>
 <p>and <a class="reference external" href="https://pdfs.semanticscholar.org/4edd/1ac673ea4cab251bb0b64bf0f5b65f18cc9d.pdf">https://pdfs.semanticscholar.org/4edd/1ac673ea4cab251bb0b64bf0f5b65f18cc9d.pdf</a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.BinaryOperation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">BinaryOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">codomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">BinaryOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">codomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation" title="Link to this definition"></a></dt>
 <dd><p>Define a binary operation <span class="math notranslate nohighlight">\(f\)</span> such that,</p>
 <div class="math notranslate nohighlight">
 \[f:S\times S \rightarrow S.\]</div>
@@ -238,10 +243,10 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 <p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Binary_operation">https://en.wikipedia.org/wiki/Binary_operation</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.BinaryOperation.check_associativity">
-<span class="sig-name descname"><span class="pre">check_associativity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.check_associativity" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_associativity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.check_associativity" title="Link to this definition"></a></dt>
 <dd><p>Check if the binary operation is associative for all the element of the domain</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -249,10 +254,10 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.BinaryOperation.check_closure">
-<span class="sig-name descname"><span class="pre">check_closure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.check_closure" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_closure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.check_closure" title="Link to this definition"></a></dt>
 <dd><p>Check that the relation gives elements that are in the codomain</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -260,10 +265,10 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.BinaryOperation.check_surjectivity">
-<span class="sig-name descname"><span class="pre">check_surjectivity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.check_surjectivity" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">check_surjectivity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.check_surjectivity" title="Link to this definition"></a></dt>
 <dd><p>Check surjectivity (image equals codomain)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -271,7 +276,7 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.BinaryOperation.generate">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.generate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.generate" title="Link to this definition"></a></dt>
 <dd><p>Create a complete set out of the generators.</p>
 <p>Algorithm from <a class="reference external" href="https://physics.stackexchange.com/a/351400j">https://physics.stackexchange.com/a/351400j</a>, simplified version of
 <a class="reference external" href="http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html">http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html</a></p>
@@ -284,10 +289,10 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.BinaryOperation.image">
-<span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.image" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.BinaryOperation.image" title="Link to this definition"></a></dt>
 <dd><p>Get the image set (which is part of the codomain)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.Set" title="qcip_tools.symmetry.Set">Set</a></p>
 </dd>
 </dl>
@@ -297,28 +302,28 @@ In particular, the documentation of <a class="reference external" href="#qcip_to
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.CharacterTable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">CharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.CharacterTable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">CharacterTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.CharacterTable" title="Link to this definition"></a></dt>
 <dd><p>List of irreducible representations</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.CharacterTable.LIMIT">
-<span class="sig-name descname"><span class="pre">LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-05</span></em><a class="headerlink" href="#qcip_tools.symmetry.CharacterTable.LIMIT" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1e-05</span></em><a class="headerlink" href="#qcip_tools.symmetry.CharacterTable.LIMIT" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.CharacterTable.size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#qcip_tools.symmetry.CharacterTable.size" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#qcip_tools.symmetry.CharacterTable.size" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.CharacterTableError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">CharacterTableError</span></span><a class="headerlink" href="#qcip_tools.symmetry.CharacterTableError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">CharacterTableError</span></span><a class="headerlink" href="#qcip_tools.symmetry.CharacterTableError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">Group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binary_operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">Group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binary_operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group" title="Link to this definition"></a></dt>
 <dd><p>Abstract group structure.</p>
 <p>A set <span class="math notranslate nohighlight">\(G\)</span>, together with an operation <span class="math notranslate nohighlight">\(\star\)</span> (group law),
 form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if it satisfies 4 requirements:</p>
@@ -330,13 +335,13 @@ form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if
 </ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.character_table">
-<span class="sig-name descname"><span class="pre">character_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.character_table" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">character_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.character_table" title="Link to this definition"></a></dt>
 <dd><p>Compute the character table</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>table</strong> (<em>numpy.ndarray</em>) – character table</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.CharacterTable" title="qcip_tools.symmetry.CharacterTable">CharacterTable</a></p>
 </dd>
 </dl>
@@ -344,10 +349,10 @@ form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.class_matrices">
-<span class="sig-name descname"><span class="pre">class_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.class_matrices" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">class_matrices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.class_matrices" title="Link to this definition"></a></dt>
 <dd><p>Get all the class matrices</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -355,17 +360,17 @@ form a group <span class="math notranslate nohighlight">\((G, \star)\)</span> if
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.class_matrix">
-<span class="sig-name descname"><span class="pre">class_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.class_matrix" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">class_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.class_matrix" title="Link to this definition"></a></dt>
 <dd><p>Compute class matrix: given the <span class="math notranslate nohighlight">\(k\)</span> classes <span class="math notranslate nohighlight">\(C_i\)</span> (<span class="math notranslate nohighlight">\(0\leq i &lt; k\)</span>),</p>
 <p>For each <span class="math notranslate nohighlight">\(x\in C_r\)</span>, compute <span class="math notranslate nohighlight">\(y=x^{-1}z\)</span>, with <cite>zin C_t</cite> and <span class="math notranslate nohighlight">\(y\in C_s\)</span>.
 Add 1 to the <span class="math notranslate nohighlight">\((s,t)\)</span> component of <span class="math notranslate nohighlight">\(M^r\)</span>, a <span class="math notranslate nohighlight">\(k\times k\)</span> matrix.
 Here, <code class="docutils literal notranslate"><span class="pre">class_number</span></code> gives the value of <span class="math notranslate nohighlight">\(r\)</span>.</p>
 <p>This results in a matrix where each component is the number of solution <span class="math notranslate nohighlight">\((y,z)\)</span> for which <span class="math notranslate nohighlight">\(xy=z\)</span>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>class_number</strong> (<em>int</em>) – class id</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.ndarray</p>
 </dd>
 </dl>
@@ -373,10 +378,10 @@ Here, <code class="docutils literal notranslate"><span class="pre">class_number<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.conjugacy_class">
-<span class="sig-name descname"><span class="pre">conjugacy_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.conjugacy_class" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">conjugacy_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.conjugacy_class" title="Link to this definition"></a></dt>
 <dd><p>Get the elements of the conjugacy class of <code class="docutils literal notranslate"><span class="pre">g</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>g</strong> (<a class="reference internal" href="#qcip_tools.symmetry.GroupElement" title="qcip_tools.symmetry.GroupElement"><em>GroupElement</em></a>) – a group element</p>
 </dd>
 </dl>
@@ -384,17 +389,17 @@ Here, <code class="docutils literal notranslate"><span class="pre">class_number<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.gen_character_table">
-<span class="sig-name descname"><span class="pre">gen_character_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tweak_matrices_func=&lt;function</span> <span class="pre">Group.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.gen_character_table" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gen_character_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tweak_matrices_func=&lt;function</span> <span class="pre">Group.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.gen_character_table" title="Link to this definition"></a></dt>
 <dd><p>Generate a character table for the group.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tweak_matrices_func</strong> (<em>function</em>) – function to alter the list of class matrices (if needed): takes a list of matrices
 as input and returns the new list. Useful in some cases (especially if the classes are sorted).</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the character table, with the column ordered as the different class, and the line in a random order</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
@@ -402,10 +407,10 @@ as input and returns the new list. Useful in some cases (especially if the class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.identity">
-<span class="sig-name descname"><span class="pre">identity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.identity" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">identity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.identity" title="Link to this definition"></a></dt>
 <dd><p>Get identity</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>an element of G</p>
 </dd>
 </dl>
@@ -413,13 +418,13 @@ as input and returns the new list. Useful in some cases (especially if the class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Group.inverse">
-<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.inverse" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Group.inverse" title="Link to this definition"></a></dt>
 <dd><p>Return an inverse of a given element of G</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>element</strong> – the element</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>another element of G</p>
 </dd>
 </dl>
@@ -429,34 +434,34 @@ as input and returns the new list. Useful in some cases (especially if the class
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.GroupElement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">GroupElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.GroupElement" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">GroupElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.GroupElement" title="Link to this definition"></a></dt>
 <dd><p>Abstract group element: syntaxic sugar</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.IrreducibleRepresentation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">IrreducibleRepresentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">characters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.IrreducibleRepresentation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">IrreducibleRepresentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">characters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.IrreducibleRepresentation" title="Link to this definition"></a></dt>
 <dd><p>An irreducible representation (<em>irrep.</em>)</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.IrreducibleRepresentation.degree">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degree</span></span><a class="headerlink" href="#qcip_tools.symmetry.IrreducibleRepresentation.degree" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degree</span></span><a class="headerlink" href="#qcip_tools.symmetry.IrreducibleRepresentation.degree" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.IrreducibleRepresentation.dot">
-<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.IrreducibleRepresentation.dot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.IrreducibleRepresentation.dot" title="Link to this definition"></a></dt>
 <dd><p>Compute the scalar product between two representations, <span class="math notranslate nohighlight">\(\chi^\lambda\)</span> (<code class="docutils literal notranslate"><span class="pre">self</span></code>) and
 <span class="math notranslate nohighlight">\(\chi^\mu\)</span> (<code class="docutils literal notranslate"><span class="pre">other</span></code>), as</p>
 <div class="math notranslate nohighlight">
 \[\frac{1}{\#\mathcal G}\sum_{r\in \mathcal G} [\chi^\lambda(r)]^\star \chi^\mu(r).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#qcip_tools.symmetry.IrreducibleRepresentation" title="qcip_tools.symmetry.IrreducibleRepresentation"><em>IrreducibleRepresentation</em></a>) – other irreducible representation</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>scalar product</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>complex</p>
 </dd>
 </dl>
@@ -466,12 +471,12 @@ as input and returns the new list. Useful in some cases (especially if the class
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.NotInGroup">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">NotInGroup</span></span><a class="headerlink" href="#qcip_tools.symmetry.NotInGroup" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">NotInGroup</span></span><a class="headerlink" href="#qcip_tools.symmetry.NotInGroup" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation" title="Link to this definition"></a></dt>
 <dd><p>Define a symmetry element (fully based on quaternion).</p>
 <p>According <a class="reference external" href="https://www.mdpi.com/2073-8994/2/3/1423/pdf">Mamone et al.</a>,</p>
 <div class="math notranslate nohighlight">
@@ -481,17 +486,17 @@ To use this operator on a point, the opposite of the sandwich product must be ta
 quaternion that represent the point is actually used.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.C">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">1.])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.C" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">1.])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.C" title="Link to this definition"></a></dt>
 <dd><p>Generate the representation of a proper rotation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – order of the axis</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – number of step</p></li>
 <li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – to which axis this rotation axis should be parallel ?</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation">Operation</a></p>
 </dd>
 </dl>
@@ -499,10 +504,10 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.E">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">E</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.E" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">E</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.E" title="Link to this definition"></a></dt>
 <dd><p>Generate the identity</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation">Operation</a></p>
 </dd>
 </dl>
@@ -510,17 +515,17 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.S">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">1.])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.S" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">1.])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.S" title="Link to this definition"></a></dt>
 <dd><p>Generate the representation of a improper rotation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – order of the axis</p></li>
 <li><p><strong>k</strong> (<em>int</em>) – number of step</p></li>
 <li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – to which axis this rotation axis should be parallel ?</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation">Operation</a></p>
 </dd>
 </dl>
@@ -528,13 +533,13 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.apply" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.apply" title="Link to this definition"></a></dt>
 <dd><p>Apply the operation on a point</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>pin</strong> (<em>numpy.ndarray</em>) – the point</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.ndarray</p>
 </dd>
 </dl>
@@ -542,10 +547,10 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.from_axangle">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_axangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.283185307179586</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.from_axangle" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_axangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6.283185307179586</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.from_axangle" title="Link to this definition"></a></dt>
 <dd><p>Create from axe and angle</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – the rotation axe</p></li>
 <li><p><strong>angle</strong> (<em>float</em>) – the rotation angle</p></li>
@@ -554,7 +559,7 @@ quaternion that represent the point is actually used.</p>
 <li><p><strong>description</strong> (<a class="reference internal" href="#qcip_tools.symmetry.OperationDescription" title="qcip_tools.symmetry.OperationDescription"><em>OperationDescription</em></a>) – description of the operation</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation">Operation</a></p>
 </dd>
 </dl>
@@ -562,7 +567,7 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.get_description">
-<span class="sig-name descname"><span class="pre">get_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.get_description" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.get_description" title="Link to this definition"></a></dt>
 <dd><p>Try to recognize the transformation:</p>
 <ol class="arabic simple">
 <li><p>Extract axis and angle from quaternion (using <code class="docutils literal notranslate"><span class="pre">quat2axangle()</span></code>) ;</p></li>
@@ -579,10 +584,10 @@ quaternion that represent the point is actually used.</p>
 <li><p>Recognize the specific <span class="math notranslate nohighlight">\(n\)</span> cases (1 or 2).</p></li>
 </ol>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>force</strong> (<em>bool</em>) – use <code class="docutils literal notranslate"><span class="pre">self.description</span></code> if <code class="docutils literal notranslate"><span class="pre">False</span></code>, or try a new recognition otherwise</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.OperationDescription" title="qcip_tools.symmetry.OperationDescription">OperationDescription</a></p>
 </dd>
 </dl>
@@ -590,10 +595,10 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.i">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">i</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.i" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">i</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.i" title="Link to this definition"></a></dt>
 <dd><p>Generate an inversion center</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation">Operation</a></p>
 </dd>
 </dl>
@@ -601,19 +606,19 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.matrix_representation">
-<span class="sig-name descname"><span class="pre">matrix_representation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.matrix_representation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">matrix_representation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.matrix_representation" title="Link to this definition"></a></dt>
 <dd><p>Get a 3x3 matrix representation of the symmetry operation</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Operation.sigma">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">1.])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.sigma" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">1.])</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.Operation.sigma" title="Link to this definition"></a></dt>
 <dd><p>Generate a symmetry plane</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>axis</strong> (<em>numpy.ndarray</em>) – normal axis to the plane</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation">Operation</a></p>
 </dd>
 </dl>
@@ -623,11 +628,11 @@ quaternion that represent the point is actually used.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationDescription">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">OperationDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.OperationDescription" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">OperationDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.OperationDescription" title="Link to this definition"></a></dt>
 <dd><p>Store the description of a symmetry operation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationDescription.find_textual_axis">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_textual_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.OperationDescription.find_textual_axis" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_textual_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.OperationDescription.find_textual_axis" title="Link to this definition"></a></dt>
 <dd><p>Try to find the main axis:</p>
 <ul class="simple">
 <li><p>Find sole axis (x, y, z) ;</p></li>
@@ -656,10 +661,10 @@ o : single axis,
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>axis</strong> (<em>numpy.ndarray</em>) – the axis</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str|None</p>
 </dd>
 </dl>
@@ -669,48 +674,48 @@ o : single axis,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">OperationType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.OperationType" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">OperationType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.OperationType" title="Link to this definition"></a></dt>
 <dd><p>Symbol of the symmetry element, in <a class="reference external" href="https://en.wikipedia.org/wiki/Schoenflies_notation">Schoenflies notation</a>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationType.identity">
-<span class="sig-name descname"><span class="pre">identity</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'E'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.identity" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">identity</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'E'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.identity" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationType.improper_rotation">
-<span class="sig-name descname"><span class="pre">improper_rotation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'S'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.improper_rotation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">improper_rotation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'S'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.improper_rotation" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationType.inversion">
-<span class="sig-name descname"><span class="pre">inversion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'i'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.inversion" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">inversion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'i'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.inversion" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationType.proper_rotation">
-<span class="sig-name descname"><span class="pre">proper_rotation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.proper_rotation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">proper_rotation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.proper_rotation" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.OperationType.reflexion_plane">
-<span class="sig-name descname"><span class="pre">reflexion_plane</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'σ'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.reflexion_plane" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reflexion_plane</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'σ'</span></em><a class="headerlink" href="#qcip_tools.symmetry.OperationType.reflexion_plane" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup" title="Link to this definition"></a></dt>
 <dd><p>Concrete implementation of a point group</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.C_n">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.C_n" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.C_n" title="Link to this definition"></a></dt>
 <dd><p>Create a cyclic group of order n</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -718,16 +723,16 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.C_nh">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_nh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.C_nh" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_nh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.C_nh" title="Link to this definition"></a></dt>
 <dd><p>Create a reflexion point group of order n:</p>
 <div class="math notranslate nohighlight">
 \[C_{nv} = C_n \times \sigma_h.\]</div>
 <p>Note that <span class="math notranslate nohighlight">\(C_{1h}\)</span> is usually noted <span class="math notranslate nohighlight">\(C_s\)</span>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -735,15 +740,15 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.C_nv">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_nv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.C_nv" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C_nv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.C_nv" title="Link to this definition"></a></dt>
 <dd><p>Create a pyramidal group of order n:</p>
 <div class="math notranslate nohighlight">
 \[C_{nv} = C_n \times \sigma_v(y).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -751,15 +756,15 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.D_n">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">D_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.D_n" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">D_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.D_n" title="Link to this definition"></a></dt>
 <dd><p>Create a dihedral point group of order n:</p>
 <div class="math notranslate nohighlight">
 \[D_{n} = C_n(z) \times C_2(x).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -767,15 +772,15 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.D_nd">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">D_nd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.D_nd" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">D_nd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.D_nd" title="Link to this definition"></a></dt>
 <dd><p>Create an anti prismatic point group of order n:</p>
 <div class="math notranslate nohighlight">
 \[D_{nd} = S_{2n}(z) \times \sigma_d(y).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -783,16 +788,16 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.D_nh">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">D_nh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.D_nh" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">D_nh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.D_nh" title="Link to this definition"></a></dt>
 <dd><p>Create a prismatic point group of order n:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}D_{nh} &amp;= D_n \times \sigma_h \\
 &amp;= C_n(z) \times C_2(x) \times\sigma_h.\end{split}\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -800,13 +805,13 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.I">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">I</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.I" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">I</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.I" title="Link to this definition"></a></dt>
 <dd><p>Create the chiral octahedral group</p>
 <div class="math notranslate nohighlight">
 \[I = C_5(1, 0, \phi) \times C_3(1, 1, 1) \times C_2(x), \text{ with }
 \phi = \frac{1+\sqrt 5}{2}.\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -814,13 +819,13 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.I_h">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">I_h</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.I_h" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">I_h</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.I_h" title="Link to this definition"></a></dt>
 <dd><p>Create the chiral octahedral group</p>
 <div class="math notranslate nohighlight">
 \[I_h = C_5(1, 0, \phi) \times C_3(1, 1, 1) \times C_2(x) \times \sigma_h, \text{ with }
 \phi = \frac{1+\sqrt 5}{2}.\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -828,12 +833,12 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.O">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">O</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.O" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">O</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.O" title="Link to this definition"></a></dt>
 <dd><p>Create the chiral octahedral group</p>
 <div class="math notranslate nohighlight">
 \[O = C_4(z) \times C_3(1, 1, 1).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -841,12 +846,12 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.O_h">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">O_h</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.O_h" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">O_h</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.O_h" title="Link to this definition"></a></dt>
 <dd><p>Create the achiral octahedral group</p>
 <div class="math notranslate nohighlight">
 \[O_h = C_4 \times \sigma_h \times C_3(1, 1, 1).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -854,16 +859,16 @@ o : single axis,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.S_n">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.S_n" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">S_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.S_n" title="Link to this definition"></a></dt>
 <dd><p>Create a reflexion (odd n, <span class="math notranslate nohighlight">\(C_{(2k+1)h}\)</span>)
 or improper rotation (even n, <span class="math notranslate nohighlight">\(S_{2k}\)</span>) point group of
 order n.</p>
 <p>Note that <span class="math notranslate nohighlight">\(S_{2}\)</span> is usually noted <span class="math notranslate nohighlight">\(C_i\)</span>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – order of the group</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -871,12 +876,12 @@ order n.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.T">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.T" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.T" title="Link to this definition"></a></dt>
 <dd><p>Create the chiral tetrahedral group</p>
 <div class="math notranslate nohighlight">
 \[T = C_2(z) \times C_3(1, 1, 1).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -884,12 +889,12 @@ order n.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.T_d">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T_d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.T_d" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T_d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.T_d" title="Link to this definition"></a></dt>
 <dd><p>Create the achiral tetrahedral group</p>
 <div class="math notranslate nohighlight">
 \[T_d = S_4 \times C_3(1, 1, 1).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -897,12 +902,12 @@ order n.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.T_h">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T_h</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.T_h" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">T_h</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.T_h" title="Link to this definition"></a></dt>
 <dd><p>Create the pyritohedral group</p>
 <div class="math notranslate nohighlight">
 \[T_h = C_2 \times \sigma_h \times C_3(1, 1, 1).\]</div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -910,7 +915,7 @@ order n.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.character_table">
-<span class="sig-name descname"><span class="pre">character_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.character_table" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">character_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.character_table" title="Link to this definition"></a></dt>
 <dd><p>Generate a character table for the group.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -927,7 +932,7 @@ for unknown reasons, it “fails” for <span class="math notranslate nohighligh
 <p>That’s the best I can do for the moment ;)</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#qcip_tools.symmetry.CharacterTable" title="qcip_tools.symmetry.CharacterTable">CharacterTable</a></p>
 </dd>
 </dl>
@@ -935,30 +940,30 @@ for unknown reasons, it “fails” for <span class="math notranslate nohighligh
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.generate">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.generate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.generate" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroup.product">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.product" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroup.product" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupDescription">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupDescription</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupDescription.gen_point_group">
-<span class="sig-name descname"><span class="pre">gen_point_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lowers_infinite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription.gen_point_group" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gen_point_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lowers_infinite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupDescription.gen_point_group" title="Link to this definition"></a></dt>
 <dd><p>Generate the point group out of the description.</p>
 <p>Not able to generate infinite groups <span class="math notranslate nohighlight">\(D_{\infty h}\)</span> or <span class="math notranslate nohighlight">\(C_{\infty v}\)</span>, except
 if <code class="docutils literal notranslate"><span class="pre">lowers_infinite</span></code> is set.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>lowers_infinite</strong> (<em>int</em>) – axis order used instead of <span class="math notranslate nohighlight">\(\infty\)</span>.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#qcip_tools.symmetry.PointGroup" title="qcip_tools.symmetry.PointGroup">PointGroup</a></p>
 </dd>
 </dl>
@@ -968,88 +973,87 @@ if <code class="docutils literal notranslate"><span class="pre">lowers_infinite<
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupError</span></span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupError</span></span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType" title="Permalink to this definition"></a></dt>
-<dd><p>An enumeration.</p>
-<dl class="py attribute">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">PointGroupType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.antiprismatic">
-<span class="sig-name descname"><span class="pre">antiprismatic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'D_nd'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.antiprismatic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">antiprismatic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'D_nd'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.antiprismatic" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.cyclic">
-<span class="sig-name descname"><span class="pre">cyclic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C_n'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.cyclic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cyclic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C_n'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.cyclic" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.dihedral">
-<span class="sig-name descname"><span class="pre">dihedral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'D_n'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.dihedral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dihedral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'D_n'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.dihedral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.icosahedral_achiral">
-<span class="sig-name descname"><span class="pre">icosahedral_achiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'I_h'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.icosahedral_achiral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">icosahedral_achiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'I_h'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.icosahedral_achiral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.icosahedral_chiral">
-<span class="sig-name descname"><span class="pre">icosahedral_chiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'I'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.icosahedral_chiral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">icosahedral_chiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'I'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.icosahedral_chiral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.improper_rotation">
-<span class="sig-name descname"><span class="pre">improper_rotation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'S_n'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.improper_rotation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">improper_rotation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'S_n'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.improper_rotation" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.octahedral_achiral">
-<span class="sig-name descname"><span class="pre">octahedral_achiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'O_h'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.octahedral_achiral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">octahedral_achiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'O_h'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.octahedral_achiral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.octahedral_chiral">
-<span class="sig-name descname"><span class="pre">octahedral_chiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'O'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.octahedral_chiral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">octahedral_chiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'O'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.octahedral_chiral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.prismatic">
-<span class="sig-name descname"><span class="pre">prismatic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'D_nh'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.prismatic" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">prismatic</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'D_nh'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.prismatic" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.pyramidal">
-<span class="sig-name descname"><span class="pre">pyramidal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C_nv'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.pyramidal" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pyramidal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C_nv'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.pyramidal" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.pyritohedral">
-<span class="sig-name descname"><span class="pre">pyritohedral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T_h'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.pyritohedral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pyritohedral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T_h'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.pyritohedral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.reflexion">
-<span class="sig-name descname"><span class="pre">reflexion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C_nh'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.reflexion" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reflexion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C_nh'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.reflexion" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.tetrahedral_achiral">
-<span class="sig-name descname"><span class="pre">tetrahedral_achiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T_d'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.tetrahedral_achiral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tetrahedral_achiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T_d'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.tetrahedral_achiral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.PointGroupType.tetrahedral_chiral">
-<span class="sig-name descname"><span class="pre">tetrahedral_chiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.tetrahedral_chiral" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">tetrahedral_chiral</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T'</span></em><a class="headerlink" href="#qcip_tools.symmetry.PointGroupType.tetrahedral_chiral" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.ReducibleRepresentation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">ReducibleRepresentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irreducible_representations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">characters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.ReducibleRepresentation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">ReducibleRepresentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irreducible_representations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">characters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.ReducibleRepresentation" title="Link to this definition"></a></dt>
 <dd><p>Sum of irreducible representation</p>
 <p>Reduction of <span class="math notranslate nohighlight">\(\chi^{(red)}\)</span> into a sum of irreducible representation of <span class="math notranslate nohighlight">\(n^\lambda\)</span> times
 a irreducible representation <span class="math notranslate nohighlight">\(\chi^\lambda\)</span> is performed using</p>
@@ -1057,35 +1061,35 @@ a irreducible representation <span class="math notranslate nohighlight">\(\chi^\
 \[n^\lambda = \frac{1}{\#\mathcal G} \sum_{r\in\mathcal G} [\chi^{(red)}(r)]^\star \chi^\lambda(r)\]</div>
 <dl class="py property">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.ReducibleRepresentation.characters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">characters</span></span><a class="headerlink" href="#qcip_tools.symmetry.ReducibleRepresentation.characters" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">characters</span></span><a class="headerlink" href="#qcip_tools.symmetry.ReducibleRepresentation.characters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.ReducibleRepresentation.size">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#qcip_tools.symmetry.ReducibleRepresentation.size" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#qcip_tools.symmetry.ReducibleRepresentation.size" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.RepresentationError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">RepresentationError</span></span><a class="headerlink" href="#qcip_tools.symmetry.RepresentationError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">RepresentationError</span></span><a class="headerlink" href="#qcip_tools.symmetry.RepresentationError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.Set">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">Set</span></span><a class="headerlink" href="#qcip_tools.symmetry.Set" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">Set</span></span><a class="headerlink" href="#qcip_tools.symmetry.Set" title="Link to this definition"></a></dt>
 <dd><p>Define a (finite) set of (unique) elements</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">SymmetryFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">SymmetryFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder" title="Link to this definition"></a></dt>
 <dd><p>Find the symmetry</p>
 <p>Inspired by <a class="reference external" href="https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py">https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py</a>
 and <a class="reference external" href="http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html">http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>points</strong> (<em>numpy.ndarray</em>) – an Nx4 array of N points with <code class="docutils literal notranslate"><span class="pre">(Z,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> for each point. <code class="docutils literal notranslate"><span class="pre">Z</span></code> is a label for points
 that are equivalent.</p></li>
@@ -1095,18 +1099,18 @@ that are equivalent.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.cartesian_tensor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cartesian_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.cartesian_tensor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cartesian_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.cartesian_tensor" title="Link to this definition"></a></dt>
 <dd><p>Compute multipole expansion of cartesian tensor of order <code class="docutils literal notranslate"><span class="pre">n</span></code> (what you find in the right column of a
 character table) and get its principal components.</p>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Multipole_expansion">https://en.wikipedia.org/wiki/Multipole_expansion</a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tensor</strong> (<em>numpy.ndarray</em>) – tensor</p></li>
 <li><p><strong>n</strong> (<em>int</em>) – order</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>eigenvalue and eigenvectors of the tensor</p>
 </dd>
 </dl>
@@ -1114,15 +1118,15 @@ character table) and get its principal components.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.degeneracies">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degeneracies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.degeneracies" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degeneracies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.degeneracies" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.find_best_x_axis">
-<span class="sig-name descname"><span class="pre">find_best_x_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">principal_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mirrors_or_C2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">are_mirrors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_best_x_axis" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_best_x_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">principal_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mirrors_or_C2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">are_mirrors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_best_x_axis" title="Link to this definition"></a></dt>
 <dd><p>Find best x axis among the list of mirrors or C2: the one that goes by the largest number of atoms</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>principal_axis</strong> (<em>numpy.ndarray</em>) – main axis</p></li>
 <li><p><strong>mirrors_or_C2</strong> (<em>list</em>) – axes to check</p></li>
@@ -1134,10 +1138,10 @@ character table) and get its principal components.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.find_c_highest">
-<span class="sig-name descname"><span class="pre">find_c_highest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probable_cn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_c_highest" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_c_highest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probable_cn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_c_highest" title="Link to this definition"></a></dt>
 <dd><p>Among all rotation axis, find highest.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>probable_cn</strong> (<em>list</em><em>(</em><em>tuple</em><em>)</em>) – list of rotation axis <code class="docutils literal notranslate"><span class="pre">(order,</span> <span class="pre">axis)</span></code></p>
 </dd>
 </dl>
@@ -1145,13 +1149,13 @@ character table) and get its principal components.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.find_probable_parallel_mirrors">
-<span class="sig-name descname"><span class="pre">find_probable_parallel_mirrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parallel_to</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_probable_parallel_mirrors" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_probable_parallel_mirrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parallel_to</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_probable_parallel_mirrors" title="Link to this definition"></a></dt>
 <dd><p>Find possible mirrors parallel to a given axis (so that the normal is perpendicular).</p>
 <p>For each combination of points, find if the corresponding normal is perpendicular
 to the axis (dot product is null), then remove duplicates.</p>
 <p>Returns a list of normals.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parallel_to</strong> (<em>numpy.ndarray</em><em>|</em><em>list</em>) – axis to which the plane should be parallel to</p>
 </dd>
 </dl>
@@ -1159,13 +1163,13 @@ to the axis (dot product is null), then remove duplicates.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.find_probable_rotations">
-<span class="sig-name descname"><span class="pre">find_probable_rotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parallel_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_probable_rotations" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_probable_rotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parallel_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_probable_rotations" title="Link to this definition"></a></dt>
 <dd><p>Find rotations</p>
 <p>Inspired by <a class="reference external" href="https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py">https://github.com/sunqm/pyscf/blob/master/pyscf/symm/geom.py</a> !</p>
 <p>The idea is to find, for each set of equidistant points, the ones that are at equal distance from the
 first point, which means that a rotation axis may pass by those points.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parallel_to</strong> (<em>numpy.ndarray</em><em>|</em><em>list</em>) – get only the rotation axis parallel to a given axis (should be normalized)</p>
 </dd>
 </dl>
@@ -1173,7 +1177,7 @@ first point, which means that a rotation axis may pass by those points.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.find_symmetry">
-<span class="sig-name descname"><span class="pre">find_symmetry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_symmetry" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">find_symmetry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.find_symmetry" title="Link to this definition"></a></dt>
 <dd><p>(Try to) find symmetry.</p>
 <p>Algorithm is inspired by <a class="reference external" href="http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html">http://pymatgen.org/_modules/pymatgen/symmetry/analyzer.html</a>
 (and actually any book on group theory):</p>
@@ -1217,10 +1221,10 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 <p>In the other case, the orientation is taken from the inertia tensor.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>the point group, the center and the rotational matrix</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple(<a class="reference internal" href="#qcip_tools.symmetry.PointGroupDescription" title="qcip_tools.symmetry.PointGroupDescription">PointGroupDescription</a>, numpy.ndarray, numpy.ndarray)</p>
 </dd>
 </dl>
@@ -1228,16 +1232,16 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.get_mirrors">
-<span class="sig-name descname"><span class="pre">get_mirrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parallel_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.get_mirrors" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_mirrors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parallel_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.get_mirrors" title="Link to this definition"></a></dt>
 <dd><p>Find the different mirror types (if they actually exists)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parallel_to</strong> (<em>numpy.ndarray</em>) – principal axis</p></li>
 <li><p><strong>other_axes</strong> (<em>list</em>) – the other rotation axes</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list</p>
 </dd>
 </dl>
@@ -1245,16 +1249,16 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.get_perpendicular_C2">
-<span class="sig-name descname"><span class="pre">get_perpendicular_C2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perpendicular_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probable_cn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.get_perpendicular_C2" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_perpendicular_C2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perpendicular_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probable_cn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.get_perpendicular_C2" title="Link to this definition"></a></dt>
 <dd><p>Get perpendicular <span class="math notranslate nohighlight">\(C_2\)</span> (if they actually exist)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>probable_cn</strong> (<em>list</em><em>(</em><em>tuple</em><em>)</em>) – list of rotation axis <code class="docutils literal notranslate"><span class="pre">(order,</span> <span class="pre">axis)</span></code></p></li>
 <li><p><strong>perpendicular_to</strong> (<em>numpy.ndarray</em>) – main axis</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list</p>
 </dd>
 </dl>
@@ -1262,13 +1266,13 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.get_symmetry">
-<span class="sig-name descname"><span class="pre">get_symmetry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.get_symmetry" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_symmetry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.get_symmetry" title="Link to this definition"></a></dt>
 <dd><p>Find symmetry and store it, so that it is not computed next time (except if <code class="docutils literal notranslate"><span class="pre">force</span></code>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>force</strong> (<em>bool</em>) – force new search</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple(<a class="reference internal" href="#qcip_tools.symmetry.PointGroupDescription" title="qcip_tools.symmetry.PointGroupDescription">PointGroupDescription</a>, numpy.ndarray, numpy.ndarray)</p>
 </dd>
 </dl>
@@ -1276,16 +1280,16 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.group_points">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.group_points" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decimals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.group_points" title="Link to this definition"></a></dt>
 <dd><p>Group points per label and distances wrt center (within <code class="docutils literal notranslate"><span class="pre">decimals</span></code>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>points</strong> (<em>numpy.ndarray</em>) – the points, with the first axis being the label</p></li>
 <li><p><strong>decimals</strong> (<em>int</em>) – precision</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list</p>
 </dd>
 </dl>
@@ -1293,34 +1297,34 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.has_improper_rotation">
-<span class="sig-name descname"><span class="pre">has_improper_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_improper_rotation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">has_improper_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_improper_rotation" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.has_inversion">
-<span class="sig-name descname"><span class="pre">has_inversion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_inversion" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">has_inversion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_inversion" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.has_mirror">
-<span class="sig-name descname"><span class="pre">has_mirror</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_mirror" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">has_mirror</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_mirror" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.has_rotation">
-<span class="sig-name descname"><span class="pre">has_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_rotation" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">has_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.has_rotation" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.inertia_tensor_moments">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inertia_tensor_moments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.inertia_tensor_moments" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inertia_tensor_moments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.inertia_tensor_moments" title="Link to this definition"></a></dt>
 <dd><p>Get inertia egeinvalue and egeinvectors, sorted
 (smallest first, so the main axis is the last eigenvector, if any).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tensor</strong> (<em>numpy.ndarray</em>) – carthesian tensor</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple</p>
 </dd>
 </dl>
@@ -1328,17 +1332,17 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.pass_trough">
-<span class="sig-name descname"><span class="pre">pass_trough</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">principal_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_mirror</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.pass_trough" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pass_trough</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">principal_axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_mirror</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.pass_trough" title="Link to this definition"></a></dt>
 <dd><p>Determine by how much atoms the plane or the plane formed by the rotation axis pass trough</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>principal_axis</strong> (<em>numpy.ndarray</em>) – main axis</p></li>
 <li><p><strong>axis</strong> (<em>numpy.ndarray</em>) – axis to check</p></li>
 <li><p><strong>is_mirror</strong> (<em>bool</em>) – is axis the one of a mirror ?</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
 </dd>
 </dl>
@@ -1346,10 +1350,10 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.symmetric_for">
-<span class="sig-name descname"><span class="pre">symmetric_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.symmetric_for" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">symmetric_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.symmetric_for" title="Link to this definition"></a></dt>
 <dd><p>Check if symmetric for a given operation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>op</strong> (<a class="reference internal" href="#qcip_tools.symmetry.Operation" title="qcip_tools.symmetry.Operation"><em>Operation</em></a>) – the operation</p>
 </dd>
 </dl>
@@ -1357,10 +1361,10 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinder.vec_in_vecs">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vec_in_vecs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vecs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.vec_in_vecs" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vec_in_vecs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vecs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinder.vec_in_vecs" title="Link to this definition"></a></dt>
 <dd><p>Check if <code class="docutils literal notranslate"><span class="pre">vec</span></code> is in the set of <code class="docutils literal notranslate"><span class="pre">vecs</span></code></p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vec</strong> – vector to find</p></li>
 <li><p><strong>vec</strong> – numpy.ndarray</p></li>
@@ -1368,7 +1372,7 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 <li><p><strong>tol</strong> (<em>float</em>) – tolerence threshold</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -1378,12 +1382,12 @@ tensor is used. <strong>Note:</strong> for octahedral molecules, the <span class
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.SymmetryFinderError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">SymmetryFinderError</span></span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinderError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">SymmetryFinderError</span></span><a class="headerlink" href="#qcip_tools.symmetry.SymmetryFinderError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="qcip_tools.symmetry.simultaneous_diagonalization">
-<span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">simultaneous_diagonalization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_vecs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.simultaneous_diagonalization" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">qcip_tools.symmetry.</span></span><span class="sig-name descname"><span class="pre">simultaneous_diagonalization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_vecs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.symmetry.simultaneous_diagonalization" title="Link to this definition"></a></dt>
 <dd><p>Simultaneous diagonalization of (<strong>communting Hermitian</strong>) matrices.</p>
 <p>Seems to works by computing a <em>basis</em> for the first matrix, then by diagonalizing the different
 blocks (organized by the degeneracy of the eigenvalues).</p>
@@ -1392,7 +1396,7 @@ Also check
 <a class="reference external" href="https://ocw.mit.edu/courses/physics/8-05-quantum-physics-ii-fall-2013/lecture-notes/MIT8_05F13_Chap_05.pdf">https://ocw.mit.edu/courses/physics/8-05-quantum-physics-ii-fall-2013/lecture-notes/MIT8_05F13_Chap_05.pdf</a>
 (which is the closest explanation I found of this implementation, which is not common).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>matrices</strong> (<em>list</em>) – list of matrices</p></li>
 <li><p><strong>tol</strong> (<em>float</em>) – tolerance on the eigenvalue (to check if they are degenerate or not)</p></li>
