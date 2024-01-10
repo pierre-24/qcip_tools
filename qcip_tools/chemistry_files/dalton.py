@@ -1431,7 +1431,7 @@ class Input(ChemistryFile, WithOutputMixin, WithIdentificationMixin):
         raise KeyError(item)
 
     def __setitem__(self, key, value):
-        if type(value) != InputModule:
+        if type(value) is not InputModule:
             raise TypeError(value)
 
         if value.name is not None and key[:5] != value.name[:5]:
