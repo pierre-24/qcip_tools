@@ -310,7 +310,7 @@ class MassWeightedHessian:
 
         .. note::
 
-            + No electronic contribution (since it is the energy of the system)
+            + No electronic contribution
             + Assume that the rotational partition function is equal to the "high" temperature limit (T>100K?)
             + The vibrational contribution does not include ZPVA
 
@@ -374,7 +374,7 @@ class MassWeightedHessian:
         :type temperature: float
         :param pressure: pressure (in pascal)
         :type pressure: float
-        :return: (S_t, S_r, S_v) (as a tuple, in Hartree / Kelvin)
+        :return: (S_e, S_t, S_r, S_v) (as a tuple, in Hartree / Kelvin)
         :rtype: tuple
         """
 
@@ -397,7 +397,9 @@ class MassWeightedHessian:
 
         S_v *= constants.R * self.ENERGY_IN_AU_CONVERSION
 
-        return S_t, S_r, S_v
+        S_e = math.log(omega_e) * constants.R * self.ENERGY_IN_AU_CONVERSION
+
+        return S_e, S_t, S_r, S_v
 
     def compute_gibbs_free_energy(self, symmetry_number, temperature=298.15, pressure=1.01325e5):
         """Compute the value of the different contribution (translation, rotation, vibration) to gibbs free energy,
@@ -414,11 +416,11 @@ class MassWeightedHessian:
         :type temperature: float
         :param pressure: pressure (in pascal)
         :type pressure: float
-        :return: (G_t, G_r, G_v) (as a tuple, in Hartree)
+        :return: (G_e, G_t, G_r, G_v) (as a tuple, in Hartree)
         :rtype: tuple
         """
 
         H_t, H_r, H_v = self.compute_enthalpy(temperature)
-        S_t, S_r, S_v = self.compute_entropy(symmetry_number, temperature, pressure)
+        S_e, S_t, S_r, S_v = self.compute_entropy(symmetry_number, temperature, pressure)
 
-        return H_t - temperature * S_t, H_r - temperature * S_r, H_v - temperature * S_v
+        return -temperature * S_e, H_t - temperature * S_t, H_r - temperature * S_r, H_v - temperature * S_v

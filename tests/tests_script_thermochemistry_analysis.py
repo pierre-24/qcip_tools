@@ -93,4 +93,4 @@ class ThermochemistryAnalysisTestCase(QcipScriptsTestCase):
 
         self.assertIn('G(T)', stdout_decoded)
         G_line = stdout_decoded.splitlines()[-2].split()
-        self.assertAlmostEqual(float(G_line[1]), -598.517192, places=5)
+        self.assertAlmostEqual(float(G_line[1]), -598.516131, places=5)
