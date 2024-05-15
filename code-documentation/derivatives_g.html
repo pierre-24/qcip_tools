@@ -328,7 +328,7 @@ and returns the whole thing (so the same remarks applies, in particular: NO ZPVA
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(S_t, S_r, S_v) (as a tuple, in Hartree / Kelvin)</p>
+<dd class="field-even"><p>(S_e, S_t, S_r, S_v) (as a tuple, in Hartree / Kelvin)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
@@ -355,7 +355,7 @@ No ZPVA, no electronic energy (as usual)</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(G_t, G_r, G_v) (as a tuple, in Hartree)</p>
+<dd class="field-even"><p>(G_e, G_t, G_r, G_v) (as a tuple, in Hartree)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
@@ -371,7 +371,7 @@ No ZPVA, no electronic energy (as usual)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>No electronic contribution (since it is the energy of the system)</p></li>
+<li><p>No electronic contribution</p></li>
 <li><p>Assume that the rotational partition function is equal to the “high” temperature limit (T&gt;100K?)</p></li>
 <li><p>The vibrational contribution does not include ZPVA</p></li>
 </ul>
