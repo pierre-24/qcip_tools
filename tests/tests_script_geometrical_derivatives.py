@@ -25,13 +25,11 @@ class GeometricalDerivativesTestCase(QcipScriptsTestCase):
         stdout_t, stderr_t = process.communicate()
 
         self.assertIsNotNone(stderr_t)
-        self.assertNotEqual(len(stderr_t), 0)
         self.assertIsNotNone(stdout_t)
-        self.assertEqual(len(stdout_t), 0, msg=stdout_t.decode())
 
         stdout_decoded = stdout_t.decode()
 
-        self.assertNotIn('gradient', stdout_decoded)
+        self.assertIn('gradient', stdout_decoded)
         self.assertNotIn('hessian', stdout_decoded)
 
         # with vibrational analysis
