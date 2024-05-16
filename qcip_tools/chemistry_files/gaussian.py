@@ -455,7 +455,7 @@ def gaussian__fchk__property__computed_energies(obj, *args, **kwargs):
     """Get the energies. Returns a dictionary of the energies at different level of approximation.
 
     :param obj: object
-    :type obj: qcip_tools.chemistry_files.gaussian.FCHK
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK plots) or the density of states (DOS) of a given charge density read from CHGCAR. The self-consistent CHGCAR file must be determined b
     :rtype: dict
     """
 
@@ -775,9 +775,6 @@ def gaussian__fchk__property__geometrical_derivatives(obj, *args, **kwargs):
     geometrical_derivatives = {}
     spacial_dof = 3 * len(obj.molecule)
     trans_plus_rot_dof = 5 if obj.molecule.linear() else 6
-
-    if obj.calculation_type.lower() not in ['freq', 'force']:
-        raise PropertyNotPresent('geometrical_derivatives')
 
     if 'Cartesian Gradient' in obj:
         gradient = obj.get('Cartesian Gradient')
