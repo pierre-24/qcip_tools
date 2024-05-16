@@ -4,7 +4,7 @@ import numpy
 
 from tests import QcipToolsTestCase
 from qcip_tools import derivatives_g, derivatives, derivatives_e, derivatives_exci
-from qcip_tools.chemistry_files import gaussian, dalton, PropertyNotPresent, crystal
+from qcip_tools.chemistry_files import gaussian, dalton, crystal
 
 
 class PropertiesTestCase(QcipToolsTestCase):

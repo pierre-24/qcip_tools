@@ -455,7 +455,7 @@ def gaussian__fchk__property__computed_energies(obj, *args, **kwargs):
     """Get the energies. Returns a dictionary of the energies at different level of approximation.
 
     :param obj: object
-    :type obj: qcip_tools.chemistry_files.gaussian.FCHK plots) or the density of states (DOS) of a given charge density read from CHGCAR. The self-consistent CHGCAR file must be determined b
+    :type obj: qcip_tools.chemistry_files.gaussian.FCHK plots)
     :rtype: dict
     """
 
