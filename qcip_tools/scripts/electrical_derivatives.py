@@ -7,11 +7,12 @@ import argparse
 import sys
 from scipy import constants
 import pandas as pd
+import platform
 
 import qcip_tools.scripts
 from qcip_tools import derivatives_e, quantities
 from qcip_tools.chemistry_files import helpers, PropertyNotPresent
-import platform
+from qcip_tools.transformations import TransformationMatrix as TM
 
 __version__ = '0.3'
 __author__ = 'Pierre Beaujean'
@@ -47,7 +48,7 @@ def to_nanometer(val):
     return '{:.1f}nm'.format(converted)
 
 
-def print_tensors(electrical_derivatives, representation):
+def print_tensors(electrical_derivatives, representation, rm=None):
     if representation in electrical_derivatives:
         freqs = [x for x in electrical_derivatives[representation].keys()]
         freqs.sort(key=lambda x: derivatives_e.convert_frequency_from_string(x))
@@ -64,6 +65,10 @@ def print_tensors(electrical_derivatives, representation):
             print('{}, w={} ({:.6f} a.u.)'.format(
                 name, to_nanometer(freq), derivatives_e.convert_frequency_from_string(freq)))
 
+            if rm is not None:
+                a = TM.rotate_matrix(electrical_derivatives[representation][freq].components, rm)
+                electrical_derivatives[representation][freq].components = a
+
             print(electrical_derivatives[representation][freq].to_string(**kw))
 
 
@@ -73,6 +78,8 @@ def get_arguments_parser():
     arguments_parser.add_argument('-csv', default=False, action='store_true')
     arguments_parser.add_argument('--save-components', default=False, action='store_true')
     arguments_parser.add_argument('-q', '--quiet', default=False, action='store_true')
+    arguments_parser.add_argument('--vector', default=None,
+                                  help='rotate tensors to match the (a b c) direction.', nargs=3, type=float)
 
     arguments_parser.add_argument(
         'infile',
@@ -173,6 +180,15 @@ def main():
         except PropertyNotPresent:
             return qcip_tools.scripts.exit_failure('cannot find electrical derivatives ({})'.format(infile.file_type))
 
+        rotation_matrix = None
+        if args.vector is not None:
+            if 'F' in electrical_derivatives:
+                dipole = electrical_derivatives['F']['static'].components
+                rotation_matrix = TM.rotation_matrix_from_vectors(dipole, args.vector)
+                electrical_derivatives['F']['static'].components = TM.rotate_matrix(dipole, rotation_matrix)
+            else:
+                print('No dipole to define a rotation matrix')
+
         if not args.quiet:
             # mu
             if 'F' in electrical_derivatives:
@@ -181,22 +197,22 @@ def main():
                 print('')
 
             # alpha
-            print_tensors(electrical_derivatives, 'FF')
-            print_tensors(electrical_derivatives, 'dD')
+            print_tensors(electrical_derivatives, 'FF', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'dD', rm=rotation_matrix)
 
             # beta:
-            print_tensors(electrical_derivatives, 'FFF')
-            print_tensors(electrical_derivatives, 'dDF')
-            print_tensors(electrical_derivatives, 'FDd')
-            print_tensors(electrical_derivatives, 'XDD')
+            print_tensors(electrical_derivatives, 'FFF', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'dDF', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'FDd', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'XDD', rm=rotation_matrix)
 
             # gamma
-            print_tensors(electrical_derivatives, 'FFFF')
-            print_tensors(electrical_derivatives, 'dDFF')
-            print_tensors(electrical_derivatives, 'dFFD')
-            print_tensors(electrical_derivatives, 'XDDF')
-            print_tensors(electrical_derivatives, 'dDDd')
-            print_tensors(electrical_derivatives, 'XDDD')
+            print_tensors(electrical_derivatives, 'FFFF', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'dDFF', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'dFFD', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'XDDF', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'dDDd', rm=rotation_matrix)
+            print_tensors(electrical_derivatives, 'XDDD', rm=rotation_matrix)
 
         if args.csv:
             append_data(electrical_derivatives, to_data_frames, infile.file_name, args.save_components)

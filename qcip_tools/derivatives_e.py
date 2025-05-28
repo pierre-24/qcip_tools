@@ -192,6 +192,9 @@ class BaseElectricalDerivativeTensor(derivatives.Tensor):
         self.name = self.to_name()
         self.properties = {}
 
+    def flatten_components(self):
+        return self.components.flatten()
+
     def to_string(self, threshold=1e-5, **kwargs):
         """Rewritten to get a better output with this kind of tensor
         """
@@ -311,6 +314,9 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
         """
         self.properties['alpha_iso'] = self.isotropic_value()
         self.properties['alpha_aniso'] = self.anisotropic_value()
+        self.properties['rayleigh_n'] = self.rayleigh_natural_light()
+        self.properties['rayleigh_lpara'] = self.rayleigh_parallel_linearly_light()
+        self.properties['rayleigh_lper'] = self.rayleigh_perpendicula_linearly_light()
 
     def isotropic_value(self):
         """Isotropic value:
@@ -341,6 +347,48 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
 
         return _sqrt_or_neg_sqrt(.5 * tmp)
 
+    def rayleigh_natural_light(self):
+        """Rayleigh Natural Light value:
+        J. Elm, P. Norman, M. Bilde, K. V. Mikkelsen,
+        Computational study of the Rayleigh light scattering properties of atmospheric pre-nucleation clusters,
+        Phys. Chem. Chem. Phys. 16 (2014) 10883–10890. https://doi.org/10.1039/C4CP01206B.
+
+        .. math::
+
+            \\R_{NL}= 45\\alpha_{iso}^2 + 13\\alpha_{aniso}^2.
+
+        :rtype: float
+        """
+        return 45 * self.isotropic_value() ** 2.0 + 13 * self.anisotropic_value() ** 2.0
+
+    def rayleigh_parallel_linearly_light(self):
+        """Rayleigh Parallel Linearly Light value:
+        J. Elm, P. Norman, M. Bilde, K. V. Mikkelsen,
+        Computational study of the Rayleigh light scattering properties of atmospheric pre-nucleation clusters,
+        Phys. Chem. Chem. Phys. 16 (2014) 10883–10890. https://doi.org/10.1039/C4CP01206B.
+
+        .. math::
+
+            \\R_{p||}= 6\\alpha_{aniso}^2.
+
+        :rtype: float
+        """
+        return 6 * self.anisotropic_value() ** 2.0
+
+    def rayleigh_perpendicula_linearly_light(self):
+        """Rayleigh Perpendicular Linearly Light value:
+        J. Elm, P. Norman, M. Bilde, K. V. Mikkelsen,
+        Computational study of the Rayleigh light scattering properties of atmospheric pre-nucleation clusters,
+        Phys. Chem. Chem. Phys. 16 (2014) 10883–10890. https://doi.org/10.1039/C4CP01206B.
+
+        .. math::
+
+            \\R_{p_|_}= 45\\alpha_{iso}^2 + 7\\alpha_{aniso}^2.
+
+        :rtype: float
+        """
+        return 45 * self.isotropic_value() ** 2.0 + 7 * self.anisotropic_value() ** 2.0
+
     def to_string(self, threshold=1e-5, disable_extras=False, **kwargs):
         """Rewritten to add information
         """
@@ -351,8 +399,11 @@ class PolarisabilityTensor(BaseElectricalDerivativeTensor):
         if not disable_extras:
             self.compute_properties()
 
-            for k, v in self.properties.items():
-                r += '{:7s}{: .5e}\n'.format(k, v)
+            r += 'alpha_iso  {: .5e}\n'.format(self.properties['alpha_iso'])
+            r += 'alpha_aniso{: .5e}\n'.format(self.properties['alpha_aniso'])
+            r += 'Rayleigh_n {: .5e}\n'.format(self.properties['rayleigh_n'])
+            r += 'Rayleigh_//{: .5e}\n'.format(self.properties['rayleigh_lpara'])
+            r += 'Rayleigh_|_{: .5e}\n'.format(self.properties['rayleigh_lper'])
 
         return r
 
@@ -397,7 +448,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
             self.properties['beta_squared_zzz'] = self.beta_squared_zzz()
             self.properties['beta_hrs'] = \
                 _sqrt_or_neg_sqrt(self.properties['beta_squared_zxx'] + self.properties['beta_squared_zzz'])
-            self.properties['DR'] = self.properties['beta_squared_zzz'] / self.properties['beta_squared_zxx']
+            self.properties['DR_hrs'] = self.properties['beta_squared_zzz'] / self.properties['beta_squared_zxx']
 
             # "old" version
             self.properties['dipolar_contribution'] = self.dipolar_contribution(old_version=True)
@@ -879,7 +930,7 @@ class FirstHyperpolarisabilityTensor(BaseElectricalDerivativeTensor):
                 r += '<B2zzz>    {: .5e}\n'.format(self.properties['beta_squared_zzz'])
                 r += '<B2zxx>    {: .5e}\n'.format(self.properties['beta_squared_zxx'])
                 r += 'beta_HRS   {: .5e}\n'.format(self.properties['beta_hrs'])
-                r += 'DR         {: .3f}\n'.format(self.properties['DR'])
+                r += 'DR         {: .3f}\n'.format(self.properties['DR_hrs'])
 
                 # "old" version
                 r += 'B|J=1|     {: .5e}\n'.format(self.properties['dipolar_contribution'])
@@ -931,7 +982,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
             self.properties['gamma_squared_zxxx'] = self.gamma_squared_zxxx()
             self.properties['gamma_THS'] = \
                 _sqrt_or_neg_sqrt(self.properties['gamma_squared_zzzz'] + self.properties['gamma_squared_zxxx'])
-            self.properties['DR'] = self.properties['gamma_squared_zzzz'] / self.properties['gamma_squared_zxxx']
+            self.properties['DR_ths'] = self.properties['gamma_squared_zzzz'] / self.properties['gamma_squared_zxxx']
             # "old" definition
             self.properties['isotropic_contribution'] = self.isotropic_contribution(old_version=True)
             self.properties['quadrupolar_contribution'] = self.quadrupolar_contribution(old_version=True)
@@ -1473,7 +1524,7 @@ class SecondHyperpolarizabilityTensor(BaseElectricalDerivativeTensor):
                 r += '<G2zzzz>   {: .5e}\n'.format(self.properties['gamma_squared_zzzz'])
                 r += '<G2zxxx>   {: .5e}\n'.format(self.properties['gamma_squared_zxxx'])
                 r += 'gamma_THS  {: .5e}\n'.format(self.properties['gamma_THS'])
-                r += 'DR         {: .3f}\n'.format(self.properties['DR'])
+                r += 'DR         {: .3f}\n'.format(self.properties['DR_ths'])
 
                 # "old" definition
                 r += 'G|J=0|     {: .5e}\n'.format(self.properties['isotropic_contribution'])

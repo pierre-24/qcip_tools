@@ -5,6 +5,7 @@ Constructed on top of `transforms3d <https://github.com/matthew-brett/transforms
 """
 
 import numpy
+import itertools
 
 
 from transforms3d.euler import euler2mat
@@ -118,6 +119,55 @@ class TransformationMatrix:
         m = TransformationMatrix.identity()
         m[:3, :3] = euler2mat(psi, theta, chi, axes)
         return m
+
+    @staticmethod
+    def rotation_matrix_from_vectors(vec1, vec2):
+        """ Find the rotation matrix that aligns vec1 to vec2
+        :param vec1: A 3d "source" vector
+        :param vec2: A 3d "destination" vector
+        :return mat: A transform matrix (3x3) which when applied to vec1, aligns it with vec2.
+        """
+        a, b = (vec1 / numpy.linalg.norm(vec1)).reshape(3), (vec2 / numpy.linalg.norm(vec2)).reshape(3)
+        v = numpy.cross(a, b)
+        c = numpy.dot(a, b)
+        s = numpy.linalg.norm(v)
+        kmat = numpy.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]], dtype=numpy.float64)
+        rotation_matrix = numpy.eye(3, dtype=numpy.float64) + kmat + kmat.dot(kmat) * ((1 - c) / (s ** 2))
+        return rotation_matrix
+
+    @staticmethod
+    def rotate_matrix(tensor, rotation_matrix):
+        """Return a rotated tensor
+
+        .. warning::
+
+            To much magic here, will be deprecated at some point.
+
+        :param tensor: the tensor to be rotated
+        :type tensor: numpy.ndarray
+        :param psi: Rotation around the Z axis (in degree)
+        :type psi: float
+        :param theta: rotation around the y' axis (in degree)
+        :type theta: float
+        :param chi: Rotation around the z'' axis (in degree)
+        :type chi: float
+        :rtype: numpy.ndarray
+        """
+
+        new_tensor = numpy.zeros(tensor.shape)
+        order = len(tensor.shape)
+
+        for i in itertools.product(range(3), repeat=order):
+            tmp = .0
+            for j in itertools.product(range(3), repeat=order):
+                product = 1
+                for k in range(order):
+                    product *= rotation_matrix[i[k], j[k]]
+                tmp += product * tensor[j]
+
+            new_tensor[i] = tmp
+
+        return new_tensor
 
 
 class ImmutableTransformable:
