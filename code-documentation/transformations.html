@@ -382,6 +382,38 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.rotate_matrix">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotate_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.rotate_matrix" title="Link to this definition"></a></dt>
+<dd><p>Return a rotated tensor</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To much magic here, will be deprecated at some point.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<em>numpy.ndarray</em>) – the tensor to be rotated</p></li>
+<li><p><strong>psi</strong> (<em>float</em>) – Rotation around the Z axis (in degree)</p></li>
+<li><p><strong>theta</strong> (<em>float</em>) – rotation around the y’ axis (in degree)</p></li>
+<li><p><strong>chi</strong> (<em>float</em>) – Rotation around the z’’ axis (in degree)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.rotation_matrix_from_vectors">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotation_matrix_from_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vec2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.rotation_matrix_from_vectors" title="Link to this definition"></a></dt>
+<dd><p>Find the rotation matrix that aligns vec1 to vec2
+:param vec1: A 3d “source” vector
+:param vec2: A 3d “destination” vector
+:return mat: A transform matrix (3x3) which when applied to vec1, aligns it with vec2.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="qcip_tools.transformations.TransformationMatrix.scale">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qcip_tools.transformations.TransformationMatrix.scale" title="Link to this definition"></a></dt>
 <dd><p>Create a translation matrix</p>
